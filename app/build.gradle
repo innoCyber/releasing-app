@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        applicationId "it.ounet.releasing"
+        applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
