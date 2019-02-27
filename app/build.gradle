@@ -3,16 +3,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "it.ounet.releasing"
-        minSdkVersion 14
-        targetSdkVersion 28
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", "\"https://api.github.com/\"")
+        vectorDrawables.useSupportLibrary true
     }
     buildTypes {
         release {
@@ -20,15 +24,77 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //kotlin
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.core:core-ktx:1.1.0-alpha04'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+
+    //appcompat
+    implementation "androidx.appcompat:appcompat:$supportLibVersion"
+
+    //constraint
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
+    //material
+    implementation "com.google.android.material:material:$materialLibVersion"
+
+    // architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$archComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime:$archComponentsVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.paging:paging-runtime:$pagingVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$archComponentsVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation"com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit-mock:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
+
+    //rx
+    implementation "io.reactivex.rxjava2:rxandroid:$rxVersion"
+
+
+    //dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+
+    //timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+
+    //leakcanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
+
+    //glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+
+    //shimmer
+    implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
+
+    // testing
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test:runner:$runnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }
