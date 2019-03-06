@@ -12,4 +12,14 @@
     <string name="unknown_exception">An unexpected error has occurred. Please check your network connection and try
         again.
     </string>
+    <string name="profiles">Profiles</string>
+    <string name="configure_device">Configure Device</string>
+    <string name="download_damages">Download Damages</string>
+    <string name="save_configuration">Save Configuration</string>
+    <string name="delete_profile">Delete Profile</string>
+    <string name="cargo_type">Cargo Type</string>
+    <string name="operation">Operation</string>
+    <string name="terminal">Terminal</string>
+    <string name="parking_step">Parking Step</string>
+    <string name="enable_camera_scan">Enable Camera Scan</string>
 </resources>

@@ -34,4 +34,21 @@
     </declare-styleable>
 
 
+    <declare-styleable name="SupportVectorDrawablesButton">
+        <attr name="drawableStartCompat" format="reference" />
+        <attr name="drawableEndCompat" format="reference" />
+        <attr name="drawableTopCompat" format="reference" />
+        <attr name="drawableBottomCompat" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ReleasingButton">
+        <attr name="rb_text" format="string"/>
+        <attr name="rb_icon" format="reference"/>
+        <attr name="rb_drawablePadding" format="dimension"/>
+        <attr name="rb_backgroundColor" format="color"/>
+        <attr name="rb_cornerRadius" format="dimension" />
+        <attr name="tb_textColor" format="color" />
+        <attr name="tb_textSize" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/btn_profiles_layout"
+            style="@style/RippleLayoutStyle"
+            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toTopOf="@id/guideline_t">
+
+            <ptml.releasing.views.SupportVectorDrawablesButton
+                android:id="@+id/btn_profiles"
+                style="@style/ButtonStyle.Home"
+                android:text="@string/profiles"
+                app:drawableStartCompat="@drawable/ic_group" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/btn_configure_layout"
+            style="@style/RippleLayoutStyle"
+            app:layout_constraintBottom_toTopOf="@id/btn_download_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_profiles_layout">
+
+            <ptml.releasing.views.SupportVectorDrawablesButton
+                android:id="@+id/btn_configure"
+                style="@style/ButtonStyle.Home"
+                android:text="@string/configure_device"
+                app:drawableStartCompat="@drawable/ic_support" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/btn_download_layout"
+            style="@style/RippleLayoutStyle"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_b"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_configure_layout">
+
+            <ptml.releasing.views.SupportVectorDrawablesButton
+                android:id="@+id/btn_download"
+                style="@style/ButtonStyle.Home"
+                android:text="@string/download_damages"
+                app:drawableStartCompat="@drawable/ic_download" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

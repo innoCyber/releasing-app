@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/constraint_default_margin_8dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.085" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.9" />
+
+        <TextView
+            android:id="@+id/tv_select_cargo"
+            style="@style/LabelStyle"
+            android:text="@string/cargo_type"
+            app:layout_constraintStart_toStartOf="@id/guideline_ll"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/select_cargo_spinner_layout"
+            style="@style/RippleLayoutStyle.Configure.Spinner"
+            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_cargo">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/select_cargo_spinner"
+                style="@style/SpinnerStyle"
+                tools:entries="@array/sample" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+
+        <TextView
+            android:id="@+id/tv_select_operation"
+            style="@style/LabelStyle"
+            android:text="@string/operation"
+            app:layout_constraintStart_toStartOf="@id/guideline_ll"
+            app:layout_constraintTop_toBottomOf="@id/select_cargo_spinner_layout" />
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/select_operation_spinner_layout"
+            style="@style/RippleLayoutStyle.Configure.Spinner"
+            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_operation">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/select_operation_spinner"
+                style="@style/SpinnerStyle"
+                tools:entries="@array/sample" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+
+        <TextView
+            android:id="@+id/tv_select_terminal"
+            style="@style/LabelStyle"
+            android:text="@string/terminal"
+            app:layout_constraintStart_toStartOf="@id/guideline_ll"
+            app:layout_constraintTop_toBottomOf="@id/select_operation_spinner_layout" />
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/select_terminal_spinner_layout"
+            style="@style/RippleLayoutStyle.Configure.Spinner"
+            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_terminal">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/select_terminal_spinner"
+                style="@style/SpinnerStyle"
+                tools:entries="@array/sample" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+
+        <TextView
+            android:id="@+id/tv_select_parking_step"
+            style="@style/LabelStyle"
+            android:text="@string/parking_step"
+            app:layout_constraintStart_toStartOf="@id/guideline_ll"
+            app:layout_constraintTop_toBottomOf="@id/select_terminal_spinner_layout" />
+
+        <ptml.releasing.views.MaterialRippleLayout
+            android:id="@+id/select_parking_step_spinner_layout"
+            style="@style/RippleLayoutStyle.Configure.Spinner"
+            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_parking_step">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/select_parking_step_spinner"
+                style="@style/SpinnerStyle"
+                tools:entries="@array/sample" />
+        </ptml.releasing.views.MaterialRippleLayout>
+
+
+        <Switch
+            android:id="@+id/camera_switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/constraint_default_margin_10dp"
+            android:switchPadding="@dimen/constraint_default_margin_16dp"
+            android:text="@string/enable_camera_scan"
+            android:layout_marginTop="@dimen/constraint_default_margin_24dp"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/select_parking_step_spinner_layout"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
