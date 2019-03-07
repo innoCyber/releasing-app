@@ -22,4 +22,15 @@
     <string name="terminal">Terminal</string>
     <string name="parking_step">Parking Step</string>
     <string name="enable_camera_scan">Enable Camera Scan</string>
+    <string name="verification_error_message">This device has not been registered for this application, please contact the administrator davide.minervini@ptml-ng.com for more information</string>
+    <string name="verification_error_title">Verification Error:</string>
+    <string name="configure_device_message">Please wait, configuring device…</string>
+
+    <string name="allow_permission">Allow Permission</string>
+    <string name="allow_phone_state_permission_msg">For the app to work as expected, allow the permissions</string>
+    <string name="phone_state_permission_denied">For the app to work as expected, please allow the permission</string>
+    <string name="phone_state_permission_never_ask">To use this feature, allow the permissions in settings</string>
+    <string name="info">Info</string>
+    <string name="info_msg">Message</string>
+    <string name="retry">Retry</string>
 </resources>

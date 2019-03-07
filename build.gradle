@@ -67,4 +67,9 @@ ext {
 
     glideVersion = "4.8.0"
     shimmerVersion = "0.3.0"
+
+    permission_dispatcher = '4.3.0'
+    okhttpMockServer = '3.13.1'
+    androidJunit = "1.1.0"
+    testRunner = '1.1.1'
 }
