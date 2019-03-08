@@ -1,9 +1,8 @@
 package ptml.releasing.di.component
 
 import dagger.Component
-import ptml.releasing.base.BaseTest
+import ptml.releasing.base.BaseApiTest
 import ptml.releasing.di.modules.local.DbModule
-import ptml.releasing.di.modules.network.NetworkModule
 import ptml.releasing.di.modules.network.TestNetworkModule
 
 import ptml.releasing.di.modules.ui.UiModule
@@ -17,5 +16,5 @@ import ptml.releasing.di.scopes.ReleasingAppScope
     DbModule::class, ViewModelFactoryModule::class,
     ViewModelModule::class, UiModule::class, TestRxJavaModule::class])
 interface TestAppComponent {
-    fun inject(baseTest: BaseTest)
+    fun inject(baseApiTest: BaseApiTest)
 }

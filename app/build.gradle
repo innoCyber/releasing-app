@@ -117,7 +117,7 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     testImplementation "junit:junit:$junitVersion"
-    testImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpMockServer"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$testRunner"

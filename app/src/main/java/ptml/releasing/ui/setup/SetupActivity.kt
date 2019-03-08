@@ -18,6 +18,7 @@ import ptml.releasing.ui.DeviceConfigErrorActivity
 import ptml.releasing.ui.MainActivity
 import ptml.releasing.ui.base.BaseActivity
 import ptml.releasing.ui.dialogs.InfoConfirmDialog
+import ptml.releasing.utils.ErrorHandler
 import ptml.releasing.utils.NetworkState
 import ptml.releasing.utils.NotificationUtils
 import ptml.releasing.utils.Status
@@ -100,10 +101,11 @@ class SetupActivity : BaseActivity() {
 
 
     private fun showSnackBarError(it: NetworkState) {
+       val error = ErrorHandler(this).getErrorMessage(it.throwable)
         binding.progressBar.visibility = View.GONE
         binding.tvMessage.visibility = View.GONE
         val snackbar = Snackbar.make(binding.root,
-            it.msg.toString(), Snackbar.LENGTH_INDEFINITE)
+            error, Snackbar.LENGTH_INDEFINITE)
         val snackBarLayout = snackbar.getView() as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
         (snackBarLayout.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView)

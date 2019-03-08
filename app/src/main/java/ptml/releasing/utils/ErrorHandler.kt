@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ErrorHandler @Inject constructor(var context: Context) {
 
 
-    fun getErrorMessage(e: Throwable): String {
+    fun getErrorMessage(e: Throwable?): String {
         if (e is ConnectException){
             return context.getString(R.string.connect_exception)
         }

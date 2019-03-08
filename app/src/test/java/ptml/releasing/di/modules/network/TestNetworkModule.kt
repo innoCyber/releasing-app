@@ -1,10 +1,12 @@
 package ptml.releasing.di.modules.network
 
 
-import com.squareup.okhttp.mockwebserver.MockWebServer
+
+
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.mockwebserver.MockWebServer
 
 import ptml.releasing.di.scopes.ReleasingAppScope
 import retrofit2.Retrofit
@@ -26,7 +28,6 @@ class TestNetworkModule {
         builder.addCallAdapterFactory(rxJavaCallAdapterFactory)
         builder.addConverterFactory(gsonConverterFactory)
         builder.baseUrl(baseUrl)
-        System.out.println("TestNetworkModule " + baseUrl)
         return builder.build()
     }
 

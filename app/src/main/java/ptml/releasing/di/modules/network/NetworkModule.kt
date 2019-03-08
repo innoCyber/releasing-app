@@ -24,7 +24,6 @@ class NetworkModule {
         builder.addCallAdapterFactory(rxJavaCallAdapterFactory)
         builder.addConverterFactory(gsonConverterFactory)
         builder.baseUrl(baseUrl)
-        System.out.println("NetworkModule" + baseUrl)
         return builder.build()
     }
 
