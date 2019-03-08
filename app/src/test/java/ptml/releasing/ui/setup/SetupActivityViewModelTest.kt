@@ -88,47 +88,12 @@ class SetupActivityViewModelTest:BaseTest(){
         this.viewModel.verifyDeviceId(SAMPLE_IMEI)
         // Checks
         System.out.println("Url" + mockServer.requestCount)
-        /*kotlin.test.assertEquals(null, this.viewModel.baseLiveData.value, "Response should be null")
+        kotlin.test.assertEquals(null, this.viewModel.baseLiveData.value, "Response should be null")
         kotlin.test.assertEquals(
-            NetworkState.error(""),
+            NetworkState.error("HTTP 502 OK"),
             this.viewModel.networkState.value,
             "The error should be thrown"
-        )*/
+        )
     }
-
-
-    @Test
-    fun verifyMockApi(){
-        var baseResponse:BaseResponse? = null
-        var message: Message? = null
-        var  throwable:Throwable? = null
-        mockServer.enqueue(MockResponse().setBody("{\"text\":\"hello!\"}").setResponseCode(HttpURLConnection.HTTP_OK))
-
-        var messageApi = /*Retrofit.Builder()
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(mockServer.url("/").toString())
-            .client(OkHttpClient()).build()*/
-        retrofit
-            .create(MessagesApi::class.java)
-
-        kotlin.test.assertNotNull(messageApi)
-
-        val msgReg = messageApi.findMessage("")
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-            message = it
-        }, {
-            throwable = it
-        })
-
-        kotlin.test.assertNotNull(message)
-
-
-
-//        kotlin.test.assertNotNull(throwable)
-    }
-
 
 }
