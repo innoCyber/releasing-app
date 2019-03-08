@@ -1,27 +1,43 @@
-/*
 package ptml.releasing.base
 
 
-import okhttp3.mockwebserver.MockWebServer
+import androidx.lifecycle.ViewModelProvider
+import com.squareup.okhttp.mockwebserver.MockResponse
+import com.squareup.okhttp.mockwebserver.MockWebServer
 import org.junit.After
+
 import org.junit.Before
+import ptml.releasing.di.component.DaggerTestAppComponent
+
+import ptml.releasing.di.component.TestAppComponent
+import ptml.releasing.di.modules.network.*
+import ptml.releasing.di.modules.viewmodel.DaggerViewModelFactory
+import ptml.releasing.di.rx.TestRxJavaModule
+import retrofit2.Retrofit
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.test.AfterTest
 
 abstract class BaseTest {
 
     lateinit var testAppComponent: TestAppComponent
+
+    @Inject
     lateinit var mockServer: MockWebServer
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var retrofit: Retrofit
+
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Before
     open fun setUp(){
-        this.configureMockServer()
         this.configureDi()
+//        this.configureMockServer()
     }
 
-    @AfterTest
+    @After
     open fun tearDown(){
         this.stopMockServer()
     }
@@ -29,36 +45,32 @@ abstract class BaseTest {
     // CONFIGURATION
     open fun configureDi(){
         this.testAppComponent = DaggerTestAppComponent.builder()
-                .netModule(NetModule(if (isMockServerEnabled()) mockServer.url("/").toString() else BASE_URL))
-                .repositoryModule(RepositoryModule())
-                .testRxJavaModule(TestRxJavaModule())
                 .build()
         this.testAppComponent.inject(this)
     }
 
-    // MOCK SERVER
-    abstract fun isMockServerEnabled(): Boolean // Because we don't want it always enabled on all tests
+
 
     open fun configureMockServer(){
-        if (isMockServerEnabled()){
-            mockServer = MockWebServer()
-            mockServer.start()
-        }
+        mockServer.start()
     }
 
     open fun stopMockServer() {
-        if (isMockServerEnabled()){
-            mockServer.shutdown()
-        }
+        mockServer.shutdown()
     }
 
-    open fun mockHttpResponse(fileName: String, responseCode: Int) = mockServer.enqueue(MockResponse()
-            .setResponseCode(responseCode)
-            .setBody(getJson(fileName)))
+    open fun mockHttpResponse(fileName: String, responseCode: Int) {
+        val body = getJson(fileName)
+        System.out.println("BODY: $body")
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(body))
+    }
 
     private fun getJson(path : String) : String {
         val uri = this.javaClass.classLoader.getResource(path)
         val file = File(uri.path)
         return String(file.readBytes())
     }
-}*/
+}

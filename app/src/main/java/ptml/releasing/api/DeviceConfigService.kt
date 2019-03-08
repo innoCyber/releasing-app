@@ -8,6 +8,6 @@ import retrofit2.http.Query
 
 interface DeviceConfigService {
 
-    @GET("verifyDeviceId")
-    fun verifyDeviceId(@Query("imei") imei: String): Single<BaseResponse>
+    @GET("/verifyDeviceId")
+    fun verifyDeviceId(@Query("imei") imei: String): Observable<BaseResponse>
 }

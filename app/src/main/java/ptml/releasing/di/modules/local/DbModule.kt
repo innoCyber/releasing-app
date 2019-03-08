@@ -11,7 +11,7 @@ import ptml.releasing.di.scopes.ReleasingAppScope
 import javax.inject.Named
 
 @Module
-class ReleasingDbModule {
+class DbModule {
 
 
     @SuppressLint("MissingPermission", "HardwareIds")

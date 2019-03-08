@@ -1,4 +1,4 @@
-package ptml.releasing.di.modules
+package ptml.releasing.di.modules.ui
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -9,7 +9,7 @@ import ptml.releasing.ui.setup.SetupActivity
 
 
 @Module
-abstract class ReleasingBuilderModule {
+abstract class UiModule {
 
 
     @ContributesAndroidInjector(modules = [MainModule::class])

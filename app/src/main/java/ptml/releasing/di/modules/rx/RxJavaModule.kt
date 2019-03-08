@@ -1,5 +1,4 @@
-/*
-package ptml.releasing.di
+package ptml.releasing.di.modules.rx
 
 import dagger.Module
 import dagger.Provides
@@ -7,18 +6,19 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Named
-import javax.inject.Singleton
+
+const val SUBSCRIBER_ON = "SubscribeOn"
+const val OBSERVER_ON = "ObserverOn"
 
 @Module
-class TestRxJavaModule {
+class RxJavaModule {
 
     @Provides
-    @Named(SUBCRIBER_ON)
-    @Singleton
-    fun provideSuscriberOn(): Scheduler = AndroidSchedulers.mainThread()
+    @Named(SUBSCRIBER_ON)
+    fun provideSubscriberOn(): Scheduler = Schedulers.io()
 
     @Provides
     @Named(OBSERVER_ON)
-    @Singleton
     fun provideObserverOn(): Scheduler = AndroidSchedulers.mainThread()
-}*/
+
+}

@@ -9,13 +9,14 @@ import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import ptml.releasing.BuildConfig
-import ptml.releasing.di.components.DaggerReleasingAppComponent
+import ptml.releasing.di.components.DaggerAppComponent
 import timber.log.Timber
 
 open class App: DaggerApplication() {
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerReleasingAppComponent.builder().bindApplication(this).build()
+        return DaggerAppComponent.builder().bindApplication(this).build()
     }
+
 
 
     override fun onCreate() {

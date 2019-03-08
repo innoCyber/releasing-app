@@ -5,5 +5,5 @@ import io.reactivex.Single
 import ptml.releasing.db.models.response.base.BaseResponse
 
 interface Remote {
-    fun verifyDeviceId(imei:String):Single<BaseResponse>
+    fun verifyDeviceId(imei:String):Observable<BaseResponse>
 }

@@ -1,18 +1,27 @@
 package ptml.releasing.ui.setup
 
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import ptml.releasing.app.App
 import ptml.releasing.data.ReleasingRepository
 import ptml.releasing.db.models.response.base.BaseResponse
+import ptml.releasing.di.modules.rx.OBSERVER_ON
+import ptml.releasing.di.modules.rx.SUBSCRIBER_ON
 import ptml.releasing.utils.ErrorHandler
 import ptml.releasing.utils.NetworkState
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
-class SetupActivityViewModel @Inject constructor(app:App,var repository: ReleasingRepository): AndroidViewModel(app) {
+class SetupActivityViewModel @Inject constructor(var repository: ReleasingRepository,
+                                                 @param:Named(SUBSCRIBER_ON) var subscriberOn: Scheduler,
+                                                 @param:Named(OBSERVER_ON) var observerOn: Scheduler
+): ViewModel() {
 
    private val disposable = CompositeDisposable()
 
@@ -35,15 +44,26 @@ class SetupActivityViewModel @Inject constructor(app:App,var repository: Releasi
 
     fun verifyDeviceId(imei:String){
         imeiLiveData.value = imei
-        if (networkState.value == NetworkState.LOADING) return
-        networkState.postValue(NetworkState.LOADING)
-        disposable.add(repository.verifyDeviceId(imei).subscribe({
+
+        disposable.add(repository.verifyDeviceId(imei)
+            .subscribeOn(subscriberOn)
+            .observeOn(observerOn)
+            .doOnSubscribe {
+                System.out.println("doOnSubscribe")
+                networkState.postValue(NetworkState.LOADING)  }
+            .doOnDispose {  System.out.println("doOnDispose") }
+            .doOnError{ System.out.println("doOnError") }
+            .doOnComplete{System.out.println("doOnComplete") }
+            .subscribe({
             baseLiveData.postValue(it)
+                System.out.println("Loaded")
+                Timber.e("Loaded")
             networkState.postValue(NetworkState.LOADED)
         }, {
             Timber.e(it, "Error occurred")
-            val error = ErrorHandler(getApplication()).getErrorMessage(it)
-            networkState.postValue(NetworkState.error(error))
+                System.out.println("Error")
+//            val error = ErrorHandler(context).getErrorMessage(it)
+            networkState.postValue(NetworkState.error(it.message))
         }))
     }
 

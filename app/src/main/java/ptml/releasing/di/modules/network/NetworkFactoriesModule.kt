@@ -21,7 +21,7 @@ class NetworkFactoriesModule {
     @Provides
     @ReleasingAppScope
     fun provideRxJavaAdapterFactory(): RxJava2CallAdapterFactory{
-        return RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+        return RxJava2CallAdapterFactory.create()
     }
 
     @Provides
