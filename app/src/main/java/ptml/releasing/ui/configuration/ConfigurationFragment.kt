@@ -21,7 +21,7 @@ class ConfigurationFragment @Inject constructor():BaseFragment() {
     lateinit var viewModeFactory: ViewModelProvider.Factory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_configure_profile, container, false)
         return binding.root
     }
 
@@ -31,6 +31,8 @@ class ConfigurationFragment @Inject constructor():BaseFragment() {
 
         configurationViewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(ConfigurationViewModel::class.java)
+
+
 
     }
 }

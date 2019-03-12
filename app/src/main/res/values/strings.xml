@@ -41,4 +41,5 @@
     <string name="password">Password</string>
     <string name="admin_id">Admin ID</string>
     <string name="logining_in">Logging in…</string>
+    <string name="configuration">Configuration</string>
 </resources>

@@ -18,12 +18,17 @@ import ptml.releasing.R
 import ptml.releasing.databinding.FragmentLoginBinding
 import ptml.releasing.ui.MainActivity
 import ptml.releasing.ui.base.BaseFragment
+import ptml.releasing.ui.configuration.ConfigurationActivity
 import ptml.releasing.ui.dialogs.InfoConfirmDialog
 import ptml.releasing.utils.ErrorHandler
 import ptml.releasing.utils.NetworkState
 import ptml.releasing.utils.NotificationUtils
 import ptml.releasing.utils.Status
 import javax.inject.Inject
+
+import android.view.animation.AnimationUtils.loadAnimation
+
+import android.view.animation.AnimationUtils
 
 
 class LoginFragment @Inject constructor() : BaseFragment() {
@@ -64,7 +69,7 @@ class LoginFragment @Inject constructor() : BaseFragment() {
         loginViewModel.response.observe(this, Observer {
             when (it.isSuccess) {
                 true -> {
-                    (activity as LoginActivity).startNewActivity(MainActivity::class.java, true)
+                    (activity as LoginActivity).startNewActivity(ConfigurationActivity::class.java, true)
                 }
 
                 else -> {
@@ -130,67 +135,27 @@ class LoginFragment @Inject constructor() : BaseFragment() {
 
     private fun showLoading() {
         binding.includeProgress.tvMessage.text = getString(R.string.logining_in)
-        binding.includeProgress.root.visibility = View.VISIBLE
-        binding.includeProgress.root.alpha = 0.0f
 
-
-        val slide = TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, binding.includeProgress.root.height.toFloat(),
-            Animation.RELATIVE_TO_SELF, 0.0f
+        val bottomUp = AnimationUtils.loadAnimation(
+            context,
+            R.anim.bottom_up
         )
 
-        slide.duration = 300
-        slide.fillAfter = true
-        slide.isFillEnabled = true
-
-        binding.includeProgress.root.startAnimation(slide)
-
-        slide.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(animation: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animation?) {
-                binding.includeProgress.root.alpha = 1.0f
-            }
-
-            override fun onAnimationStart(animation: Animation?) {
-
-            }
-        })
+        binding.includeProgress.root.startAnimation(bottomUp)
+        binding.includeProgress.root.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
 
 
-        val slide = TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, binding.includeProgress.root.height.toFloat()
+        val slide = AnimationUtils.loadAnimation(
+            context,
+            R.anim.up_down
         )
 
-        slide.duration = 300
-        slide.fillAfter = true
-        slide.isFillEnabled = true
 
         binding.includeProgress.root.startAnimation(slide)
-
-        slide.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(animation: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animation?) {
-                binding.includeProgress.root.visibility = View.GONE
-            }
-
-            override fun onAnimationStart(animation: Animation?) {
-
-            }
-        })
+        binding.includeProgress.root.visibility = View.GONE
     }
 
     private fun hideKeyBoard(view: View){
