@@ -15,7 +15,7 @@ public class InfoConfirmDialog extends LovelyStandardDialog implements View.OnCl
     public InfoConfirmDialog(Context context, String title, String message, @DrawableRes int topIcon, InfoListener listener) {
         super(context, ButtonLayout.HORIZONTAL);
         this.listener = listener;
-        setTopColorRes(R.color.colorPrimary);
+        setTopColorRes(R.color.colorAccent);
 
         setIcon(topIcon == 0 ? R.drawable.ic_info_white : topIcon);
         setTitle(TextUtils.isEmpty(title) ? context.getString(R.string.info) : title);

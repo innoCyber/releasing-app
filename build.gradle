@@ -72,4 +72,5 @@ ext {
     okhttpMockServer = '3.13.1'
     androidJunit = "1.1.0"
     testRunner = '1.1.1'
+    mockitoVersion = '2.22.0'
 }

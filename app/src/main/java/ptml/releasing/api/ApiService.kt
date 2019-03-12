@@ -11,7 +11,7 @@ interface ApiService {
     @GET("/verifyDeviceId")
     fun verifyDeviceId(@Query("imei") imei: String): Observable<BaseResponse>
 
-    @GET("/login")
+    @GET("/loginFail")
     fun login(@Query("username") username:String, @Query("password") password:String) : Observable<BaseResponse>
 
 }

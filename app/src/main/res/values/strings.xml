@@ -38,4 +38,7 @@
     <string name="error">Error</string>
     <string name="username_empty">Please enter your admin ID</string>
     <string name="password_empty">Please enter your password</string>
+    <string name="password">Password</string>
+    <string name="admin_id">Admin ID</string>
+    <string name="logining_in">Logging in…</string>
 </resources>

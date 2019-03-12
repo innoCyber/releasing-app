@@ -127,4 +127,8 @@ dependencies {
     testImplementation 'android.arch.core:core-testing:1.1.1'
     // ROBOLECTRIC
     testImplementation 'org.robolectric:robolectric:3.8'
+
+    //mockito
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
 }

@@ -3,6 +3,8 @@ package ptml.releasing.ui.login
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,33 +90,63 @@ class LoginFragment @Inject constructor() : BaseFragment() {
             loginViewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
         }
 
+        binding.editName.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.tilAdminId.error = null
+            }
+        })
+
+
+        binding.editPassword.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.tilPassword.error = null
+            }
+        })
 
     }
 
 
-    fun showLoading() {
-        binding.includeProgress.root.visibility = View.VISIBLE;
-        binding.includeProgress.root.alpha = 0.0f
+    private fun showLoading() {
+        binding.includeProgress.tvMessage.text = getString(R.string.logining_in)
+        binding.includeProgress.root.visibility = View.VISIBLE
+        /*binding.includeProgress.root.alpha = 0.0f
         binding.includeProgress.root.animate()
                 .translationY(binding.includeProgress.root.height.toFloat())
                 .alpha(1.0f)
-                .setListener(null)
+                .setListener(null)*/
     }
 
-    fun hideLoading() {
-        binding.includeProgress.root.animate()
+    private fun hideLoading() {
+        binding.includeProgress.root.visibility = View.GONE
+       /* binding.includeProgress.root.animate()
                 .translationY(0f)
                 .alpha(0.0f)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         super.onAnimationEnd(animation)
-                        binding.includeProgress.root.visibility = View.GONE
+
                     }
                 })
-
+*/
     }
 
-    fun showDialog(message:String){
+    private fun showDialog(message:String){
         InfoConfirmDialog.showDialog(context, getString(R.string.error), message, R.drawable.ic_error ){
 
         }

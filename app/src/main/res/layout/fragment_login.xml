@@ -29,7 +29,7 @@
             <TextView
                     android:id="@+id/tv_admin_id"
                     style="@style/LabelStyle"
-                    android:text="Admin ID"
+                    android:text="@string/admin_id"
                     app:layout_constraintEnd_toStartOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
@@ -63,7 +63,7 @@
             <TextView
                     android:id="@+id/tv_password"
                     style="@style/LabelStyle"
-                    android:text="Password"
+                    android:text="@string/password"
                     app:layout_constraintEnd_toStartOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0"
                     android:layout_marginTop="@dimen/constraint_default_margin_16dp"

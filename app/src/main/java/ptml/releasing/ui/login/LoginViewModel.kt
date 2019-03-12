@@ -45,10 +45,11 @@ class LoginViewModel @Inject constructor(
         passwordValidation.value = null
 
         val user = User(username, password)
+        if(networkState.value == NetworkState.LOADING) return
+        networkState.postValue(NetworkState.LOADING)
         disposable.add(repository.login(user)
             .subscribeOn(subscriberOn)
             .observeOn(observerOn)
-            .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
             .subscribe({
                 response.postValue(it)
                 networkState.postValue(NetworkState.LOADED)
