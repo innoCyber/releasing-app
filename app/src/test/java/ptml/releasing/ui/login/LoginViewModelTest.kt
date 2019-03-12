@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config
 import ptml.releasing.R
 import ptml.releasing.base.BaseApiTest
 import ptml.releasing.db.models.User
+import ptml.releasing.ui.setup.SetupActivityViewModelApiTest
 import java.net.HttpURLConnection
 
 
@@ -34,6 +35,8 @@ class LoginViewModelTest : BaseApiTest() {
     companion object {
         const val PASSWORD = "1234"
         const val USERNAME = "paul"
+
+        private const val EXPECTED_EXCEPTION_MESSAGE = "HTTP 504 Server Error"
     }
 
     @Before
@@ -78,6 +81,27 @@ class LoginViewModelTest : BaseApiTest() {
         kotlin.test.assertEquals(false, viewModel.response.value?.isSuccess)
         kotlin.test.assertEquals("An error occurred", viewModel.response.value?.message)
 
+    }
+
+
+    @Test
+    fun loginFailureException() {
+        // Prepare data
+        Mockito.`when`(user.password).thenReturn(PASSWORD)
+        Mockito.`when`(user.username).thenReturn(USERNAME)
+        this.mockHttpResponse("loginFailure.json", HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
+
+        // Pre-test
+        kotlin.test.assertNull(this.viewModel.response.value, "Response should be null before a successful request")
+
+
+        // Execute View Model
+        viewModel.login(user.username, user.password)
+
+
+        // Assertions
+        kotlin.test.assertNull(this.viewModel.response.value)
+        kotlin.test.assertEquals(EXPECTED_EXCEPTION_MESSAGE, this.viewModel.networkState.value?.throwable?.message, "Error thrown")
     }
 
 
