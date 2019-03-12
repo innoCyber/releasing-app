@@ -44,6 +44,7 @@
         </activity>
         <activity android:name=".ui.login.LoginActivity"
         android:label="@string/admin_login"/>
+        <activity android:name=".ui.configuration.ConfigurationActivity"/>
     </application>
 
 </manifest>

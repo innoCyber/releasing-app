@@ -101,7 +101,11 @@ class LoginViewModelTest : BaseApiTest() {
 
         // Assertions
         kotlin.test.assertNull(this.viewModel.response.value)
-        kotlin.test.assertEquals(EXPECTED_EXCEPTION_MESSAGE, this.viewModel.networkState.value?.throwable?.message, "Error thrown")
+        kotlin.test.assertEquals(
+            EXPECTED_EXCEPTION_MESSAGE,
+            this.viewModel.networkState.value?.throwable?.message,
+            "Error thrown"
+        )
     }
 
 
@@ -112,8 +116,14 @@ class LoginViewModelTest : BaseApiTest() {
         Mockito.`when`(user.username).thenReturn("")
         this.mockHttpResponse("loginSuccess.json", HttpURLConnection.HTTP_OK)
 
-        kotlin.test.assertNull(viewModel.usernameValidation.value, " Username validation should be null before a successful request")
-        kotlin.test.assertNull(viewModel.passwordValidation.value, " Password validation should be null before a successful request")
+        kotlin.test.assertNull(
+            viewModel.usernameValidation.value,
+            " Username validation should be null before a successful request"
+        )
+        kotlin.test.assertNull(
+            viewModel.passwordValidation.value,
+            " Password validation should be null before a successful request"
+        )
 
         viewModel.login(user.username, user.password)
 

@@ -1,13 +1,15 @@
 package ptml.releasing.ui.login
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
+import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +27,7 @@ import javax.inject.Inject
 
 
 class LoginFragment @Inject constructor() : BaseFragment() {
+
     lateinit var binding: FragmentLoginBinding
 
     lateinit var loginViewModel: LoginViewModel
@@ -42,13 +45,13 @@ class LoginFragment @Inject constructor() : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loginViewModel = ViewModelProviders.of(this, viewModeFactory)
-                .get(LoginViewModel::class.java)
+            .get(LoginViewModel::class.java)
 
 
         loginViewModel.networkState.observe(this, Observer {
-            if(it == NetworkState.LOADING){
+            if (it == NetworkState.LOADING) {
                 showLoading()
-            }else{
+            } else {
                 hideLoading()
             }
 
@@ -59,12 +62,12 @@ class LoginFragment @Inject constructor() : BaseFragment() {
         })
 
         loginViewModel.response.observe(this, Observer {
-            when(it.isSuccess){
+            when (it.isSuccess) {
                 true -> {
                     (activity as LoginActivity).startNewActivity(MainActivity::class.java, true)
                 }
 
-                else ->{
+                else -> {
                     showDialog(it.message)
                 }
             }
@@ -73,7 +76,7 @@ class LoginFragment @Inject constructor() : BaseFragment() {
         loginViewModel.passwordValidation.observe(this, Observer {
             if (it != null) {
                 binding.tilPassword.error = getString(it)
-            }else{
+            } else {
                 binding.tilPassword.error = null
             }
         })
@@ -81,16 +84,19 @@ class LoginFragment @Inject constructor() : BaseFragment() {
         loginViewModel.usernameValidation.observe(this, Observer {
             if (it != null) {
                 binding.tilAdminId.error = getString(it)
-            }else{
+            } else {
                 binding.tilAdminId.error = null
             }
         })
 
         binding.btnLoginLayout.setOnClickListener {
             loginViewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
+            binding.editPassword.clearFocus()
+            binding.editName.clearFocus()
+            hideKeyBoard(binding.btnLogin)
         }
 
-        binding.editName.addTextChangedListener(object :TextWatcher{
+        binding.editName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -105,7 +111,7 @@ class LoginFragment @Inject constructor() : BaseFragment() {
         })
 
 
-        binding.editPassword.addTextChangedListener(object :TextWatcher{
+        binding.editPassword.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -125,29 +131,75 @@ class LoginFragment @Inject constructor() : BaseFragment() {
     private fun showLoading() {
         binding.includeProgress.tvMessage.text = getString(R.string.logining_in)
         binding.includeProgress.root.visibility = View.VISIBLE
-        /*binding.includeProgress.root.alpha = 0.0f
-        binding.includeProgress.root.animate()
-                .translationY(binding.includeProgress.root.height.toFloat())
-                .alpha(1.0f)
-                .setListener(null)*/
+        binding.includeProgress.root.alpha = 0.0f
+
+
+        val slide = TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, binding.includeProgress.root.height.toFloat(),
+            Animation.RELATIVE_TO_SELF, 0.0f
+        )
+
+        slide.duration = 300
+        slide.fillAfter = true
+        slide.isFillEnabled = true
+
+        binding.includeProgress.root.startAnimation(slide)
+
+        slide.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                binding.includeProgress.root.alpha = 1.0f
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+        })
     }
 
     private fun hideLoading() {
-        binding.includeProgress.root.visibility = View.GONE
-       /* binding.includeProgress.root.animate()
-                .translationY(0f)
-                .alpha(0.0f)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        super.onAnimationEnd(animation)
 
-                    }
-                })
-*/
+
+        val slide = TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, binding.includeProgress.root.height.toFloat()
+        )
+
+        slide.duration = 300
+        slide.fillAfter = true
+        slide.isFillEnabled = true
+
+        binding.includeProgress.root.startAnimation(slide)
+
+        slide.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                binding.includeProgress.root.visibility = View.GONE
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+        })
     }
 
-    private fun showDialog(message:String){
-        InfoConfirmDialog.showDialog(context, getString(R.string.error), message, R.drawable.ic_error ){
+    private fun hideKeyBoard(view: View){
+        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun showDialog(message: String) {
+        InfoConfirmDialog.showDialog(context, getString(R.string.error), message, R.drawable.ic_error) {
 
         }
     }
