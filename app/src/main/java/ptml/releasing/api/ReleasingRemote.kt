@@ -1,17 +1,16 @@
 package ptml.releasing.api
 
-import io.reactivex.Observable
-import io.reactivex.Single
-
-import ptml.releasing.db.models.response.base.BaseResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
-class ReleasingRemote @Inject constructor(var retrofit: Retrofit): Remote{
 
-    private val deviceConfigService = retrofit.create(DeviceConfigService::class.java)
+class ReleasingRemote @Inject constructor(var retrofit: Retrofit) : Remote {
 
-    override fun verifyDeviceId(imei: String):Observable<BaseResponse> {
-        return  deviceConfigService.verifyDeviceId(imei)
-    }
+    private val deviceConfigService = retrofit.create(ApiService::class.java)
+
+    override fun login(username: String, password: String) = deviceConfigService.login(username, password)
+
+
+    override fun verifyDeviceId(imei: String) = deviceConfigService.verifyDeviceId(imei)
+
 
 }

@@ -7,6 +7,7 @@ import android.os.Build
 import android.telephony.TelephonyManager
 import dagger.Module
 import dagger.Provides
+import ptml.releasing.db.prefs.PrefsManager
 import ptml.releasing.di.scopes.ReleasingAppScope
 import javax.inject.Named
 
@@ -24,6 +25,13 @@ class DbModule {
             telephonyManager.imei
         } else {
             telephonyManager.deviceId
-        };
+        }
+    }
+
+
+    @Provides
+    @ReleasingAppScope
+    fun providePrefsHelper(context: Context): PrefsManager {
+        return PrefsManager(context)
     }
 }

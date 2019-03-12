@@ -10,11 +10,14 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import ptml.releasing.BuildConfig
 import ptml.releasing.di.components.DaggerAppComponent
+import ptml.releasing.di.modules.network.NetworkModule
 import timber.log.Timber
 
 open class App: DaggerApplication() {
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().bindApplication(this).build()
+        return DaggerAppComponent.builder()
+                .bindNetwork(NetworkModule())
+                .bindApplication(this).build()
     }
 
 

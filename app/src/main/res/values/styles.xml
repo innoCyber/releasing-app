@@ -89,4 +89,15 @@
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
+
+
+    <style name="TextLimitStyle" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">9sp</item>
+    </style>
+
+    <style name="TextLimitError" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">9sp</item>
+    </style>
 </resources>

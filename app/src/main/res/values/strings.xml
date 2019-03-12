@@ -33,4 +33,9 @@
     <string name="info">Info</string>
     <string name="info_msg">Message</string>
     <string name="retry">Retry</string>
+    <string name="login">Login</string>
+    <string name="admin_login">Admin Login</string>
+    <string name="error">Error</string>
+    <string name="username_empty">Please enter your admin ID</string>
+    <string name="password_empty">Please enter your password</string>
 </resources>

@@ -18,6 +18,7 @@ import ptml.releasing.ui.DeviceConfigErrorActivity
 import ptml.releasing.ui.MainActivity
 import ptml.releasing.ui.base.BaseActivity
 import ptml.releasing.ui.dialogs.InfoConfirmDialog
+import ptml.releasing.ui.login.LoginActivity
 import ptml.releasing.utils.ErrorHandler
 import ptml.releasing.utils.NetworkState
 import ptml.releasing.utils.NotificationUtils
@@ -45,9 +46,9 @@ class SetupActivity : BaseActivity() {
 
         setupActivityViewModel.baseLiveData.observe(this, Observer {
             if(true == it?.isSuccess){
-                startNewActivity(MainActivity::class.java)
+                startNewActivity(LoginActivity::class.java, true)
             }else if(false == it?.isSuccess){
-                startNewActivity(DeviceConfigErrorActivity::class.java)
+                startNewActivity(DeviceConfigErrorActivity::class.java, true)
             }
         })
 
@@ -121,9 +122,5 @@ class SetupActivity : BaseActivity() {
         snackbar.show()
     }
 
-    private fun startNewActivity(name:Class<*>){
-        val intent = Intent(this, name)
-        startActivity(intent)
-        finish()
-    }
+
 }

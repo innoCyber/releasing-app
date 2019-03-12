@@ -14,7 +14,6 @@ import org.robolectric.annotation.Config
 import ptml.releasing.base.BaseApiTest
 import ptml.releasing.db.models.response.base.BaseResponse
 import ptml.releasing.utils.NetworkState
-import retrofit2.HttpException
 import java.net.HttpURLConnection
 
 
