@@ -17,19 +17,19 @@ interface Local {
 
 
     fun insertCargoTypes(list:List<CargoType>): Observable<Unit>
-    fun insertCargoType(terminal: CargoType): Observable<Unit>
+    fun insertCargoType(cargoType: CargoType): Observable<Unit>
     fun updateCargoTypes(list: List<CargoType>): Observable<Unit>
     fun getCargoType(id: Int): Observable<CargoType>
     fun getCargoTypes(): Observable<List<CargoType>>
-    fun deleteCargoType(terminal: CargoType): Observable<Unit>
+    fun deleteCargoType(cargoType: CargoType): Observable<Unit>
     fun deleteCargoTypes(list: List<CargoType>): Observable<Unit>
 
 
     fun insertOperationSteps(list:List<OperationStep>): Observable<Unit>
-    fun insertOperationStep(terminal: OperationStep): Observable<Unit>
+    fun insertOperationStep(operationStep: OperationStep): Observable<Unit>
     fun updateOperationSteps(list: List<OperationStep>): Observable<Unit>
     fun getOperationStep(id: Int): Observable<OperationStep>
     fun getOperationSteps(): Observable<List<OperationStep>>
-    fun deleteOperationStep(terminal: OperationStep): Observable<Unit>
+    fun deleteOperationStep(operationStep: OperationStep): Observable<Unit>
     fun deleteOperationSteps(list: List<OperationStep>): Observable<Unit>
 }

@@ -15,7 +15,6 @@ import org.robolectric.annotation.Config
 import ptml.releasing.R
 import ptml.releasing.base.BaseApiTest
 import ptml.releasing.db.models.User
-import ptml.releasing.ui.setup.SetupActivityViewModelApiTest
 import java.net.HttpURLConnection
 
 
@@ -70,14 +69,14 @@ class LoginViewModelTest : BaseApiTest() {
         // Prepare data
         Mockito.`when`(user.password).thenReturn(PASSWORD)
         Mockito.`when`(user.username).thenReturn(USERNAME)
-        this.mockHttpResponse("loginFailure.json", HttpURLConnection.HTTP_OK)
+        this.mockHttpResponse("failure.json", HttpURLConnection.HTTP_OK)
 
         kotlin.test.assertNull(viewModel.response.value, "Response should be null before a successful request")
 
         viewModel.login(user.username, user.password)
 
 
-        kotlin.test.assertNotNull(viewModel.response, "Response should not be null, successful was successful request")
+        kotlin.test.assertNotNull(viewModel.response, "Response should not be null,  was a successful request")
         kotlin.test.assertEquals(false, viewModel.response.value?.isSuccess)
         kotlin.test.assertEquals("An error occurred", viewModel.response.value?.message)
 
@@ -89,7 +88,7 @@ class LoginViewModelTest : BaseApiTest() {
         // Prepare data
         Mockito.`when`(user.password).thenReturn(PASSWORD)
         Mockito.`when`(user.username).thenReturn(USERNAME)
-        this.mockHttpResponse("loginFailure.json", HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
+        this.mockHttpResponse("failure.json", HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
 
         // Pre-test
         kotlin.test.assertNull(this.viewModel.response.value, "Response should be null before a successful request")

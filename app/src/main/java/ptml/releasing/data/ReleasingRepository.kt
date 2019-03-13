@@ -12,7 +12,7 @@ import ptml.releasing.db.models.config.response.ConfigurationResponse
 import timber.log.Timber
 import javax.inject.Inject
 
-class ReleasingRepository @Inject constructor(var remote: Remote, var local: Local) : Repository {
+open class ReleasingRepository @Inject constructor(var remote: Remote, var local: Local) : Repository {
 
     override fun verifyDeviceId(imei: String) = remote.verifyDeviceId(imei)
     override fun login(user: User) = remote.login(user.username, user.password)

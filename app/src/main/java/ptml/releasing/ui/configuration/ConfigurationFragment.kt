@@ -48,7 +48,7 @@ class ConfigurationFragment @Inject constructor():BaseFragment() {
             .get(ConfigurationViewModel::class.java)
 
 
-        configurationViewModel.configResponse.observe(this, Observer {
+        configurationViewModel.configData.observe(this, Observer {
 
             if(it.isSuccess){
                 setUpSpinners(it)
@@ -58,7 +58,7 @@ class ConfigurationFragment @Inject constructor():BaseFragment() {
         })
 
 
-        configurationViewModel.networkState.observe(this, Observer {
+        configurationViewModel.network.observe(this, Observer {
             if (it == NetworkState.LOADING) {
                 showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.logining_in)
             } else {

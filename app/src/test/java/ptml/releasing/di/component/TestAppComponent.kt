@@ -4,6 +4,8 @@ import dagger.Component
 import ptml.releasing.base.BaseApiTest
 import ptml.releasing.di.modules.local.DbModule
 import ptml.releasing.di.modules.network.TestNetworkModule
+import ptml.releasing.di.modules.ui.MainModule
+import ptml.releasing.di.modules.ui.TestMainModule
 
 import ptml.releasing.di.modules.ui.UiModule
 import ptml.releasing.di.modules.viewmodel.ViewModelFactoryModule
@@ -14,7 +16,7 @@ import ptml.releasing.di.scopes.ReleasingAppScope
 @ReleasingAppScope
 @Component(modules = [TestNetworkModule::class,
     DbModule::class, ViewModelFactoryModule::class,
-    ViewModelModule::class, UiModule::class, TestRxJavaModule::class])
+    ViewModelModule::class, UiModule::class, TestRxJavaModule::class, TestMainModule::class])
 interface TestAppComponent {
     fun inject(baseApiTest: BaseApiTest)
 }

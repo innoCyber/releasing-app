@@ -1,6 +1,5 @@
 package ptml.releasing.db
 
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.internal.operators.observable.ObservableFromCallable
 import ptml.releasing.db.models.config.CargoType
@@ -35,7 +34,7 @@ class ReleasingLocal @Inject constructor(appDatabase: AppDatabase,
 
     override fun insertCargoTypes(list: List<CargoType>) = ObservableFromCallable { cargoTypeDao.insert(list) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
-    override fun insertCargoType(terminal: CargoType) = ObservableFromCallable { cargoTypeDao.insert(terminal) }.subscribeOn(subscriberOn).observeOn(observerOn)
+    override fun insertCargoType(cargoType: CargoType) = ObservableFromCallable { cargoTypeDao.insert(cargoType) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
     override fun updateCargoTypes(list: List<CargoType>) = ObservableFromCallable { cargoTypeDao.update(list) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
@@ -45,14 +44,14 @@ class ReleasingLocal @Inject constructor(appDatabase: AppDatabase,
     override fun getCargoTypes() = cargoTypeDao.all
 
 
-    override fun deleteCargoType(terminal: CargoType) = ObservableFromCallable { cargoTypeDao.delete(terminal) }.subscribeOn(subscriberOn).observeOn(observerOn)
+    override fun deleteCargoType(cargoType: CargoType) = ObservableFromCallable { cargoTypeDao.delete(cargoType) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
     override fun deleteCargoTypes(list: List<CargoType>) = ObservableFromCallable { cargoTypeDao.delete(list) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
 
     override fun insertOperationSteps(list: List<OperationStep>) = ObservableFromCallable { operationStepDao.insert(list) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
-    override fun insertOperationStep(terminal: OperationStep) = ObservableFromCallable { operationStepDao.insert(terminal) }.subscribeOn(subscriberOn).observeOn(observerOn)
+    override fun insertOperationStep(operationStep: OperationStep) = ObservableFromCallable { operationStepDao.insert(operationStep) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
     override fun updateOperationSteps(list: List<OperationStep>) = ObservableFromCallable { operationStepDao.update(list) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
@@ -60,7 +59,7 @@ class ReleasingLocal @Inject constructor(appDatabase: AppDatabase,
 
     override fun getOperationSteps() = operationStepDao.all
 
-    override fun deleteOperationStep(terminal: OperationStep) = ObservableFromCallable { operationStepDao.delete(terminal) }.subscribeOn(subscriberOn).observeOn(observerOn)
+    override fun deleteOperationStep(operationStep: OperationStep) = ObservableFromCallable { operationStepDao.delete(operationStep) }.subscribeOn(subscriberOn).observeOn(observerOn)
 
     override fun deleteOperationSteps(list: List<OperationStep>) = ObservableFromCallable { operationStepDao.delete(list) }.subscribeOn(subscriberOn).observeOn(observerOn)
 

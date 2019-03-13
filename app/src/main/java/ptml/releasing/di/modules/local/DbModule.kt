@@ -51,11 +51,4 @@ class DbModule {
         return builder.build()
     }
 
-
-    @Provides
-    @Singleton
-    fun provideReleasingLocal(appDatabase: AppDatabase, @Named(SUBSCRIBER_ON) subscriberOn: Scheduler,
-                            @Named(OBSERVER_ON) observerOn: Scheduler): ReleasingLocal {
-        return ReleasingLocal(appDatabase, subscriberOn, observerOn)
-    }
 }

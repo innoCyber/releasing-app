@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
     val networkState = MutableLiveData<NetworkState>()
 
 
-    fun login(username:String, password:String){
+    fun login(username:String?, password:String?){
         if(TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
             if(TextUtils.isEmpty(username)){
                 usernameValidation.value = R.string.username_empty

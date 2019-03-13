@@ -20,6 +20,13 @@ class ConfigurationViewModel @Inject constructor(var repository: Repository,
      val configResponse = MutableLiveData<ConfigurationResponse>()
      val networkState = MutableLiveData<NetworkState>()
 
+    val network = Transformations.map(networkState) {
+        it
+    }
+    val configData = Transformations.map(configResponse) {
+        it
+    }
+
     fun getConfig(imei: String) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
