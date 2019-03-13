@@ -17,7 +17,7 @@ import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module()
-abstract class MainModule {
+class MainModule {
 
     @Provides
     @ReleasingAppScope

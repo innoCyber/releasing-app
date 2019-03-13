@@ -17,15 +17,8 @@ class ConfigurationViewModel @Inject constructor(var repository: Repository,
                                                  @param:Named(SUBSCRIBER_ON) var subscriberOn: Scheduler,
                                                  @param:Named(OBSERVER_ON) var observerOn: Scheduler) : BaseViewModel() {
 
-    private val configResponse = MutableLiveData<ConfigurationResponse>()
-    private val networkState = MutableLiveData<NetworkState>()
-
-    val network = Transformations.map(networkState) {
-        it
-    }
-    val configData = Transformations.map(configResponse) {
-        it
-    }
+     val configResponse = MutableLiveData<ConfigurationResponse>()
+     val networkState = MutableLiveData<NetworkState>()
 
     fun getConfig(imei: String) {
         if (networkState.value == NetworkState.LOADING) return
@@ -35,6 +28,7 @@ class ConfigurationViewModel @Inject constructor(var repository: Repository,
                 .observeOn(observerOn)
                 .subscribe({
                     configResponse.postValue(it)
+                    Timber.e("Loading done: %s", it)
                     networkState.postValue(NetworkState.LOADED)
                 }, {
                     Timber.e(it)

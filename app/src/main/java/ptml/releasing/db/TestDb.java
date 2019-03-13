@@ -23,7 +23,7 @@ public class TestDb {
         return Observable.combineLatest(local.getCargoTypes(), local.getOperationSteps(), local.getTerminals(), new Function3<List<CargoType>, List<OperationStep>, List<Terminal>, ConfigurationResponse>() {
             @Override
             public ConfigurationResponse apply(List<CargoType> cargoTypes, List<OperationStep> operationSteps, List<Terminal> terminals) throws Exception {
-                return new ConfigurationResponse(cargoTypes, operationSteps, terminals);
+                return new ConfigurationResponse("", true, cargoTypes, operationSteps, terminals);
             }
         });
     }

@@ -30,6 +30,7 @@
                     android:id="@+id/tv_admin_id"
                     style="@style/LabelStyle"
                     android:text="@string/admin_id"
+                    android:layout_marginTop="@dimen/constraint_default_margin_64dp"
                     app:layout_constraintEnd_toStartOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"

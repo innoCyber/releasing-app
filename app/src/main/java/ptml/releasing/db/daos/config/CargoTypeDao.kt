@@ -1,11 +1,12 @@
 package ptml.releasing.db.daos.config
 
+import androidx.room.Dao
 import androidx.room.Query
 import io.reactivex.Observable
 import ptml.releasing.db.daos.base.BasicDAORx
 import ptml.releasing.db.models.config.CargoType
 
-
+@Dao
 interface CargoTypeDao : BasicDAORx<CargoType> {
 
     @Query("SELECT * FROM CargoType")

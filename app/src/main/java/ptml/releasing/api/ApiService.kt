@@ -11,11 +11,11 @@ interface ApiService {
     @GET("/verifyDeviceId")
     fun verifyDeviceId(@Query("imei") imei: String): Observable<BaseResponse>
 
-    @GET("/loginFail")
+    @GET("/login")
     fun login(@Query("username") username:String?, @Query("password") password:String?) : Observable<BaseResponse>
 
 
-    @GET("setAdminConfiguration")
+    @GET("/setAdminConfiguration")
     fun setAdminConfiguration(@Query("imei") imei: String) : Observable<ConfigurationResponse>
 
 }

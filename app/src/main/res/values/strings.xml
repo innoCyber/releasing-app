@@ -45,4 +45,6 @@
     <string name="drop_down">Drop down</string>
 
     <string name="loading">Loading…</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="internet_restored">Internet restored</string>
 </resources>

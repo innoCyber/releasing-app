@@ -1,7 +1,5 @@
 package ptml.releasing.ui.setup
 
-import android.Manifest
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -15,17 +13,14 @@ import permissions.dispatcher.*
 import ptml.releasing.R
 import ptml.releasing.app.App
 import ptml.releasing.ui.DeviceConfigErrorActivity
-import ptml.releasing.ui.MainActivity
 import ptml.releasing.ui.base.BaseActivity
 import ptml.releasing.ui.dialogs.InfoConfirmDialog
 import ptml.releasing.ui.login.LoginActivity
 import ptml.releasing.utils.ErrorHandler
 import ptml.releasing.utils.NetworkState
-import ptml.releasing.utils.NotificationUtils
 import ptml.releasing.utils.Status
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 @RuntimePermissions
 class SetupActivity : BaseActivity() {
@@ -86,12 +81,12 @@ class SetupActivity : BaseActivity() {
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
      fun showDeniedForInitRecognizer() {
-        NotificationUtils.notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
+        notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
     }
 
     @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
     fun neverAskForInitRecognizer() {
-        NotificationUtils.notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
+        notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 
 
@@ -108,7 +103,7 @@ class SetupActivity : BaseActivity() {
         val snackbar = Snackbar.make(binding.root,
             error, Snackbar.LENGTH_INDEFINITE)
         val snackBarLayout = snackbar.getView() as Snackbar.SnackbarLayout
-        snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
         (snackBarLayout.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView)
             .setTextColor(this.resources.getColor(android.R.color.white))
 

@@ -26,7 +26,8 @@ public class ConfigurationResponse extends BaseResponse {
     private List<Terminal> terminalList;
 
 
-    public ConfigurationResponse(List<CargoType> cargoTypeList, List<OperationStep> operationStepList, List<Terminal> terminalList) {
+    public ConfigurationResponse(String message, boolean success, List<CargoType> cargoTypeList, List<OperationStep> operationStepList, List<Terminal> terminalList) {
+        super(message, success);
         this.cargoTypeList = cargoTypeList;
         this.operationStepList = operationStepList;
         this.terminalList = terminalList;
@@ -81,5 +82,15 @@ public class ConfigurationResponse extends BaseResponse {
         result = 31 * result + (operationStepList != null ? operationStepList.hashCode() : 0);
         result = 31 * result + (terminalList != null ? terminalList.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigurationResponse{" +
+                super.toString()+
+                "cargoTypeList=" + cargoTypeList +
+                ", operationStepList=" + operationStepList +
+                ", terminalList=" + terminalList +
+                '}';
     }
 }

@@ -1,34 +1,24 @@
 package ptml.releasing.ui.login
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
-import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import ptml.releasing.R
 import ptml.releasing.databinding.FragmentLoginBinding
-import ptml.releasing.ui.MainActivity
 import ptml.releasing.ui.base.BaseFragment
 import ptml.releasing.ui.configuration.ConfigurationActivity
-import ptml.releasing.ui.dialogs.InfoConfirmDialog
 import ptml.releasing.utils.ErrorHandler
 import ptml.releasing.utils.NetworkState
-import ptml.releasing.utils.NotificationUtils
+
 import ptml.releasing.utils.Status
 import javax.inject.Inject
-
-import android.view.animation.AnimationUtils.loadAnimation
-
-import android.view.animation.AnimationUtils
 
 
 class LoginFragment @Inject constructor() : BaseFragment() {
@@ -62,7 +52,7 @@ class LoginFragment @Inject constructor() : BaseFragment() {
 
             if (it?.status == Status.FAILED) {
                 val error = ErrorHandler(context!!).getErrorMessage(it.throwable)
-                NotificationUtils.notifyUser(binding.root, error)
+                notifyUser(binding.root, error)
             }
         })
 
@@ -133,10 +123,6 @@ class LoginFragment @Inject constructor() : BaseFragment() {
     }
 
 
-    private fun showDialog(message: String) {
-        InfoConfirmDialog.showDialog(context, getString(R.string.error), message, R.drawable.ic_error) {
 
-        }
-    }
 
 }

@@ -33,7 +33,10 @@ public class ConfigurationSpinnerAdapter extends ArrayAdapter<BaseConfig> {
             convertView = inflater.inflate(R.layout.spinner_configuration_layout, parent,false);
         }
 
-        convertView.findViewById(R.id.img_drop).setVisibility(View.GONE);
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (2*scale + 0.5f);
+        convertView.setPadding(dpAsPixels, dpAsPixels,dpAsPixels ,dpAsPixels);
+        convertView.findViewById(R.id.img_drop).setVisibility(View.VISIBLE);
         TextView textView= convertView.findViewById(R.id.tv_category);
 
         textView.setText(list.get(position).getValue());
@@ -47,8 +50,8 @@ public class ConfigurationSpinnerAdapter extends ArrayAdapter<BaseConfig> {
             convertView = inflater.inflate(R.layout.spinner_configuration_layout, parent,false);
         }
 
-        ImageView imageView =  convertView.findViewById(R.id.img_drop);
-        imageView.setVisibility(View.VISIBLE);
+
+        convertView.findViewById(R.id.img_drop).setVisibility(View.GONE);
         TextView textView= convertView.findViewById(R.id.tv_category);
 
         textView.setText(list.get(position).getValue());
