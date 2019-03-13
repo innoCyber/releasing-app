@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="sample">
-        <item>Select Cargo</item>
+        <item>@string/loading</item>
     </array>
 </resources>

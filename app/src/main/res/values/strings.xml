@@ -18,7 +18,7 @@
     <string name="save_configuration">Save Configuration</string>
     <string name="delete_profile">Delete Profile</string>
     <string name="cargo_type">Cargo Type</string>
-    <string name="operation">Operation</string>
+    <string name="operation">Operation Step</string>
     <string name="terminal">Terminal</string>
     <string name="parking_step">Parking Step</string>
     <string name="enable_camera_scan">Enable Camera Scan</string>
@@ -42,4 +42,7 @@
     <string name="admin_id">Admin ID</string>
     <string name="logining_in">Logging in…</string>
     <string name="configuration">Configuration</string>
+    <string name="drop_down">Drop down</string>
+
+    <string name="loading">Loading…</string>
 </resources>

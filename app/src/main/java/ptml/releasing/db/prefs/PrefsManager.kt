@@ -2,6 +2,7 @@ package ptml.releasing.db.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.securepreferences.SecurePreferences
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var context: Context):Prefs {
@@ -11,7 +12,7 @@ class PrefsManager @Inject constructor(var context: Context):Prefs {
     }
 
     fun getPrefs(): SharedPreferences {
-        return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        return SecurePreferences(context, PREFS)
     }
 
    override fun isFirst(): Boolean {
@@ -21,5 +22,7 @@ class PrefsManager @Inject constructor(var context: Context):Prefs {
     override fun setFirst(value:Boolean) {
         return getPrefs().edit().putBoolean(FIRST, value).apply()
     }
+
+
 
 }

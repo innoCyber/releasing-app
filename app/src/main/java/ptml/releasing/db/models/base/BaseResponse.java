@@ -1,4 +1,4 @@
-package ptml.releasing.db.models.response.base;
+package ptml.releasing.db.models.base;
 
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;

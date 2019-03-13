@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.Scheduler
 import ptml.releasing.R
 import ptml.releasing.data.ReleasingRepository
+import ptml.releasing.data.Repository
 import ptml.releasing.db.models.User
-import ptml.releasing.db.models.response.base.BaseResponse
+import ptml.releasing.db.models.base.BaseResponse
 import ptml.releasing.di.modules.rx.OBSERVER_ON
 import ptml.releasing.di.modules.rx.SUBSCRIBER_ON
 import ptml.releasing.ui.base.BaseViewModel
@@ -16,7 +17,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LoginViewModel @Inject constructor(
-    var repository: ReleasingRepository,
+    var repository: Repository,
     @param:Named(SUBSCRIBER_ON) var subscriberOn: Scheduler,
     @param:Named(OBSERVER_ON) var observerOn: Scheduler
 ) : BaseViewModel() {

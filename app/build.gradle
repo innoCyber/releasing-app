@@ -61,6 +61,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$archComponentsVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$archComponentsVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-rxjava2:$roomVersion"
     implementation "androidx.paging:paging-runtime:$pagingVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$archComponentsVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
@@ -110,6 +111,9 @@ dependencies {
     //dialogs
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
 
+    //secure shared preferences
+    implementation 'com.scottyab:secure-preferences-lib:0.1.7'
+
     // testing
     testImplementation "com.google.dagger:dagger:$daggerVersion"
     testImplementation "com.google.dagger:dagger-android-support:$daggerVersion"
@@ -125,7 +129,7 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$testRunner"
-    androidTestImplementation "com.android.support.test:rules:$testRunner"
+    androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
     // CORE TESTING
     testImplementation 'android.arch.core:core-testing:1.1.1'

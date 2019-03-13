@@ -5,11 +5,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.telephony.TelephonyManager
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import ptml.releasing.db.AppDatabase
+import ptml.releasing.db.ReleasingLocal
 import ptml.releasing.db.prefs.PrefsManager
+import ptml.releasing.di.modules.rx.OBSERVER_ON
+import ptml.releasing.di.modules.rx.SUBSCRIBER_ON
 import ptml.releasing.di.scopes.ReleasingAppScope
+import ptml.releasing.utils.Constants.DATABASE_NAME
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class DbModule {
@@ -33,5 +41,21 @@ class DbModule {
     @ReleasingAppScope
     fun providePrefsHelper(context: Context): PrefsManager {
         return PrefsManager(context)
+    }
+
+
+    @Provides
+    @ReleasingAppScope
+    fun provideAppDatabase(context: Context): AppDatabase {
+        val builder = Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+        return builder.build()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideReleasingLocal(appDatabase: AppDatabase, @Named(SUBSCRIBER_ON) subscriberOn: Scheduler,
+                            @Named(OBSERVER_ON) observerOn: Scheduler): ReleasingLocal {
+        return ReleasingLocal(appDatabase, subscriberOn, observerOn)
     }
 }

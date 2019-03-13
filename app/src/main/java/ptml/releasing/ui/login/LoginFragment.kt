@@ -55,9 +55,9 @@ class LoginFragment @Inject constructor() : BaseFragment() {
 
         loginViewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading()
+                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.logining_in)
             } else {
-                hideLoading()
+                hideLoading(binding.includeProgress.root)
             }
 
             if (it?.status == Status.FAILED) {
@@ -132,36 +132,6 @@ class LoginFragment @Inject constructor() : BaseFragment() {
 
     }
 
-
-    private fun showLoading() {
-        binding.includeProgress.tvMessage.text = getString(R.string.logining_in)
-
-        val bottomUp = AnimationUtils.loadAnimation(
-            context,
-            R.anim.bottom_up
-        )
-
-        binding.includeProgress.root.startAnimation(bottomUp)
-        binding.includeProgress.root.visibility = View.VISIBLE
-    }
-
-    private fun hideLoading() {
-
-
-        val slide = AnimationUtils.loadAnimation(
-            context,
-            R.anim.up_down
-        )
-
-
-        binding.includeProgress.root.startAnimation(slide)
-        binding.includeProgress.root.visibility = View.GONE
-    }
-
-    private fun hideKeyBoard(view: View){
-        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .hideSoftInputFromWindow(view.windowToken, 0)
-    }
 
     private fun showDialog(message: String) {
         InfoConfirmDialog.showDialog(context, getString(R.string.error), message, R.drawable.ic_error) {
