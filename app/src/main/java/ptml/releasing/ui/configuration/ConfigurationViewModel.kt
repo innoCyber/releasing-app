@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import io.reactivex.Scheduler
 import ptml.releasing.data.Repository
-import ptml.releasing.db.models.config.response.ConfigurationResponse
+import ptml.releasing.db.models.config.ConfigurationResponse
 import ptml.releasing.di.modules.rx.OBSERVER_ON
 import ptml.releasing.di.modules.rx.SUBSCRIBER_ON
 import ptml.releasing.ui.base.BaseViewModel
@@ -19,6 +19,9 @@ class ConfigurationViewModel @Inject constructor(var repository: Repository,
 
      val configResponse = MutableLiveData<ConfigurationResponse>()
      val networkState = MutableLiveData<NetworkState>()
+    init {
+        networkState.postValue(NetworkState.LOADING)
+    }
 
     val network = Transformations.map(networkState) {
         it

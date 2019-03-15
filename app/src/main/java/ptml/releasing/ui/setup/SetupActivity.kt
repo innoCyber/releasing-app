@@ -35,7 +35,7 @@ class SetupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.progress_bar)
-
+        binding.tvMessage.text = getString(R.string.configure_device_message)
         setupActivityViewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(SetupActivityViewModel::class.java)
 

@@ -24,8 +24,6 @@ class SetupActivityViewModelApiTest:BaseApiTest(){
     companion object {
         private val SAMPLE_IMEI = "0000"
 
-        private val EXPECTED_RESPONSE = BaseResponse("", true)
-
         private const val EXPECTED_ERROR_MESSAGE = "HTTP 502 Server Error"
     }
 
@@ -60,7 +58,7 @@ class SetupActivityViewModelApiTest:BaseApiTest(){
 
 
         // Assertions
-        kotlin.test.assertEquals(EXPECTED_RESPONSE, this.viewModel.baseLiveData.value, "Verify the response")
+        kotlin.test.assertEquals(true, this.viewModel.baseLiveData.value?.isSuccess, "Verify the response")
         kotlin.test.assertEquals(NetworkState.LOADED, this.viewModel.networkState.value, "Network state should be loaded")
     }
 

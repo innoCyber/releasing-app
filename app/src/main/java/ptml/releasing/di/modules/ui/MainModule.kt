@@ -7,9 +7,9 @@ import ptml.releasing.api.ReleasingRemote
 import ptml.releasing.api.Remote
 import ptml.releasing.data.ReleasingRepository
 import ptml.releasing.data.Repository
-import ptml.releasing.db.AppDatabase
 import ptml.releasing.db.Local
 import ptml.releasing.db.ReleasingLocal
+import ptml.releasing.db.prefs.Prefs
 import ptml.releasing.di.modules.rx.OBSERVER_ON
 import ptml.releasing.di.modules.rx.SUBSCRIBER_ON
 import ptml.releasing.di.scopes.ReleasingAppScope
@@ -33,9 +33,8 @@ class MainModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideLocal(appDatabase: AppDatabase, @Named(SUBSCRIBER_ON) subscriberOn: Scheduler,
-                     @Named(OBSERVER_ON) observerOn: Scheduler): Local {
-        return ReleasingLocal(appDatabase, subscriberOn, observerOn)
+    fun provideLocal(prefs: Prefs): Local {
+        return ReleasingLocal(prefs)
     }
 
 

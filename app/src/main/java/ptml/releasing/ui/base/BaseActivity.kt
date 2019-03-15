@@ -48,8 +48,6 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
         }
 
 
-
-
     }
 
 
@@ -61,16 +59,17 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
             initializeReceiver()
         }
 
-        disposable.add(networkSubject
-            .subscribe({
-                Timber.d("Network state changed")
-                when (it) {
-                    true -> showSnackBar()
-                    else -> showSnackBarError()
-                }
-            }, {
-                Timber.e(it)
-            })
+        disposable.add(
+            networkSubject
+                .subscribe({
+                    Timber.d("Network state changed")
+                    when (it) {
+                        true -> showSnackBar()
+                        else -> showSnackBarError()
+                    }
+                }, {
+                    Timber.e(it)
+                })
         )
     }
 
@@ -145,7 +144,7 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
         param.gravity = Gravity.TOP
 
         snackBar?.view?.layoutParams = param
-        if(!firstTime){
+        if (!firstTime) {
             snackBar?.show()
             firstTime = false
         }
@@ -167,7 +166,7 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
             .setTextColor(resources.getColor(android.R.color.white))
         param.gravity = Gravity.TOP
         snackBar?.view?.layoutParams = param
-        if(!firstTime){
+        if (!firstTime) {
             snackBar?.show()
             firstTime = false
         }
@@ -177,10 +176,10 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
 
 
     fun notifyUser(message: String) {
-        Toast.makeText( this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-     fun notifyUser(view: View, message: String) {
+    fun notifyUser(view: View, message: String) {
         val snackBar = Snackbar.make(view, message, Snackbar.LENGTH_LONG)
         /* FrameLayout.LayoutParams param = (FrameLayout.LayoutParams) snackBar.getView().getLayoutParams();*/
         val snackBarLayout = snackBar.view as Snackbar.SnackbarLayout

@@ -29,7 +29,7 @@
             <include layout="@layout/progress_bar"
                      android:id="@+id/include_progress"
                      android:layout_width="match_parent"
-                     android:visibility="gone"
+                     android:visibility="visible"
                      android:layout_height="match_parent"/>
 
 

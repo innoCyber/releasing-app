@@ -14,7 +14,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ptml.releasing.R
 import ptml.releasing.base.BaseApiTest
-import ptml.releasing.db.models.User
+import ptml.releasing.db.models.user.User
 import java.net.HttpURLConnection
 
 

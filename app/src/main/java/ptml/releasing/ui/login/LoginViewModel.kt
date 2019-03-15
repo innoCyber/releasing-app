@@ -4,9 +4,8 @@ import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Scheduler
 import ptml.releasing.R
-import ptml.releasing.data.ReleasingRepository
 import ptml.releasing.data.Repository
-import ptml.releasing.db.models.User
+import ptml.releasing.db.models.user.User
 import ptml.releasing.db.models.base.BaseResponse
 import ptml.releasing.di.modules.rx.OBSERVER_ON
 import ptml.releasing.di.modules.rx.SUBSCRIBER_ON

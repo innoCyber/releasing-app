@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.snackbar.Snackbar
 import permissions.dispatcher.*
 import ptml.releasing.R
 import ptml.releasing.app.App
 import ptml.releasing.databinding.FragmentConfigureProfileBinding
-import ptml.releasing.db.models.config.response.ConfigurationResponse
+import ptml.releasing.db.models.config.ConfigurationResponse
 import ptml.releasing.ui.base.BaseFragment
 import ptml.releasing.ui.configuration.adapter.ConfigurationSpinnerAdapter
 import ptml.releasing.ui.dialogs.InfoConfirmDialog
@@ -44,6 +41,8 @@ class ConfigurationFragment @Inject constructor():BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.bottom.btnConfigure.visibility = View.GONE
 
+
+
         configurationViewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(ConfigurationViewModel::class.java)
 
@@ -60,7 +59,7 @@ class ConfigurationFragment @Inject constructor():BaseFragment() {
 
         configurationViewModel.network.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.logining_in)
+                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.getting_configuration)
             } else {
                 hideLoading(binding.includeProgress.root)
             }
