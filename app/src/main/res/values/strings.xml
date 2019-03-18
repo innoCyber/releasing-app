@@ -23,7 +23,7 @@
     <string name="parking_step">Parking Step</string>
     <string name="enable_camera_scan">Enable Camera Scan</string>
     <string name="verification_error_message">This device has not been registered for this application, please contact the administrator davide.minervini@ptml-ng.com for more information</string>
-    <string name="verification_error_title">Verification Error:</string>
+    <string name="verification_error_title">Verification Error</string>
     <string name="configure_device_message">Please wait, configuring device…</string>
 
     <string name="allow_permission">Allow Permission</string>
@@ -51,4 +51,5 @@
     <string name="reload">Reload</string>
     <string name="error_image">Error image</string>
     <string name="error_occurred">An error occurred, please try again</string>
+    <string name="exit">Close</string>
 </resources>

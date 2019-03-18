@@ -13,6 +13,7 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.admin_configuration.view.AdminConfigActivity
+import ptml.releasing.admin_configuration.view.getConfigWithPermissionCheck
 import ptml.releasing.databinding.ActivityLoginBinding
 
 class LoginActivity : BaseActivity<LoginViewModel>() {
@@ -24,6 +25,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         showUpEnabled(true)
+        initErrorDrawable(binding.includeError.imgError)
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
                 .get(LoginViewModel::class.java)
@@ -37,7 +39,9 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
 
             if (it?.status == Status.FAILED) {
                 val error = ErrorHandler().getErrorMessage(it.throwable)
-                notifyUser(binding.root, getString(error))
+                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+            } else {
+                hideLoading(binding.includeError.root)
             }
         })
 
@@ -70,10 +74,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         })
 
         binding.btnLoginLayout.setOnClickListener {
-            viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
-            binding.editPassword.clearFocus()
-            binding.editName.clearFocus()
-            hideKeyBoard(binding.btnLogin)
+            login()
         }
 
         binding.editName.addTextChangedListener(object : TextWatcher {
@@ -103,6 +104,17 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
                 binding.tilPassword.error = null
             }
         })
+
+        binding.includeError.btnReloadLayout.setOnClickListener {
+            login()
+        }
+    }
+
+    private fun login() {
+        viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
+        binding.editPassword.clearFocus()
+        binding.editName.clearFocus()
+        hideKeyBoard(binding.btnLogin)
     }
 
     override fun getViewModelClass() = LoginViewModel::class.java

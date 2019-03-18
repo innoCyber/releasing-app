@@ -2,6 +2,9 @@ package ptml.releasing.device_configuration.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
@@ -28,9 +31,11 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel>() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_device_config)
         binding.includeProgress.root.visibility = View.VISIBLE
+        initErrorDrawable(binding.includeError.imgError)
 
         viewModel.baseLiveData.observe(this, Observer {
             if (true == it?.isSuccess) {
+                hideLoading(binding.includeError.root)
                 startNewActivity(LoginActivity::class.java, true)
             } else if (false == it?.isSuccess) {
                 showError()
@@ -51,12 +56,16 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel>() {
         })
 
 
+        binding.includeDeviceConfigError.btnClose.setOnClickListener {
+            finish()
+        }
         binding.includeError.btnReload.setOnClickListener {
             verifyDeviceIdWithPermissionCheck()
         }
 
         verifyDeviceIdWithPermissionCheck()
     }
+
 
     private fun showError() {
         binding.includeProgress.root.visibility = View.GONE

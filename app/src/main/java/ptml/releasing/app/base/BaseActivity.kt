@@ -18,6 +18,7 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -25,6 +26,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -290,5 +292,12 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         }
     }
 
+
+    protected fun initErrorDrawable(imageView: ImageView) {
+        val errorDrawable = ContextCompat.getDrawable(this, R.drawable.ic_error)
+        val mutatedDrawable = errorDrawable?.mutate()
+        DrawableCompat.setTint(mutatedDrawable!!, ContextCompat.getColor(this, R.color.colorRed))
+        imageView.setImageDrawable(mutatedDrawable)
+    }
 //    abstract fun observeNetworkChanges(connectivityObservable: Observable<Boolean>)
 }

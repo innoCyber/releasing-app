@@ -15,7 +15,7 @@ interface ApiService {
     fun login(@Query("username") username:String?, @Query("password") password:String?) : Observable<BaseResponse>
 
 
-    @GET("/setAdminConfiguration")
+    @GET("/setAdminConfigurationFail")
     fun setAdminConfiguration(@Query("imei") imei: String) : Observable<ConfigurationResponse>
 
 }
