@@ -1,8 +1,8 @@
 package ptml.releasing.api
 
 import io.reactivex.Observable
-import ptml.releasing.db.models.base.BaseResponse
-import ptml.releasing.db.models.config.ConfigurationResponse
+import ptml.releasing.app.base.BaseResponse
+import ptml.releasing.admin_configuration.models.ConfigurationResponse
 
 interface Remote {
     fun verifyDeviceId(imei:String):Observable<BaseResponse>

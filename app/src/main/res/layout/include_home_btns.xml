@@ -36,7 +36,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.8" />
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_profiles_layout"
             style="@style/RippleLayoutStyle"
             app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
@@ -44,15 +44,15 @@
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toTopOf="@id/guideline_t">
 
-            <ptml.releasing.views.SupportVectorDrawablesButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_profiles"
                 style="@style/ButtonStyle.Home"
                 android:text="@string/profiles"
                 app:drawableStartCompat="@drawable/ic_group" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_configure_layout"
             style="@style/RippleLayoutStyle"
             app:layout_constraintBottom_toTopOf="@id/btn_download_layout"
@@ -60,15 +60,15 @@
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/btn_profiles_layout">
 
-            <ptml.releasing.views.SupportVectorDrawablesButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_configure"
                 style="@style/ButtonStyle.Home"
                 android:text="@string/configure_device"
                 app:drawableStartCompat="@drawable/ic_support" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_download_layout"
             style="@style/RippleLayoutStyle"
             app:layout_constraintBottom_toBottomOf="@id/guideline_b"
@@ -76,12 +76,12 @@
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/btn_configure_layout">
 
-            <ptml.releasing.views.SupportVectorDrawablesButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_download"
                 style="@style/ButtonStyle.Home"
                 android:text="@string/download_damages"
                 app:drawableStartCompat="@drawable/ic_download" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,7 +1,5 @@
 package ptml.releasing.api
 
-import io.reactivex.Observable
-import ptml.releasing.db.models.base.BaseResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
 

@@ -1,0 +1,109 @@
+package ptml.releasing.auth.view
+
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import ptml.releasing.R
+import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.Status
+import ptml.releasing.auth.viewmodel.LoginViewModel
+import ptml.releasing.admin_configuration.view.AdminConfigActivity
+import ptml.releasing.databinding.ActivityLoginBinding
+
+class LoginActivity : BaseActivity<LoginViewModel>() {
+
+    lateinit var binding: ActivityLoginBinding
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        showUpEnabled(true)
+
+        viewModel = ViewModelProviders.of(this, viewModeFactory)
+                .get(LoginViewModel::class.java)
+
+        viewModel.networkState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.logining_in)
+            } else {
+                hideLoading(binding.includeProgress.root)
+            }
+
+            if (it?.status == Status.FAILED) {
+                val error = ErrorHandler().getErrorMessage(it.throwable)
+                notifyUser(binding.root, getString(error))
+            }
+        })
+
+        viewModel.response.observe(this, Observer {
+            when (it.isSuccess) {
+                true -> {
+                    startNewActivity(AdminConfigActivity::class.java, true)
+                }
+
+                else -> {
+                    showDialog(it.message)
+                }
+            }
+        })
+
+        viewModel.passwordValidation.observe(this, Observer {
+            if (it != null) {
+                binding.tilPassword.error = getString(it)
+            } else {
+                binding.tilPassword.error = null
+            }
+        })
+
+        viewModel.usernameValidation.observe(this, Observer {
+            if (it != null) {
+                binding.tilAdminId.error = getString(it)
+            } else {
+                binding.tilAdminId.error = null
+            }
+        })
+
+        binding.btnLoginLayout.setOnClickListener {
+            viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
+            binding.editPassword.clearFocus()
+            binding.editName.clearFocus()
+            hideKeyBoard(binding.btnLogin)
+        }
+
+        binding.editName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.tilAdminId.error = null
+            }
+        })
+
+        binding.editPassword.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.tilPassword.error = null
+            }
+        })
+    }
+
+    override fun getViewModelClass() = LoginViewModel::class.java
+}

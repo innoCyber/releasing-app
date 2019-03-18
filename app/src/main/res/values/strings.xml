@@ -48,4 +48,7 @@
     <string name="no_internet">No internet connection</string>
     <string name="internet_restored">Internet restored</string>
     <string name="getting_configuration">Getting configuration…</string>
+    <string name="reload">Reload</string>
+    <string name="error_image">Error image</string>
+    <string name="error_occurred">An error occurred, please try again</string>
 </resources>

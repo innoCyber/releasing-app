@@ -22,7 +22,7 @@
             app:layout_constraintGuide_percent="0.9" />
 
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_profiles_layout"
             style="@style/RippleLayoutStyle.Configure"
             app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
@@ -30,14 +30,14 @@
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toTopOf="@id/guideline_t">
 
-            <ptml.releasing.views.SupportVectorDrawablesButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_profiles"
                 style="@style/ButtonStyle.Save"
                 android:text="@string/save_configuration" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_configure_layout"
             style="@style/RippleLayoutStyle.Configure"
             app:layout_constraintBottom_toTopOf="@id/btn_download_layout"
@@ -45,7 +45,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/btn_profiles_layout">
 
-            <ptml.releasing.views.ReleasingButton
+            <ptml.releasing.app.views.ReleasingButton
                 android:id="@+id/btn_configure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 app:rb_text="@string/delete_profile" />
 
 
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

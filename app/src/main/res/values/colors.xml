@@ -10,5 +10,5 @@
     <color name="colorWhiteAlpha">#99FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorRed">#E53935</color>
-    <color name="colorGray">@android:color/darker_gray</color>
+    <color name="colorGray">#777777</color>
 </resources>

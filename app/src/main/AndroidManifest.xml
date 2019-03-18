@@ -21,7 +21,7 @@
 
 
     <application
-            android:name="ptml.releasing.app.App"
+            android:name="ptml.releasing.app.ReleasingApplication"
             android:allowBackup="true"
             android:networkSecurityConfig="@xml/network_security_config"
             android:icon="@mipmap/ic_launcher"
@@ -30,9 +30,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning" tools:targetApi="n">
-        <activity android:name="ptml.releasing.ui.MainActivity" />
-        <activity android:name=".ui.DeviceConfigErrorActivity" />
-        <activity android:name=".ui.setup.SetupActivity"
+        <activity android:name="ptml.releasing.app.ui.MainActivity" />
+        <activity android:name=".device_configuration.view.DeviceConfigErrorActivity" />
+        <activity android:name="ptml.releasing.device_configuration.view.DeviceConfigActivity"
         android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,9 +40,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.LoginActivity"
+        <activity android:name=".auth.view.LoginActivity"
         android:label="@string/admin_login"/>
-        <activity android:name=".ui.configuration.ConfigurationActivity"
+        <activity android:name="ptml.releasing.admin_configuration.view.AdminConfigActivity"
                   android:label="@string/configuration"/>
     </application>
 

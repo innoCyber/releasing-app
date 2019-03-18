@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_cargo_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
             app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
@@ -48,7 +48,7 @@
                 android:id="@+id/select_cargo_spinner"
                 style="@style/SpinnerStyle"
                 android:entries="@array/sample" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
         <TextView
@@ -58,7 +58,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
             app:layout_constraintTop_toBottomOf="@id/select_cargo_spinner_layout" />
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_operation_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
             app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
@@ -70,7 +70,7 @@
                 android:id="@+id/select_operation_spinner"
                 style="@style/SpinnerStyle"
                 android:entries="@array/sample" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
         <TextView
@@ -80,7 +80,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
             app:layout_constraintTop_toBottomOf="@id/select_operation_spinner_layout" />
 
-        <ptml.releasing.views.MaterialRippleLayout
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_terminal_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
             app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
@@ -92,7 +92,7 @@
                 android:id="@+id/select_terminal_spinner"
                 style="@style/SpinnerStyle"
                 android:entries="@array/sample" />
-        </ptml.releasing.views.MaterialRippleLayout>
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
 
 
