@@ -20,7 +20,6 @@ import ptml.releasing.R
  * compatibility attribute for compound drawables. Thus, we must load compound drawables at runtime
  * using AppCompat and inject them into the button to support pre-L devices.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SupportVectorDrawablesButton : AppCompatButton {
     constructor(context: Context) : super(context) {}
 

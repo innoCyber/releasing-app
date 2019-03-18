@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
-
-    <ptml.releasing.views.SupportVectorDrawableTextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tv"
-        style="@style/SpinnerItemStyle"
-        tools:drawableEnd="@drawable/ic_arrow_drop_down"
-        tools:text="@tools:sample/lorem" />
-</layout>
