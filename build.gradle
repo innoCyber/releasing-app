@@ -53,6 +53,7 @@ ext {
     roomVersion = '2.1.0-alpha04'
     pagingVersion = '2.1.0'
     retrofitVersion = "2.3.0"
+    retrofitCoroutine= "1.0.0"
     okhttpLoggingInterceptorVersion = "3.9.0"
 
     runnerVersion = '1.1.0-alpha4'
