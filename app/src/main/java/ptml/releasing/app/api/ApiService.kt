@@ -1,9 +1,8 @@
 package ptml.releasing.app.api
 
-import io.reactivex.Observable
 import kotlinx.coroutines.Deferred
-import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.admin_configuration.models.ConfigurationResponse
+import ptml.releasing.app.base.BaseResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

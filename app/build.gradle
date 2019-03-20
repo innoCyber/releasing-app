@@ -47,7 +47,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutine"
 
     //Android Kotlin extensions
     implementation "androidx.core:core-ktx:1.0.1"
@@ -107,14 +106,9 @@ dependencies {
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
 
     // unit testing
-    testImplementation "com.google.dagger:dagger:$daggerVersion"
-    testImplementation "com.google.dagger:dagger-android-support:$daggerVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'android.arch.core:core-testing:1.1.1'
     testImplementation "io.mockk:mockk:$mockkVersion"
-
-    kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
-    kaptTest "com.google.dagger:dagger-android-processor:$daggerVersion"
 
 
 
@@ -124,9 +118,5 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$testRunner"
     androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
-    androidTestImplementation "com.google.dagger:dagger:$daggerVersion"
-    androidTestImplementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
-    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
-    kaptAndroidTest "com.google.dagger:dagger-android-processor:$daggerVersion"
 }

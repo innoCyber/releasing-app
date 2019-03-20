@@ -27,13 +27,13 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.PublishSubject
 import ptml.releasing.R
 import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.utils.Constants
@@ -42,10 +42,9 @@ import javax.inject.Inject
 
 abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewModel{
 
-    private val networkSubject = PublishSubject.create<Boolean>()
+    private val networkSubject = MutableLiveData<Boolean>()
     private lateinit var receiver: BroadcastReceiver
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
-    private val disposable = CompositeDisposable()
     private var snackBar: Snackbar? = null
     private var firstTime = true
 
@@ -72,7 +71,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
             override fun onReceive(context: Context?, intent: Intent?) {
                 Timber.d("Base activity receiver")
                 val networkIsAvailable = intent?.extras?.getBoolean(Constants.IS_NETWORK_AVAILABLE, false)
-                networkSubject.onNext(networkIsAvailable!!)
+                networkSubject.postValue(networkIsAvailable)
             }
         }
     }
@@ -120,18 +119,12 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
             initializeReceiver()
         }
 
-        disposable.add(
-                networkSubject
-                        .subscribe({
-                            Timber.d("Network state changed")
-                            when (it) {
-                                true -> showSnackBar()
-                                else -> showSnackBarError()
-                            }
-                        }, {
-                            Timber.e(it)
-                        })
-        )
+        networkSubject.observe(this, Observer {
+            when (it) {
+                true -> showSnackBar()
+                else -> showSnackBarError()
+            }
+        })
     }
 
     override fun onStop() {
@@ -146,12 +139,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!disposable.isDisposed) {
-            disposable.dispose()
-        }
-    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -160,12 +148,12 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onLost(network: Network?) {
                 Timber.d("ReleasingApplication lost connection")
-                networkSubject.onNext(false)
+                networkSubject.postValue( false)
             }
 
             override fun onAvailable(network: Network?) {
                 Timber.d("ReleasingApplication gained connection")
-                networkSubject.onNext(true)
+                networkSubject.postValue( true)
             }
         }
         val networkRequest = NetworkRequest.Builder().build()
