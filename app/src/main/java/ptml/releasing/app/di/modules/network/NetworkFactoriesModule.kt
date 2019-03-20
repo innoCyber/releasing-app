@@ -7,7 +7,6 @@ import ptml.releasing.app.di.scopes.ReleasingAppScope
 import dagger.Module
 import dagger.Provides
 import ptml.releasing.admin_configuration.models.*
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module

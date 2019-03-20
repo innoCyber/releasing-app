@@ -1,6 +1,5 @@
 package ptml.releasing.auth.viewmodel
 
-import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,9 +57,7 @@ class LoginViewModel @Inject constructor(
                 Timber.e(it)
                 networkState.postValue(NetworkState.error(it))
             }
-
         }
     }
-
 
 }

@@ -9,7 +9,6 @@ import okhttp3.OkHttpClient
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 

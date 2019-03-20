@@ -72,12 +72,8 @@ dependencies {
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation"com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutine"
-
-    //rx
-    implementation "io.reactivex.rxjava2:rxandroid:$rxVersion"
 
 
     //dagger
@@ -114,10 +110,7 @@ dependencies {
     testImplementation "com.google.dagger:dagger:$daggerVersion"
     testImplementation "com.google.dagger:dagger-android-support:$daggerVersion"
     testImplementation "junit:junit:$junitVersion"
-    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpMockServer"
     testImplementation 'android.arch.core:core-testing:1.1.1'
-    testImplementation 'org.robolectric:robolectric:3.8'
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -126,7 +119,6 @@ dependencies {
 
 
     //instrumentation testing
-    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$testRunner"

@@ -32,14 +32,12 @@ class AdminConfigViewModel @Inject constructor(
     fun getConfig(imei: String) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
-        System.out.println("Loading")
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
                 val response = repository.getAdminConfiguration(imei).await()
 
                 withContext(appCoroutineDispatchers.main) {
                     configResponse.postValue(response)
-                    System.out.println("In here $response")
                     Timber.e("Loading done: %s", response)
                     networkState.postValue(NetworkState.LOADED)
                 }

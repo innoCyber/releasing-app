@@ -16,7 +16,7 @@ interface ApiService {
     fun login(@Query("username") username:String?, @Query("password") password:String?) : Deferred<BaseResponse>
 
 
-    @GET("/setAdminConfigurationFail")
+    @GET("/setAdminConfiguration")
     fun setAdminConfiguration(@Query("imei") imei: String) : Deferred<ConfigurationResponse>
 
 }
