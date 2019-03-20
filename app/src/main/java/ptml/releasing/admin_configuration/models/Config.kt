@@ -101,9 +101,9 @@ class ConfigurationResponse : BaseResponse {
     constructor(
         message: String,
         success: Boolean,
-        cargoTypeList: List<CargoType>,
-        operationStepList: List<OperationStep>,
-        terminalList: List<Terminal>
+        cargoTypeList: List<CargoType>?,
+        operationStepList: List<OperationStep>?,
+        terminalList: List<Terminal>?
     ) : super(message, success) {
         this.cargoTypeList = cargoTypeList
         this.operationStepList = operationStepList

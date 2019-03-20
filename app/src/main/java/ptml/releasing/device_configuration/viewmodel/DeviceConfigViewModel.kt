@@ -29,19 +29,16 @@ class DeviceConfigViewModel @Inject constructor(
         imeiLiveData.value = imei
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
-        System.out.println("loading")
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
                 val response = repository.verifyDeviceId(imei).await()
-                System.out.println("Inside try")
                 withContext(appCoroutineDispatchers.main) {
-                    System.out.println("Main thread")
                     baseLiveData.postValue(response)
                     networkState.postValue(NetworkState.LOADED)
                 }
             } catch (it: Throwable) {
-                System.out.println("Error occurred")
+
                 Timber.e(it, "Error occurred")
                 networkState.postValue(NetworkState.error(it))
             }

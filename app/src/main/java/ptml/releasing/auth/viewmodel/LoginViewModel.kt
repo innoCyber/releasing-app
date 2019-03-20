@@ -29,16 +29,18 @@ class LoginViewModel @Inject constructor(
 
 
     fun login(username: String?, password: String?) {
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-            if (TextUtils.isEmpty(username)) {
+        if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
+            if (username.isNullOrEmpty()) {
                 usernameValidation.value = R.string.username_empty
             }
 
-            if (TextUtils.isEmpty(password)) {
+            if (password.isNullOrEmpty()) {
                 passwordValidation.value = R.string.password_empty
             }
+
             return
         }
+
         usernameValidation.value = null
         passwordValidation.value = null
 
