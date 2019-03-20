@@ -1,17 +1,19 @@
 package ptml.releasing.app.base
 
 import androidx.lifecycle.ViewModel
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Job
 
 open class BaseViewModel : ViewModel() {
-    val disposable = CompositeDisposable()
+     var compositeJob: Job? = null
 
 
 
 
     override fun onCleared() {
-        if(!disposable.isDisposed){
-            disposable.dispose()
+        when(compositeJob?.isCancelled){
+            false ->{
+                compositeJob?.cancel()
+            }
         }
         super.onCleared()
     }

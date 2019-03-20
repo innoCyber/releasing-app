@@ -1,15 +1,15 @@
 package ptml.releasing.app.data
 
-import io.reactivex.Observable
-import ptml.releasing.auth.model.User
-import ptml.releasing.app.base.BaseResponse
+import kotlinx.coroutines.Deferred
 import ptml.releasing.admin_configuration.models.ConfigurationResponse
+import ptml.releasing.app.base.BaseResponse
+import ptml.releasing.auth.model.User
 
 interface Repository {
 
-    fun verifyDeviceId( imei: String) : Observable<BaseResponse>
+    suspend fun verifyDeviceId( imei: String) : Deferred<BaseResponse>
 
-    fun login(user: User):Observable<BaseResponse>
+    suspend fun login(user: User):Deferred<BaseResponse>
 
-    fun getAdminConfiguration(imei:String):Observable<ConfigurationResponse>
+    suspend fun getAdminConfiguration(imei:String):Deferred<ConfigurationResponse>
 }

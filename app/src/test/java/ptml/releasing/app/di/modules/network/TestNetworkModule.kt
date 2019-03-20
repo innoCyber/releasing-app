@@ -3,6 +3,7 @@ package ptml.releasing.app.di.modules.network
 
 
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -10,7 +11,6 @@ import okhttp3.mockwebserver.MockWebServer
 
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 
@@ -21,11 +21,11 @@ class TestNetworkModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideRetrofit(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory, rxJavaCallAdapterFactory: RxJava2CallAdapterFactory, @Named(
+    fun provideRetrofit(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory, coroutineCallAdapterFactory: CoroutineCallAdapterFactory, @Named(
         TEST_URL) baseUrl:String): Retrofit{
         val builder = Retrofit.Builder()
         builder.client(client)
-        builder.addCallAdapterFactory(rxJavaCallAdapterFactory)
+        builder.addCallAdapterFactory(coroutineCallAdapterFactory)
         builder.addConverterFactory(gsonConverterFactory)
         builder.baseUrl(baseUrl)
         return builder.build()

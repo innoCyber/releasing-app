@@ -2,6 +2,7 @@ package ptml.releasing.app.di.modules.network
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import dagger.Module
 import dagger.Provides
@@ -20,9 +21,10 @@ class NetworkFactoriesModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideRxJavaAdapterFactory(): RxJava2CallAdapterFactory{
-        return RxJava2CallAdapterFactory.create()
+    fun provideCoroutineAdapterFactory(): CoroutineCallAdapterFactory {
+        return CoroutineCallAdapterFactory()
     }
+
 
     @Provides
     @ReleasingAppScope

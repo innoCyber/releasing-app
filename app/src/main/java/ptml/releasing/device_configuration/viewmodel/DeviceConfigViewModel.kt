@@ -1,23 +1,21 @@
 package ptml.releasing.device_configuration.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Scheduler
-import ptml.releasing.app.data.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseResponse
-import ptml.releasing.app.di.modules.rx.OBSERVER_ON
-import ptml.releasing.app.di.modules.rx.SUBSCRIBER_ON
 import ptml.releasing.app.base.BaseViewModel
+import ptml.releasing.app.data.Repository
+import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 class DeviceConfigViewModel @Inject constructor(
     var repository: Repository,
-    @param:Named(SUBSCRIBER_ON) var subscriberOn: Scheduler,
-    @param:Named(OBSERVER_ON) var observerOn: Scheduler
+    var appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel() {
-
 
 
     private val imeiLiveData = MutableLiveData<String>()
@@ -29,19 +27,26 @@ class DeviceConfigViewModel @Inject constructor(
 
     fun verifyDeviceId(imei: String) {
         imeiLiveData.value = imei
+        if (networkState.value == NetworkState.LOADING) return
+        networkState.postValue(NetworkState.LOADING)
+        System.out.println("loading")
+        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+            try {
 
-        disposable.add(repository.verifyDeviceId(imei)
-            .subscribeOn(subscriberOn)
-            .observeOn(observerOn)
-            .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
-            .subscribe({
-                baseLiveData.postValue(it)
-                networkState.postValue(NetworkState.LOADED)
-            }, {
+                val response = repository.verifyDeviceId(imei).await()
+                System.out.println("Inside try")
+                withContext(appCoroutineDispatchers.main) {
+                    System.out.println("Main thread")
+                    baseLiveData.postValue(response)
+                    networkState.postValue(NetworkState.LOADED)
+                }
+            } catch (it: Throwable) {
+                System.out.println("Error occurred")
                 Timber.e(it, "Error occurred")
                 networkState.postValue(NetworkState.error(it))
-            })
-        )
+            }
+        }
+
     }
 
 }

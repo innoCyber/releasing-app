@@ -1,6 +1,8 @@
 package ptml.releasing.app.base
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 open class BaseResponse {
     @SerializedName("message")
@@ -19,4 +21,5 @@ open class BaseResponse {
     }
 
 
+     fun toDefferred() = GlobalScope.async { this@BaseResponse }
 }

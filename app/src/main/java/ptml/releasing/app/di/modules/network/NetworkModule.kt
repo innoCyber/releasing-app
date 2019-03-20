@@ -1,6 +1,8 @@
 package ptml.releasing.app.di.modules.network
 
 
+
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -17,11 +19,11 @@ class NetworkModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideRetrofit(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory, rxJavaCallAdapterFactory: RxJava2CallAdapterFactory, @Named(
+    fun provideRetrofit(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory, coroutineCallAdapterFactory: CoroutineCallAdapterFactory, @Named(
         BASE_URL) baseUrl:String): Retrofit{
         val builder = Retrofit.Builder()
         builder.client(client)
-        builder.addCallAdapterFactory(rxJavaCallAdapterFactory)
+        builder.addCallAdapterFactory(coroutineCallAdapterFactory)
         builder.addConverterFactory(gsonConverterFactory)
         builder.baseUrl(baseUrl)
         return builder.build()
