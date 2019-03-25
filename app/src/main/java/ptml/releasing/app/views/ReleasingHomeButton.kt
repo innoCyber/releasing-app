@@ -181,7 +181,7 @@ class ReleasingHomeButton : ReleasingButton {
         }
 
 
-        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView, 12, 48, 1, TypedValue.COMPLEX_UNIT_SP)
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView, 10, 48, 1, TypedValue.COMPLEX_UNIT_SP)
 
     }
 

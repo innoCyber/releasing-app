@@ -26,54 +26,47 @@
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_configuration_layout"
             style="@style/RippleLayoutStyle.HomeTop"
-            android:layout_marginStart="@dimen/constraint_default_margin_8dp"
-            android:layout_marginTop="@dimen/constraint_default_margin_8dp"
-            android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
-            app:layout_constraintEnd_toStartOf="@id/btn_search_layout"
+            app:layout_constraintEnd_toStartOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ptml.releasing.app.views.ReleasingHomeButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_configuration"
-                style="@style/ReleasingHomeButtonStyle.Bottom"
-                app:rb_icon="@drawable/btn_configuration_bg"
-                app:rb_text="@string/configuration" />
+                style="@style/ButtonStyle.HomeBottom"
+                android:text="@string/configuration"
+                app:drawableStartCompat="@drawable/ic_configuration" />
         </ptml.releasing.app.views.MaterialRippleLayout>
 
 
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_search_layout"
             style="@style/RippleLayoutStyle.HomeTop"
+            android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+            app:layout_constraintEnd_toStartOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_configuration_layout">
 
-            android:layout_marginStart="@dimen/constraint_default_margin_8dp"
-            android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
-            app:layout_constraintBottom_toBottomOf="@id/btn_configuration_layout"
-            app:layout_constraintEnd_toEndOf="@id/guideline_r"
-
-            app:layout_constraintStart_toEndOf="@id/btn_configuration_layout"
-            app:layout_constraintTop_toTopOf="@id/btn_configuration_layout">
-
-            <ptml.releasing.app.views.ReleasingHomeButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_search"
-                style="@style/ReleasingHomeButtonStyle.Bottom"
-                app:rb_icon="@drawable/btn_search_bg"
-                app:rb_text="@string/cargo_search" />
+                style="@style/ButtonStyle.HomeBottom"
+                android:text="@string/cargo_search"
+                app:drawableStartCompat="@drawable/ic_search" />
         </ptml.releasing.app.views.MaterialRippleLayout>
 
 
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/btn_download_layout"
             style="@style/RippleLayoutStyle.HomeTop"
-            android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-            app:layout_constraintEnd_toEndOf="@id/btn_configuration_layout"
-            app:layout_constraintStart_toStartOf="@id/btn_configuration_layout"
-            app:layout_constraintTop_toBottomOf="@id/btn_configuration_layout">
+            android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_search_layout">
 
-            <ptml.releasing.app.views.ReleasingHomeButton
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_download"
-                style="@style/ReleasingHomeButtonStyle.Bottom"
-                app:rb_icon="@drawable/btn_download_bg"
-                app:rb_text="@string/download_damages" />
+                style="@style/ButtonStyle.HomeBottom"
+                android:text="@string/download_damages"
+                app:drawableStartCompat="@drawable/ic_download" />
         </ptml.releasing.app.views.MaterialRippleLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

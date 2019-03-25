@@ -90,7 +90,7 @@ public class ReleasingButton extends ConstraintLayout {
         textColor = typedArray.getColor(R.styleable.ReleasingButton_rb_textColor, Color.parseColor(DEFAULT_TEXT_COLOR));
 
         //text size
-        textSize = typedArray.getDimensionPixelSize(R.styleable.ReleasingButton_rb_textSize, getResources().getDimensionPixelSize(R.dimen.home_btn_text_size));
+        textSize = typedArray.getDimensionPixelSize(R.styleable.ReleasingButton_rb_textSize, getResources().getDimensionPixelSize(R.dimen.releasing_btn_text_size));
         typedArray.recycle();
 
         initView();
