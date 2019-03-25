@@ -10,7 +10,7 @@
 
         <include
             android:id="@+id/include_home_btns"
-            layout="@layout/include_home_btns" />
+            layout="@layout/include_home_bottom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -28,7 +28,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel>() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_admin_config)
         showUpEnabled(true)
         initErrorDrawable(binding.includeError.imgError)
-        binding.bottom.btnConfigure.visibility = View.GONE
+//        binding.bottom.btnDeleteLayout.visibility = View.GONE
         binding.top.root.visibility = View.INVISIBLE
         binding.bottom.root.visibility = View.INVISIBLE
 

@@ -9,6 +9,17 @@
     <dimen name="constraint_default_margin_10dp">10dp</dimen>
 
 
-    <dimen name="home_btn_text_size">18sp</dimen>
     <dimen name="constraint_default_margin_64dp">64dp</dimen>
+    <dimen name="home_btn_text_size">18sp</dimen>
+
+
+
+    <dimen name="home_btn_icon_size">48dp</dimen>
+    <dimen name="home_btn_icon_padding_start">32dp</dimen>
+    <dimen name="home_btn_icon_padding_top">16dp</dimen>
+    <dimen name="home_btn_icon_padding_end">32dp</dimen>
+    <dimen name="home_btn_icon_padding_bottom">16dp</dimen>
+    <dimen name="home_btn_text_margin_top">4dp</dimen>
+    <dimen name="home_btn_tv_margin_top">4dp</dimen>
+    <dimen name="releasing_button_default_corner_radius">8dp</dimen>
 </resources>

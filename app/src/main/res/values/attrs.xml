@@ -39,8 +39,28 @@
         <attr name="rb_drawablePadding" format="dimension"/>
         <attr name="rb_backgroundColor" format="color"/>
         <attr name="rb_cornerRadius" format="dimension" />
-        <attr name="tb_textColor" format="color" />
-        <attr name="tb_textSize" format="dimension" />
+        <attr name="rb_textColor" format="color" />
+        <attr name="rb_textSize" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ReleasingHomeButton">
+        <attr name="rb_text"/>
+        <attr name="rb_icon" />
+        <attr name="rb_drawablePadding" />
+        <attr name="rb_backgroundColor" />
+        <attr name="rb_cornerRadius"  />
+        <attr name="rb_textColor" />
+        <attr name="rb_textSize" />
+        <attr name="rb_textMarginTop" format="dimension" />
+        <attr name="rb_iconWidth" format="dimension"/>
+        <attr name="rb_iconHeight" format="dimension"/>
+        <attr name="rb_iconPaddingStart" format="dimension"/>
+        <attr name="rb_iconPaddingEnd" format="dimension"/>
+        <attr name="rb_iconPaddingTop" format="dimension"/>
+        <attr name="rb_iconPaddingBottom" format="dimension"/>
+        <attr name="rb_bg_drawable" format="reference"/>
+
     </declare-styleable>
 
 </resources>

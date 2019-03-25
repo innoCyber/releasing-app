@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlueGray">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_b"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline_t">
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_operation_step"
+                style="@style/HomeTopTitleLabelStyle"
+                android:text="@string/operation_step"
+                app:layout_constraintEnd_toEndOf="@id/btn_operation_step_layout"
+                app:layout_constraintStart_toStartOf="@id/btn_operation_step_layout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_operation_step_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+                app:layout_constraintEnd_toStartOf="@id/btn_cargo_type_layout"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/tv_operation_step">
+
+                <ptml.releasing.app.views.ReleasingHomeButton
+                    android:id="@+id/btn_operation_step"
+                    style="@style/ReleasingHomeButtonStyle"
+                    app:rb_icon="@drawable/ic_parking_slot"
+                    app:rb_text="@string/parking_lot" />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_cargo_type"
+                style="@style/HomeTopTitleLabelStyle"
+                android:text="@string/cargo_type"
+                app:layout_constraintEnd_toEndOf="@id/btn_cargo_type_layout"
+                app:layout_constraintStart_toStartOf="@id/btn_cargo_type_layout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_cargo_type_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                android:layout_marginStart="@dimen/constraint_default_margin_8dp"
+                android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step_layout"
+                app:layout_constraintEnd_toStartOf="@id/btn_terminal_layout"
+                app:layout_constraintStart_toEndOf="@id/btn_operation_step_layout"
+                app:layout_constraintTop_toTopOf="@id/btn_operation_step_layout">
+
+                <ptml.releasing.app.views.ReleasingHomeButton
+                    android:id="@+id/btn_cargo_type"
+                    style="@style/ReleasingHomeButtonStyle"
+                    app:rb_icon="@drawable/ic_container"
+                    app:rb_text="@string/container"
+
+                    />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_terminal"
+                style="@style/HomeTopTitleLabelStyle"
+                android:text="@string/terminal"
+                app:layout_constraintEnd_toEndOf="@id/btn_terminal_layout"
+                app:layout_constraintStart_toStartOf="@id/btn_terminal_layout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_terminal_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step_layout"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toEndOf="@id/btn_cargo_type_layout"
+                app:layout_constraintTop_toTopOf="@id/btn_operation_step_layout">
+
+                <ptml.releasing.app.views.ReleasingHomeButton
+                    android:id="@+id/btn_terminal"
+                    style="@style/ReleasingHomeButtonStyle"
+                    app:rb_icon="@drawable/ic_terminal"
+                    app:rb_text="@string/main" />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

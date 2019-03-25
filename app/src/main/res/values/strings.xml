@@ -52,4 +52,10 @@
     <string name="error_image">Error image</string>
     <string name="error_occurred">An error occurred, please try again</string>
     <string name="exit">Close</string>
+    <string name="cargo_search">Cargo Search</string>
+    <string name="parking_lot">Parking Lot</string>
+    <string name="container">Container</string>
+    <string name="main">Main</string>
+    <string name="terminal">Terminal</string>
+    <string name="operation_step">Operation step</string>
 </resources>

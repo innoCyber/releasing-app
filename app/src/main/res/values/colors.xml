@@ -11,4 +11,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorRed">#E53935</color>
     <color name="colorGray">#777777</color>
+    <color name="colorBlueGray">#cdd4da</color>
+    <color name="colorHomeTop">#2a2a2a</color>
 </resources>

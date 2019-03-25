@@ -29,9 +29,7 @@
 
     </style>
 
-    <style name="ButtonStyle.Home">
-        <item name="android:background">@drawable/home_btn_bg</item>
-    </style>
+    <style name="ButtonStyle.Home"></style>
 
     <style name="ButtonStyle.Save">
         <item name="android:gravity">center</item>
@@ -61,6 +59,11 @@
     <style name="RippleLayoutStyle.Configure.Spinner">
         <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
         <item name="mrl_rippleRoundedCorners">0dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.HomeTop">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleRoundedCorners">8dp</item>
     </style>
 
 
@@ -102,4 +105,31 @@
         <item name="android:textColor">@color/colorRed</item>
         <item name="android:textSize">9sp</item>
     </style>
+
+    <style name="ReleasingHomeButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="rb_bg_drawable">@drawable/round_rect_gray</item>
+        <item name="rb_textColor">@color/colorBlack</item>
+    </style>
+
+
+    <style name="ReleasingHomeButtonStyle.Bottom">
+        <item name="rb_bg_drawable">@drawable/btn_bg</item>
+        <item name="rb_iconPaddingTop">@dimen/constraint_default_margin_32dp</item>
+        <item name="rb_iconPaddingBottom">@dimen/constraint_default_margin_32dp</item>
+    </style>
+
+
+    <style name="HomeTopTitleLabelStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+    </style>
+
+    <dimen name="home_top_btn_label_text_size">12sp</dimen>
 </resources>
