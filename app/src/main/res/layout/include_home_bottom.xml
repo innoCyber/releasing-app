@@ -65,7 +65,6 @@
             android:id="@+id/btn_download_layout"
             style="@style/RippleLayoutStyle.HomeTop"
             android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/btn_configuration_layout"
             app:layout_constraintStart_toStartOf="@id/btn_configuration_layout"
             app:layout_constraintTop_toBottomOf="@id/btn_configuration_layout">

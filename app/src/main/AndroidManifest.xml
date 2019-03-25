@@ -48,6 +48,8 @@
         <activity
             android:name="ptml.releasing.admin_configuration.view.AdminConfigActivity"
             android:label="@string/configuration" />
+        <activity android:name=".home.view.HomeActivity"
+            android:label="@string/Home"/>
     </application>
 
 </manifest>

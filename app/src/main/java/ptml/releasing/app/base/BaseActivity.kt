@@ -22,11 +22,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -40,7 +43,7 @@ import ptml.releasing.app.utils.Constants
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewModel{
+abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseViewModel, D : ViewDataBinding {
 
     private val networkSubject = MutableLiveData<Boolean>()
     private lateinit var receiver: BroadcastReceiver
@@ -49,6 +52,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     private var firstTime = true
 
     protected lateinit var viewModel: T
+    protected lateinit var binding: D
 
     @Inject
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
@@ -56,7 +60,6 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         } else {
@@ -74,7 +77,20 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
                 networkSubject.postValue(networkIsAvailable)
             }
         }
+
+        initBinding()
     }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, getLayoutResourceId())
+        binding.setVariable(getBindingVariable(), viewModel)
+        binding.executePendingBindings()
+    }
+
+    @LayoutRes
+    abstract fun getLayoutResourceId(): Int
+
+    abstract fun getBindingVariable(): Int
 
     protected abstract fun getViewModelClass(): Class<T>
 
@@ -140,20 +156,18 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupConnectionListener() {
         Timber.d("Setting up connectivity listener")
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onLost(network: Network?) {
                 Timber.d("ReleasingApplication lost connection")
-                networkSubject.postValue( false)
+                networkSubject.postValue(false)
             }
 
             override fun onAvailable(network: Network?) {
                 Timber.d("ReleasingApplication gained connection")
-                networkSubject.postValue( true)
+                networkSubject.postValue(true)
             }
         }
         val networkRequest = NetworkRequest.Builder().build()

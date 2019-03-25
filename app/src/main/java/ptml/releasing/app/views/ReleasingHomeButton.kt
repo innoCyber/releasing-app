@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
+import android.util.TypedValue
+import android.view.Gravity
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -116,7 +118,7 @@ class ReleasingHomeButton : ReleasingButton {
         //add the text
         addView(textView)
 
-        TextViewCompat.setAutoSizeTextTypeWithDefaults(textView, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+
 
         //set the specified text
         textView.text = text
@@ -127,6 +129,7 @@ class ReleasingHomeButton : ReleasingButton {
             textView.setTextAppearance(context, android.R.style.TextAppearance_Medium)
         }
         textView.textSize = SizeUtils.px2sp(context, textSize).toFloat()
+        textView.gravity = Gravity.CENTER
         textView.setTextColor(textColor)
 
 
@@ -153,9 +156,10 @@ class ReleasingHomeButton : ReleasingButton {
         Timber.d("W %s", iconWidth)
         Timber.d("H; %s", iconHeight)
         constraintSet.connect(textView.id, ConstraintSet.TOP, imageView.id, ConstraintSet.BOTTOM, textMarginTop)
-        constraintSet.connect(textView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        constraintSet.connect(textView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-
+        constraintSet.connect(textView.id, ConstraintSet.START, imageView.id, ConstraintSet.START)
+        constraintSet.connect(textView.id, ConstraintSet.END, imageView.id, ConstraintSet.END)
+        constraintSet.constrainWidth(textView.id, ConstraintSet.MATCH_CONSTRAINT)
+        constraintSet.constrainHeight(textView.id, ConstraintSet.WRAP_CONTENT)
         constraintSet.applyTo(this)
 
 
@@ -175,6 +179,9 @@ class ReleasingHomeButton : ReleasingButton {
                 iconPaddingBottom
             )
         }
+
+
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView, 12, 48, 1, TypedValue.COMPLEX_UNIT_SP)
 
     }
 

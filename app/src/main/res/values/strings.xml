@@ -53,9 +53,9 @@
     <string name="error_occurred">An error occurred, please try again</string>
     <string name="exit">Close</string>
     <string name="cargo_search">Cargo Search</string>
-    <string name="parking_lot">Parking Lot</string>
+    <string name="parking_lot">Parking Slot</string>
     <string name="container">Container</string>
     <string name="main">Main</string>
-    <string name="terminal">Terminal</string>
     <string name="operation_step">Operation step</string>
+    <string name="Home">Home</string>
 </resources>

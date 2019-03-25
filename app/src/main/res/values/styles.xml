@@ -111,6 +111,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="rb_bg_drawable">@drawable/round_rect_gray</item>
         <item name="rb_textColor">@color/colorBlack</item>
+        <item name="rb_textSize">@dimen/releasing_btn_text_size</item>
     </style>
 
 
@@ -129,7 +130,11 @@
         <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
         <item name="android:gravity">center</item>
         <item name="autoSizeTextType">uniform</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+        <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
+        <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
+        <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
     </style>
 
-    <dimen name="home_top_btn_label_text_size">12sp</dimen>
+
 </resources>

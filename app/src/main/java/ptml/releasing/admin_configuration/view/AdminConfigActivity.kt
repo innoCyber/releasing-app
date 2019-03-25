@@ -5,6 +5,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
+import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_configuration.models.ConfigurationResponse
 import ptml.releasing.admin_configuration.view.adapter.ConfigSpinnerAdapter
@@ -19,16 +20,15 @@ import ptml.releasing.databinding.ActivityAdminConfigBinding
 import timber.log.Timber
 
 @RuntimePermissions
-class AdminConfigActivity : BaseActivity<AdminConfigViewModel>() {
-    lateinit var binding: ActivityAdminConfigBinding
+class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_admin_config)
         showUpEnabled(true)
         initErrorDrawable(binding.includeError.imgError)
-//        binding.bottom.btnDeleteLayout.visibility = View.GONE
+        binding.bottom.btnDeleteLayout.visibility = View.GONE
         binding.top.root.visibility = View.INVISIBLE
         binding.bottom.root.visibility = View.INVISIBLE
 
@@ -118,5 +118,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel>() {
     }
 
     override fun getViewModelClass() = AdminConfigViewModel::class.java
+
+    //TODO: Change to view model if you are using data binding in xml
+    override fun getBindingVariable() = BR._all
+
+    override fun getLayoutResourceId() = R.layout.activity_admin_config
 
 }
