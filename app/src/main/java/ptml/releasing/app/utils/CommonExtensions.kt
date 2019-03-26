@@ -1,5 +1,6 @@
 package ptml.releasing.app.utils
 
+import android.content.Context
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -8,11 +9,15 @@ import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
 import android.view.ViewGroup
-
+import android.view.inputmethod.InputMethodManager
 
 
 /**
  * Extension method to update padding of view.
+ * @param paddingStart The start padding of the view, defaults to the original start padding or 0
+ * @param paddingTop The top padding of the view, defaults to the original top padding or 0
+ * @param paddingEnd The end padding of the view, defaults to the original end padding or 0
+ * @param paddingBottom The bottom padding of the view, defaults to the original bottom padding or 0
  *
  */
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -23,6 +28,14 @@ fun View.updatePadding(paddingStart: Int = getPaddingStart(),
     setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
 }
 
+/**
+ * Extension method to update margin of view.
+ * @param start The start margin of the view, defaults to the original start margin or 0
+ * @param top The top margin of the view, defaults to the original top margin or 0
+ * @param end The end margin of the view, defaults to the original end margin or 0
+ * @param bottom The bottom margin of the view, defaults to the original bottom margin or 0
+ *
+ */
 fun View.updateMargin(start: Int = marginStart,
                       top: Int = marginTop,
                       end: Int = marginEnd,
@@ -32,4 +45,14 @@ fun View.updateMargin(start: Int = marginStart,
         p.setMargins(start, top, end, bottom)
         requestLayout()
     }
+}
+
+/**
+ * Extension method to dismiss the SoftInput from the current window
+ * @link InputMethodManager#hideSoftInputFromWindow()
+ *
+ */
+fun View.hideSoftInputFromWindow() {
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(windowToken, 0)
 }

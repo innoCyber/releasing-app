@@ -57,5 +57,6 @@
     <string name="container">Container</string>
     <string name="main">Main</string>
     <string name="operation_step">Operation step</string>
-    <string name="Home">Home</string>
+    <string name="home">Home</string>
+    <string name="nav_settings">Settings</string>
 </resources>

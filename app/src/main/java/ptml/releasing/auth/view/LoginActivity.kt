@@ -3,7 +3,6 @@ package ptml.releasing.auth.view
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ptml.releasing.BR
@@ -14,7 +13,7 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.admin_configuration.view.AdminConfigActivity
-import ptml.releasing.admin_configuration.view.getConfigWithPermissionCheck
+import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
@@ -113,7 +112,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
         binding.editPassword.clearFocus()
         binding.editName.clearFocus()
-        hideKeyBoard(binding.btnLogin)
+        binding.btnLogin.hideSoftInputFromWindow()
     }
 
     override fun getViewModelClass() = LoginViewModel::class.java

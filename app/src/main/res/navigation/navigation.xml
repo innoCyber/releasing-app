@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/navigation">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/device_config_dest">
 
+    <activity
+        android:id="@+id/device_config_dest"
+        android:name="ptml.releasing.device_configuration.view.DeviceConfigActivity"
+        android:label="@string/configure_device"
+        tools:layout="@layout/activity_device_config" />
+    <activity
+        android:id="@+id/login_dest"
+        android:name="ptml.releasing.auth.view.LoginActivity"
+        android:label="@string/login"
+        tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/admin_config_dest"
+        android:name="ptml.releasing.admin_configuration.view.AdminConfigActivity"
+        android:label="@string/configuration"
+        tools:layout="@layout/activity_admin_config" />
+    <activity
+        android:id="@+id/home_activity_dest"
+        android:name="ptml.releasing.home.view.HomeActivity"
+        android:label="@string/home"
+        tools:layout="@layout/activity_home" />
+    <fragment
+        android:id="@+id/home_fragment_dest"
+        android:name="ptml.releasing.home.view.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
 </navigation>

@@ -148,13 +148,6 @@ class ReleasingHomeButton : ReleasingButton {
         constraintSet.constrainWidth(imageView.id, ConstraintSet.MATCH_CONSTRAINT)
         constraintSet.constrainHeight(imageView.id, ConstraintSet.MATCH_CONSTRAINT)
 
-        Timber.d("Text margin top: %s", textMarginTop)
-        Timber.d("End pA top: %s", iconPaddingEnd)
-        Timber.d("Padding Start top: %s", iconPaddingStart)
-        Timber.d("Padding T top: %s", iconPaddingTop)
-        Timber.d("Padding B top: %s", iconPaddingBottom)
-        Timber.d("W %s", iconWidth)
-        Timber.d("H; %s", iconHeight)
         constraintSet.connect(textView.id, ConstraintSet.TOP, imageView.id, ConstraintSet.BOTTOM, textMarginTop)
         constraintSet.connect(textView.id, ConstraintSet.START, imageView.id, ConstraintSet.START)
         constraintSet.connect(textView.id, ConstraintSet.END, imageView.id, ConstraintSet.END)
