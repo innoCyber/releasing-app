@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.securepreferences.SecurePreferences
-import ptml.releasing.admin_configuration.models.ConfigurationResponse
+import ptml.releasing.admin_configuration.models.AdminConfigResponse
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var context: Context, var gson: Gson) : Prefs {
@@ -26,11 +26,11 @@ class PrefsManager @Inject constructor(var context: Context, var gson: Gson) : P
         return getPrefs().edit().putBoolean(FIRST, value).apply()
     }
 
-    override fun saveConfig(response: ConfigurationResponse?) {
+    override fun saveConfig(response: AdminConfigResponse?) {
         getPrefs().edit().putString(CONFIG, gson.toJson(response)).apply()
     }
 
-    override fun getConfig(): ConfigurationResponse? {
-        return gson.fromJson(getPrefs().getString(CONFIG, "{}"), ConfigurationResponse::class.java)
+    override fun getConfig(): AdminConfigResponse? {
+        return gson.fromJson(getPrefs().getString(CONFIG, "{}"), AdminConfigResponse::class.java)
     }
 }

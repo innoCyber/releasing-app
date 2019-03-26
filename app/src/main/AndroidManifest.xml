@@ -31,7 +31,6 @@
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning"
             tools:targetApi="n">
-        <activity android:name="ptml.releasing.app.ui.MainActivity"/>
 
         <activity
                 android:name="ptml.releasing.device_configuration.view.DeviceConfigActivity"

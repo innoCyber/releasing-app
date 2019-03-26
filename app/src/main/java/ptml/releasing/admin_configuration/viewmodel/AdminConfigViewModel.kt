@@ -4,12 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.*
 import ptml.releasing.app.data.Repository
-import ptml.releasing.admin_configuration.models.ConfigurationResponse
+import ptml.releasing.admin_configuration.models.AdminConfigResponse
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -18,7 +17,7 @@ class AdminConfigViewModel @Inject constructor(
     var appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel() {
 
-    val configResponse = MutableLiveData<ConfigurationResponse>()
+    val configResponse = MutableLiveData<AdminConfigResponse>()
     val networkState = MutableLiveData<NetworkState>()
 
 

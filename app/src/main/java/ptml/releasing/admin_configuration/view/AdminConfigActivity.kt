@@ -2,12 +2,11 @@ package ptml.releasing.admin_configuration.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.admin_configuration.models.ConfigurationResponse
+import ptml.releasing.admin_configuration.models.AdminConfigResponse
 import ptml.releasing.admin_configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.admin_configuration.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.ReleasingApplication
@@ -103,7 +102,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     }
 
 
-    private fun setUpSpinners(response: ConfigurationResponse) {
+    private fun setUpSpinners(response: AdminConfigResponse) {
         try {
             val cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList!!)
             val operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.operationStepList!!)

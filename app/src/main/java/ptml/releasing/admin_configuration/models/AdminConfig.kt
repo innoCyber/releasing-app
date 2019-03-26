@@ -84,7 +84,7 @@ class OperationStepDeserializer : JsonDeserializer<OperationStep> {
 }
 
 
-class ConfigurationResponse : BaseResponse {
+class AdminConfigResponse : BaseResponse {
 
 
     @SerializedName("cargo_type")

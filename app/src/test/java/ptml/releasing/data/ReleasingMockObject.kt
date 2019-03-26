@@ -1,8 +1,5 @@
 package ptml.releasing.data
 
-import com.google.gson.Gson
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import ptml.releasing.admin_configuration.models.*
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.auth.model.User
@@ -19,5 +16,5 @@ fun getUser() = User("ugo", "123456")
 fun getLoginSuccess() = BaseResponse("", true)
 fun getLoginFail() = BaseResponse(LOGIN_FAILURE_MSG, false)
 
-fun getAdminConfigurationSuccess() = ConfigurationResponse("", true, mutableListOf<CargoType>(), mutableListOf<OperationStep>(), mutableListOf<Terminal>())
-fun getAdminConfigurationFail() = ConfigurationResponse("Error", false, null, null, null )
+fun getAdminConfigurationSuccess() = AdminConfigResponse("", true, mutableListOf<CargoType>(), mutableListOf<OperationStep>(), mutableListOf<Terminal>())
+fun getAdminConfigurationFail() = AdminConfigResponse("Error", false, null, null, null )
