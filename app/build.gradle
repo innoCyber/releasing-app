@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -86,11 +85,7 @@ dependencies {
 
     //timber for logging
     implementation "com.jakewharton.timber:timber:$timberVersion"
-
-    //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
+    
 
     //leakcanary for detecting memory leaks
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
