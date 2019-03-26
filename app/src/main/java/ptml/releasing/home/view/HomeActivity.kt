@@ -23,7 +23,6 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
 
-
     }
 
     private val navigationListener = object : NavigationView.OnNavigationItemSelectedListener {
