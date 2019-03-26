@@ -8,6 +8,7 @@ import org.junit.Test
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.base.BaseTest
+import ptml.releasing.data.IMEI
 import ptml.releasing.data.getVerifyDeviceException
 import ptml.releasing.data.getVerifyDeviceFail
 import ptml.releasing.data.getVerifyDeviceSuccess
@@ -30,7 +31,7 @@ class DeviceConfigViewModelTest : BaseTest() {
             repository.verifyDeviceIdAsync(any())
         } returns getVerifyDeviceSuccess().toDeferredAsync() as Deferred<DeviceConfigResponse>
 
-        deviceConfigViewModel.verifyDeviceId("")
+        deviceConfigViewModel.verifyDeviceId(IMEI)
 
         assertEquals(
             getVerifyDeviceSuccess().data[0],

@@ -11,6 +11,6 @@
             android:paddingLeft="@dimen/constraint_default_margin_16dp"
             android:paddingRight="@dimen/constraint_default_margin_16dp" />
 
-    <solid android:color="@color/colorPrimary" />
+    <solid android:color="@color/colorAccent" />
 
 </shape>

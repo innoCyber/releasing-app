@@ -63,4 +63,5 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="damages">Damages</string>
+    <string name="downloading_damages">Downloading damages</string>
 </resources>

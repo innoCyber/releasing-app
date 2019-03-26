@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import ptml.releasing.admin_configuration.view.AdminConfigActivity
 import ptml.releasing.auth.view.LoginActivity
+import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.home.view.HomeActivity
 
@@ -25,5 +26,8 @@ abstract class UiModule {
 
     @ContributesAndroidInjector()
     abstract fun homeActivity(): HomeActivity
+
+    @ContributesAndroidInjector()
+    abstract fun damageActivity(): DamageActivity
 
 }
