@@ -81,11 +81,15 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
         InfoConfirmDialog.showDialog(
-                this,
-                R.string.allow_permission,
-                R.string.allow_phone_state_permission_msg,
-                R.drawable.ic_info_white, ({ request.proceed() })
-        )
+            context = this,
+            title = R.string.allow_permission,
+            message = R.string.allow_phone_state_permission_msg,
+            topIcon = R.drawable.ic_info_white,
+            listener = object : InfoConfirmDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)

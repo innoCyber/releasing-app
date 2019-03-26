@@ -1,7 +1,7 @@
 package ptml.releasing.app.remote
 
 import ptml.releasing.admin_configuration.models.api.AdminConfigApiService
-import ptml.releasing.auth.model.LoginApiService
+import ptml.releasing.auth.model.api.LoginApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService
 import retrofit2.Retrofit
 import javax.inject.Inject

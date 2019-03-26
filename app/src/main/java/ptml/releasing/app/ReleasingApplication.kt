@@ -41,14 +41,20 @@ open class ReleasingApplication : DaggerApplication() {
         LeakCanary.install(this)
     }
 
-    @SuppressLint("MissingPermission", "HardwareIds")
+    @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            telephonyManager.imei
-        } else {
-            telephonyManager.deviceId
-        };
+        return when (BuildConfig.DEBUG) {
+            true -> "0000000001"
+            else -> {
+                val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    telephonyManager.imei
+                } else {
+                    telephonyManager.deviceId
+                }
+            }
+        }
+
     }
 
 }

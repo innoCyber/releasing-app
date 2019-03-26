@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-open class BaseResponse{
-    @SerializedName("message")
+open class BaseResponse {
+    @SerializedName("message:")
     var message: String? = null
 
     @SerializedName("success")
@@ -13,7 +13,7 @@ open class BaseResponse{
 
 
     //used by serializers and deserializers
-    constructor() {}
+    constructor()
 
     constructor(message: String, success: Boolean) {
         this.message = message
@@ -21,9 +21,11 @@ open class BaseResponse{
     }
 
 
+    /**
+     *Used in tests to wrap this as a @link Deferred
+     * */
+    fun toDefferred() = GlobalScope.async { this@BaseResponse }
 
-
-     fun toDefferred() = GlobalScope.async { this@BaseResponse }
 
 
     override fun equals(other: Any?): Boolean {
@@ -40,5 +42,9 @@ open class BaseResponse{
         var result = message?.hashCode() ?: 0
         result = 31 * result + isSuccess.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "BaseResponse(message=$message, isSuccess=$isSuccess)"
     }
 }

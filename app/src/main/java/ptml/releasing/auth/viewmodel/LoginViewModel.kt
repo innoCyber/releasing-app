@@ -52,7 +52,9 @@ class LoginViewModel @Inject constructor(
                 val result = repository.loginAsync(user).await()
                 withContext(appCoroutineDispatchers.main) {
                     if (result.data.isNotEmpty()) {
+                        val data = result.data[0]
                         response.postValue(result.data[0])
+                        Timber.d("Response: %s", data)
                         networkState.postValue(NetworkState.LOADED)
                     } else {
                         networkState.postValue(NetworkState.error(Exception("Response received was unexpected")))

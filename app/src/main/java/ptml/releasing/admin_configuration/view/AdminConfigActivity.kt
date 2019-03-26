@@ -22,7 +22,6 @@ import timber.log.Timber
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
@@ -43,7 +42,11 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         viewModel.network.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.getting_configuration)
+                showLoading(
+                    binding.includeProgress.root,
+                    binding.includeProgress.tvMessage,
+                    R.string.getting_configuration
+                )
             } else {
                 hideLoading(binding.includeProgress.root)
                 binding.top.root.visibility = View.VISIBLE
@@ -78,11 +81,15 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
         InfoConfirmDialog.showDialog(
-                this,
-                R.string.allow_permission,
-                R.string.allow_phone_state_permission_msg,
-                R.drawable.ic_info_white, ({ request.proceed() })
-        )
+            context = this,
+            title = R.string.allow_permission,
+            message = R.string.allow_phone_state_permission_msg,
+            topIcon = R.drawable.ic_info_white,
+            listener = object : InfoConfirmDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
@@ -105,7 +112,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     private fun setUpSpinners(response: AdminConfigResponse) {
         try {
             val cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList!!)
-            val operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.operationStepList!!)
+            val operationStepAdapter =
+                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.operationStepList!!)
             val terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList!!)
             binding.top.selectCargoSpinner.adapter = cargoAdapter
             binding.top.selectOperationSpinner.adapter = operationStepAdapter

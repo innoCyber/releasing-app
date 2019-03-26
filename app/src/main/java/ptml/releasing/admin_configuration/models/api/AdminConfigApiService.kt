@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface AdminConfigApiService {
-    @GET("/setAdminConfigurationFail")
+    @GET("setAdminConfiguration")
     fun setAdminConfigurationAsync(@Query("imei") imei: String) : Deferred<AdminConfigResponse>
 }

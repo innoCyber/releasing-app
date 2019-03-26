@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface DeviceConfigApiService {
-    @GET("/verifyDeviceId")
+    @GET("verifyDeviceId")
     fun verifyDeviceIdAsync(@Query("imei") imei: String): Deferred<DeviceConfigResponse>
 }

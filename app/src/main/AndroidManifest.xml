@@ -43,6 +43,7 @@
         </activity>
         <activity
                 android:name=".auth.view.LoginActivity"
+                android:parentActivityName=".home.view.HomeActivity"
                 android:label="@string/admin_login"/>
         <activity
                 android:name="ptml.releasing.admin_configuration.view.AdminConfigActivity"

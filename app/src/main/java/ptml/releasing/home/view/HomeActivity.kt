@@ -8,6 +8,7 @@ import com.google.android.material.navigation.NavigationView
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.databinding.ActivityHomeBinding
 import ptml.releasing.home.viewmodel.HomeViewModel
 
@@ -22,7 +23,9 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
-
+        binding.appBarHome.content.includeHomeBottom.btnConfigurationLayout.setOnClickListener {
+            startNewActivity(LoginActivity::class.java)
+        }
     }
 
     private val navigationListener = object : NavigationView.OnNavigationItemSelectedListener {
