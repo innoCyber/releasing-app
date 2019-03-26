@@ -31,12 +31,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         binding.bottom.root.visibility = View.INVISIBLE
 
         viewModel.configData.observe(this, Observer {
-
-            if (it.isSuccess) {
-                setUpSpinners(it)
-            } else {
-                showDialog(it?.message)
-            }
+            setUpSpinners(it)
         })
 
 

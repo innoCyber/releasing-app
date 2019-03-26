@@ -84,7 +84,7 @@ class OperationStepDeserializer : JsonDeserializer<OperationStep> {
 }
 
 
-class AdminConfigResponse : BaseResponse {
+class AdminConfigResponse {
 
 
     @SerializedName("cargo_type")
@@ -99,18 +99,16 @@ class AdminConfigResponse : BaseResponse {
 
 
     constructor(
-        message: String,
-        success: Boolean,
         cargoTypeList: List<CargoType>?,
         operationStepList: List<OperationStep>?,
         terminalList: List<Terminal>?
-    ) : super(message, success) {
+    ) {
         this.cargoTypeList = cargoTypeList
         this.operationStepList = operationStepList
         this.terminalList = terminalList
     }
 
-    constructor() {}
+    constructor()
 
 
 }
