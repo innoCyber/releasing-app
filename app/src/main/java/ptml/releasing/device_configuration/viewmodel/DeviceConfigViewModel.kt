@@ -10,11 +10,12 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 class DeviceConfigViewModel @Inject constructor(
-    var repository: Repository,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
+        var repository: Repository,
+        var appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel() {
 
 
@@ -32,10 +33,15 @@ class DeviceConfigViewModel @Inject constructor(
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
-                val response = repository.verifyDeviceId(imei).await()
+                val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
-                    baseLiveData.postValue(response)
-                    networkState.postValue(NetworkState.LOADED)
+                    if (response.data.isNotEmpty()) {
+                        baseLiveData.postValue(response.data[0])
+                        networkState.postValue(NetworkState.LOADED)
+                    } else {
+                        networkState.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                    }
+
                 }
             } catch (it: Throwable) {
 

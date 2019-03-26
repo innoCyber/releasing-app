@@ -1,0 +1,141 @@
+{
+  "operation_step": [
+    {
+      "id": 3,
+      "value": "Buffer Area",
+      "cargo_id": 1
+    },
+    {
+      "id": 5,
+      "value": "Pontoon in",
+      "cargo_id": 1
+    },
+    {
+      "id": 6,
+      "value": "Pontoon out",
+      "cargo_id": 1
+    },
+    {
+      "id": 7,
+      "value": "Terminal Tally",
+      "cargo_id": 1
+    },
+    {
+      "id": 28,
+      "value": "Check Barge Pontoon out",
+      "cargo_id": 2
+    },
+    {
+      "id": 9,
+      "value": "Stacking Area",
+      "cargo_id": 2
+    },
+    {
+      "id": 10,
+      "value": "Check Barge",
+      "cargo_id": 2
+    },
+    {
+      "id": 11,
+      "value": "Loaded on Truck\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 14,
+      "value": "Empty Return\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 15,
+      "value": "Repairs\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 16,
+      "value": "Empty Delivery for Export\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 17,
+      "value": "Empty transfer to terminal\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 18,
+      "value": "Full Export returned\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 20,
+      "value": "loading on Bord\r\n",
+      "cargo_id": 2
+    },
+    {
+      "id": 21,
+      "value": "Warehouse tallying\r\n",
+      "cargo_id": 3
+    },
+    {
+      "id": 29,
+      "value": "ATL",
+      "cargo_id": 2
+    },
+    {
+      "id": 23,
+      "value": "Loaded on truck\r\n",
+      "cargo_id": 3
+    },
+    {
+      "id": 25,
+      "value": "Examination Confirmation",
+      "cargo_id": 2
+    },
+    {
+      "id": 30,
+      "value": "Check ATL Export",
+      "cargo_id": 2
+    },
+    {
+      "id": 27,
+      "value": "Examination Export",
+      "cargo_id": 2
+    },
+    {
+      "id": 32,
+      "value": "Ship Shide",
+      "cargo_id": 1
+    }
+  ],
+  "cargo_type": [
+    {
+      "Value": "Vehicle",
+      "Id": "1"
+    },
+    {
+      "Value": "Container",
+      "Id": "2"
+    },
+    {
+      "Value": "General",
+      "Id": "3"
+    }
+  ],
+  "terminal": [
+    {
+      "Value": "Satellite Car Park",
+      "Id": "1"
+    },
+    {
+      "Value": "Terminal 2",
+      "Id": "2"
+    },
+    {
+      "Value": "Main Terminal",
+      "Id": "3"
+    },
+    {
+      "Value": "Depop",
+      "Id": "4"
+    }
+  ]
+}

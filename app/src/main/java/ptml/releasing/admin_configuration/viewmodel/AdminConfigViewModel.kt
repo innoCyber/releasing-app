@@ -34,7 +34,7 @@ class AdminConfigViewModel @Inject constructor(
         networkState.postValue(NetworkState.LOADING)
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
-                val response = repository.getAdminConfiguration(imei).await()
+                val response = repository.getAdminConfigurationAsync(imei).await()
 
                 withContext(appCoroutineDispatchers.main) {
                     configResponse.postValue(response)
