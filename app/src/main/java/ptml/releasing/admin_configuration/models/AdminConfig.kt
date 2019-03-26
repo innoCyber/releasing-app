@@ -2,6 +2,7 @@ package ptml.releasing.admin_configuration.models
 
 import com.google.gson.*
 import com.google.gson.annotations.SerializedName
+import ptml.releasing.app.base.AppResponse
 import ptml.releasing.app.base.BaseModel
 import ptml.releasing.app.base.BaseResponse
 import java.lang.reflect.Type
@@ -84,7 +85,7 @@ class OperationStepDeserializer : JsonDeserializer<OperationStep> {
 }
 
 
-class AdminConfigResponse {
+class AdminConfigResponse : AppResponse {
 
 
     @SerializedName("cargo_type")
@@ -99,9 +100,9 @@ class AdminConfigResponse {
 
 
     constructor(
-        cargoTypeList: List<CargoType>?,
-        operationStepList: List<OperationStep>?,
-        terminalList: List<Terminal>?
+            cargoTypeList: List<CargoType>?,
+            operationStepList: List<OperationStep>?,
+            terminalList: List<Terminal>?
     ) {
         this.cargoTypeList = cargoTypeList
         this.operationStepList = operationStepList
@@ -109,6 +110,31 @@ class AdminConfigResponse {
     }
 
     constructor()
+
+
+    /**
+     * Used to check for equality in instances of this class
+     * */
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AdminConfigResponse) return false
+
+        if (cargoTypeList != other.cargoTypeList) return false
+        if (operationStepList != other.operationStepList) return false
+        if (terminalList != other.terminalList) return false
+
+        return true
+    }
+
+    /**
+     * Used in conjuction with @link AdminConfigResponse#equals to  check for equality in instances of this class
+     * */
+    override fun hashCode(): Int {
+        var result = cargoTypeList?.hashCode() ?: 0
+        result = 31 * result + (operationStepList?.hashCode() ?: 0)
+        result = 31 * result + (terminalList?.hashCode() ?: 0)
+        return result
+    }
 
 
 }

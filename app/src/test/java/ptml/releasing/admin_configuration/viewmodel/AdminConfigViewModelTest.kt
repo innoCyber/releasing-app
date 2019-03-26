@@ -22,8 +22,8 @@ class AdminConfigViewModelTest : BaseTest() {
     @Test
     fun `get admin configuration success`() {
         coEvery {
-            repository.getAdminConfiguration(any())
-        } returns getAdminConfigurationSuccess().toDefferred() as Deferred<AdminConfigResponse>
+            repository.getAdminConfigurationAsync(any())
+        } returns getAdminConfigurationSuccess().toDeferredAsync() as Deferred<AdminConfigResponse>
 
         viewModel.getConfig("")
 
@@ -46,8 +46,8 @@ class AdminConfigViewModelTest : BaseTest() {
     @Test
     fun `get admin configuration fail`() {
         coEvery {
-            repository.getAdminConfiguration(any())
-        } returns getAdminConfigurationFail().toDefferred() as Deferred<AdminConfigResponse>
+            repository.getAdminConfigurationAsync(any())
+        } returns getAdminConfigurationFail().toDeferredAsync() as Deferred<AdminConfigResponse>
 
         viewModel.getConfig("")
 

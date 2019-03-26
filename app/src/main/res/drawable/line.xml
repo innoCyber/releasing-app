@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+
+    <solid android:color="@color/colorAccent" />
+
+    <padding
+            android:top="@dimen/constraint_default_margin_8dp"
+            android:left="@dimen/constraint_default_margin_8dp"
+            android:right="@dimen/constraint_default_margin_8dp"
+            android:bottom="@dimen/constraint_default_margin_8dp"/>
+</shape>

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-open class BaseResponse {
+open class BaseResponse :AppResponse{
     @SerializedName("message:")
     var message: String? = null
 
@@ -20,11 +20,6 @@ open class BaseResponse {
         this.isSuccess = success
     }
 
-
-    /**
-     *Used in tests to wrap this as a @link Deferred
-     * */
-    fun toDefferred() = GlobalScope.async { this@BaseResponse }
 
 
 

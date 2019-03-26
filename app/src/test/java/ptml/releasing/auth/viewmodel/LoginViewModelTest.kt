@@ -3,9 +3,11 @@ package ptml.releasing.auth.viewmodel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.Deferred
 import org.junit.Test
 import ptml.releasing.R
 import ptml.releasing.app.data.ReleasingRepository
+import ptml.releasing.auth.model.LoginResponse
 import ptml.releasing.auth.model.User
 import ptml.releasing.base.BaseTest
 import ptml.releasing.data.getLoginFail
@@ -33,15 +35,15 @@ class LoginViewModelTest : BaseTest() {
 
 
         coEvery {
-            repository.login(any())
-        } returns getLoginSuccess().toDefferred()
+            repository.loginAsync(any())
+        } returns getLoginSuccess().toDeferredAsync() as Deferred<LoginResponse>
 
 
         assertNull(viewModel.response.value, "DeviceConfigResponse should be null before a successful request")
 
         viewModel.login(user.username, user.password)
 
-        assertEquals(getLoginSuccess(), viewModel.response.value, "Login is successful")
+        assertEquals(getLoginSuccess().data[0], viewModel.response.value, "Login is successful")
     }
 
     @Test
@@ -56,15 +58,15 @@ class LoginViewModelTest : BaseTest() {
 
 
         coEvery {
-            repository.login(any())
-        } returns getLoginFail().toDefferred()
+            repository.loginAsync(any())
+        } returns getLoginFail().toDeferredAsync() as Deferred<LoginResponse>
 
         assertNull(viewModel.response.value, "DeviceConfigResponse should be null before a successful request")
 
         viewModel.login(user.username, user.password)
 
 
-        assertEquals(getLoginFail(), viewModel.response.value)
+        assertEquals(getLoginFail().data[0], viewModel.response.value)
 
     }
 
