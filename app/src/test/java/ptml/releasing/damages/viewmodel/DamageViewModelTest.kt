@@ -25,7 +25,7 @@ class DamageViewModelTest : BaseTest() {
             repository.downloadDamagesAsync(any())
         }returns downloadDamagesSuccess().toDeferredAsync() as Deferred<DamageResponse>
 
-        viewModel.downloadDamages(IMEI)
+        viewModel.getDamages(IMEI)
 
         assertEquals(DAMAGE_SIZE, viewModel.response.value?.size)
 

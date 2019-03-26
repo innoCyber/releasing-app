@@ -19,8 +19,8 @@ class MainModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideRepository(remote: Remote, local: Local): Repository {
-        return ReleasingRepository(remote, local)
+    fun provideRepository(remote: Remote, local: Local, appCoroutineDispatchers: AppCoroutineDispatchers): Repository {
+        return ReleasingRepository(remote, local, appCoroutineDispatchers)
     }
 
     @Provides

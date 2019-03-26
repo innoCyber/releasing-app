@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            android:onClick='@{() -> viewModel.downloadDamages("")}'
             app:elevation="@dimen/constraint_default_margin_4dp"
             app:srcCompat="@drawable/ic_sync" />
 

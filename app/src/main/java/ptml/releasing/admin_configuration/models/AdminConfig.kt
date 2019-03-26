@@ -57,7 +57,7 @@ class TerminalDeserializer : JsonDeserializer<Terminal> {
 }
 
 class OperationStep : BaseConfig() {
-    @SerializedName("cargo_type_id")
+    @SerializedName("cargo_id")
     var categoryTypeId: Int = 0
 
     override fun toJson(): JsonObject {

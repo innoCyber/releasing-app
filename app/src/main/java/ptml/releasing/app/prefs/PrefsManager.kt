@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.securepreferences.SecurePreferences
 import ptml.releasing.admin_configuration.models.AdminConfigResponse
+import ptml.releasing.damages.model.DamageResponse
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var context: Context, var gson: Gson) : Prefs {
@@ -12,6 +13,7 @@ class PrefsManager @Inject constructor(var context: Context, var gson: Gson) : P
         const val PREFS = "prefs"
         const val FIRST = "is_first"
         const val CONFIG = "config"
+        const val DAMAGES = "damages"
     }
 
     private fun getPrefs(): SharedPreferences {
@@ -31,6 +33,14 @@ class PrefsManager @Inject constructor(var context: Context, var gson: Gson) : P
     }
 
     override fun getConfig(): AdminConfigResponse? {
-        return gson.fromJson(getPrefs().getString(CONFIG, "{}"), AdminConfigResponse::class.java)
+        return gson.fromJson(getPrefs().getString(CONFIG, null), AdminConfigResponse::class.java)
+    }
+
+    override fun saveDamages(response: DamageResponse?) {
+        getPrefs().edit().putString(DAMAGES, gson.toJson(response)).apply()
+    }
+
+    override fun getDamages(): DamageResponse? {
+        return gson.fromJson(getPrefs().getString(DAMAGES, null), DamageResponse::class.java)
     }
 }

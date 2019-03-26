@@ -27,12 +27,43 @@ class DamageViewModel @Inject constructor(
     val networkState: LiveData<NetworkState> = networkStateMutable
 
 
-    fun downloadDamages(imei:String) {
+    fun getDamages(imei:String) {
         if (networkStateMutable.value == NetworkState.LOADING) return
 
         networkStateMutable.postValue(NetworkState.LOADING)
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
+
+
+                val response = repository.getDamagesAsync(imei).await()
+                //TODO insert to Database
+                withContext(appCoroutineDispatchers.main) {
+                    if (response.data.isNotEmpty()) {
+                        responseMutable.postValue(response.data)
+                        networkStateMutable.postValue(NetworkState.LOADED)
+                    } else {
+                        networkStateMutable.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                    }
+
+                }
+            } catch (it: Throwable) {
+
+                Timber.e(it, "Error occurred")
+                networkStateMutable.postValue(NetworkState.error(it))
+            }
+        }
+
+
+    }
+
+
+    fun downloadDamagesFromServer(imei:String) {
+        if (networkStateMutable.value == NetworkState.LOADING) return
+
+        networkStateMutable.postValue(NetworkState.LOADING)
+        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+            try {
+
 
                 val response = repository.downloadDamagesAsync(imei).await()
                 //TODO insert to Database

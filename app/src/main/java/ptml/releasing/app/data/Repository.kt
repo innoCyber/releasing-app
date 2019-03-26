@@ -14,6 +14,8 @@ interface Repository {
     suspend fun loginAsync(user: User):Deferred<LoginResponse>
 
     suspend fun getAdminConfigurationAsync(imei:String):Deferred<AdminConfigResponse>
+    suspend fun downloadAdminConfigurationAsync(imei:String):Deferred<AdminConfigResponse>
 
     suspend fun downloadDamagesAsync(imei:String):Deferred<DamageResponse>
+    suspend fun getDamagesAsync(imei:String):Deferred<DamageResponse>
 }

@@ -23,7 +23,7 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
 
     private val listener = object : DamageListener {
         override fun onItemClick(item: Damage?) {
-
+            Timber.d("clicked: %s", item)
         }
     }
     private val adapter = DamageAdapter(listener)
@@ -32,7 +32,7 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
         binding.recyclerView.adapter = adapter
-        val layoutManager =  LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         val decorator = DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.addItemDecoration(decorator)
@@ -61,17 +61,28 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
             adapter.notifyDataSetChanged()
         })
 
+
+
         binding.includeError.btnReloadLayout.setOnClickListener {
             downloadDamagesWithPermissionCheck()
         }
 
-        downloadDamagesWithPermissionCheck()
+        binding.fab.setOnClickListener {
+            downloadDamagesWithPermissionCheck()
+        }
+
+        getDamagesWithPermissionCheck()
     }
 
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun downloadDamages() {
-        viewModel.downloadDamages((application as ReleasingApplication).provideImei())
+        viewModel.downloadDamagesFromServer((application as ReleasingApplication).provideImei())
+    }
+
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    fun getDamages() {
+        viewModel.getDamages((application as ReleasingApplication).provideImei())
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
@@ -103,6 +114,7 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
+
 
 
     override fun getLayoutResourceId() = R.layout.activity_damage
