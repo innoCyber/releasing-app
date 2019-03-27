@@ -5,6 +5,7 @@ object Constants{
     const val CONNECT_TIME_OUT = 60L
     const val WRITE_TIME_OUT = 60L
     const val DATABASE_NAME = "releasing.db"
+    const val PREFS = "prefs"
 
     //Connection
     const val IS_NETWORK_AVAILABLE: String = "Is Network Available"

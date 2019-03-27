@@ -62,7 +62,7 @@ class OperationStep : BaseConfig() {
 
     override fun toJson(): JsonObject {
         val obj = super.toJson()
-        obj.addProperty("cargo_type_id", categoryTypeId)
+        obj.addProperty("cargo_id", categoryTypeId)
         return obj
     }
 }
@@ -79,7 +79,7 @@ class OperationStepDeserializer : JsonDeserializer<OperationStep> {
         val operationStep = OperationStep()
         operationStep.id = json?.asJsonObject?.get("id")?.asInt ?: 0
         operationStep.value = json?.asJsonObject?.get("value")?.asString
-        operationStep.categoryTypeId = json?.asJsonObject?.get("cargo_type_id")?.asInt ?: 0
+        operationStep.categoryTypeId = json?.asJsonObject?.get("cargo_id")?.asInt ?: 0
         return operationStep;
     }
 }
