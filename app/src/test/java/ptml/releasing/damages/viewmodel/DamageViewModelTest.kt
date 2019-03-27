@@ -22,7 +22,7 @@ class DamageViewModelTest : BaseTest() {
     @Test
     fun `get damages with valid IMEI`() {
         coEvery {
-            repository.downloadDamagesAsync(any())
+            repository.getDamagesAsync(any())
         }returns downloadDamagesSuccess().toDeferredAsync() as Deferred<DamageResponse>
 
         viewModel.getDamages(IMEI)
