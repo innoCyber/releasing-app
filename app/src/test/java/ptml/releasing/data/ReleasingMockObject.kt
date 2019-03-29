@@ -10,13 +10,13 @@ import java.net.SocketTimeoutException
 const val IMEI = ""
 const val VERIFY_DEVICE_FAILURE_MSG = "Device not authorized"
 const val LOGIN_FAILURE_MSG = "User not authorized"
-fun getVerifyDeviceSuccess() = DeviceConfigResponse(listOf(BaseResponse("", true)))
-fun getVerifyDeviceFail() = DeviceConfigResponse(listOf(BaseResponse(VERIFY_DEVICE_FAILURE_MSG, true)))
+fun getVerifyDeviceSuccess() = BaseResponse("", true)
+fun getVerifyDeviceFail() = BaseResponse(VERIFY_DEVICE_FAILURE_MSG, true)
 fun getVerifyDeviceException() = SocketTimeoutException()
 
 fun getUser() = User("ugo", "123456")
-fun getLoginSuccess() = LoginResponse(listOf(BaseResponse("", true)))
-fun getLoginFail() = LoginResponse(listOf(BaseResponse(LOGIN_FAILURE_MSG, false)))
+fun getLoginSuccess() = BaseResponse("", true)
+fun getLoginFail() = BaseResponse(LOGIN_FAILURE_MSG, false)
 
 fun getAdminConfigurationSuccess() = AdminConfigResponse(listOf<CargoType>(), listOf<OperationStep>(), listOf<Terminal>())
 fun getAdminConfigurationFail() = AdminConfigResponse(null, null, null)
@@ -35,4 +35,8 @@ private fun getDamageList(): MutableList<Damage> {
 
     return list
 }
-private fun getDamage(i:Int) = Damage(i, "$DAMAGE_DESCRIPTION_PREFIX$i", "${DAMAGE_POSITION_MULTIPLIER*i}", DAMAGE_CONTAINER_MULTIPLIER*i)
+private fun getDamage(i:Int): Damage {
+    val damage = Damage( "$DAMAGE_DESCRIPTION_PREFIX$i", "${DAMAGE_POSITION_MULTIPLIER*i}", DAMAGE_CONTAINER_MULTIPLIER*i)
+    damage.id = i
+    return damage
+}
