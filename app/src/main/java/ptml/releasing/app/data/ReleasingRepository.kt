@@ -1,15 +1,14 @@
 package ptml.releasing.app.data
 
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import ptml.releasing.admin_configuration.models.AdminConfigResponse
-import ptml.releasing.app.Local
+import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.auth.model.User
 import ptml.releasing.damages.model.DamageResponse
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 open class ReleasingRepository @Inject constructor(var remote: Remote,
@@ -69,6 +68,37 @@ open class ReleasingRepository @Inject constructor(var remote: Remote,
     }
 
 
+    override  suspend fun getSavedConfigAsync(): Deferred<Configuration> {
+        return withContext(appCoroutineDispatchers.db) {
+            local.getSavedConfig().toDeferredAsync() as Deferred<Configuration>
+        }
+    }
+
+    override suspend fun setSavedConfigAsync(configuration: Configuration) {
+        return withContext(appCoroutineDispatchers.db) {
+            local.setSavedConfig(configuration)
+        }
+    }
+
+    override suspend fun isFirstAsync(): Deferred<Boolean> {
+        return GlobalScope.async { local.isFirst() }
+    }
+
+    override suspend fun setFirst(value: Boolean) {
+        withContext(appCoroutineDispatchers.db){
+            local.setFirst(value)
+        }
+    }
+
+    override suspend fun isConfiguredAsync(): Deferred<Boolean> {
+        return GlobalScope.async { local.isConfigured() }
+    }
+
+    override suspend fun setConfigured(isConfigured: Boolean) {
+        withContext(appCoroutineDispatchers.db){
+            local.setConfigured(isConfigured)
+        }
+    }
 }
 
 

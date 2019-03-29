@@ -69,5 +69,9 @@
     <string name="verify">Verify</string>
     <string name="mrk_number">MRK Number</string>
     <string name="enter_mrk_number">Enter MRK Number</string>
+    <string name="config_saved_success">Configuration saved successfully</string>
+    <string name="saved_successful">Success</string>
+    <string name="config_error">Configuration Error</string>
+    <string name="config_error_message">To perfom the operation, you need to save a configuration</string>
 
 </resources>

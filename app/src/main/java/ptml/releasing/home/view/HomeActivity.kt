@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityHomeBinding
@@ -21,21 +23,59 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
-                this, binding.drawerLayout, binding.appBarHome.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            this,
+            binding.drawerLayout,
+            binding.appBarHome.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
         binding.appBarHome.content.includeHomeBottom.btnConfigurationLayout.setOnClickListener {
-            startNewActivity(LoginActivity::class.java)
+            viewModel.openConfiguration()
         }
 
         binding.appBarHome.content.includeHomeBottom.btnDownloadLayout.setOnClickListener {
-            startNewActivity(DamageActivity::class.java)
+            viewModel.openDownloadDamages()
         }
 
         binding.appBarHome.content.includeHomeBottom.btnSearchLayout.setOnClickListener {
-            startNewActivity(SearchActivity::class.java)
+            viewModel.openSearch()
         }
+
+        viewModel.openConfiguration.observe(this, Observer {
+            startNewActivity(LoginActivity::class.java)
+        })
+        viewModel.openSearch.observe(this, Observer {
+            if (it) {
+                startNewActivity(SearchActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+        })
+
+        viewModel.openDownloadDamages.observe(this, Observer {
+            if (it) {
+                startNewActivity(DamageActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+
+        })
+
+
+    }
+
+    private fun showConfigurationErrorDialog() {
+        InfoConfirmDialog.showDialog(context = this,
+            title = getString(R.string.config_error),
+            message = getString(R.string.config_error_message),
+            topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.openConfiguration()
+                }
+            })
     }
 
     private val navigationListener = object : NavigationView.OnNavigationItemSelectedListener {

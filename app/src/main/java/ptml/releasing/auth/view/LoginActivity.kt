@@ -50,7 +50,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
                 }
 
                 else -> {
-                    showDialog(it.message)
+                    showErrorDialog(it.message)
                 }
             }
         })

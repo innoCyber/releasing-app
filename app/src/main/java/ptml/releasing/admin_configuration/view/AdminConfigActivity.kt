@@ -7,6 +7,9 @@ import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_configuration.models.AdminConfigResponse
+import ptml.releasing.admin_configuration.models.CargoType
+import ptml.releasing.admin_configuration.models.OperationStep
+import ptml.releasing.admin_configuration.models.Terminal
 import ptml.releasing.admin_configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.admin_configuration.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.ReleasingApplication
@@ -21,6 +24,11 @@ import timber.log.Timber
 @RuntimePermissions
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
+    private lateinit var cargoAdapter: ConfigSpinnerAdapter<CargoType>
+
+    private lateinit var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>
+
+    private lateinit var terminalAdapter: ConfigSpinnerAdapter<Terminal>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +64,32 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             }
         })
 
+
+        viewModel.savedSuccess.observe(this, Observer {
+            if(it){
+                showDialog(getString(R.string.saved_successful), getString(R.string.config_saved_success))
+            }
+        })
+
+        viewModel.configuration.observe(this, Observer {
+            val terminal = it.terminal
+            val operationStep = it.operationStep
+            val cargoType = it.cargoType
+            val cameraEnabled = it.cameraEnabled
+
+            binding.top.cameraSwitch.isChecked = cameraEnabled
+            binding.top.selectCargoSpinner.setSelection(cargoAdapter.getPosition(cargoType))
+            binding.top.selectOperationSpinner.setSelection(operationStepAdapter.getPosition(operationStep))
+            binding.top.selectTerminalSpinner.setSelection(terminalAdapter.getPosition(terminal))
+        })
+
+
+        binding.bottom.btnProfilesLayout.setOnClickListener {
+            viewModel.setConfig(binding.top.selectTerminalSpinner.selectedItem as Terminal,
+                binding.top.selectOperationSpinner.selectedItem as OperationStep,
+                binding.top.selectCargoSpinner.selectedItem as CargoType,
+                binding.top.cameraSwitch.isChecked)
+        }
 
         binding.includeError.btnReloadLayout.setOnClickListener {
             getConfigWithPermissionCheck()
@@ -106,10 +140,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     private fun setUpSpinners(response: AdminConfigResponse) {
         try {
-            val cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList!!)
-            val operationStepAdapter =
+            cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList!!)
+            operationStepAdapter =
                 ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.operationStepList!!)
-            val terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList!!)
+            terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList!!)
             binding.top.selectCargoSpinner.adapter = cargoAdapter
             binding.top.selectOperationSpinner.adapter = operationStepAdapter
             binding.top.selectTerminalSpinner.adapter = terminalAdapter

@@ -9,9 +9,22 @@ open class BaseModel {
     @SerializedName("id")
     open var id: Int = 0
 
-    open fun toJson(): JsonObject {
-        val jsonObject = JsonObject()
-        jsonObject.addProperty("id", id)
-        return jsonObject
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BaseModel) return false
+
+        if (id != other.id) return false
+
+        return true
     }
+
+    override fun hashCode(): Int {
+        return id
+    }
+
+    override fun toString(): String {
+        return "BaseModel(id=$id)"
+    }
+
+
 }
