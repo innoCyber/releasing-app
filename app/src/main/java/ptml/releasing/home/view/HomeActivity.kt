@@ -12,6 +12,7 @@ import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityHomeBinding
 import ptml.releasing.home.viewmodel.HomeViewModel
+import ptml.releasing.search.view.SearchActivity
 
 
 class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
@@ -30,6 +31,10 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
         binding.appBarHome.content.includeHomeBottom.btnDownloadLayout.setOnClickListener {
             startNewActivity(DamageActivity::class.java)
+        }
+
+        binding.appBarHome.content.includeHomeBottom.btnSearchLayout.setOnClickListener {
+            startNewActivity(SearchActivity::class.java)
         }
     }
 

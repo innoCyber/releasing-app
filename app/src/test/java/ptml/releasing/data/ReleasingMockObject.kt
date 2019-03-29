@@ -2,11 +2,9 @@ package ptml.releasing.data
 
 import ptml.releasing.admin_configuration.models.*
 import ptml.releasing.app.base.BaseResponse
-import ptml.releasing.auth.model.LoginResponse
 import ptml.releasing.auth.model.User
 import ptml.releasing.damages.model.Damage
 import ptml.releasing.damages.model.DamageResponse
-import ptml.releasing.device_configuration.model.DeviceConfigResponse
 import java.net.SocketTimeoutException
 
 const val IMEI = ""

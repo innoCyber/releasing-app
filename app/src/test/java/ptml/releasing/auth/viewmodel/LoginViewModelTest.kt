@@ -7,7 +7,6 @@ import kotlinx.coroutines.Deferred
 import org.junit.Test
 import ptml.releasing.R
 import ptml.releasing.app.data.ReleasingRepository
-import ptml.releasing.auth.model.LoginResponse
 import ptml.releasing.auth.model.User
 import ptml.releasing.base.BaseTest
 import ptml.releasing.data.getLoginFail

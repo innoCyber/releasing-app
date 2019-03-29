@@ -12,7 +12,6 @@ import ptml.releasing.data.IMEI
 import ptml.releasing.data.getVerifyDeviceException
 import ptml.releasing.data.getVerifyDeviceFail
 import ptml.releasing.data.getVerifyDeviceSuccess
-import ptml.releasing.device_configuration.model.DeviceConfigResponse
 import kotlin.test.assertEquals
 
 class DeviceConfigViewModelTest : BaseTest() {
