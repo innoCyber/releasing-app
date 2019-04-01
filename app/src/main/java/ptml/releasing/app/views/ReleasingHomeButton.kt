@@ -141,27 +141,25 @@ open class ReleasingHomeButton : ReleasingButton {
         val constraintSet = ConstraintSet()
         constraintSet.clone(this)
 
-        constraintSet.create(R.id.releasing_btn_guideline, ConstraintSet.HORIZONTAL_GUIDELINE)
-        constraintSet.setGuidelinePercent(R.id.releasing_btn_guideline, 0.8f)
+
 
         constraintSet.connect(imageView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         constraintSet.connect(imageView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         constraintSet.connect(imageView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(imageView.id, ConstraintSet.BOTTOM, R.id.releasing_btn_guideline, ConstraintSet.TOP)
 
-        constraintSet.constrainWidth(imageView.id, ConstraintSet.MATCH_CONSTRAINT)
-        constraintSet.constrainHeight(imageView.id, ConstraintSet.MATCH_CONSTRAINT)
+        constraintSet.constrainWidth(imageView.id, ConstraintSet.WRAP_CONTENT)
+        constraintSet.constrainHeight(imageView.id, ConstraintSet.WRAP_CONTENT)
 
         constraintSet.connect(
             textView.id,
             ConstraintSet.TOP,
-            R.id.releasing_btn_guideline,
+            imageView.id,
             ConstraintSet.BOTTOM,
             textMarginTop
         )
         constraintSet.connect(textView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         constraintSet.connect(textView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constraintSet.constrainWidth(textView.id, ConstraintSet.MATCH_CONSTRAINT)
+        constraintSet.constrainWidth(textView.id, ConstraintSet.WRAP_CONTENT)
         constraintSet.constrainHeight(textView.id, ConstraintSet.WRAP_CONTENT)
         constraintSet.applyTo(this)
 

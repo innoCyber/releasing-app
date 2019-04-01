@@ -24,7 +24,7 @@ open class ReleasingApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-        initializeLeakCanary()
+//        initializeLeakCanary()
     }
 
     private fun initLogger() {
@@ -43,7 +43,7 @@ open class ReleasingApplication : DaggerApplication() {
 
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-        return when (BuildConfig.DEBUG) {
+        return when (true) {
             true -> "0000000001"
             else -> {
                 val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager

@@ -99,12 +99,12 @@
     </style>
 
     <style name="RippleLayoutStyle.HomeTop">
-        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
         <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_8dp</item>
     </style>
 
     <style name="RippleLayoutStyle.HomeBottom">
-        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
         <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_10dp</item>
     </style>
 
@@ -164,9 +164,12 @@
     </style>
 
     <style name="ReleasingButtonStyle.Home">
+        <item name="android:layout_width">0dp</item>
         <item name="rb_bg_drawable">@drawable/round_rect_black</item>
         <item name="rb_textColor">@color/colorBlack</item>
-        <item name="rb_textSize">@dimen/releasing_btn_text_size</item>
+        <item name="rb_textSize">14sp</item>
+        <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
+        <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
     </style>
 
     <style name="ReleasingButtonStyle.QrCode">

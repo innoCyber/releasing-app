@@ -2,6 +2,7 @@ package ptml.releasing.home.view
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -44,6 +45,10 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
             viewModel.openSearch()
         }
 
+        viewModel.isConfigured.observe(this, Observer {
+            binding.appBarHome.content.tvConfigMessage.visibility = if(it) View.GONE else View.VISIBLE
+        })
+
         viewModel.openConfiguration.observe(this, Observer {
             startNewActivity(LoginActivity::class.java)
         })
@@ -67,13 +72,18 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkIfConfigured()
+    }
+
     private fun showConfigurationErrorDialog() {
         InfoConfirmDialog.showDialog(context = this,
             title = getString(R.string.config_error),
             message = getString(R.string.config_error_message),
             topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
                 override fun onConfirm() {
-                    viewModel.openConfiguration()
+//                    viewModel.openConfiguration()
                 }
             })
     }
