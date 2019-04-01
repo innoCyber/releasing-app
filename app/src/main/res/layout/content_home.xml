@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:padding="@dimen/constraint_default_margin_16dp"
+                android:visibility="gone"
                 android:text="@string/device_not_configured_message"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/colorWhite"

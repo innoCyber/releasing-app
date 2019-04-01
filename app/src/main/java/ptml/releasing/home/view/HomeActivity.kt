@@ -24,11 +24,11 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            binding.appBarHome.toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
+                this,
+                binding.drawerLayout,
+                binding.appBarHome.toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
         )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -46,7 +46,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         }
 
         viewModel.isConfigured.observe(this, Observer {
-            binding.appBarHome.content.tvConfigMessage.visibility = if(it) View.GONE else View.VISIBLE
+            binding.appBarHome.content.tvConfigMessage.visibility = if (it) View.GONE else View.VISIBLE
         })
 
         viewModel.openConfiguration.observe(this, Observer {
@@ -79,13 +79,13 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
     private fun showConfigurationErrorDialog() {
         InfoConfirmDialog.showDialog(context = this,
-            title = getString(R.string.config_error),
-            message = getString(R.string.config_error_message),
-            topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
-                override fun onConfirm() {
+                title = getString(R.string.config_error),
+                message = getString(R.string.config_error_message),
+                topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
+            override fun onConfirm() {
 //                    viewModel.openConfiguration()
-                }
-            })
+            }
+        })
     }
 
     private val navigationListener = object : NavigationView.OnNavigationItemSelectedListener {
