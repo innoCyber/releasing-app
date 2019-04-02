@@ -58,6 +58,8 @@
             android:name=".damages.view.DamageActivity"
             android:parentActivityName=".home.view.HomeActivity"
             android:label="@string/damages" />
+        <activity android:name=".search.view.SearchActivity"
+            android:label="@string/cargo_search"/>
     </application>
 
 </manifest>

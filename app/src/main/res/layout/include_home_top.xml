@@ -65,7 +65,7 @@
 
                 <ptml.releasing.app.views.ReleasingHomeButton
                     android:id="@+id/btn_operation_step"
-                    style="@style/ReleasingHomeButtonStyle"
+                    style="@style/ReleasingButtonStyle.Home"
                     app:rb_icon="@drawable/ic_operation_step"
                     app:rb_text="@string/parking_lot" />
             </ptml.releasing.app.views.MaterialRippleLayout>
@@ -92,7 +92,7 @@
 
                 <ptml.releasing.app.views.ReleasingHomeButton
                     android:id="@+id/btn_cargo_type"
-                    style="@style/ReleasingHomeButtonStyle"
+                    style="@style/ReleasingButtonStyle.Home"
                     app:rb_icon="@drawable/ic_container"
                     app:rb_text="@string/container"
 
@@ -118,7 +118,7 @@
 
                 <ptml.releasing.app.views.ReleasingHomeButton
                     android:id="@+id/btn_terminal"
-                    style="@style/ReleasingHomeButtonStyle"
+                    style="@style/ReleasingButtonStyle.Home"
                     app:rb_icon="@drawable/ic_terminal"
                     app:rb_text="@string/main" />
             </ptml.releasing.app.views.MaterialRippleLayout>

@@ -5,8 +5,10 @@
     <dimen name="constraint_default_margin_32dp">32dp</dimen>
     <dimen name="constraint_default_margin_24dp">24dp</dimen>
     <dimen name="constraint_default_margin_4dp">4dp</dimen>
+    <dimen name="constraint_default_margin_48dp">48dp</dimen>
     <dimen name="constraint_default_margin_12dp">12dp</dimen>
     <dimen name="constraint_default_margin_10dp">10dp</dimen>
+    <dimen name="constraint_default_margin_2dp">2dp</dimen>
 
 
     <dimen name="constraint_default_margin_64dp">64dp</dimen>
@@ -29,4 +31,7 @@
     <dimen name="home_top_label_max_size">48sp</dimen>
     <dimen name="home_top_label_step_size">1sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="search_label_text_size">14sp</dimen>
+
+    <dimen name="qr_code_img_size">72dp</dimen>
 </resources>

@@ -12,76 +12,58 @@ open class BaseConfig : BaseModel() {
     @SerializedName("value")
     var value: String? = null
 
-    override fun toJson(): JsonObject {
-        val obj = super.toJson()
-        obj.addProperty("value", value)
-        return obj
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BaseConfig) return false
+        if (!super.equals(other)) return false
+
+        if (value != other.value) return false
+
+        return true
     }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + (value?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun toString(): String {
+        return "BaseConfig(value=$value)"
+    }
+
 
 }
 
 class CargoType : BaseConfig()
 
-class CargoTypeSerializer : JsonSerializer<CargoType> {
-    override fun serialize(src: CargoType?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
-        return src?.toJson() ?: JsonObject()
-    }
-
-}
-
-class CargoTypeDeserializer : JsonDeserializer<CargoType> {
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): CargoType {
-        val cargoType = CargoType()
-        cargoType.id = json?.asJsonObject?.get("id")?.asInt ?: 0
-        cargoType.value = json?.asJsonObject?.get("value")?.asString
-        return cargoType;
-    }
-}
-
 class Terminal : BaseConfig()
 
-class TerminalSerializer : JsonSerializer<Terminal> {
-    override fun serialize(src: Terminal?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
-        return src?.toJson() ?: JsonObject()
+
+data class OperationStep(@SerializedName("cargo_id")
+                         val categoryTypeId: Int) : BaseConfig(){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OperationStep) return false
+        if (!super.equals(other)) return false
+
+        if (categoryTypeId != other.categoryTypeId) return false
+
+        return true
     }
 
-}
-
-class TerminalDeserializer : JsonDeserializer<Terminal> {
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Terminal {
-        val cargoType = Terminal()
-        cargoType.id = json?.asJsonObject?.get("id")?.asInt ?: 0
-        cargoType.value = json?.asJsonObject?.get("value")?.asString
-        return cargoType;
-    }
-}
-
-class OperationStep : BaseConfig() {
-    @SerializedName("cargo_id")
-    var categoryTypeId: Int = 0
-
-    override fun toJson(): JsonObject {
-        val obj = super.toJson()
-        obj.addProperty("cargo_type_id", categoryTypeId)
-        return obj
-    }
-}
-
-class OperationStepSerializer : JsonSerializer<OperationStep> {
-    override fun serialize(src: OperationStep?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
-        return src?.toJson() ?: JsonObject()
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + categoryTypeId
+        return result
     }
 
-}
-
-class OperationStepDeserializer : JsonDeserializer<OperationStep> {
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): OperationStep {
-        val operationStep = OperationStep()
-        operationStep.id = json?.asJsonObject?.get("id")?.asInt ?: 0
-        operationStep.value = json?.asJsonObject?.get("value")?.asString
-        operationStep.categoryTypeId = json?.asJsonObject?.get("cargo_type_id")?.asInt ?: 0
-        return operationStep;
+    override fun toString(): String {
+        return "OperationStep(categoryTypeId=$categoryTypeId)"
     }
+
+
 }
 
 
@@ -100,9 +82,9 @@ class AdminConfigResponse : AppResponse {
 
 
     constructor(
-            cargoTypeList: List<CargoType>?,
-            operationStepList: List<OperationStep>?,
-            terminalList: List<Terminal>?
+        cargoTypeList: List<CargoType>?,
+        operationStepList: List<OperationStep>?,
+        terminalList: List<Terminal>?
     ) {
         this.cargoTypeList = cargoTypeList
         this.operationStepList = operationStepList
@@ -134,6 +116,39 @@ class AdminConfigResponse : AppResponse {
         result = 31 * result + (operationStepList?.hashCode() ?: 0)
         result = 31 * result + (terminalList?.hashCode() ?: 0)
         return result
+    }
+
+
+}
+
+data class Configuration(
+    @SerializedName("terminal") val terminal: Terminal,
+    @SerializedName("operationStep") val operationStep: OperationStep,
+    @SerializedName("cargoType") val cargoType: CargoType,
+    @SerializedName("cameraEnabled") val cameraEnabled: Boolean
+):AppResponse(){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Configuration) return false
+
+        if (terminal != other.terminal) return false
+        if (operationStep != other.operationStep) return false
+        if (cargoType != other.cargoType) return false
+        if (cameraEnabled != other.cameraEnabled) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = terminal.hashCode()
+        result = 31 * result + operationStep.hashCode()
+        result = 31 * result + cargoType.hashCode()
+        result = 31 * result + cameraEnabled.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "Configuration(terminal=$terminal, operationStep=$operationStep, cargoType=$cargoType, cameraEnabled=$cameraEnabled)"
     }
 
 

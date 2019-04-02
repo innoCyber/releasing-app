@@ -64,4 +64,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="damages">Damages</string>
     <string name="downloading_damages">Downloading damages</string>
+    <string name="qrcode">arcode</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="verify">Verify</string>
+    <string name="mrk_number">MRK Number</string>
+    <string name="enter_mrk_number">Enter MRK Number</string>
+    <string name="config_saved_success">Configuration saved successfully</string>
+    <string name="saved_successful">Success</string>
+    <string name="config_error">Configuration Error</string>
+    <string name="config_error_message">To perfom the operation, you need to save a configuration</string>
+
 </resources>

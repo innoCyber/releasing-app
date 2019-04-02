@@ -35,13 +35,8 @@ class DeviceConfigViewModel @Inject constructor(
 
                 val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (response.data.isNotEmpty()) {
-                        baseLiveData.postValue(response.data[0])
-                        networkState.postValue(NetworkState.LOADED)
-                    } else {
-                        networkState.postValue(NetworkState.error(Exception("Response received was unexpected")))
-                    }
-
+                    baseLiveData.postValue(response)
+                    networkState.postValue(NetworkState.LOADED)
                 }
             } catch (it: Throwable) {
 

@@ -34,7 +34,7 @@
                 android:id="@+id/btn_configuration"
                 style="@style/ButtonStyle.HomeBottom"
                 android:text="@string/configuration"
-                app:drawableStartCompat="@drawable/ic_configuration" />
+                app:drawableStartCompat="@drawable/ic_config" />
         </ptml.releasing.app.views.MaterialRippleLayout>
 
 

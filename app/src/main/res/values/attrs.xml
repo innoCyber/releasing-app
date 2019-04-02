@@ -3,34 +3,34 @@
 
 
     <declare-styleable name="SupportVectorDrawableTextView">
-        <attr name="tv_DrawableStartCompat" format="reference" />
-        <attr name="tv_DrawableEndCompat" format="reference" />
-        <attr name="tv_DrawableTopCompat" format="reference" />
-        <attr name="tv_DrawableBottomCompat" format="reference" />
+        <attr name="tv_DrawableStartCompat" format="reference"/>
+        <attr name="tv_DrawableEndCompat" format="reference"/>
+        <attr name="tv_DrawableTopCompat" format="reference"/>
+        <attr name="tv_DrawableBottomCompat" format="reference"/>
     </declare-styleable>
 
 
     <declare-styleable name="MaterialRippleLayout">
-        <attr name="mrl_rippleColor" format="color" localization="suggested" />
-        <attr name="mrl_rippleDimension" format="dimension" localization="suggested" />
-        <attr name="mrl_rippleOverlay" format="boolean" localization="suggested" />
-        <attr name="mrl_rippleAlpha" format="float" localization="suggested" />
-        <attr name="mrl_rippleDuration" format="integer" localization="suggested" />
-        <attr name="mrl_rippleFadeDuration" format="integer" localization="suggested" />
-        <attr name="mrl_rippleHover" format="boolean" localization="suggested" />
-        <attr name="mrl_rippleBackground" format="color" localization="suggested" />
-        <attr name="mrl_rippleDelayClick" format="boolean" localization="suggested" />
-        <attr name="mrl_ripplePersistent" format="boolean" localization="suggested" />
-        <attr name="mrl_rippleInAdapter" format="boolean" localization="suggested" />
-        <attr name="mrl_rippleRoundedCorners" format="dimension" localization="suggested" />
+        <attr name="mrl_rippleColor" format="color" localization="suggested"/>
+        <attr name="mrl_rippleDimension" format="dimension" localization="suggested"/>
+        <attr name="mrl_rippleOverlay" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleAlpha" format="float" localization="suggested"/>
+        <attr name="mrl_rippleDuration" format="integer" localization="suggested"/>
+        <attr name="mrl_rippleFadeDuration" format="integer" localization="suggested"/>
+        <attr name="mrl_rippleHover" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleBackground" format="color" localization="suggested"/>
+        <attr name="mrl_rippleDelayClick" format="boolean" localization="suggested"/>
+        <attr name="mrl_ripplePersistent" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleInAdapter" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleRoundedCorners" format="dimension" localization="suggested"/>
     </declare-styleable>
 
 
     <declare-styleable name="SupportVectorDrawablesButton">
-        <attr name="drawableStartCompat" format="reference" />
-        <attr name="drawableEndCompat" format="reference" />
-        <attr name="drawableTopCompat" format="reference" />
-        <attr name="drawableBottomCompat" format="reference" />
+        <attr name="drawableStartCompat" format="reference"/>
+        <attr name="drawableEndCompat" format="reference"/>
+        <attr name="drawableTopCompat" format="reference"/>
+        <attr name="drawableBottomCompat" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="ReleasingButton">
@@ -38,21 +38,21 @@
         <attr name="rb_icon" format="reference"/>
         <attr name="rb_drawablePadding" format="dimension"/>
         <attr name="rb_backgroundColor" format="color"/>
-        <attr name="rb_cornerRadius" format="dimension" />
-        <attr name="rb_textColor" format="color" />
-        <attr name="rb_textSize" format="dimension" />
+        <attr name="rb_cornerRadius" format="dimension"/>
+        <attr name="rb_textColor" format="color"/>
+        <attr name="rb_textSize" format="dimension"/>
     </declare-styleable>
 
 
     <declare-styleable name="ReleasingHomeButton">
         <attr name="rb_text"/>
-        <attr name="rb_icon" />
-        <attr name="rb_drawablePadding" />
-        <attr name="rb_backgroundColor" />
-        <attr name="rb_cornerRadius"  />
-        <attr name="rb_textColor" />
-        <attr name="rb_textSize" />
-        <attr name="rb_textMarginTop" format="dimension" />
+        <attr name="rb_icon"/>
+        <attr name="rb_drawablePadding"/>
+        <attr name="rb_backgroundColor"/>
+        <attr name="rb_cornerRadius"/>
+        <attr name="rb_textColor"/>
+        <attr name="rb_textSize"/>
+        <attr name="rb_textMarginTop" format="dimension"/>
         <attr name="rb_iconWidth" format="dimension"/>
         <attr name="rb_iconHeight" format="dimension"/>
         <attr name="rb_iconPaddingStart" format="dimension"/>
@@ -60,7 +60,10 @@
         <attr name="rb_iconPaddingTop" format="dimension"/>
         <attr name="rb_iconPaddingBottom" format="dimension"/>
         <attr name="rb_bg_drawable" format="reference"/>
+        <attr name="rb_showText" format="boolean"/>
 
     </declare-styleable>
+
+
 
 </resources>

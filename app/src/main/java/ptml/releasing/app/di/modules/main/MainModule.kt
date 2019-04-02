@@ -3,8 +3,8 @@ package ptml.releasing.app.di.modules.main
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Dispatchers
-import ptml.releasing.app.Local
-import ptml.releasing.app.ReleasingLocal
+import ptml.releasing.app.local.Local
+import ptml.releasing.app.local.ReleasingLocal
 import ptml.releasing.app.remote.ReleasingRemote
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.data.ReleasingRepository

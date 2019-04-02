@@ -1,46 +1,59 @@
 package ptml.releasing.app.prefs
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.securepreferences.SecurePreferences
 import ptml.releasing.admin_configuration.models.AdminConfigResponse
+import ptml.releasing.admin_configuration.models.Configuration
 import ptml.releasing.damages.model.DamageResponse
 import javax.inject.Inject
 
-class PrefsManager @Inject constructor(var context: Context, var gson: Gson) : Prefs {
+class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson) : Prefs {
     companion object {
-        const val PREFS = "prefs"
         const val FIRST = "is_first"
         const val CONFIG = "config"
+        const val CONFIGURED = "configured"
         const val DAMAGES = "damages"
+        const val SAVED_CONFIG = "saved_config"
     }
 
-    private fun getPrefs(): SharedPreferences {
-        return SecurePreferences(context, PREFS)
-    }
 
     override fun isFirst(): Boolean {
-        return getPrefs().getBoolean(FIRST, true)
+        return sharedPreferences.getBoolean(FIRST, true)
     }
 
     override fun setFirst(value: Boolean) {
-        return getPrefs().edit().putBoolean(FIRST, value).apply()
+        return sharedPreferences.edit().putBoolean(FIRST, value).apply()
     }
 
     override fun saveConfig(response: AdminConfigResponse?) {
-        getPrefs().edit().putString(CONFIG, gson.toJson(response)).apply()
+        sharedPreferences.edit().putString(CONFIG, gson.toJson(response)).apply()
     }
 
     override fun getConfig(): AdminConfigResponse? {
-        return gson.fromJson(getPrefs().getString(CONFIG, null), AdminConfigResponse::class.java)
+        return gson.fromJson(sharedPreferences.getString(CONFIG, null), AdminConfigResponse::class.java)
     }
 
     override fun saveDamages(response: DamageResponse?) {
-        getPrefs().edit().putString(DAMAGES, gson.toJson(response)).apply()
+        sharedPreferences.edit().putString(DAMAGES, gson.toJson(response)).apply()
     }
 
     override fun getDamages(): DamageResponse? {
-        return gson.fromJson(getPrefs().getString(DAMAGES, null), DamageResponse::class.java)
+        return gson.fromJson(sharedPreferences.getString(DAMAGES, null), DamageResponse::class.java)
+    }
+
+    override fun getSavedConfig(): Configuration {
+        return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), Configuration::class.java)
+    }
+
+    override fun setSavedConfig(configuration: Configuration) {
+        sharedPreferences.edit().putString(SAVED_CONFIG, gson.toJson(configuration)).apply()
+    }
+
+    override fun isConfigured(): Boolean {
+        return sharedPreferences.getBoolean(CONFIGURED, false)
+    }
+
+    override fun setConfigured(isConfigured: Boolean) {
+        return sharedPreferences.edit().putBoolean(CONFIGURED, isConfigured).apply()
     }
 }

@@ -10,6 +10,7 @@ import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.home.viewmodel.HomeViewModel
+import ptml.releasing.search.viewmodel.SearchViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -42,4 +43,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DamageViewModel::class)
     abstract fun bindDamageViewModel(myViewModel: DamageViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    abstract fun bindSearchViewModel(myViewModel: SearchViewModel): ViewModel
 }

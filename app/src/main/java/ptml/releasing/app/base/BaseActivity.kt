@@ -274,9 +274,13 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         view.visibility = View.GONE
     }
 
-    fun showDialog(message: String?) {
+    fun showErrorDialog(message: String?) {
+        showDialog(getString(R.string.error), message)
+    }
+
+    fun showDialog(title: String?, message: String?) {
         InfoConfirmDialog.showDialog(context = this,
-            title =  getString(R.string.error),
+            title =  title,
             message =  message,
             topIcon =  R.drawable.ic_error)
     }
