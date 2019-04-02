@@ -51,77 +51,62 @@
                 android:id="@+id/tv_operation_step"
                 style="@style/HomeTopTitleLabelStyle"
                 android:text="@string/operation_step"
-                app:layout_constraintEnd_toEndOf="@id/btn_operation_step_layout"
-                app:layout_constraintStart_toStartOf="@id/btn_operation_step_layout"
+                app:layout_constraintEnd_toEndOf="@id/btn_operation_step"
+                app:layout_constraintStart_toStartOf="@id/btn_operation_step"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <ptml.releasing.app.views.MaterialRippleLayout
-                android:id="@+id/btn_operation_step_layout"
-                style="@style/RippleLayoutStyle.HomeTop"
-                app:layout_constraintEnd_toStartOf="@id/btn_cargo_type_layout"
+            <ptml.releasing.app.views.ReleasingHomeButton
+                android:id="@+id/btn_operation_step"
+                style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintEnd_toStartOf="@id/btn_cargo_type"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/tv_operation_step">
-
-                <ptml.releasing.app.views.ReleasingHomeButton
-                    android:id="@+id/btn_operation_step"
-                    style="@style/ReleasingButtonStyle.Home"
-                    app:rb_icon="@drawable/ic_operation_step"
-                    app:rb_text="@string/parking_lot" />
-            </ptml.releasing.app.views.MaterialRippleLayout>
+                app:layout_constraintTop_toBottomOf="@id/tv_operation_step"
+                app:rb_icon="@drawable/ic_operation_step"
+                app:rb_text="@string/parking_lot"
+                app:rb_textSize="14sp" />
 
 
             <TextView
                 android:id="@+id/tv_cargo_type"
                 style="@style/HomeTopTitleLabelStyle"
                 android:text="@string/cargo_type"
-                app:layout_constraintEnd_toEndOf="@id/btn_cargo_type_layout"
-                app:layout_constraintStart_toStartOf="@id/btn_cargo_type_layout"
+                app:layout_constraintEnd_toEndOf="@id/btn_cargo_type"
+                app:layout_constraintStart_toStartOf="@id/btn_cargo_type"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <ptml.releasing.app.views.MaterialRippleLayout
-                android:id="@+id/btn_cargo_type_layout"
-                style="@style/RippleLayoutStyle.HomeTop"
-                android:layout_marginStart="@dimen/constraint_default_margin_8dp"
-                android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
-                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step_layout"
-                app:layout_constraintEnd_toStartOf="@id/btn_terminal_layout"
-                app:layout_constraintStart_toEndOf="@id/btn_operation_step_layout"
-                app:layout_constraintTop_toTopOf="@id/btn_operation_step_layout">
-
-                <ptml.releasing.app.views.ReleasingHomeButton
-                    android:id="@+id/btn_cargo_type"
-                    style="@style/ReleasingButtonStyle.Home"
-                    app:rb_icon="@drawable/ic_container"
-                    app:rb_text="@string/container"
-
-                    />
-            </ptml.releasing.app.views.MaterialRippleLayout>
+            <ptml.releasing.app.views.ReleasingHomeButton
+                android:id="@+id/btn_cargo_type"
+                style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step"
+                app:layout_constraintEnd_toStartOf="@id/btn_terminal"
+                app:layout_constraintStart_toEndOf="@id/btn_operation_step"
+                app:layout_constraintTop_toTopOf="@id/btn_operation_step"
+                app:rb_icon="@drawable/ic_container"
+                app:rb_text="@string/container"
+                />
 
 
             <TextView
                 android:id="@+id/tv_terminal"
                 style="@style/HomeTopTitleLabelStyle"
                 android:text="@string/terminal"
-                app:layout_constraintEnd_toEndOf="@id/btn_terminal_layout"
-                app:layout_constraintStart_toStartOf="@id/btn_terminal_layout"
+                app:layout_constraintEnd_toEndOf="@id/btn_terminal"
+                app:layout_constraintStart_toStartOf="@id/btn_terminal"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ptml.releasing.app.views.MaterialRippleLayout
-                android:id="@+id/btn_terminal_layout"
-                style="@style/RippleLayoutStyle.HomeTop"
-                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step_layout"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toEndOf="@id/btn_cargo_type_layout"
-                app:layout_constraintTop_toTopOf="@id/btn_operation_step_layout">
 
-                <ptml.releasing.app.views.ReleasingHomeButton
-                    android:id="@+id/btn_terminal"
-                    style="@style/ReleasingButtonStyle.Home"
-                    app:rb_icon="@drawable/ic_terminal"
-                    app:rb_text="@string/main" />
-            </ptml.releasing.app.views.MaterialRippleLayout>
+            <ptml.releasing.app.views.ReleasingHomeButton
+                android:id="@+id/btn_terminal"
+                style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toEndOf="@id/btn_cargo_type"
+                app:layout_constraintTop_toTopOf="@id/btn_operation_step"
+                app:rb_icon="@drawable/ic_terminal"
+                app:rb_text="@string/main" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

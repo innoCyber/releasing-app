@@ -2,6 +2,7 @@ package ptml.releasing.home.view
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -23,11 +24,11 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            binding.appBarHome.toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
+                this,
+                binding.drawerLayout,
+                binding.appBarHome.toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
         )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -43,6 +44,10 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         binding.appBarHome.content.includeHomeBottom.btnSearchLayout.setOnClickListener {
             viewModel.openSearch()
         }
+
+        viewModel.isConfigured.observe(this, Observer {
+            binding.appBarHome.content.tvConfigMessage.visibility = if (it) View.GONE else View.VISIBLE
+        })
 
         viewModel.openConfiguration.observe(this, Observer {
             startNewActivity(LoginActivity::class.java)
@@ -67,15 +72,20 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkIfConfigured()
+    }
+
     private fun showConfigurationErrorDialog() {
         InfoConfirmDialog.showDialog(context = this,
-            title = getString(R.string.config_error),
-            message = getString(R.string.config_error_message),
-            topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
-                override fun onConfirm() {
-                    viewModel.openConfiguration()
-                }
-            })
+                title = getString(R.string.config_error),
+                message = getString(R.string.config_error_message),
+                topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
+            override fun onConfirm() {
+//                    viewModel.openConfiguration()
+            }
+        })
     }
 
     private val navigationListener = object : NavigationView.OnNavigationItemSelectedListener {

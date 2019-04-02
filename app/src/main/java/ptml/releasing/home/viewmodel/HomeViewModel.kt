@@ -15,10 +15,12 @@ class HomeViewModel @Inject constructor( var repository: Repository,  var appCor
     private val _openConfiguration = MutableLiveData<Boolean>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
     private val _openSearch = MutableLiveData<Boolean>()
+    private val _isConfigured = MutableLiveData<Boolean>()
 
     val openConfiguration: LiveData<Boolean> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openSearch: LiveData<Boolean> = _openSearch
+    val isConfigured: LiveData<Boolean> = _isConfigured
 
     fun openConfiguration() {
         _openConfiguration.postValue(true)
@@ -38,6 +40,15 @@ class HomeViewModel @Inject constructor( var repository: Repository,  var appCor
             val configured = repository.isConfiguredAsync().await()
             withContext(appCoroutineDispatchers.main){
                 _openDownloadDamages.postValue(configured)
+            }
+        }
+    }
+
+    fun checkIfConfigured(){
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val configured = repository.isConfiguredAsync().await()
+            withContext(appCoroutineDispatchers.main){
+                _isConfigured.postValue(configured)
             }
         }
     }
