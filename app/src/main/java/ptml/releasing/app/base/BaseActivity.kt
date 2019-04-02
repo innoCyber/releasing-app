@@ -36,7 +36,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import ptml.releasing.R
-import ptml.releasing.app.dialogs.InfoConfirmDialog
+import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import timber.log.Timber
 import javax.inject.Inject
@@ -279,10 +279,12 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
     fun showDialog(title: String?, message: String?) {
-        InfoConfirmDialog.showDialog(context = this,
-            title =  title,
-            message =  message,
-            topIcon =  R.drawable.ic_error)
+        val dialogFragment =  InfoDialog.newInstance(
+            title = title,
+            message = message,
+            buttonText = getString(android.R.string.ok))
+        Timber.e("msg: %s", message)
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 

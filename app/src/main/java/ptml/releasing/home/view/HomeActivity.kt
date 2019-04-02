@@ -9,8 +9,9 @@ import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import ptml.releasing.BR
 import ptml.releasing.R
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
-import ptml.releasing.app.dialogs.InfoConfirmDialog
+import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityHomeBinding
@@ -46,7 +47,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         }
 
         viewModel.isConfigured.observe(this, Observer {
-            binding.appBarHome.content.tvConfigMessage.visibility = if (it) View.GONE else View.VISIBLE
+            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE
         })
 
         viewModel.openConfiguration.observe(this, Observer {
@@ -78,14 +79,25 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
     }
 
     private fun showConfigurationErrorDialog() {
-        InfoConfirmDialog.showDialog(context = this,
+   /*     InfoConfirmDialog.showDialog(context = this,
                 title = getString(R.string.config_error),
                 message = getString(R.string.config_error_message),
                 topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
             override fun onConfirm() {
 //                    viewModel.openConfiguration()
             }
-        })
+        })*/
+
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.config_error),
+            message = getString(R.string.config_error_message),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.openConfiguration()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     private val navigationListener = object : NavigationView.OnNavigationItemSelectedListener {
@@ -94,10 +106,23 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
                 R.id.nav_preferences -> {
                     //TODO handle nav
                 }
+
+                R.id.nav_about -> {
+                    //TODO handle nav
+                    showImeiDialog()
+                }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             return true
         }
+    }
+
+    private fun showImeiDialog() {
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.device_IMEI),
+            message = (application as ReleasingApplication).provideImei(),
+            buttonText = getString(R.string.dismiss))
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     override fun getLayoutResourceId() = R.layout.activity_home

@@ -15,6 +15,7 @@ import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.admin_configuration.view.AdminConfigActivity
 import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
+import timber.log.Timber
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
@@ -50,6 +51,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
                 }
 
                 else -> {
+                    Timber.d("message: %s", it.message)
                     showErrorDialog(it.message)
                 }
             }

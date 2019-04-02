@@ -74,5 +74,8 @@
     <string name="config_error">Configuration Error</string>
     <string name="config_error_message">To perform this operation, your device needs to be configured. Please contact the administrator</string>
     <string name="device_not_configured_message">This device is not yet configured, please contact the administrator</string>
+    <string name="nav_about">Device IMEI</string>
+    <string name="device_IMEI">Device IMEI</string>
+    <string name="dismiss">Dismiss</string>
 
 </resources>

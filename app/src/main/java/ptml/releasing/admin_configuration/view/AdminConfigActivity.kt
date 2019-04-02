@@ -14,7 +14,7 @@ import ptml.releasing.admin_configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.admin_configuration.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
-import ptml.releasing.app.dialogs.InfoConfirmDialog
+import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
@@ -67,7 +67,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         viewModel.savedSuccess.observe(this, Observer {
             if(it){
-                showDialog(getString(R.string.saved_successful), getString(R.string.config_saved_success))
+                notifyUser(getString(R.string.config_saved_success))
+                finish()
             }
         })
 
@@ -109,16 +110,16 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        InfoConfirmDialog.showDialog(
-            context = this,
-            title = R.string.allow_permission,
-            message = R.string.allow_phone_state_permission_msg,
-            topIcon = R.drawable.ic_info_white,
-            listener = object : InfoConfirmDialog.InfoListener {
+       val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+           buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     request.proceed()
                 }
             })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
