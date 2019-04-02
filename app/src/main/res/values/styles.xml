@@ -1,0 +1,105 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionMenuTextColor">@color/colorBlack</item>
+        <item name="titleTextColor">@color/colorBlack</item>
+    </style>
+
+
+    <style name="AppTheme.Splash">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:padding">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:drawablePadding">@dimen/constraint_default_margin_10dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">start|center</item>
+        <item name="android:textSize">@dimen/home_btn_text_size</item>
+
+    </style>
+
+    <style name="ButtonStyle.Home">
+        <item name="android:background">@drawable/home_btn_bg</item>
+    </style>
+
+    <style name="ButtonStyle.Save">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/save_btn_bg</item>
+    </style>
+
+    <style name="ButtonStyle.Delete">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/delete_btn_bg</item>
+        <item name="tv_DrawableStartCompat">@drawable/ic_delete</item>
+    </style>
+
+
+    <style name="RippleLayoutStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="mrl_rippleColor">@color/colorWhiteAlpha</item>
+        <item name="mrl_rippleOverlay">true</item>
+        <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.Configure">
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.Configure.Spinner">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleRoundedCorners">0dp</item>
+    </style>
+
+
+    <style name="SpinnerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/spinner_bg</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+
+    <style name="SpinnerItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:drawablePadding">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">start|center</item>
+        <item name="drawableEndCompat">@drawable/ic_arrow_drop_down</item>
+    </style>
+
+
+    <style name="LabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+
+    <style name="TextLimitStyle" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">9sp</item>
+    </style>
+
+    <style name="TextLimitError" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">9sp</item>
+    </style>
+</resources>

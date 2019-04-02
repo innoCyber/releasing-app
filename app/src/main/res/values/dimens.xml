@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="constraint_default_margin_8dp">8dp</dimen>
+    <dimen name="constraint_default_margin_16dp">16dp</dimen>
+    <dimen name="constraint_default_margin_32dp">32dp</dimen>
+    <dimen name="constraint_default_margin_24dp">24dp</dimen>
+    <dimen name="constraint_default_margin_4dp">4dp</dimen>
+    <dimen name="constraint_default_margin_12dp">12dp</dimen>
+    <dimen name="constraint_default_margin_10dp">10dp</dimen>
+
+
+    <dimen name="home_btn_text_size">18sp</dimen>
+    <dimen name="constraint_default_margin_64dp">64dp</dimen>
+</resources>
