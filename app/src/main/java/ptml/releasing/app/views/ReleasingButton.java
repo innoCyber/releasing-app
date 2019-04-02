@@ -9,29 +9,29 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.widget.TextViewCompat;
+import org.jetbrains.annotations.NotNull;
 import ptml.releasing.R;
+import ptml.releasing.app.utils.SizeUtils;
 
-public class ReleasingButton extends FrameLayout {
+public class ReleasingButton extends ConstraintLayout {
     public static final String DEFAULT_BG_COLOR = "#E53935";
     public static final String DEFAULT_TEXT_COLOR = "#FFFFFF";
     public static final int DEFAULT_PADDING = 10;
-    public static final int DEFAULT_RADIUS = 8;
-    public static final int DEFAULT_TEXT_SIZE = 18;
 
-    private String text;
-    private Drawable icon;
-    private float drawablePadding;
-    private int backgroundColor;
-    private float cornerRadius;
-    private int textColor;
-    private float textSize;
+    protected String text;
+    protected Drawable icon;
+    protected float drawablePadding;
+    protected int backgroundColor;
+    protected float cornerRadius;
+    protected int textColor;
+    protected float textSize;
 
     public ReleasingButton(@NonNull Context context) {
         super(context);
@@ -48,7 +48,7 @@ public class ReleasingButton extends FrameLayout {
         initAttr(context, attrs );
     }
 
-    private void initAttr(Context context, AttributeSet attributeSet){
+    protected void initAttr(Context context, AttributeSet attributeSet){
         if(attributeSet == null){
             return;
         }
@@ -84,42 +84,48 @@ public class ReleasingButton extends FrameLayout {
         backgroundColor = typedArray.getColor(R.styleable.ReleasingButton_rb_backgroundColor, Color.parseColor(DEFAULT_BG_COLOR));
 
         //corner radius
-        cornerRadius = typedArray.getDimension(R.styleable.ReleasingButton_rb_cornerRadius, DEFAULT_RADIUS);
+        cornerRadius = typedArray.getDimension(R.styleable.ReleasingButton_rb_cornerRadius, getResources().getDimension(R.dimen.releasing_button_default_corner_radius));
 
         //text color
-        textColor = typedArray.getColor(R.styleable.ReleasingButton_tb_textColor, Color.parseColor(DEFAULT_TEXT_COLOR));
+        textColor = typedArray.getColor(R.styleable.ReleasingButton_rb_textColor, Color.parseColor(DEFAULT_TEXT_COLOR));
 
         //text size
-        textSize = typedArray.getDimension(R.styleable.ReleasingButton_tb_textSize, DEFAULT_TEXT_SIZE);
+        textSize = typedArray.getDimensionPixelSize(R.styleable.ReleasingButton_rb_textSize, getResources().getDimensionPixelSize(R.dimen.releasing_btn_text_size));
         typedArray.recycle();
 
         initView();
 
     }
 
-    private void initView(){
+    protected void initView(){
         //create a TextView
         TextView textView = new TextView(getContext());
+
+        //add the text
+        addView(textView);
+
         //set the specified text
         textView.setText(text);
-        textView.setTextSize(textSize);
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextAppearance(android.R.style.TextAppearance_Medium);
         }else{
             textView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
         }
+
+        textView.setTextSize(SizeUtils.px2sp(getContext(), textSize));
         textView.setTextColor(textColor);
         textView.setGravity(Gravity.CENTER);
-        textView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        textView.setId(R.id.releasing_btn_tv);
+
+
 
         //set the icon
         textView.setCompoundDrawablePadding((int) drawablePadding);
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, icon, null, null ,null);
 
-        //create drawable for the background
-        GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setColor(backgroundColor); //set the color
-        gradientDrawable.setCornerRadius(cornerRadius); //set the corner radius
+        GradientDrawable gradientDrawable = getGradientDrawable();
 
         //set the drawable as the background
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -128,9 +134,26 @@ public class ReleasingButton extends FrameLayout {
             setBackgroundDrawable(gradientDrawable);
         }
 
-        //add the text
-        addView(textView);
+        //set the layout params
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(this );
+        constraintSet.constrainWidth(textView.getId(), ConstraintSet.WRAP_CONTENT);
+        constraintSet.constrainHeight(textView.getId(), ConstraintSet.WRAP_CONTENT);
+        constraintSet.connect(textView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        constraintSet.connect(textView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        constraintSet.connect(textView.getId(), ConstraintSet.TOP,  ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        constraintSet.applyTo(this);
 
+
+    }
+
+    @NotNull
+    protected GradientDrawable getGradientDrawable() {
+        //create drawable for the background
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(backgroundColor); //set the color
+        gradientDrawable.setCornerRadius(cornerRadius); //set the corner radius
+        return gradientDrawable;
     }
 
     public String getText() {

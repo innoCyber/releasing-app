@@ -8,12 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionMenuTextColor">@color/colorBlack</item>
         <item name="titleTextColor">@color/colorBlack</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
     </style>
 
 
-    <style name="AppTheme.Splash">
+
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.Toolbar" parent="AppTheme">
+        <!--This line changes the color of text in Toolbar-->
+        <item name="android:textColorPrimary">@color/colorBlack</item>
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="android:textColorSecondary">@color/colorBlack</item>
     </style>
 
     <style name="ButtonStyle">
@@ -29,8 +42,15 @@
 
     </style>
 
-    <style name="ButtonStyle.Home">
-        <item name="android:background">@drawable/home_btn_bg</item>
+    <style name="ButtonStyle.Error">
+        <item name="android:background">@drawable/round_rect_blue</item>
+    </style>
+
+    <style name="ButtonStyle.HomeBottom">
+        <item name="android:background">@drawable/round_rect_gray</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:padding">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:drawablePadding">@dimen/constraint_default_margin_24dp</item>
     </style>
 
     <style name="ButtonStyle.Save">
@@ -54,6 +74,16 @@
         <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_8dp</item>
     </style>
 
+    <style name="RippleLayoutStyle.Close">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="RippleLayoutStyle.Damages">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleRoundedCorners">0dp</item>
+    </style>
+
     <style name="RippleLayoutStyle.Configure">
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
     </style>
@@ -61,6 +91,16 @@
     <style name="RippleLayoutStyle.Configure.Spinner">
         <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
         <item name="mrl_rippleRoundedCorners">0dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.HomeTop">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.HomeBottom">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_10dp</item>
     </style>
 
 
@@ -102,4 +142,30 @@
         <item name="android:textColor">@color/colorRed</item>
         <item name="android:textSize">9sp</item>
     </style>
+
+    <style name="ReleasingHomeButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="rb_bg_drawable">@drawable/round_rect_black</item>
+        <item name="rb_textColor">@color/colorBlack</item>
+        <item name="rb_textSize">@dimen/releasing_btn_text_size</item>
+    </style>
+
+
+
+    <style name="HomeTopTitleLabelStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+        <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
+        <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
+        <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
+    </style>
+
+
 </resources>

@@ -14,19 +14,20 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -40,14 +41,15 @@ import ptml.releasing.app.utils.Constants
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewModel{
-
+abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseViewModel, D : ViewDataBinding {
     private val networkSubject = MutableLiveData<Boolean>()
     private lateinit var receiver: BroadcastReceiver
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
     private var snackBar: Snackbar? = null
     private var firstTime = true
 
+
+    protected lateinit var binding: D
     protected lateinit var viewModel: T
 
     @Inject
@@ -56,27 +58,33 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+
+        viewModel = ViewModelProviders.of(this, viewModeFactory)
+                .get(getViewModelClass())
+
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         } else {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
+        initBinding()
 
-        viewModel = ViewModelProviders.of(this, viewModeFactory)
-                .get(getViewModelClass())
-
-        receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                Timber.d("Base activity receiver")
-                val networkIsAvailable = intent?.extras?.getBoolean(Constants.IS_NETWORK_AVAILABLE, false)
-                networkSubject.postValue(networkIsAvailable)
-            }
-        }
     }
 
-    protected abstract fun getViewModelClass(): Class<T>
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, getLayoutResourceId())
+        binding.setVariable(getBindingVariable(), viewModel)
+        binding.executePendingBindings()
+    }
+
+
+    @LayoutRes
+    abstract fun getLayoutResourceId(): Int
+
+    abstract fun getBindingVariable(): Int
+
 
     fun showUpEnabled(enabled: Boolean) {
         supportActionBar?.setDisplayHomeAsUpEnabled(enabled)
@@ -140,20 +148,18 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupConnectionListener() {
         Timber.d("Setting up connectivity listener")
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onLost(network: Network?) {
                 Timber.d("ReleasingApplication lost connection")
-                networkSubject.postValue( false)
+                networkSubject.postValue(false)
             }
 
             override fun onAvailable(network: Network?) {
                 Timber.d("ReleasingApplication gained connection")
-                networkSubject.postValue( true)
+                networkSubject.postValue(true)
             }
         }
         val networkRequest = NetworkRequest.Builder().build()
@@ -169,7 +175,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-    fun startNewActivity(name: Class<*>, finish: Boolean) {
+    fun startNewActivity(name: Class<*>, finish: Boolean = false) {
         val intent = Intent(this, name)
         startActivity(intent)
         if (finish) {
@@ -178,7 +184,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-    fun showSnackBarError() {
+    private fun showSnackBarError() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
                 findViewById(android.R.id.content),
@@ -189,7 +195,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         val snackBarLayout = snackBar?.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorRed))
         snackBarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                .setTextColor(resources.getColor(android.R.color.white))
+                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         param.gravity = Gravity.TOP
 
 
@@ -202,7 +208,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-    fun showSnackBar() {
+    private fun showSnackBar() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
                 findViewById(android.R.id.content),
@@ -213,7 +219,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         val snackBarLayout = snackBar?.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
         snackBarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                .setTextColor(resources.getColor(android.R.color.white))
+                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         param.gravity = Gravity.TOP
         snackBar?.view?.layoutParams = param
         if (!firstTime) {
@@ -225,7 +231,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-    fun notifyUser(message: String) {
+    fun notifyUser(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -235,7 +241,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         val snackBarLayout = snackBar.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorAccent))
         (snackBarLayout.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView)
-                .setTextColor(view.context.resources.getColor(android.R.color.white))
+                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         /*snackBar.getView().setLayoutParams(param);*/
         snackBar.show()
     }
@@ -249,7 +255,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
     }
 
 
-    protected fun showLoading(view: View, textView: TextView, @StringRes message: Int) {
+    fun showLoading(view: View, textView: TextView, @StringRes message: Int) {
         textView.text = getString(message)
 
         val bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up)
@@ -258,7 +264,7 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         view.visibility = View.VISIBLE
     }
 
-    protected fun hideLoading(view: View) {
+    fun hideLoading(view: View) {
 
         val slide = AnimationUtils.loadAnimation(
                 this,
@@ -268,24 +274,23 @@ abstract class BaseActivity<T> : DaggerAppCompatActivity() where T: BaseViewMode
         view.visibility = View.GONE
     }
 
-
-    protected fun hideKeyBoard(view: View) {
-        (applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    protected fun showDialog(message: String?) {
-        InfoConfirmDialog.showDialog(this, getString(R.string.error), message, R.drawable.ic_error) {
-
-        }
+    fun showDialog(message: String?) {
+        InfoConfirmDialog.showDialog(context = this,
+            title =  getString(R.string.error),
+            message =  message,
+            topIcon =  R.drawable.ic_error)
     }
 
 
-    protected fun initErrorDrawable(imageView: ImageView) {
+    fun initErrorDrawable(imageView: ImageView) {
         val errorDrawable = ContextCompat.getDrawable(this, R.drawable.ic_error)
         val mutatedDrawable = errorDrawable?.mutate()
         DrawableCompat.setTint(mutatedDrawable!!, ContextCompat.getColor(this, R.color.colorRed))
         imageView.setImageDrawable(mutatedDrawable)
     }
 //    abstract fun observeNetworkChanges(connectivityObservable: Observable<Boolean>)
+
+
+    protected abstract fun getViewModelClass(): Class<T>
+
 }

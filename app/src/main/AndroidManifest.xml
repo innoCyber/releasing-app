@@ -31,11 +31,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="n">
-        <activity android:name="ptml.releasing.app.ui.MainActivity" />
 
         <activity
             android:name="ptml.releasing.device_configuration.view.DeviceConfigActivity"
-            android:theme="@style/AppTheme.Splash">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,10 +43,21 @@
         </activity>
         <activity
             android:name=".auth.view.LoginActivity"
-            android:label="@string/admin_login" />
+            android:label="@string/admin_login"
+            android:parentActivityName=".home.view.HomeActivity" />
         <activity
             android:name="ptml.releasing.admin_configuration.view.AdminConfigActivity"
             android:label="@string/configuration" />
+
+        <activity
+            android:name=".home.view.HomeActivity"
+            android:label="@string/home"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".damages.view.DamageActivity"
+            android:parentActivityName=".home.view.HomeActivity"
+            android:label="@string/damages" />
     </application>
 
 </manifest>

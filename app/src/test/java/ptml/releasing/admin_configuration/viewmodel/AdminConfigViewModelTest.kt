@@ -4,7 +4,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Deferred
 import org.junit.Test
-import ptml.releasing.admin_configuration.models.ConfigurationResponse
+import ptml.releasing.admin_configuration.models.AdminConfigResponse
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.base.BaseTest
@@ -22,8 +22,8 @@ class AdminConfigViewModelTest : BaseTest() {
     @Test
     fun `get admin configuration success`() {
         coEvery {
-            repository.getAdminConfiguration(any())
-        } returns getAdminConfigurationSuccess().toDefferred() as Deferred<ConfigurationResponse>
+            repository.getAdminConfigurationAsync(any())
+        } returns getAdminConfigurationSuccess().toDeferredAsync() as Deferred<AdminConfigResponse>
 
         viewModel.getConfig("")
 
@@ -46,8 +46,8 @@ class AdminConfigViewModelTest : BaseTest() {
     @Test
     fun `get admin configuration fail`() {
         coEvery {
-            repository.getAdminConfiguration(any())
-        } returns getAdminConfigurationFail().toDefferred() as Deferred<ConfigurationResponse>
+            repository.getAdminConfigurationAsync(any())
+        } returns getAdminConfigurationFail().toDeferredAsync() as Deferred<AdminConfigResponse>
 
         viewModel.getConfig("")
 

@@ -7,7 +7,9 @@ import dagger.multibindings.IntoMap
 import ptml.releasing.app.di.mapkeys.ViewModelKey
 import ptml.releasing.admin_configuration.viewmodel.AdminConfigViewModel
 import ptml.releasing.auth.viewmodel.LoginViewModel
+import ptml.releasing.damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
+import ptml.releasing.home.viewmodel.HomeViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -28,4 +30,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AdminConfigViewModel::class)
     abstract fun bindConfigViewModel(myViewModel: AdminConfigViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun bindHomeViewModel(myViewModel: HomeViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DamageViewModel::class)
+    abstract fun bindDamageViewModel(myViewModel: DamageViewModel): ViewModel
 }

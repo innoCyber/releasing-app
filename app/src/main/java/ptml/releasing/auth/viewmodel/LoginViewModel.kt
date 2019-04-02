@@ -12,11 +12,12 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.auth.model.User
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    var repository: Repository,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
+        var repository: Repository,
+        var appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel() {
 
 
@@ -48,10 +49,16 @@ class LoginViewModel @Inject constructor(
         networkState.postValue(NetworkState.LOADING)
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
-                val result = repository.login(user).await()
+                val result = repository.loginAsync(user).await()
                 withContext(appCoroutineDispatchers.main) {
-                    response.postValue(result)
-                    networkState.postValue(NetworkState.LOADED)
+                    if (result.data.isNotEmpty()) {
+                        val data = result.data[0]
+                        response.postValue(result.data[0])
+                        Timber.d("Response: %s", data)
+                        networkState.postValue(NetworkState.LOADED)
+                    } else {
+                        networkState.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                    }
                 }
             } catch (it: Throwable) {
                 Timber.e(it)

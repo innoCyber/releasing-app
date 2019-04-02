@@ -52,4 +52,16 @@
     <string name="error_image">Error image</string>
     <string name="error_occurred">An error occurred, please try again</string>
     <string name="exit">Close</string>
+    <string name="cargo_search">Cargo Search</string>
+    <string name="parking_lot">Parking Slot</string>
+    <string name="container">Container</string>
+    <string name="main">Main</string>
+    <string name="operation_step">Operation step</string>
+    <string name="home">Home</string>
+    <string name="nav_preferences">Preferences</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="damages">Damages</string>
+    <string name="downloading_damages">Downloading damages</string>
 </resources>

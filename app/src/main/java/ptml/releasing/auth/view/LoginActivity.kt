@@ -3,9 +3,9 @@ package ptml.releasing.auth.view
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.ErrorHandler
@@ -13,17 +13,15 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.admin_configuration.view.AdminConfigActivity
-import ptml.releasing.admin_configuration.view.getConfigWithPermissionCheck
+import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
 
-class LoginActivity : BaseActivity<LoginViewModel>() {
+class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
-    lateinit var binding: ActivityLoginBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         showUpEnabled(true)
         initErrorDrawable(binding.includeError.imgError)
 
@@ -114,8 +112,13 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
         binding.editPassword.clearFocus()
         binding.editName.clearFocus()
-        hideKeyBoard(binding.btnLogin)
+        binding.btnLogin.hideSoftInputFromWindow()
     }
 
     override fun getViewModelClass() = LoginViewModel::class.java
+
+    //TODO: Change to view model if you are using data binding in xml
+    override fun getBindingVariable() = BR._all
+
+    override fun getLayoutResourceId() = R.layout.activity_login
 }

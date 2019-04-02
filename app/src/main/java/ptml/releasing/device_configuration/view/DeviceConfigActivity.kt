@@ -8,6 +8,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
+import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
@@ -19,24 +20,22 @@ import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityDeviceConfigBinding
 
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
+import ptml.releasing.home.view.HomeActivity
 import timber.log.Timber
 
 @RuntimePermissions
-class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel>() {
+class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceConfigBinding>() {
 
-
-    lateinit var binding: ActivityDeviceConfigBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_device_config)
         binding.includeProgress.root.visibility = View.VISIBLE
         initErrorDrawable(binding.includeError.imgError)
 
         viewModel.baseLiveData.observe(this, Observer {
             if (true == it?.isSuccess) {
                 hideLoading(binding.includeError.root)
-                startNewActivity(LoginActivity::class.java, true)
+                startNewActivity(HomeActivity::class.java, true)
             } else if (false == it?.isSuccess) {
                 showError()
             }
@@ -82,11 +81,15 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel>() {
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
         InfoConfirmDialog.showDialog(
-                this,
-                R.string.allow_permission,
-                R.string.allow_phone_state_permission_msg,
-                R.drawable.ic_info_white, ({ request.proceed() })
-        )
+            context = this,
+            title = R.string.allow_permission,
+            message = R.string.allow_phone_state_permission_msg,
+            topIcon = R.drawable.ic_info_white,
+            listener = object : InfoConfirmDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
@@ -107,6 +110,9 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel>() {
 
     override fun getViewModelClass() = DeviceConfigViewModel::class.java
 
+    override fun getLayoutResourceId() = R.layout.activity_device_config
+
+    override fun getBindingVariable() = BR._all
 
 
 }

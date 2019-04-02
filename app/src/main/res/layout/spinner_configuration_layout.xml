@@ -10,6 +10,7 @@
         android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
         android:ellipsize="marquee"
         android:gravity="start"
+        android:textColor="@color/colorGray"
         android:drawablePadding="@dimen/constraint_default_margin_8dp"
         android:padding="@dimen/constraint_default_margin_8dp"
         android:singleLine="true"

@@ -5,8 +5,8 @@ import dagger.Provides
 import kotlinx.coroutines.Dispatchers
 import ptml.releasing.app.Local
 import ptml.releasing.app.ReleasingLocal
-import ptml.releasing.app.api.ReleasingRemote
-import ptml.releasing.app.api.Remote
+import ptml.releasing.app.remote.ReleasingRemote
+import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.di.scopes.ReleasingAppScope
@@ -19,8 +19,8 @@ class MainModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideRepository(remote: Remote, local: Local): Repository {
-        return ReleasingRepository(remote, local)
+    fun provideRepository(remote: Remote, local: Local, appCoroutineDispatchers: AppCoroutineDispatchers): Repository {
+        return ReleasingRepository(remote, local, appCoroutineDispatchers)
     }
 
     @Provides
