@@ -41,8 +41,10 @@ class CargoType : BaseConfig()
 class Terminal : BaseConfig()
 
 
-data class OperationStep(@SerializedName("cargo_id")
-                         val categoryTypeId: Int) : BaseConfig(){
+data class OperationStep(
+    @SerializedName("cargo_id")
+    val categoryTypeId: Int
+) : BaseConfig() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is OperationStep) return false
@@ -67,17 +69,17 @@ data class OperationStep(@SerializedName("cargo_id")
 }
 
 
-data class AdminConfigResponse(@SerializedName("cargo_type")
-                               val cargoTypeList: List<CargoType>,
-                               @SerializedName("operation_step")
-                               val operationStepList: List<OperationStep>,
-                               @SerializedName("terminal")
-                               val terminalList: List<Terminal>) : AppResponse() {
+data class AdminConfigResponse(
+    @SerializedName("cargo_type")
+    val cargoTypeList: List<CargoType>,
+    @SerializedName("operation_step")
+    val operationStepList: List<OperationStep>,
+    @SerializedName("terminal")
+    val terminalList: List<Terminal>
+) : AppResponse() {
 
 
-
-
-    constructor(): this(mutableListOf(), mutableListOf(), mutableListOf())
+    constructor() : this(mutableListOf(), mutableListOf(), mutableListOf())
 
 
     /**
@@ -112,7 +114,7 @@ data class Configuration(
     @SerializedName("operationStep") val operationStep: OperationStep,
     @SerializedName("cargoType") val cargoType: CargoType,
     @SerializedName("cameraEnabled") val cameraEnabled: Boolean
-):AppResponse(){
+) : AppResponse() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Configuration) return false
@@ -139,3 +141,16 @@ data class Configuration(
 
 
 }
+
+data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse()
+
+data class ConfigureDeviceData(
+    @SerializedName("type") val type: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("is_required") val required: Boolean,
+    @SerializedName("is_editable") val editable: Boolean,
+    @SerializedName("options") val options: List<Options>,
+    @SerializedName("data_validation") val dataValidation: String
+) : BaseModel()
+
+class Options()
