@@ -18,6 +18,7 @@ class AdminConfigViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val configResponse = MutableLiveData<AdminConfigResponse>()
+    val operationStepList = MutableLiveData<List<OperationStep>>()
     val networkState = MutableLiveData<NetworkState>()
     val savedSuccess = MutableLiveData<Boolean>()
     val configuration = MutableLiveData<Configuration>()
@@ -43,7 +44,7 @@ class AdminConfigViewModel @Inject constructor(
                     configResponse.postValue(response)
                     Timber.d("Checking if there is a saved configuration")
                     val configured = repository.isConfiguredAsync().await()
-                    if(configured){
+                    if (configured) {
                         Timber.d("Configuration was saved before, getting the configuration")
                         val config = repository.getSavedConfigAsync().await()
                         Timber.d("Configuration gotten: %s", config)
@@ -72,13 +73,33 @@ class AdminConfigViewModel @Inject constructor(
                 repository.setConfigured(true)
                 savedSuccess.postValue(true)
                 networkState.postValue(NetworkState.LOADED)
-            }catch (e: Throwable) {
+            } catch (e: Throwable) {
                 Timber.e(e)
                 networkState.postValue(NetworkState.error(e))
             }
 
         }
     }
+
+    fun cargoTypeSelected(cargoType: CargoType) {
+        //populate
+        operationStepList.postValue(getOperationStepForCargo(cargoType))
+    }
+
+    private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
+        val list = mutableListOf<OperationStep>()
+        for (operationStep in configResponse.value?.operationStepList ?: mutableListOf()) {
+            if (operationStep.categoryTypeId == cargoType.id) {
+                Timber.d("Operation step has  a category_id: %s", cargoType.id)
+                list.add(operationStep)
+            } else {
+                Timber.d("Operation step is does not have a category_id: %s", cargoType.id)
+            }
+        }
+        return list
+    }
+
+
 
 
 }

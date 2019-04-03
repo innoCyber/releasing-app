@@ -94,7 +94,7 @@
     </style>
 
     <style name="RippleLayoutStyle.Configure.Spinner">
-        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
         <item name="mrl_rippleRoundedCorners">0dp</item>
     </style>
 

@@ -2,6 +2,7 @@ package ptml.releasing.admin_configuration.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -24,7 +25,7 @@ import timber.log.Timber
 @RuntimePermissions
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
-    private lateinit var cargoAdapter: ConfigSpinnerAdapter<CargoType>
+    private var cargoAdapter: ConfigSpinnerAdapter<CargoType>? = null
 
     private lateinit var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>
 
@@ -38,8 +39,23 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         binding.top.root.visibility = View.INVISIBLE
         binding.bottom.root.visibility = View.INVISIBLE
 
+
+        binding.top.selectCargoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Timber.d("Nothing was selected")
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.cargoTypeSelected(cargoAdapter?.getItem(position) ?: CargoType())
+            }
+        }
+
         viewModel.configData.observe(this, Observer {
             setUpSpinners(it)
+        })
+
+        viewModel.operationStepList.observe(this, Observer {
+            setUpOperationStep(it)
         })
 
 
@@ -66,7 +82,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
 
         viewModel.savedSuccess.observe(this, Observer {
-            if(it){
+            if (it) {
                 notifyUser(getString(R.string.config_saved_success))
                 finish()
             }
@@ -79,17 +95,19 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             val cameraEnabled = it.cameraEnabled
 
             binding.top.cameraSwitch.isChecked = cameraEnabled
-            binding.top.selectCargoSpinner.setSelection(cargoAdapter.getPosition(cargoType))
+            binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?:0)
             binding.top.selectOperationSpinner.setSelection(operationStepAdapter.getPosition(operationStep))
             binding.top.selectTerminalSpinner.setSelection(terminalAdapter.getPosition(terminal))
         })
 
 
         binding.bottom.btnProfilesLayout.setOnClickListener {
-            viewModel.setConfig(binding.top.selectTerminalSpinner.selectedItem as Terminal,
+            viewModel.setConfig(
+                binding.top.selectTerminalSpinner.selectedItem as Terminal,
                 binding.top.selectOperationSpinner.selectedItem as OperationStep,
                 binding.top.selectCargoSpinner.selectedItem as CargoType,
-                binding.top.cameraSwitch.isChecked)
+                binding.top.cameraSwitch.isChecked
+            )
         }
 
         binding.includeError.btnReloadLayout.setOnClickListener {
@@ -110,10 +128,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-       val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
-           buttonText = getString(android.R.string.ok),
+            buttonText = getString(android.R.string.ok),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     request.proceed()
@@ -141,23 +159,29 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     private fun setUpSpinners(response: AdminConfigResponse) {
         try {
-            cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList!!)
-            operationStepAdapter =
-                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.operationStepList!!)
-            terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList!!)
+            cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList)
+
+            terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList)
+
             binding.top.selectCargoSpinner.adapter = cargoAdapter
-            binding.top.selectOperationSpinner.adapter = operationStepAdapter
             binding.top.selectTerminalSpinner.adapter = terminalAdapter
+
         } catch (e: Exception) {
             Timber.e(e)
             showLoading(binding.includeError.root, binding.includeError.tvMessage, R.string.error_occurred)
         }
     }
 
+    private fun setUpOperationStep(operationStepList: List<OperationStep>) {
+        operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
+        binding.top.selectOperationSpinner.adapter = operationStepAdapter
+    }
+
+
     override fun getViewModelClass() = AdminConfigViewModel::class.java
 
-    //TODO: Change to view model if you are using data binding in xml
-    override fun getBindingVariable() = BR._all
+
+    override fun getBindingVariable() = BR.viewModel
 
     override fun getLayoutResourceId() = R.layout.activity_admin_config
 

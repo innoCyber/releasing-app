@@ -67,31 +67,17 @@ data class OperationStep(@SerializedName("cargo_id")
 }
 
 
-class AdminConfigResponse : AppResponse {
+data class AdminConfigResponse(@SerializedName("cargo_type")
+                               val cargoTypeList: List<CargoType>,
+                               @SerializedName("operation_step")
+                               val operationStepList: List<OperationStep>,
+                               @SerializedName("terminal")
+                               val terminalList: List<Terminal>) : AppResponse() {
 
 
-    @SerializedName("cargo_type")
-    var cargoTypeList: List<CargoType>? = null
-
-    @SerializedName("operation_step")
-    var operationStepList: List<OperationStep>? = null
 
 
-    @SerializedName("terminal")
-    var terminalList: List<Terminal>? = null
-
-
-    constructor(
-        cargoTypeList: List<CargoType>?,
-        operationStepList: List<OperationStep>?,
-        terminalList: List<Terminal>?
-    ) {
-        this.cargoTypeList = cargoTypeList
-        this.operationStepList = operationStepList
-        this.terminalList = terminalList
-    }
-
-    constructor()
+    constructor(): this(mutableListOf(), mutableListOf(), mutableListOf())
 
 
     /**
@@ -112,9 +98,9 @@ class AdminConfigResponse : AppResponse {
      * Used in conjuction with @link AdminConfigResponse#equals to  check for equality in instances of this class
      * */
     override fun hashCode(): Int {
-        var result = cargoTypeList?.hashCode() ?: 0
-        result = 31 * result + (operationStepList?.hashCode() ?: 0)
-        result = 31 * result + (terminalList?.hashCode() ?: 0)
+        var result = cargoTypeList.hashCode() ?: 0
+        result = 31 * result + (operationStepList.hashCode() ?: 0)
+        result = 31 * result + (terminalList.hashCode() ?: 0)
         return result
     }
 
