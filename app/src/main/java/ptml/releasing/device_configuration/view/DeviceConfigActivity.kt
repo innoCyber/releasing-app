@@ -13,6 +13,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.databinding.ActivityDeviceConfigBinding
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.home.view.HomeActivity
@@ -30,7 +31,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         viewModel.baseLiveData.observe(this, Observer {
             if (true == it?.isSuccess) {
                 hideLoading(binding.includeError.root)
-                startNewActivity(AdminConfigActivity::class.java, true)
+                startNewActivity(LoginActivity::class.java, true)
             } else if (false == it?.isSuccess) {
                 showError()
             }
