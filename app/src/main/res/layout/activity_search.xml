@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+                name="viewModel"
+                type="ptml.releasing.search.viewmodel.SearchViewModel" />
+    </data>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,13 +50,29 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/constraint_default_margin_32dp"
-                android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
                 app:layout_constraintTop_toBottomOf="@id/include_home_top"
                 app:layout_constraintVertical_bias="0" />
 
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                    android:id="@+id/btn_back_layout"
+                    style="@style/RippleLayoutStyle.Configure"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                    app:layout_constraintStart_toStartOf="@id/guideline_l"
+                    app:layout_constraintTop_toBottomOf="@id/include_search">
+
+                <ptml.releasing.app.views.SupportVectorDrawablesButton
+                        android:id="@+id/btn_back"
+                        style="@style/ButtonStyle.GoBack"
+                        android:onClick="@{() -> viewModel.goBack()}"
+                        android:text="@string/back_to_home"/>
+            </ptml.releasing.app.views.MaterialRippleLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

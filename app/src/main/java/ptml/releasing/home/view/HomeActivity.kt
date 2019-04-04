@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import ptml.releasing.BR
 import ptml.releasing.R
+import ptml.releasing.admin_configuration.models.Configuration
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
@@ -47,7 +48,21 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         }
 
         viewModel.isConfigured.observe(this, Observer {
-            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE
+            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+            binding.appBarHome.content.includeHomeTop.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
+
+        })
+
+        viewModel.firstTimeLogin.observe(this, Observer {
+            if(it){
+                startNewActivity(LoginActivity::class.java)
+            }
+        })
+
+        viewModel.firstTimeFindCargo.observe(this, Observer {
+            if(it){
+                startNewActivity(SearchActivity::class.java)
+            }
         })
 
         viewModel.openConfiguration.observe(this, Observer {
@@ -70,12 +85,24 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
         })
 
+        viewModel.savedConfiguration.observe(this, Observer {
+            updateTop(it)
+        })
 
+
+        viewModel.getSavedConfig()
+
+    }
+
+    private fun updateTop(it: Configuration) {
+        binding.appBarHome.content.includeHomeTop.btnCargoType.text = it.cargoType.value
+        binding.appBarHome.content.includeHomeTop.btnOperationStep.text = it.operationStep.value
+        binding.appBarHome.content.includeHomeTop.btnTerminal.text = it.terminal.value
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.checkIfConfigured()
+        viewModel.getSavedConfig()
     }
 
     private fun showConfigurationErrorDialog() {

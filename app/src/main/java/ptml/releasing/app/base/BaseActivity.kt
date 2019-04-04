@@ -69,7 +69,6 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         }
 
         initBinding()
-
     }
 
 

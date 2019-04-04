@@ -15,8 +15,8 @@ import java.lang.Exception
 import javax.inject.Inject
 
 class DamageViewModel @Inject constructor(
-        private var repository: Repository,
-        private var appCoroutineDispatchers: AppCoroutineDispatchers) : BaseViewModel() {
+        repository: Repository,
+        appCoroutineDispatchers: AppCoroutineDispatchers) : BaseViewModel(repository, appCoroutineDispatchers) {
 
 
     private val responseMutable = MutableLiveData<List<Damage>>()

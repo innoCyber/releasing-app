@@ -16,9 +16,9 @@ import java.lang.Exception
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-        var repository: Repository,
-        var appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel() {
+        repository: Repository,
+        appCoroutineDispatchers: AppCoroutineDispatchers
+) : BaseViewModel(repository, appCoroutineDispatchers) {
 
 
     val usernameValidation = MutableLiveData<Int>()

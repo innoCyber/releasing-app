@@ -13,9 +13,9 @@ import javax.inject.Inject
 
 
 class AdminConfigViewModel @Inject constructor(
-    var repository: Repository,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel() {
+    repository: Repository,
+    appCoroutineDispatchers: AppCoroutineDispatchers
+) : BaseViewModel(repository, appCoroutineDispatchers) {
 
     val configResponse = MutableLiveData<AdminConfigResponse>()
     val operationStepList = MutableLiveData<List<OperationStep>>()

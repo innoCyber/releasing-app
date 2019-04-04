@@ -58,6 +58,12 @@
         <item name="android:background">@drawable/save_btn_bg</item>
     </style>
 
+    <style name="ButtonStyle.GoBack">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/save_btn_bg</item>
+        <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
+    </style>
+
     <style name="ButtonStyle.Delete">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
@@ -90,6 +96,12 @@
     </style>
 
     <style name="RippleLayoutStyle.Configure">
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+
+    <style name="RippleLayoutStyle.GoBack">
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
     </style>
 
