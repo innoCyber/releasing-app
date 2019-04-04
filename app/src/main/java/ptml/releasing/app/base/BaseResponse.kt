@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
 open class BaseResponse :AppResponse{
-    @SerializedName("message:")
+    @SerializedName("message")
     var message: String? = null
 
     @SerializedName("success")

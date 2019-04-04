@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+                name="configuration"
+                type="ptml.releasing.configuration.models.Configuration" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,7 +70,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
                 app:layout_constraintTop_toBottomOf="@id/tv_operation_step"
                 app:rb_icon="@drawable/ic_operation_step"
-                app:rb_text="@string/parking_lot"
                 app:rb_textSize="14sp" />
 
 
@@ -79,12 +85,13 @@
             <ptml.releasing.app.views.ReleasingHomeButton
                 android:id="@+id/btn_cargo_type"
                 style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintVertical_bias="0"
                 app:layout_constraintBottom_toBottomOf="@id/btn_operation_step"
                 app:layout_constraintEnd_toStartOf="@id/btn_terminal"
                 app:layout_constraintStart_toEndOf="@id/btn_operation_step"
                 app:layout_constraintTop_toTopOf="@id/btn_operation_step"
                 app:rb_icon="@drawable/ic_container"
-                app:rb_text="@string/container"
+
                 />
 
 
@@ -100,12 +107,13 @@
             <ptml.releasing.app.views.ReleasingHomeButton
                 android:id="@+id/btn_terminal"
                 style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintVertical_bias="0"
                 app:layout_constraintBottom_toBottomOf="@id/btn_operation_step"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toEndOf="@id/btn_cargo_type"
                 app:layout_constraintTop_toTopOf="@id/btn_operation_step"
                 app:rb_icon="@drawable/ic_terminal"
-                app:rb_text="@string/main" />
+                 />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.di.mapkeys.ViewModelKey
-import ptml.releasing.admin_configuration.viewmodel.AdminConfigViewModel
+import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
@@ -29,8 +30,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AdminConfigViewModel::class)
-    abstract fun bindConfigViewModel(myViewModel: AdminConfigViewModel): ViewModel
+    @ViewModelKey(ConfigViewModel::class)
+    abstract fun bindConfigViewModel(myViewModel: ConfigViewModel): ViewModel
 
 
     @Binds
@@ -49,4 +50,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     abstract fun bindSearchViewModel(myViewModel: SearchViewModel): ViewModel
+
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AdminConfigViewModel::class)
+    abstract fun bindAdminConfigViewModel(myViewModel: AdminConfigViewModel): ViewModel
 }

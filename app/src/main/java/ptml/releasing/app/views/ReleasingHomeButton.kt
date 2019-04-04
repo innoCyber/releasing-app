@@ -95,7 +95,7 @@ open class ReleasingHomeButton : ReleasingButton {
     }
 
     override fun initView() {
-
+        removeAllViews()
         //create an ImageView
         val imageView = ImageView(context)
         imageView.id = R.id.releasing_btn_home_img
@@ -188,6 +188,8 @@ open class ReleasingHomeButton : ReleasingButton {
             TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView, 10, 48, 1, TypedValue.COMPLEX_UNIT_SP)
         }
     }
+
+
 
     protected fun getBg(): Drawable? {
         return when (bgDrawable == null) {

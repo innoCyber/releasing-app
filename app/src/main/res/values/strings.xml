@@ -41,6 +41,7 @@
     <string name="password">Password</string>
     <string name="admin_id">Admin ID</string>
     <string name="logining_in">Logging in…</string>
+    <string name="admin_configuration">Admin Configuration</string>
     <string name="configuration">Configuration</string>
     <string name="drop_down">Drop down</string>
 
@@ -67,12 +68,18 @@
     <string name="qrcode">arcode</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="verify">Verify</string>
-    <string name="mrk_number">MRK Number</string>
-    <string name="enter_mrk_number">Enter MRK Number</string>
+    <string name="search_hint_label">Cargo Number</string>
+    <string name="search_hint">Enter Cargo Number</string>
     <string name="config_saved_success">Configuration saved successfully</string>
     <string name="saved_successful">Success</string>
     <string name="config_error">Configuration Error</string>
     <string name="config_error_message">To perform this operation, your device needs to be configured. Please contact the administrator</string>
     <string name="device_not_configured_message">This device is not yet configured, please contact the administrator</string>
+    <string name="nav_about">Device IMEI</string>
+    <string name="device_IMEI">Device IMEI</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="printer_settings">Printer settings</string>
+    <string name="device_configuration">Device Configuration</string>
 
 </resources>

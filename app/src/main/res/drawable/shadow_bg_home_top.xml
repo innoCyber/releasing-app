@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Bottom 2dp Shadow -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/home_elevation_color" />
+            <corners android:radius="@dimen/constraint_default_margin_12dp" />
+        </shape>
+    </item>
+
+    <!-- White Top color -->
+    <item android:bottom="2dp">
+
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <solid android:color="@color/colorHomeTop" />
+            <corners android:radius="@dimen/constraint_default_margin_10dp" />
+        </shape>
+
+    </item>
+
+
+</layer-list>

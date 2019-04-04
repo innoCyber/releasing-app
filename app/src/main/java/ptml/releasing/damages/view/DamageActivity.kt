@@ -9,7 +9,7 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
-import ptml.releasing.app.dialogs.InfoConfirmDialog
+import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
@@ -87,16 +87,16 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        InfoConfirmDialog.showDialog(
-                context = this,
-                title = R.string.allow_permission,
-                message = R.string.allow_phone_state_permission_msg,
-                topIcon = R.drawable.ic_info_white,
-                listener = object : InfoConfirmDialog.InfoListener {
-                    override fun onConfirm() {
-                        request.proceed()
-                    }
-                })
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)

@@ -10,18 +10,19 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 class DeviceConfigViewModel @Inject constructor(
-        var repository: Repository,
-        var appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel() {
+        repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers
+) : BaseViewModel(repository, appCoroutineDispatchers) {
 
 
     private val imeiLiveData = MutableLiveData<String>()
 
+
+
     val baseLiveData = MutableLiveData<BaseResponse>()
+
 
     val networkState = MutableLiveData<NetworkState>()
 
@@ -46,5 +47,8 @@ class DeviceConfigViewModel @Inject constructor(
         }
 
     }
+
+
+
 
 }

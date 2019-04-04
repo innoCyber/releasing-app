@@ -1,9 +1,9 @@
-package ptml.releasing.admin_configuration.viewmodel
+package ptml.releasing.configuration.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.*
-import ptml.releasing.admin_configuration.models.*
+import ptml.releasing.configuration.models.*
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -12,12 +12,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class AdminConfigViewModel @Inject constructor(
-    var repository: Repository,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel() {
+class ConfigViewModel @Inject constructor(
+    repository: Repository,
+    appCoroutineDispatchers: AppCoroutineDispatchers
+) : BaseViewModel(repository, appCoroutineDispatchers) {
 
     val configResponse = MutableLiveData<AdminConfigResponse>()
+    val operationStepList = MutableLiveData<List<OperationStep>>()
     val networkState = MutableLiveData<NetworkState>()
     val savedSuccess = MutableLiveData<Boolean>()
     val configuration = MutableLiveData<Configuration>()
@@ -42,10 +43,10 @@ class AdminConfigViewModel @Inject constructor(
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
                     Timber.d("Checking if there is a saved configuration")
-                    val configured = repository.isConfiguredAsync().await()
-                    if(configured){
+                    val configured = repository.isConfiguredAsync()
+                    if (configured) {
                         Timber.d("Configuration was saved before, getting the configuration")
-                        val config = repository.getSavedConfigAsync().await()
+                        val config = repository.getSavedConfigAsync()
                         Timber.d("Configuration gotten: %s", config)
                         configuration.postValue(config)
                     }
@@ -72,13 +73,33 @@ class AdminConfigViewModel @Inject constructor(
                 repository.setConfigured(true)
                 savedSuccess.postValue(true)
                 networkState.postValue(NetworkState.LOADED)
-            }catch (e: Throwable) {
+            } catch (e: Throwable) {
                 Timber.e(e)
                 networkState.postValue(NetworkState.error(e))
             }
 
         }
     }
+
+    fun cargoTypeSelected(cargoType: CargoType) {
+        //populate
+        operationStepList.postValue(getOperationStepForCargo(cargoType))
+    }
+
+    private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
+        val list = mutableListOf<OperationStep>()
+        for (operationStep in configResponse.value?.operationStepList ?: mutableListOf()) {
+            if (operationStep.categoryTypeId == cargoType.id) {
+                Timber.d("Operation step has  a category_id: %s", cargoType.id)
+                list.add(operationStep)
+            } else {
+                Timber.d("Operation step is does not have a category_id: %s", cargoType.id)
+            }
+        }
+        return list
+    }
+
+
 
 
 }

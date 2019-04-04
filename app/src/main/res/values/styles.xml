@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
@@ -47,7 +47,10 @@
     </style>
 
     <style name="ButtonStyle.HomeBottom">
-        <item name="android:background">@drawable/round_rect_gray</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:background">@drawable/item_bg_transparent</item>
+        <item name="android:elevation" tools:ignore="NewApi">@dimen/constraint_default_margin_16dp</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:padding">@dimen/constraint_default_margin_16dp</item>
         <item name="android:drawablePadding">@dimen/constraint_default_margin_24dp</item>
@@ -56,6 +59,12 @@
     <style name="ButtonStyle.Save">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/save_btn_bg</item>
+    </style>
+
+    <style name="ButtonStyle.GoBack">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/save_btn_bg</item>
+        <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
     </style>
 
     <style name="ButtonStyle.Delete">
@@ -93,8 +102,14 @@
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
     </style>
 
+
+    <style name="RippleLayoutStyle.GoBack">
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
     <style name="RippleLayoutStyle.Configure.Spinner">
-        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
         <item name="mrl_rippleRoundedCorners">0dp</item>
     </style>
 
@@ -165,7 +180,7 @@
 
     <style name="ReleasingButtonStyle.Home">
         <item name="android:layout_width">0dp</item>
-        <item name="rb_bg_drawable">@drawable/round_rect_black</item>
+        <item name="rb_bg_drawable">@drawable/shadow_bg_home_top</item>
         <item name="rb_textColor">@color/colorBlack</item>
         <item name="rb_textSize">14sp</item>
         <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>

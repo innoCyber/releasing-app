@@ -1,11 +1,9 @@
-package ptml.releasing.admin_configuration.models
+package ptml.releasing.configuration.models
 
-import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.AppResponse
 import ptml.releasing.app.base.BaseModel
 import ptml.releasing.app.base.BaseResponse
-import java.lang.reflect.Type
 
 open class BaseConfig : BaseModel() {
 
@@ -36,13 +34,19 @@ open class BaseConfig : BaseModel() {
 
 }
 
-class CargoType : BaseConfig()
+class CargoType : BaseConfig(){
+    companion object {
+        const val VEHICLE = "vehicle"
+    }
+}
 
 class Terminal : BaseConfig()
 
 
-data class OperationStep(@SerializedName("cargo_id")
-                         val categoryTypeId: Int) : BaseConfig(){
+data class OperationStep(
+    @SerializedName("cargo_id")
+    val categoryTypeId: Int
+) : BaseConfig() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is OperationStep) return false
@@ -67,31 +71,17 @@ data class OperationStep(@SerializedName("cargo_id")
 }
 
 
-class AdminConfigResponse : AppResponse {
-
-
+data class AdminConfigResponse(
     @SerializedName("cargo_type")
-    var cargoTypeList: List<CargoType>? = null
-
+    val cargoTypeList: List<CargoType>,
     @SerializedName("operation_step")
-    var operationStepList: List<OperationStep>? = null
-
-
+    val operationStepList: List<OperationStep>,
     @SerializedName("terminal")
-    var terminalList: List<Terminal>? = null
+    val terminalList: List<Terminal>
+) : AppResponse() {
 
 
-    constructor(
-        cargoTypeList: List<CargoType>?,
-        operationStepList: List<OperationStep>?,
-        terminalList: List<Terminal>?
-    ) {
-        this.cargoTypeList = cargoTypeList
-        this.operationStepList = operationStepList
-        this.terminalList = terminalList
-    }
-
-    constructor()
+    constructor() : this(mutableListOf(), mutableListOf(), mutableListOf())
 
 
     /**
@@ -112,9 +102,9 @@ class AdminConfigResponse : AppResponse {
      * Used in conjuction with @link AdminConfigResponse#equals to  check for equality in instances of this class
      * */
     override fun hashCode(): Int {
-        var result = cargoTypeList?.hashCode() ?: 0
-        result = 31 * result + (operationStepList?.hashCode() ?: 0)
-        result = 31 * result + (terminalList?.hashCode() ?: 0)
+        var result = cargoTypeList.hashCode() ?: 0
+        result = 31 * result + (operationStepList.hashCode() ?: 0)
+        result = 31 * result + (terminalList.hashCode() ?: 0)
         return result
     }
 
@@ -126,7 +116,7 @@ data class Configuration(
     @SerializedName("operationStep") val operationStep: OperationStep,
     @SerializedName("cargoType") val cargoType: CargoType,
     @SerializedName("cameraEnabled") val cameraEnabled: Boolean
-):AppResponse(){
+) : AppResponse() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Configuration) return false
@@ -153,3 +143,16 @@ data class Configuration(
 
 
 }
+
+data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse()
+
+data class ConfigureDeviceData(
+    @SerializedName("type") val type: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("is_required") val required: Boolean,
+    @SerializedName("is_editable") val editable: Boolean,
+    @SerializedName("options") val options: List<Options>,
+    @SerializedName("data_validation") val dataValidation: String
+) : BaseModel()
+
+class Options()

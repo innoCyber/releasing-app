@@ -2,23 +2,18 @@ package ptml.releasing.device_configuration.view
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
-import ptml.releasing.app.dialogs.InfoConfirmDialog
-import ptml.releasing.auth.view.LoginActivity
+import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityDeviceConfigBinding
-
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.home.view.HomeActivity
 import timber.log.Timber
@@ -35,7 +30,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         viewModel.baseLiveData.observe(this, Observer {
             if (true == it?.isSuccess) {
                 hideLoading(binding.includeError.root)
-                startNewActivity(HomeActivity::class.java, true)
+                startNewActivity(AdminConfigActivity::class.java, true)
             } else if (false == it?.isSuccess) {
                 showError()
             }
@@ -80,16 +75,16 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        InfoConfirmDialog.showDialog(
-            context = this,
-            title = R.string.allow_permission,
-            message = R.string.allow_phone_state_permission_msg,
-            topIcon = R.drawable.ic_info_white,
-            listener = object : InfoConfirmDialog.InfoListener {
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     request.proceed()
                 }
             })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)

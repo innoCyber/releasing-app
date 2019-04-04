@@ -1,4 +1,4 @@
-package ptml.releasing.admin_configuration.view.adapter
+package ptml.releasing.configuration.view.adapter
 
 /**
  * Created by Cyberman on 3/12/2019.
@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import ptml.releasing.R
-import ptml.releasing.admin_configuration.models.BaseConfig
+import ptml.releasing.configuration.models.BaseConfig
 
 class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<T>) : ArrayAdapter<T>(context, id, list) where T : BaseConfig {
 

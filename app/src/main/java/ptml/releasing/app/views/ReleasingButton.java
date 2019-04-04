@@ -98,6 +98,7 @@ public class ReleasingButton extends ConstraintLayout {
     }
 
     protected void initView(){
+        removeAllViews();
         //create a TextView
         TextView textView = new TextView(getContext());
 
