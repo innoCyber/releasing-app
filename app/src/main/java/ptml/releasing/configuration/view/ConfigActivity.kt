@@ -1,4 +1,4 @@
-package ptml.releasing.admin_configuration.view
+package ptml.releasing.configuration.view
 
 import android.os.Bundle
 import android.view.View
@@ -7,29 +7,29 @@ import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.admin_configuration.models.AdminConfigResponse
-import ptml.releasing.admin_configuration.models.CargoType
-import ptml.releasing.admin_configuration.models.OperationStep
-import ptml.releasing.admin_configuration.models.Terminal
-import ptml.releasing.admin_configuration.view.adapter.ConfigSpinnerAdapter
-import ptml.releasing.admin_configuration.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.databinding.ActivityAdminConfigBinding
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.CargoType
+import ptml.releasing.configuration.models.OperationStep
+import ptml.releasing.configuration.models.Terminal
+import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
+import ptml.releasing.configuration.viewmodel.ConfigViewModel
+import ptml.releasing.databinding.ActivityConfigBinding
 import timber.log.Timber
 
 @RuntimePermissions
-class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
+class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private var cargoAdapter: ConfigSpinnerAdapter<CargoType>? = null
 
-    private lateinit var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>
+    private  var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>? = null
 
-    private lateinit var terminalAdapter: ConfigSpinnerAdapter<Terminal>
+    private  var terminalAdapter: ConfigSpinnerAdapter<Terminal>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,8 +96,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
             binding.top.cameraSwitch.isChecked = cameraEnabled
             binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?:0)
-            binding.top.selectOperationSpinner.setSelection(operationStepAdapter.getPosition(operationStep))
-            binding.top.selectTerminalSpinner.setSelection(terminalAdapter.getPosition(terminal))
+            binding.top.selectOperationSpinner.setSelection(operationStepAdapter?.getPosition(operationStep) ?:0)
+            binding.top.selectTerminalSpinner.setSelection(terminalAdapter?.getPosition(terminal)?:0)
         })
 
 
@@ -178,11 +178,11 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     }
 
 
-    override fun getViewModelClass() = AdminConfigViewModel::class.java
+    override fun getViewModelClass() = ConfigViewModel::class.java
 
 
     override fun getBindingVariable() = BR.viewModel
 
-    override fun getLayoutResourceId() = R.layout.activity_admin_config
+    override fun getLayoutResourceId() = R.layout.activity_config
 
 }

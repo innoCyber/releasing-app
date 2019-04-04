@@ -12,7 +12,7 @@ import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.auth.viewmodel.LoginViewModel
-import ptml.releasing.admin_configuration.view.AdminConfigActivity
+import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
 import timber.log.Timber
@@ -47,7 +47,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         viewModel.response.observe(this, Observer {
             when (it.isSuccess) {
                 true -> {
-                    startNewActivity(AdminConfigActivity::class.java, true)
+                    startNewActivity(ConfigActivity::class.java, true)
                 }
 
                 else -> {

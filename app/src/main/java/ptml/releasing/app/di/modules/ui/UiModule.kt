@@ -2,7 +2,8 @@ package ptml.releasing.app.di.modules.ui
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import ptml.releasing.admin_configuration.view.AdminConfigActivity
+import ptml.releasing.admin_config.view.AdminConfigActivity
+import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
@@ -22,7 +23,7 @@ abstract class UiModule {
 
 
     @ContributesAndroidInjector()
-    abstract fun configActivity(): AdminConfigActivity
+    abstract fun configActivity(): ConfigActivity
 
 
     @ContributesAndroidInjector()
@@ -33,5 +34,8 @@ abstract class UiModule {
 
     @ContributesAndroidInjector()
     abstract fun searchActivity(): SearchActivity
+
+    @ContributesAndroidInjector()
+    abstract fun adminConfigActivity(): AdminConfigActivity
 
 }

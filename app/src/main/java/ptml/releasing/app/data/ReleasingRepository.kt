@@ -1,8 +1,8 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.*
-import ptml.releasing.admin_configuration.models.AdminConfigResponse
-import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -11,9 +11,11 @@ import ptml.releasing.damages.model.DamageResponse
 import timber.log.Timber
 import javax.inject.Inject
 
-open class ReleasingRepository @Inject constructor(var remote: Remote,
-                                                   var local: Local,
-                                                   var appCoroutineDispatchers: AppCoroutineDispatchers) : Repository {
+open class ReleasingRepository @Inject constructor(
+    var remote: Remote,
+    var local: Local,
+    var appCoroutineDispatchers: AppCoroutineDispatchers
+) : Repository {
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
 
@@ -68,16 +70,13 @@ open class ReleasingRepository @Inject constructor(var remote: Remote,
     }
 
 
-    override  suspend fun getSavedConfigAsync(): Deferred<Configuration> {
-        return withContext(appCoroutineDispatchers.db) {
-            local.getSavedConfig().toDeferredAsync() as Deferred<Configuration>
-        }
+    override fun getSavedConfigAsync(): Configuration {
+        return local.getSavedConfig()
+
     }
 
-    override suspend fun setSavedConfigAsync(configuration: Configuration) {
-        return withContext(appCoroutineDispatchers.db) {
-            local.setSavedConfig(configuration)
-        }
+    override fun setSavedConfigAsync(configuration: Configuration) {
+        local.setSavedConfig(configuration)
     }
 
     override suspend fun isFirstAsync(): Deferred<Boolean> {
@@ -85,19 +84,18 @@ open class ReleasingRepository @Inject constructor(var remote: Remote,
     }
 
     override suspend fun setFirst(value: Boolean) {
-        withContext(appCoroutineDispatchers.db){
+        withContext(appCoroutineDispatchers.db) {
             local.setFirst(value)
         }
     }
 
-    override suspend fun isConfiguredAsync(): Deferred<Boolean> {
-        return GlobalScope.async { local.isConfigured() }
+    override fun isConfiguredAsync(): Boolean {
+        return local.isConfigured()
     }
 
-    override suspend fun setConfigured(isConfigured: Boolean) {
-        withContext(appCoroutineDispatchers.db){
-            local.setConfigured(isConfigured)
-        }
+    override fun setConfigured(isConfigured: Boolean) {
+
+        local.setConfigured(isConfigured)
     }
 }
 

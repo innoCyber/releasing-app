@@ -2,8 +2,8 @@ package ptml.releasing.app.prefs
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import ptml.releasing.admin_configuration.models.AdminConfigResponse
-import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.model.DamageResponse
 import javax.inject.Inject
 

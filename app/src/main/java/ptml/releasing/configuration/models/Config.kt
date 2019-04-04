@@ -1,11 +1,9 @@
-package ptml.releasing.admin_configuration.models
+package ptml.releasing.configuration.models
 
-import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.AppResponse
 import ptml.releasing.app.base.BaseModel
 import ptml.releasing.app.base.BaseResponse
-import java.lang.reflect.Type
 
 open class BaseConfig : BaseModel() {
 
@@ -36,7 +34,11 @@ open class BaseConfig : BaseModel() {
 
 }
 
-class CargoType : BaseConfig()
+class CargoType : BaseConfig(){
+    companion object {
+        const val VEHICLE = "vehicle"
+    }
+}
 
 class Terminal : BaseConfig()
 

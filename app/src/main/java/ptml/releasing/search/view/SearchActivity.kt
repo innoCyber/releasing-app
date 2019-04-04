@@ -1,19 +1,21 @@
 package ptml.releasing.search.view
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.databinding.ActivitySearchBinding
 import ptml.releasing.search.viewmodel.SearchViewModel
+import java.util.*
 
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        showUpEnabled(true)
 
         viewModel.goBack.observe(this, Observer {
             if(it){
@@ -26,6 +28,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         viewModel.getSavedConfig()
+
+        showUpEnabled(true)
+
+
     }
 
     override fun onResume() {
@@ -39,6 +45,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.includeHomeTop.btnCargoType.text = it.cargoType.value
         binding.includeHomeTop.btnOperationStep.text = it.operationStep.value
         binding.includeHomeTop.btnTerminal.text = it.terminal.value
+
+        if(it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE){
+            binding.includeHomeTop.btnCargoType.icon = ContextCompat.getDrawable(themedContext, R.drawable.ic_car)
+        }else{
+            binding.includeHomeTop.btnCargoType.icon = ContextCompat.getDrawable(themedContext, R.drawable.ic_container)
+        }
     }
 
     override fun getLayoutResourceId()  = R.layout.activity_search

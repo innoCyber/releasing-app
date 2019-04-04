@@ -1,7 +1,7 @@
 package ptml.releasing.app.remote
 
 import kotlinx.coroutines.Deferred
-import ptml.releasing.admin_configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.damages.model.DamageResponse
 

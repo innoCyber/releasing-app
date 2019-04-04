@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import timber.log.Timber
@@ -38,32 +38,26 @@ open class BaseViewModel @Inject constructor(
     }
 
 
-
-
     fun getSavedConfig() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {
                 Timber.d("Checking if there is a saved configuration")
-                val configured = repository.isConfiguredAsync().await()
-                withContext(appCoroutineDispatchers.main) {
-                    _isConfigured.postValue(configured)
-                    handleDeviceConfigured(configured)
-                }
+
+                val configured =  repository.isConfiguredAsync()
+
+                _isConfigured.postValue(configured)
+                handleDeviceConfigured(configured)
                 if (configured) {
                     Timber.d("Configuration was saved before, getting the configuration")
-                    val config = repository.getSavedConfigAsync().await()
+                    val config = repository.getSavedConfigAsync()
                     Timber.d("Configuration gotten: %s", config)
-                    withContext(appCoroutineDispatchers.main) {
-                        _configuration.postValue(config)
-
-                    }
+                    _configuration.postValue(config)
                 }
 
             } catch (e: Throwable) {
                 Timber.e(e)
                 System.out.println("In here: ${e.localizedMessage}")
             }
-        }
+
 
 
     }

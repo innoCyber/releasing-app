@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05"/>
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95"/>
+
+
+        <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_configuration_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
+                    android:id="@+id/btn_configuration"
+                    style="@style/ButtonStyle.HomeBottom"
+                    android:text="@string/configuration"
+                    app:drawableStartCompat="@drawable/ic_config"/>
+        </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_download_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/btn_configuration_layout">
+
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
+                    android:id="@+id/btn_download"
+                    style="@style/ButtonStyle.HomeBottom"
+                    android:text="@string/download_damages"
+                    app:drawableStartCompat="@drawable/ic_download"/>
+        </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_settings_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/btn_download_layout">
+
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
+                    android:id="@+id/btn_settings"
+                    style="@style/ButtonStyle.HomeBottom"
+                    android:text="@string/printer_settings"
+                    app:drawableStartCompat="@drawable/ic_settings"/>
+        </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_imei_layout"
+                style="@style/RippleLayoutStyle.HomeTop"
+                android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/btn_settings_layout">
+
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
+                    android:id="@+id/btn_imei"
+                    style="@style/ButtonStyle.HomeBottom"
+                    android:text="@string/download_damages"
+                    app:drawableStartCompat="@drawable/ic_info_white"/>
+        </ptml.releasing.app.views.MaterialRippleLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,7 +1,7 @@
 package ptml.releasing.app.prefs
 
-import ptml.releasing.admin_configuration.models.AdminConfigResponse
-import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.model.DamageResponse
 
 interface Prefs {

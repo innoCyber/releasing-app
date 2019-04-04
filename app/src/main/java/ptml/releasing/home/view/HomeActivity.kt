@@ -4,26 +4,68 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.admin_configuration.models.Configuration
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.auth.view.LoginActivity
-import ptml.releasing.damages.view.DamageActivity
+import ptml.releasing.configuration.models.CargoType
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivityHomeBinding
 import ptml.releasing.home.viewmodel.HomeViewModel
 import ptml.releasing.search.view.SearchActivity
+import java.util.*
 
 
 class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.isConfigured.observe(this, Observer {
+            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+            binding.appBarHome.content.includeHomeTop.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
+
+        })
+
+        viewModel.firstTimeLogin.observe(this, Observer {
+            if(it){
+                startNewActivity(LoginActivity::class.java)
+            }
+        })
+
+        viewModel.firstTimeFindCargo.observe(this, Observer {
+             if(it){
+                 startNewActivity(SearchActivity::class.java)
+             }
+        })
+
+        viewModel.getSavedConfig()
+
+        viewModel.openConfiguration.observe(this, Observer {
+            startNewActivity(AdminConfigActivity::class.java)
+        })
+        viewModel.openSearch.observe(this, Observer {
+            if (it) {
+                startNewActivity(SearchActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+        })
+
+        viewModel.savedConfiguration.observe(this, Observer {
+            updateTop(it)
+        })
+
+
+
+
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
                 this,
@@ -39,58 +81,11 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
             viewModel.openConfiguration()
         }
 
-        binding.appBarHome.content.includeHomeBottom.btnDownloadLayout.setOnClickListener {
-            viewModel.openDownloadDamages()
-        }
-
         binding.appBarHome.content.includeHomeBottom.btnSearchLayout.setOnClickListener {
             viewModel.openSearch()
         }
 
-        viewModel.isConfigured.observe(this, Observer {
-            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
-            binding.appBarHome.content.includeHomeTop.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
 
-        })
-
-        viewModel.firstTimeLogin.observe(this, Observer {
-            if(it){
-                startNewActivity(LoginActivity::class.java)
-            }
-        })
-
-        viewModel.firstTimeFindCargo.observe(this, Observer {
-            if(it){
-                startNewActivity(SearchActivity::class.java)
-            }
-        })
-
-        viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
-        })
-        viewModel.openSearch.observe(this, Observer {
-            if (it) {
-                startNewActivity(SearchActivity::class.java)
-            } else {
-                showConfigurationErrorDialog()
-            }
-        })
-
-        viewModel.openDownloadDamages.observe(this, Observer {
-            if (it) {
-                startNewActivity(DamageActivity::class.java)
-            } else {
-                showConfigurationErrorDialog()
-            }
-
-        })
-
-        viewModel.savedConfiguration.observe(this, Observer {
-            updateTop(it)
-        })
-
-
-        viewModel.getSavedConfig()
 
     }
 
@@ -98,6 +93,12 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         binding.appBarHome.content.includeHomeTop.btnCargoType.text = it.cargoType.value
         binding.appBarHome.content.includeHomeTop.btnOperationStep.text = it.operationStep.value
         binding.appBarHome.content.includeHomeTop.btnTerminal.text = it.terminal.value
+
+        if(it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE){
+            binding.appBarHome.content.includeHomeTop.btnCargoType.icon = ContextCompat.getDrawable(themedContext, R.drawable.ic_car)
+        }else{
+            binding.appBarHome.content.includeHomeTop.btnCargoType.icon = ContextCompat.getDrawable(themedContext, R.drawable.ic_container)
+        }
     }
 
     override fun onResume() {
@@ -121,7 +122,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
             buttonText = getString(android.R.string.ok),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
-                    viewModel.openConfiguration()
+//                    viewModel.openConfiguration()
                 }
             })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)

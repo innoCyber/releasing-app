@@ -41,6 +41,7 @@
     <string name="password">Password</string>
     <string name="admin_id">Admin ID</string>
     <string name="logining_in">Logging in…</string>
+    <string name="admin_configuration">Admin Configuration</string>
     <string name="configuration">Configuration</string>
     <string name="drop_down">Drop down</string>
 
@@ -78,5 +79,6 @@
     <string name="device_IMEI">Device IMEI</string>
     <string name="dismiss">Dismiss</string>
     <string name="back_to_home">Back to Home</string>
+    <string name="printer_settings">Printer settings</string>
 
 </resources>

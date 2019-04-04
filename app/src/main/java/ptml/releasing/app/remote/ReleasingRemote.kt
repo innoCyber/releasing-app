@@ -1,6 +1,6 @@
 package ptml.releasing.app.remote
 
-import ptml.releasing.admin_configuration.models.api.AdminConfigApiService
+import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.auth.model.api.LoginApiService
 import ptml.releasing.damages.model.api.DamageApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService
@@ -11,7 +11,7 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
 
     private val deviceConfigService = retrofit.create(DeviceConfigApiService::class.java)
     private val loginService = retrofit.create(LoginApiService::class.java)
-    private val adminConfigService = retrofit.create(AdminConfigApiService::class.java)
+    private val adminConfigService = retrofit.create(ConfigApiService::class.java)
     private val damageService = retrofit.create(DamageApiService::class.java)
 
     override suspend fun loginAsync(username: String?, password: String?) = loginService.loginAsync(username, password)

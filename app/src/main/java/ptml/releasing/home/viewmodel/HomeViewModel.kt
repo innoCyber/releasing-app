@@ -5,11 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ptml.releasing.admin_configuration.models.Configuration
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import timber.log.Timber
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -54,7 +52,7 @@ class HomeViewModel @Inject constructor(
 
     fun openSearch() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val configured = repository.isConfiguredAsync().await()
+            val configured = repository.isConfiguredAsync()
             withContext(appCoroutineDispatchers.main) {
                 _openSearch.postValue(configured)
             }
@@ -63,7 +61,7 @@ class HomeViewModel @Inject constructor(
 
     fun openDownloadDamages() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val configured = repository.isConfiguredAsync().await()
+            val configured = repository.isConfiguredAsync()
             withContext(appCoroutineDispatchers.main) {
                 _openDownloadDamages.postValue(configured)
             }

@@ -3,7 +3,7 @@ package ptml.releasing.data
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import ptml.releasing.admin_configuration.models.*
+import ptml.releasing.configuration.models.*
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.auth.model.User
 import ptml.releasing.damages.model.Damage
