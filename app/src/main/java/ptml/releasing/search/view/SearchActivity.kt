@@ -1,8 +1,10 @@
 package ptml.releasing.search.view
 
+import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import me.seebrock3r.elevationtester.TweakableOutlineProvider
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.configuration.models.Configuration
@@ -31,6 +33,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         showUpEnabled(true)
 
+        val cornerRadius = binding.includeHomeTop.btnCargoType.cornerRadius
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            binding.includeHomeTop.btnCargoType.outlineProvider = TweakableOutlineProvider(cornerRadius)
+            binding.includeHomeTop.btnTerminal.outlineProvider = TweakableOutlineProvider(cornerRadius)
+            binding.includeHomeTop.btnOperationStep.outlineProvider = TweakableOutlineProvider(cornerRadius)
+        }
 
     }
 

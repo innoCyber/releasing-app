@@ -7,6 +7,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
 import android.util.AttributeSet
+import me.seebrock3r.elevationtester.TweakableOutlineProvider
 import ptml.releasing.R
 
 
@@ -96,6 +97,12 @@ class SupportVectorDrawablesButton : AppCompatButton {
             this, drawableStart, drawableTop, drawableEnd, drawableBottom
         )
 
+
         attributeArray.recycle()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val cornerRadius = resources.getDimensionPixelSize(R.dimen.constraint_default_margin_10dp).toFloat()
+            outlineProvider = TweakableOutlineProvider(cornerRadius, 1f, 1f, 0)
+        }
     }
 }

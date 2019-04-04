@@ -30,6 +30,7 @@
                         android:background="@color/colorOtherAccentAlpha"
                         android:gravity="center_vertical"
                         android:padding="@dimen/constraint_default_margin_10dp"
+
                         android:text="@string/device_not_configured_message"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/colorBlack"

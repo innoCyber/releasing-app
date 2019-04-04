@@ -80,5 +80,6 @@
     <string name="dismiss">Dismiss</string>
     <string name="back_to_home">Back to Home</string>
     <string name="printer_settings">Printer settings</string>
+    <string name="device_configuration">Device Configuration</string>
 
 </resources>

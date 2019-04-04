@@ -14,4 +14,5 @@
     <color name="colorBlueGray">#cdd4da</color>
     <color name="colorHomeTop">#2A2A2A</color>
     <color name="colorTransparent">#0000</color>
+    <color name="home_elevation_color">#6F797979</color>
 </resources>

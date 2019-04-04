@@ -15,6 +15,12 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
 
     private val _openConfiguration = MutableLiveData<Boolean>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
+    private val _firstTimeLogin = MutableLiveData<Boolean>()
+    private val _firstTimeFindCargo = MutableLiveData<Boolean>()
+    private var first = true
+    val firstTimeLogin: LiveData<Boolean> = _firstTimeLogin
+    val firstTimeFindCargo: LiveData<Boolean> = _firstTimeFindCargo
+
 
     val openConfiguration: LiveData<Boolean> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
@@ -33,4 +39,29 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
             }
         }
     }
+
+    private fun navigateToLoginIfFirstTime() {
+        if (first) {
+            _firstTimeLogin.postValue(true)
+            first = false
+        }
+    }
+
+    private fun navigateToFindCargoIfFirstTime(){
+        if (first) {
+            _firstTimeFindCargo.postValue(true)
+            first = false
+        }
+    }
+
+
+    override fun handleDeviceConfigured(configured: Boolean) {
+        super.handleDeviceConfigured(configured)
+        if(configured){
+            navigateToFindCargoIfFirstTime()
+        }else{
+            navigateToLoginIfFirstTime()
+        }
+    }
+
 }

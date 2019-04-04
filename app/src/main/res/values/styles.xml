@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
@@ -47,7 +47,10 @@
     </style>
 
     <style name="ButtonStyle.HomeBottom">
-        <item name="android:background">@drawable/round_rect_gray</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:background">@drawable/item_bg_transparent</item>
+        <item name="android:elevation" tools:ignore="NewApi">@dimen/constraint_default_margin_16dp</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:padding">@dimen/constraint_default_margin_16dp</item>
         <item name="android:drawablePadding">@dimen/constraint_default_margin_24dp</item>
@@ -177,7 +180,7 @@
 
     <style name="ReleasingButtonStyle.Home">
         <item name="android:layout_width">0dp</item>
-        <item name="rb_bg_drawable">@drawable/round_rect_black</item>
+        <item name="rb_bg_drawable">@drawable/shadow_bg_home_top</item>
         <item name="rb_textColor">@color/colorBlack</item>
         <item name="rb_textSize">14sp</item>
         <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
