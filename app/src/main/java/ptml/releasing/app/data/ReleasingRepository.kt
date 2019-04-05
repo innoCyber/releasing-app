@@ -79,14 +79,12 @@ open class ReleasingRepository @Inject constructor(
         local.setSavedConfig(configuration)
     }
 
-    override suspend fun isFirstAsync(): Deferred<Boolean> {
-        return GlobalScope.async { local.isFirst() }
+    override fun isFirstAsync(): Boolean {
+        return local.isFirst()
     }
 
-    override suspend fun setFirst(value: Boolean) {
-        withContext(appCoroutineDispatchers.db) {
-            local.setFirst(value)
-        }
+    override fun setFirst(value: Boolean) {
+        local.setFirst(value)
     }
 
     override fun isConfiguredAsync(): Boolean {

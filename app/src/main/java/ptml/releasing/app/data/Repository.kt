@@ -22,8 +22,8 @@ interface Repository {
      fun getSavedConfigAsync(): Configuration
      fun setSavedConfigAsync(configuration: Configuration)
 
-    suspend fun isFirstAsync(): Deferred<Boolean>
-    suspend fun setFirst(value: Boolean)
+     fun isFirstAsync(): Boolean
+     fun setFirst(value: Boolean)
      fun isConfiguredAsync(): Boolean
      fun setConfigured(isConfigured: Boolean)
 }

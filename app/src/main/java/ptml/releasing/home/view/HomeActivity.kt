@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
@@ -28,28 +27,20 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.isConfigured.observe(this, Observer {
-            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
-            binding.appBarHome.content.includeHomeTop.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
 
-        })
-
-        viewModel.firstTimeLogin.observe(this, Observer {
-            if(it){
-                startNewActivity(LoginActivity::class.java)
-            }
-        })
-
-        viewModel.firstTimeFindCargo.observe(this, Observer {
-             if(it){
-                 startNewActivity(SearchActivity::class.java)
-             }
-        })
 
         viewModel.getSavedConfig()
+        viewModel.isConfigured.observe(this, Observer {
+            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+//            binding.appBarHome.content.includeHomeTop.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
+        })
+
+
+
+
 
         viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(AdminConfigActivity::class.java)
+            startNewActivity(LoginActivity::class.java)
         })
         viewModel.openSearch.observe(this, Observer {
             if (it) {
@@ -77,16 +68,25 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
-        binding.appBarHome.content.includeHomeBottom.btnConfigurationLayout.setOnClickListener {
+        binding.appBarHome.content.includeHomeBottom.btnConfiguration.setOnClickListener {
             viewModel.openConfiguration()
         }
 
-        binding.appBarHome.content.includeHomeBottom.btnSearchLayout.setOnClickListener {
+        binding.appBarHome.content.includeHomeBottom.btnSearch.setOnClickListener {
             viewModel.openSearch()
         }
 
 
 
+    }
+
+    override fun initBeforeView() {
+        super.initBeforeView()
+        if(viewModel.isConfigured()){
+            startNewActivity(SearchActivity::class.java)
+        }else{
+            startNewActivity(LoginActivity::class.java)
+        }
     }
 
     private fun updateTop(it: Configuration) {

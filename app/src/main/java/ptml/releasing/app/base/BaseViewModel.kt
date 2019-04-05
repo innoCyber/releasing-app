@@ -62,6 +62,10 @@ open class BaseViewModel @Inject constructor(
 
     }
 
+    fun isConfigured(): Boolean {
+        return repository.isConfiguredAsync()
+    }
+
     open fun handleDeviceConfigured(configured: Boolean) {
         // classes that need to handle this will override
         Timber.d("Configured: %s", configured)

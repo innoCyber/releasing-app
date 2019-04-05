@@ -62,6 +62,8 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         viewModel = ViewModelProviders.of(this, viewModeFactory)
                 .get(getViewModelClass())
 
+        initBeforeView()
+
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         } else {
@@ -69,6 +71,10 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         }
 
         initBinding()
+    }
+
+    open fun initBeforeView() {
+
     }
 
 
