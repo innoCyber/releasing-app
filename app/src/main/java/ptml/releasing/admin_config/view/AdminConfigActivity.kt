@@ -2,7 +2,6 @@ package ptml.releasing.admin_config.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import me.seebrock3r.elevationtester.TweakableOutlineProvider
 import ptml.releasing.BR
@@ -12,12 +11,9 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.auth.view.LoginActivity
-import ptml.releasing.configuration.models.CargoType
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.search.view.SearchActivity
-import java.util.*
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
@@ -57,6 +53,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         })
 
 
+        viewModel.openSearch.observe(this, Observer {
+            if (it) {
+                startNewActivity(SearchActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+        })
+
         showUpEnabled(true)
 
 
@@ -70,6 +74,11 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         binding.includeAdminConfig.btnDownload.setOnClickListener {
             viewModel.openDownloadDamages()
+        }
+
+
+        binding.includeAdminConfig.btnSearch.setOnClickListener {
+            viewModel.openSearch()
         }
 
 
