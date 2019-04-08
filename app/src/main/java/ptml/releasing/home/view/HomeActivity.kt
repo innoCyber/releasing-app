@@ -26,17 +26,11 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
         viewModel.getSavedConfig()
         viewModel.isConfigured.observe(this, Observer {
             binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
 //            binding.appBarHome.content.includeHomeTop.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
         })
-
-
-
 
 
         viewModel.openConfiguration.observe(this, Observer {

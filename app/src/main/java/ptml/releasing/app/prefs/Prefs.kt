@@ -2,6 +2,7 @@ package ptml.releasing.app.prefs
 
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 
 interface Prefs {
@@ -16,4 +17,7 @@ interface Prefs {
     fun setSavedConfig(configuration: Configuration)
     fun isConfigured():Boolean
     fun setConfigured(isConfigured:Boolean)
+
+    fun getDeviceConfiguration(): ConfigureDeviceResponse?
+    fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)
 }

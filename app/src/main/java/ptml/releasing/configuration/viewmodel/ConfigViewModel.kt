@@ -63,13 +63,26 @@ class ConfigViewModel @Inject constructor(
 
     }
 
-    fun setConfig(terminal: Terminal, operationStep: OperationStep, cargoType: CargoType, checked: Boolean) {
+    fun setConfig(
+        terminal: Terminal,
+        operationStep: OperationStep,
+        cargoType: CargoType,
+        checked: Boolean,
+        imei: String
+    ) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
         val configuration = Configuration(terminal, operationStep, cargoType, checked)
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {
                 repository.setSavedConfigAsync(configuration)
+                val result = repository.setConfigurationDeviceAsync(
+                    cargoTypeId = cargoType.id,
+                    terminal = terminal.id,
+                    operationStepId = operationStep.id,
+                    imei = imei
+                )
+                Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)
                 savedSuccess.postValue(true)
                 networkState.postValue(NetworkState.LOADED)
@@ -98,8 +111,6 @@ class ConfigViewModel @Inject constructor(
         }
         return list
     }
-
-
 
 
 }

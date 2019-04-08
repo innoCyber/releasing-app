@@ -7,6 +7,7 @@ import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.auth.model.User
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 import timber.log.Timber
 import javax.inject.Inject
@@ -94,6 +95,23 @@ open class ReleasingRepository @Inject constructor(
     override fun setConfigured(isConfigured: Boolean) {
 
         local.setConfigured(isConfigured)
+    }
+
+    override suspend fun setConfigurationDeviceAsync(
+        cargoTypeId: Int,
+        operationStepId: Int,
+        terminal: Int,
+        imei: String
+    ): Deferred<ConfigureDeviceResponse> {
+        return withContext(appCoroutineDispatchers.network) {
+            val remoteResponse = remote.setConfigurationDeviceAsync(cargoTypeId, operationStepId, terminal, imei)
+            Timber.d("Gotten response: %s", remoteResponse)
+            withContext(appCoroutineDispatchers.db) {
+                local.saveDeviceConfiguration(remoteResponse.await())
+                Timber.d("Saved response")
+            }
+            remoteResponse
+        }
     }
 }
 

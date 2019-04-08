@@ -5,6 +5,7 @@ import ptml.releasing.app.base.AppResponse
 import ptml.releasing.app.base.BaseModel
 import ptml.releasing.app.base.BaseResponse
 
+
 open class BaseConfig : BaseModel() {
 
     @SerializedName("value")
@@ -144,7 +145,16 @@ data class Configuration(
 
 }
 
-data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse()
+data class ConfigureDeviceParams(@SerializedName("cargo_type") val cargoTypeId: Int,
+                                 @SerializedName("operation_step") val operationStepId: Int,
+                                 @SerializedName("terminal") val terminal: Int,
+                                 @SerializedName("imei") val imei: String)
+
+data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse(){
+    override fun toString(): String {
+        return "ConfigureDeviceResponse(data=$data)"
+    }
+}
 
 data class ConfigureDeviceData(
     @SerializedName("type") val type: String,
@@ -153,6 +163,10 @@ data class ConfigureDeviceData(
     @SerializedName("is_editable") val editable: Boolean,
     @SerializedName("options") val options: List<Options>,
     @SerializedName("data_validation") val dataValidation: String
-) : BaseModel()
+) : BaseModel(){
+    override fun toString(): String {
+        return "ConfigureDeviceData(type='$type', title='$title', required=$required, editable=$editable, options=$options, dataValidation='$dataValidation')"
+    }
+}
 
 class Options()

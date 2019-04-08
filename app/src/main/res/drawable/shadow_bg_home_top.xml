@@ -4,7 +4,7 @@
     <!-- Bottom 2dp Shadow -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/home_elevation_color" />
+            <solid android:color="@color/colorTransparent" />
             <corners android:radius="@dimen/constraint_default_margin_12dp" />
         </shape>
     </item>
@@ -13,7 +13,7 @@
     <item android:bottom="2dp">
 
         <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="@color/colorHomeTop" />
+            <solid android:color="@color/colorTransparent" />
             <corners android:radius="@dimen/constraint_default_margin_10dp" />
         </shape>
 

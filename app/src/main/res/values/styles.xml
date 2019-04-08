@@ -182,7 +182,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="rb_bg_drawable">@drawable/shadow_bg_home_top</item>
         <item name="rb_textColor">@color/colorBlack</item>
-        <item name="rb_textSize">14sp</item>
+        <item name="rb_textSize">16sp</item>
         <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
         <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
     </style>

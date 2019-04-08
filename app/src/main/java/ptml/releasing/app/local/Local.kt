@@ -2,6 +2,7 @@ package ptml.releasing.app.local
 
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 
 interface Local {
@@ -15,4 +16,7 @@ interface Local {
     fun setFirst(value:Boolean)
     fun isConfigured():Boolean
     fun setConfigured(isConfigured:Boolean)
+
+    fun getDeviceConfiguration(): ConfigureDeviceResponse?
+    fun saveDeviceConfiguration(response:ConfigureDeviceResponse?)
 }

@@ -124,7 +124,13 @@ class ConfigViewModelTest : BaseTest() {
             repository.setConfigured(any())
         }returns Unit
 
-        viewModel.setConfig(mockTerminal(), mockOperationStep(), mockCargoType(), true)
+        viewModel.setConfig(
+            mockTerminal(),
+            mockOperationStep(),
+            mockCargoType(),
+            true,
+            (application as ReleasingApplication).provideImei()
+        )
 
         assertEquals(true, viewModel.savedSuccess.value,
             "The config was saved")
@@ -145,7 +151,13 @@ class ConfigViewModelTest : BaseTest() {
             repository.setSavedConfigAsync(any())
         }throws  IOException(SAVED_CONFIG_ERROR_MESSAGE)
 
-        viewModel.setConfig(mockTerminal(), mockOperationStep(), mockCargoType(), true)
+        viewModel.setConfig(
+            mockTerminal(),
+            mockOperationStep(),
+            mockCargoType(),
+            true,
+            (application as ReleasingApplication).provideImei()
+        )
 
         assertEquals(
             NetworkState.error(IOException(SAVED_CONFIG_ERROR_MESSAGE)).throwable?.message,

@@ -28,9 +28,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private var cargoAdapter: ConfigSpinnerAdapter<CargoType>? = null
 
-    private  var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>? = null
+    private var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>? = null
 
-    private  var terminalAdapter: ConfigSpinnerAdapter<Terminal>? = null
+    private var terminalAdapter: ConfigSpinnerAdapter<Terminal>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,19 +97,14 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             val cameraEnabled = it.cameraEnabled
 
             binding.top.cameraSwitch.isChecked = cameraEnabled
-            binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?:0)
-            binding.top.selectOperationSpinner.setSelection(operationStepAdapter?.getPosition(operationStep) ?:0)
-            binding.top.selectTerminalSpinner.setSelection(terminalAdapter?.getPosition(terminal)?:0)
+            binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?: 0)
+            binding.top.selectOperationSpinner.setSelection(operationStepAdapter?.getPosition(operationStep) ?: 0)
+            binding.top.selectTerminalSpinner.setSelection(terminalAdapter?.getPosition(terminal) ?: 0)
         })
 
 
         binding.bottom.btnProfilesLayout.setOnClickListener {
-            viewModel.setConfig(
-                binding.top.selectTerminalSpinner.selectedItem as Terminal,
-                binding.top.selectOperationSpinner.selectedItem as OperationStep,
-                binding.top.selectCargoSpinner.selectedItem as CargoType,
-                binding.top.cameraSwitch.isChecked
-            )
+            setConfigWithPermissionCheck()
         }
 
         binding.includeError.btnReloadLayout.setOnClickListener {
@@ -126,6 +121,16 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getConfig() {
         viewModel.getConfig((application as ReleasingApplication).provideImei())
+    }
+
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    fun setConfig() {
+        viewModel.setConfig(
+            binding.top.selectTerminalSpinner.selectedItem as Terminal,
+            binding.top.selectOperationSpinner.selectedItem as OperationStep,
+            binding.top.selectCargoSpinner.selectedItem as CargoType,
+            binding.top.cameraSwitch.isChecked, (application as ReleasingApplication).provideImei()
+        )
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
