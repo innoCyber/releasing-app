@@ -20,14 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2" />
+            app:layout_constraintGuide_percent="0.07" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.8" />
+            app:layout_constraintGuide_percent="0.93" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,14 +44,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05" />
+                app:layout_constraintGuide_percent="0.01" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_r"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
+                app:layout_constraintGuide_percent="0.99" />
 
 
             <androidx.appcompat.widget.AppCompatTextView
