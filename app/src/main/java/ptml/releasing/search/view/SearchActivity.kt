@@ -2,6 +2,7 @@ package ptml.releasing.search.view
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import me.seebrock3r.elevationtester.TweakableOutlineProvider
@@ -59,6 +60,30 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         }else{
             binding.includeHomeTop.btnCargoType.icon = ContextCompat.getDrawable(themedContext, R.drawable.ic_container)
         }
+
+        if(it.cameraEnabled){
+            showCameraScan()
+        }else{
+            hideCameraScan()
+        }
+
+    }
+
+    private fun showCameraScan(){
+        binding.includeSearch.tvScan.visibility = View.VISIBLE
+        binding.includeSearch.dividerL.visibility = View.VISIBLE
+        binding.includeSearch.dividerR.visibility = View.VISIBLE
+        binding.includeSearch.imgQrCode.visibility = View.VISIBLE
+        binding.includeSearch.imgQrCodeLayout.visibility = View.VISIBLE
+
+    }
+
+    private fun hideCameraScan(){
+        binding.includeSearch.tvScan.visibility = View.GONE
+        binding.includeSearch.dividerL.visibility = View.GONE
+        binding.includeSearch.dividerR.visibility = View.GONE
+        binding.includeSearch.imgQrCode.visibility = View.GONE
+        binding.includeSearch.imgQrCodeLayout.visibility = View.GONE
     }
 
     override fun getLayoutResourceId()  = R.layout.activity_search
