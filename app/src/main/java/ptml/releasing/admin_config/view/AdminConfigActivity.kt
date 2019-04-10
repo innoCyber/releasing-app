@@ -1,5 +1,7 @@
 package ptml.releasing.admin_config.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -18,6 +20,9 @@ import ptml.releasing.search.view.SearchActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
+    companion object {
+        const val RC = 111
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +43,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         })
 
         viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(ConfigActivity::class.java)
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivityForResult(intent, RC )
         })
 
 
@@ -55,6 +61,15 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
 
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == RC && resultCode == Activity.RESULT_OK){
+            startNewActivity(SearchActivity::class.java)
+            finish()
+        }else{
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 

@@ -36,6 +36,18 @@
                 layout="@layout/include_home_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <include
+                android:id="@+id/include_home"
+                layout="@layout/home_top"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +62,7 @@
                 app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/include_home_top"
+                app:layout_constraintTop_toBottomOf="@id/include_home"
                 app:layout_constraintVertical_bias="0" />
 
 

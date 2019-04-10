@@ -1,5 +1,6 @@
 package ptml.releasing.configuration.view
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -58,6 +59,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         viewModel.operationStepList.observe(this, Observer {
             setUpOperationStep(it)
         })
+        viewModel.terminalList.observe(this, Observer {
+//            setUpTerminal(it)
+        })
 
 
         viewModel.network.observe(this, Observer {
@@ -85,7 +89,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         viewModel.savedSuccess.observe(this, Observer {
             if (it) {
                 notifyUser(getString(R.string.config_saved_success))
-                startNewActivity(SearchActivity::class.java)
+                setResult(Activity.RESULT_OK)
                 finish()
             }
         })
@@ -167,10 +171,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     private fun setUpSpinners(response: AdminConfigResponse) {
         try {
             cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList)
+            binding.top.selectCargoSpinner.adapter = cargoAdapter
 
             terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList)
-
-            binding.top.selectCargoSpinner.adapter = cargoAdapter
             binding.top.selectTerminalSpinner.adapter = terminalAdapter
 
         } catch (e: Exception) {
@@ -182,6 +185,11 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     private fun setUpOperationStep(operationStepList: List<OperationStep>) {
         operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
         binding.top.selectOperationSpinner.adapter = operationStepAdapter
+    }
+
+    private fun setUpTerminal(terminalList: List<Terminal>) {
+        terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, terminalList)
+        binding.top.selectTerminalSpinner.adapter = terminalAdapter
     }
 
 

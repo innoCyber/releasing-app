@@ -37,6 +37,9 @@ class DeviceConfigViewModel @Inject constructor(
 
                 val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
+                    if(response.isSuccess){
+                        repository.setFirst(false)
+                    }
                     baseLiveData.postValue(response)
                     networkState.postValue(NetworkState.LOADED)
                 }

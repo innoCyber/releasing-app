@@ -1,141 +1,148 @@
 {
+  "success": true,
+  "message": "",
+  "cargo_type": [
+    {
+      "id": 1,
+      "value": "Vehicle"
+    },
+    {
+      "id": 2,
+      "value": "Container"
+    },
+    {
+      "id": 3,
+      "value": "General"
+    }
+  ],
   "operation_step": [
     {
       "id": 3,
-      "value": "Buffer Area",
-      "cargo_id": 1
+      "cargo_id": 1,
+      "value": "Buffer Area"
     },
     {
       "id": 5,
-      "value": "Pontoon in",
-      "cargo_id": 1
+      "cargo_id": 1,
+      "value": "Pontoon in"
     },
     {
       "id": 6,
-      "value": "Pontoon out",
-      "cargo_id": 1
+      "cargo_id": 1,
+      "value": "Pontoon out"
     },
     {
       "id": 7,
-      "value": "Terminal Tally",
-      "cargo_id": 1
+      "cargo_id": 1,
+      "value": "Terminal Tally"
     },
     {
       "id": 9,
-      "value": "Stacking Area",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Stacking Area"
     },
     {
       "id": 10,
-      "value": "Check Barge",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Check Barge"
     },
     {
       "id": 11,
-      "value": "Loaded on Truck",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Loaded on Truck"
     },
     {
       "id": 14,
-      "value": "Empty Return",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Empty Return"
     },
     {
       "id": 15,
-      "value": "Repairs",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Repairs"
     },
     {
       "id": 16,
-      "value": "Empty Delivery for Export",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Empty Delivery for Export"
     },
     {
       "id": 17,
-      "value": "Empty transfer to terminal",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Empty transfer to terminal"
     },
     {
       "id": 18,
-      "value": "Full Export returned",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Full Export returned"
     },
     {
       "id": 20,
-      "value": "loading on Bord",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "loading on Bord"
     },
     {
       "id": 21,
-      "value": "Warehouse tallying",
-      "cargo_id": 3
+      "cargo_id": 3,
+      "value": "Warehouse tallying"
     },
     {
       "id": 23,
-      "value": "Loaded on truck",
-      "cargo_id": 3
+      "cargo_id": 3,
+      "value": "Loaded on truck"
     },
     {
       "id": 25,
-      "value": "Examination Confirmation",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Examination Confirmation"
     },
     {
       "id": 27,
-      "value": "Examination Export",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Examination Export"
     },
     {
       "id": 28,
-      "value": "Check Barge Pontoon out",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Check Barge Pontoon out"
     },
     {
       "id": 29,
-      "value": "ATL",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "ATL"
     },
     {
       "id": 30,
-      "value": "Check ATL Export",
-      "cargo_id": 2
+      "cargo_id": 2,
+      "value": "Check EDN"
     },
     {
       "id": 32,
-      "value": "Ship Shide",
-      "cargo_id": 1
-    }
-  ],
-  "cargo_type": [
-    {
-      "value": "Vehicle",
-      "id": "1"
+      "cargo_id": 1,
+      "value": "Ship Shide"
     },
     {
-      "value": "Container",
-      "id": "2"
-    },
-    {
-      "value": "General",
-      "id": "3"
+      "id": 33,
+      "cargo_id": 2,
+      "value": "Ship Shide"
     }
   ],
   "terminal": [
     {
-      "value": "Satellite Car Park",
-      "id": "1"
+      "id": 1,
+      "value": "Satellite Car Park"
     },
     {
-      "value": "Terminal 2",
-      "id": "2"
+      "id": 2,
+      "value": "Terminal 2"
     },
     {
-      "value": "Main Terminal",
-      "id": "3"
+      "id": 3,
+      "value": "Main"
     },
     {
-      "value": "Depop",
-      "id": "4"
+      "id": 4,
+      "value": "Depot"
     }
   ]
 }

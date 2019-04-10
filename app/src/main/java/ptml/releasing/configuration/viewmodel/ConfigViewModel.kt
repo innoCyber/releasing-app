@@ -19,6 +19,7 @@ class ConfigViewModel @Inject constructor(
 
     val configResponse = MutableLiveData<AdminConfigResponse>()
     val operationStepList = MutableLiveData<List<OperationStep>>()
+    val terminalList = MutableLiveData<List<Terminal>>()
     val networkState = MutableLiveData<NetworkState>()
     val savedSuccess = MutableLiveData<Boolean>()
     val configuration = MutableLiveData<Configuration>()
@@ -97,6 +98,7 @@ class ConfigViewModel @Inject constructor(
     fun cargoTypeSelected(cargoType: CargoType) {
         //populate
         operationStepList.postValue(getOperationStepForCargo(cargoType))
+        terminalList.postValue(getTerminalsCargo(cargoType))
     }
 
     private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
@@ -107,6 +109,20 @@ class ConfigViewModel @Inject constructor(
                 list.add(operationStep)
             } else {
                 Timber.d("Operation step is does not have a category_id: %s", cargoType.id)
+            }
+        }
+        return list
+    }
+
+
+    private fun getTerminalsCargo(cargoType: CargoType): MutableList<Terminal> {
+        val list = mutableListOf<Terminal>()
+        for (terminal in configResponse.value?.terminalList ?: mutableListOf()) {
+            if (terminal.categoryTypeId == cargoType.id) {
+                Timber.d("terminal has  a category_id: %s", cargoType.id)
+                list.add(terminal)
+            } else {
+                Timber.d("terminal  does not have a category_id: %s", cargoType.id)
             }
         }
         return list
