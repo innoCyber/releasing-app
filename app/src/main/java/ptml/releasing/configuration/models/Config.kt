@@ -42,13 +42,13 @@ class CargoType : BaseConfig() {
 }
 
 data class Terminal(
-    @SerializedName("cargo_id")
+    @SerializedName("cargo_type")
     val categoryTypeId: Int
 ) : BaseConfig() {
 
 
     override fun toString(): String {
-        return "Terminal(categoryTypeId=$categoryTypeId) Super=(${super.toString()})"
+        return "Terminal(cargo_type=$categoryTypeId) Super=(${super.toString()})"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -72,27 +72,27 @@ data class Terminal(
 
 
 data class OperationStep(
-    @SerializedName("cargo_id")
-    val categoryTypeId: Int
+    @SerializedName("cargo_type")
+    val cargo_type: Int
 ) : BaseConfig() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is OperationStep) return false
         if (!super.equals(other)) return false
 
-        if (categoryTypeId != other.categoryTypeId) return false
+        if (cargo_type != other.cargo_type) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = super.hashCode()
-        result = 31 * result + categoryTypeId
+        result = 31 * result + cargo_type
         return result
     }
 
     override fun toString(): String {
-        return "OperationStep(categoryTypeId=$categoryTypeId)"
+        return "OperationStep(cargo_type=$cargo_type) " + super.toString()
     }
 
 

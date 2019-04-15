@@ -1,0 +1,148 @@
+{
+  "success": true,
+  "message": "",
+  "cargo_type": [
+    {
+      "id": 1,
+      "value": "Vehicle"
+    },
+    {
+      "id": 2,
+      "value": "Container"
+    },
+    {
+      "id": 3,
+      "value": "General"
+    }
+  ],
+  "operation_step": [
+    {
+      "id": 3,
+      "cargo_type": 1,
+      "value": "Buffer Area"
+    },
+    {
+      "id": 5,
+      "cargo_type": 1,
+      "value": "Pontoon in"
+    },
+    {
+      "id": 6,
+      "cargo_type": 1,
+      "value": "Pontoon out"
+    },
+    {
+      "id": 7,
+      "cargo_type": 1,
+      "value": "Terminal Tally"
+    },
+    {
+      "id": 9,
+      "cargo_type": 2,
+      "value": "Stacking Area"
+    },
+    {
+      "id": 10,
+      "cargo_type": 2,
+      "value": "Check Barge"
+    },
+    {
+      "id": 11,
+      "cargo_type": 2,
+      "value": "Loaded on Truck"
+    },
+    {
+      "id": 14,
+      "cargo_type": 2,
+      "value": "Empty Return"
+    },
+    {
+      "id": 15,
+      "cargo_type": 2,
+      "value": "Repairs"
+    },
+    {
+      "id": 16,
+      "cargo_type": 2,
+      "value": "Empty Delivery for Export"
+    },
+    {
+      "id": 17,
+      "cargo_type": 2,
+      "value": "Empty transfer to terminal"
+    },
+    {
+      "id": 18,
+      "cargo_type": 2,
+      "value": "Full Export returned"
+    },
+    {
+      "id": 20,
+      "cargo_type": 2,
+      "value": "loading on Bord"
+    },
+    {
+      "id": 21,
+      "cargo_type": 3,
+      "value": "Warehouse tallying"
+    },
+    {
+      "id": 23,
+      "cargo_type": 3,
+      "value": "Loaded on truck"
+    },
+    {
+      "id": 25,
+      "cargo_type": 2,
+      "value": "Examination Confirmation"
+    },
+    {
+      "id": 27,
+      "cargo_type": 2,
+      "value": "Examination Export"
+    },
+    {
+      "id": 28,
+      "cargo_type": 2,
+      "value": "Check Barge Pontoon out"
+    },
+    {
+      "id": 29,
+      "cargo_type": 2,
+      "value": "ATL"
+    },
+    {
+      "id": 30,
+      "cargo_type": 2,
+      "value": "Check EDN"
+    },
+    {
+      "id": 32,
+      "cargo_type": 1,
+      "value": "Ship Shide"
+    },
+    {
+      "id": 33,
+      "cargo_type": 2,
+      "value": "Ship Shide"
+    }
+  ],
+  "terminal": [
+    {
+      "id": 1,
+      "value": "Satellite Car Park"
+    },
+    {
+      "id": 2,
+      "value": "Terminal 2"
+    },
+    {
+      "id": 3,
+      "value": "Main"
+    },
+    {
+      "id": 4,
+      "value": "Depot"
+    }
+  ]
+}

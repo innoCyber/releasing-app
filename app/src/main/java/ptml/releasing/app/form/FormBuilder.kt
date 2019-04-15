@@ -14,16 +14,16 @@ import java.util.*
 
 class FormBuilder constructor(val context: Context) {
     private val rootLayout = LinearLayout(context)
-    private var listener:FormListener? = null
+    private var listener: FormListener? = null
 
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
 
-    fun setListener(listener: FormListener): FormBuilder{
+    fun setListener(listener: FormListener): FormBuilder {
         this.listener = listener
         return this
     }
@@ -45,11 +45,11 @@ class FormBuilder constructor(val context: Context) {
             listener?.onFormAdded(configureDeviceData)
             if (formView != null) {
                 rootLayout.addView(
-                        formView,
-                        ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
+                    formView,
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
                 )
 
             }
@@ -81,7 +81,7 @@ class FormBuilder constructor(val context: Context) {
                 FormType.MULTI_LINE_TEXTBOX -> {
                     return createMultilineTextBox(data)
                 }
-                FormType.IMAGES  -> {
+                FormType.IMAGES -> {
                     return createButton(data)
                 }
 
@@ -125,9 +125,8 @@ class FormBuilder constructor(val context: Context) {
      * @return TextView
      * */
     private fun createLabel(data: ConfigureDeviceData): TextView {
-        val textView = TextView(context)
-        textView.tag = data.id
-        //todo: Apply styles
+        val textView = inflateView(context, R.layout.form_label) as TextView
+        textView.tag = data
         return textView
 
     }
@@ -225,7 +224,6 @@ class FormBuilder constructor(val context: Context) {
     /**
      * Creates a TextView that functions as a label
      *  Applies the necessary styles
-     *  @param data the config
      * @return TextView
      * */
     private fun createErrorView(): TextView {
@@ -253,7 +251,6 @@ class FormBuilder constructor(val context: Context) {
 
         return bottomLayout
     }
-
 
 
 }
