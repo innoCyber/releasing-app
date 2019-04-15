@@ -32,6 +32,7 @@
     <dimen name="home_top_label_step_size">1sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="search_label_text_size">14sp</dimen>
+    <dimen name="form_label_text_size">16sp</dimen>
 
     <dimen name="qr_code_img_size">72dp</dimen>
     <dimen name="config_message_height">40dp</dimen>

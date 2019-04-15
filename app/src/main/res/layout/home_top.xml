@@ -3,18 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="configuration"
-            type="ptml.releasing.configuration.models.Configuration" />
-    </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBlueGray">
+        android:paddingTop="@dimen/constraint_default_margin_4dp"
+        android:paddingBottom="@dimen/constraint_default_margin_4dp"
+        >
 
 
         <TextView

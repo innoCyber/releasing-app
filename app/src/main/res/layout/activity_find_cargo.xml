@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <data>
 
         <variable
             name="viewModel"
-            type="ptml.releasing.search.viewmodel.SearchViewModel" />
+            type="ptml.releasing.find_cargo.view_model.FindCargoViewModel" />
     </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -52,18 +52,55 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <include
-            android:id="@+id/include_search"
-            layout="@layout/include_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/tv_number_label"
+            style="@style/LabelStyle.FindCargo"
+            android:text="@string/search_hint_label"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_number"
+            app:layout_constraintBottom_toBottomOf="@id/tv_number"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toTopOf="@id/tv_number" />
+
+
+        <TextView
+            android:id="@+id/tv_number"
+            style="@style/CargoNumber"
+            android:text="XXXB005643"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintStart_toEndOf="@id/tv_number_label"
+            app:layout_constraintTop_toBottomOf="@id/include_home" />
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+            android:background="@color/colorBlueGray"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_number" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+            android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
             app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
-            app:layout_constraintTop_toBottomOf="@id/include_home"
-            app:layout_constraintVertical_bias="0"
-            app:viewModel="@{viewModel}" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintVertical_bias="0">
+
+            <FrameLayout
+                android:id="@+id/form_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </androidx.core.widget.NestedScrollView>
 
 
         <ptml.releasing.app.views.MaterialRippleLayout
