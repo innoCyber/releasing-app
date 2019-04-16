@@ -16,4 +16,7 @@
     <color name="colorHomeTop">#2A2A2A</color>
     <color name="colorTransparent">#0000</color>
     <color name="home_elevation_color">#6F797979</color>
+
+    <color name="chip_default_text_color">#DE000000</color>
+    <color name="chip_default_icon_background_color">#517FA4</color>
 </resources>
