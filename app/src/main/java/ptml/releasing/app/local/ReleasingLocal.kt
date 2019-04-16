@@ -26,4 +26,5 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getDeviceConfiguration() = prefs.getDeviceConfiguration()
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)= prefs.saveDeviceConfiguration(response)
+
 }

@@ -82,5 +82,7 @@
     <string name="printer_settings">Printer settings</string>
     <string name="device_configuration">Device Configuration</string>
     <string name="find_cargo">Find Cargo</string>
+    <string name="reset">Reset</string>
+    <string name="save">Save</string>
 
 </resources>

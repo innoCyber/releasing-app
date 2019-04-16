@@ -1,4 +1,4 @@
-package ptml.releasing.app.form
+package ptml.releasing.app.form.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -12,7 +12,6 @@
     </style>
 
 
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -20,6 +19,7 @@
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Toolbar" parent="AppTheme">
@@ -43,14 +43,15 @@
     </style>
 
     <style name="ButtonStyle.Error">
-        <item name="android:background">@drawable/round_rect_blue</item>
+        <item name="android:background">@drawable/round_rect_accent</item>
     </style>
 
     <style name="ButtonStyle.HomeBottom">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
         <item name="android:background">@drawable/item_bg_transparent</item>
-        <item name="android:elevation" tools:ignore="NewApi">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:elevation" tools:ignore="NewApi">@dimen/constraint_default_margin_16dp
+        </item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:padding">@dimen/constraint_default_margin_16dp</item>
         <item name="android:drawablePadding">@dimen/constraint_default_margin_24dp</item>
@@ -190,7 +191,7 @@
     <style name="ReleasingButtonStyle.QrCode">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="rb_bg_drawable">@drawable/round_rect_blue</item>
+        <item name="rb_bg_drawable">@drawable/round_rect_accent</item>
         <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
         <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
         <item name="rb_iconPaddingTop">@dimen/constraint_default_margin_4dp</item>
@@ -203,7 +204,7 @@
     <style name="QrCodeStyle">
         <item name="android:layout_width">@dimen/qr_code_img_size</item>
         <item name="android:layout_height">@dimen/qr_code_img_size</item>
-        <item name="android:background">@drawable/round_rect_blue</item>
+        <item name="android:background">@drawable/round_rect_accent</item>
         <item name="android:paddingStart">@dimen/constraint_default_margin_16dp</item>
         <item name="android:paddingLeft">@dimen/constraint_default_margin_16dp</item>
         <item name="android:paddingEnd">@dimen/constraint_default_margin_16dp</item>
@@ -214,7 +215,6 @@
         <item name="android:contentDescription">@string/qrcode</item>
 
     </style>
-
 
 
     <style name="HomeTopTitleLabelStyle">
@@ -231,7 +231,7 @@
         <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
     </style>
 
-    
+
     <style name="HomeTopTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -281,11 +281,11 @@
     </style>
 
 
-
-
     <style name="Form">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+
+
     </style>
 
 
@@ -300,14 +300,48 @@
 
 
     <style name="Form.TextBox">
-        <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">@color/colorGray</item>d
-        <item name="android:textSize">@dimen/form_label_text_size</item>
-        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+        <item name="android:background">@drawable/outline_bg</item>
+    </style>
+
+    <style name="Form.Multiline" parent="Form.TextBox">
+        <item name="android:minLines">4</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:gravity">start</item>
     </style>
 
 
+    <style name="Form.SingleSelect">
+        <item name="android:background">@drawable/spinner_bg</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+    </style>
 
+    <style name="Form.MultiSelect" parent="Form.SingleSelect"/>
+
+    <style name="Form.Check">
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="Form.Button">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginLeft">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginEnd">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginRight">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="Form.SaveButton" parent="Form.Button">
+        <item name="android:background">@drawable/btn_bg_save</item>
+        <item name="android:text">@string/save</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="Form.ResetButton" parent="Form.Button">
+        <item name="android:background">@drawable/btn_bg_reset</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:text">@string/reset</item>
+    </style>
 </resources>

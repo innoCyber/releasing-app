@@ -66,4 +66,9 @@
 
 
 
+    <declare-styleable name="MultiSpinner">
+        <attr name="hintText" format="string"/>
+    </declare-styleable>
+
+
 </resources>

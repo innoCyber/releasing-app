@@ -6,12 +6,14 @@ import androidx.lifecycle.Observer
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.form.FormBuilder
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.find_cargo.view_model.FindCargoViewModel
 import java.util.*
 
-class FindCargoActivity:BaseActivity<FindCargoViewModel, ptml.releasing.databinding.ActivityFindCargoBinding>() {
+class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databinding.ActivityFindCargoBinding>() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +30,19 @@ class FindCargoActivity:BaseActivity<FindCargoViewModel, ptml.releasing.databind
         })
 
         viewModel.getSavedConfig()
+
+        viewModel.formConfig.observe(this, Observer {
+            createForm(it)
+        })
+
+        viewModel.getFormConfig()
+    }
+
+
+    private fun createForm(it: ConfigureDeviceResponse?) {
+        val formBuilder = FormBuilder(this)
+            .build(it?.data)
+        binding.formContainer.addView(formBuilder)
     }
 
 
@@ -36,10 +51,20 @@ class FindCargoActivity:BaseActivity<FindCargoViewModel, ptml.releasing.databind
         binding.includeHome.tvOperationStepFooter.text = it.operationStep.value
         binding.includeHome.tvTerminalFooter.text = it.terminal.value
 
-        if(it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE){
-            binding.includeHome.imgCargoType.setImageDrawable(ContextCompat.getDrawable(themedContext, R.drawable.ic_car))
-        }else{
-            binding.includeHome.imgCargoType.setImageDrawable(ContextCompat.getDrawable(themedContext, R.drawable.ic_container))
+        if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_car
+                )
+            )
+        } else {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_container
+                )
+            )
         }
 
     }

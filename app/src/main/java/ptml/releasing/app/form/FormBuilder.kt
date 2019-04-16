@@ -3,23 +3,36 @@ package ptml.releasing.app.form
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.R
+import ptml.releasing.app.form.FormUtils.applyParams
+import ptml.releasing.app.form.FormUtils.applyTopParams
+import ptml.releasing.app.form.FormUtils.getDataForMultiSpinner
 import ptml.releasing.app.form.FormUtils.getImageResourceByType
 import ptml.releasing.app.form.FormUtils.inflateView
+import ptml.releasing.app.form.adapter.FormSelectAdapter
+import ptml.releasing.app.form.adapter.MultiSelectAdapter
+import ptml.releasing.app.form.adapter.SingleSelectAdapter
+import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.SizeUtils
+import ptml.releasing.app.views.MultiSpinner
+import ptml.releasing.app.views.MultiSpinnerListener
 import ptml.releasing.configuration.models.ConfigureDeviceData
+import ptml.releasing.configuration.models.Options
 import timber.log.Timber
 import java.util.*
 
 class FormBuilder constructor(val context: Context) {
     private val rootLayout = LinearLayout(context)
     private var listener: FormListener? = null
+    private var multiSpinnerListener: MultiSpinnerListener? = null
 
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
 
@@ -28,28 +41,41 @@ class FormBuilder constructor(val context: Context) {
         return this
     }
 
+    fun setMultiSelectListener(listener: MultiSpinnerListener): FormBuilder {
+        this.multiSpinnerListener = listener
+        return this
+    }
+
     /**
      * Creates a form view from the list of configuration options
      * @param configDataList the list of configuration options
      * @return a linear layout of the form
      * */
-    fun build(configDataList: List<ConfigureDeviceData>): LinearLayout {
+    fun build(configDataList: List<ConfigureDeviceData>?): LinearLayout {
         //sort the list based on the position
         val positionComparator = Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
         Collections.sort(configDataList, positionComparator)
+        val params = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+
 
         //iterate over the list to get each config
-        for (configureDeviceData in configDataList) {
+
+        for (i in 0 until (configDataList?.size ?: mutableListOf<ConfigureDeviceData>().size)) {
             //create and add the view gotten based on the config
+            val configureDeviceData = configDataList?.get(i)
+
             val formView = createViewFromConfig(configureDeviceData)
             listener?.onFormAdded(configureDeviceData)
             if (formView != null) {
+                if (i == 0) {
+                    params.setMargins(0, SizeUtils.dp2px(context, 32f), 0, 0)
+                } else {
+                    params.setMargins(0, 0, 0, 0)
+                }
                 rootLayout.addView(
-                    formView,
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
+                        formView
                 )
 
             }
@@ -58,7 +84,9 @@ class FormBuilder constructor(val context: Context) {
         if (rootLayout.childCount <= 0) { //show an error view if no view had been added
             rootLayout.addView(createErrorView())
         } else { //add the save and reset buttons
-            rootLayout.addView(createBottomButtons())
+            val bottom = createBottomButtons()
+            applyParams(bottom)
+            rootLayout.addView(bottom)
         }
 
 
@@ -66,9 +94,9 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    private fun createViewFromConfig(data: ConfigureDeviceData): View? {
+    private fun createViewFromConfig(data: ConfigureDeviceData?): View? {
         try {
-            val formType = FormType.valueOf(data.type)
+            val formType = FormType.fromType(data!!.type)
             when (formType) {
                 FormType.LABEL -> {
                     return createLabel(data)
@@ -105,13 +133,13 @@ class FormBuilder constructor(val context: Context) {
 
 
                 else -> {
-                    Timber.e("Could not find form type for %s", formType.type)
+                    Timber.e("Could not find form type for %s", data.type)
                     return null
                 }
 
             }
         } catch (e: Exception) { //return an error view
-            Timber.e("Could not find create form for %s", data.type)
+            Timber.e(e, "Could not create form for %s", data?.type)
             return null
         }
 
@@ -120,13 +148,14 @@ class FormBuilder constructor(val context: Context) {
 
     /**
      * Creates a TextView that functions as a label
-     *  Applies the necessary styles
      *  @param data the config
      * @return TextView
      * */
     private fun createLabel(data: ConfigureDeviceData): TextView {
         val textView = inflateView(context, R.layout.form_label) as TextView
         textView.tag = data
+        textView.text = data.title
+        applyTopParams(textView)
         return textView
 
     }
@@ -134,14 +163,16 @@ class FormBuilder constructor(val context: Context) {
 
     /**
      * Creates a regular edit text for the form
-     *  Applies the necessary styles
      *  @param @param data the config
      * @return EditText
      * */
     private fun createTextBox(data: ConfigureDeviceData): EditText {
-        val editText = EditText(context)
+        val editText = inflateView(context, R.layout.form_textbox) as EditText
         editText.tag = data.id
-        //todo: Apply styles
+        editText.hint = data.title
+
+
+        applyParams(editText)
         return editText
 
     }
@@ -154,13 +185,10 @@ class FormBuilder constructor(val context: Context) {
      * @return EditText
      * */
     private fun createMultilineTextBox(data: ConfigureDeviceData): EditText {
-        val editText = EditText(context)
+        val editText = inflateView(context, R.layout.form_textbox_multiline) as EditText
         editText.tag = data
-
-        editText.setSingleLine(false)
-        editText.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
-
-        //todo: Apply styles
+        editText.hint = data.title
+        applyParams(editText)
         return editText
 
     }
@@ -179,7 +207,10 @@ class FormBuilder constructor(val context: Context) {
         titleView.text = data.title
         imageView.setImageResource(getImageResourceByType(data.type))
         view.tag = data
-
+        view.setOnClickListener {
+            listener?.onClickFormButton(FormType.fromType(data.type))
+        }
+        applyTopParams(view)
         return view
 
     }
@@ -191,14 +222,27 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return Spinner
      * */
-    private fun createSingleSelect(data: ConfigureDeviceData): Spinner {
-        val spinner = Spinner(context)
+    private fun createSingleSelect(data: ConfigureDeviceData): View {
+        if (data.options.size > Constants.ITEM_TO_EXPAND) {
+        val spinner = inflateView(context, R.layout.form_single_select) as Spinner
         spinner.tag = data
         //add the items
         val adapter = FormSelectAdapter(context, data.options)
         spinner.adapter = adapter
-        //todo: Apply styles
+
+
+
+        applyParams(spinner)
         return spinner
+        }else{
+            val adapter = SingleSelectAdapter<Options>()
+            adapter.setItems(data.options)
+            val recyclerView = RecyclerView(context)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = GridLayoutManager(context, 2)
+            applyParams(recyclerView)
+            return recyclerView
+        }
 
     }
 
@@ -209,14 +253,25 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return Spinner
      * */
-    private fun createMultiSelectSelect(data: ConfigureDeviceData): Spinner {
-        val spinner = Spinner(context)
-        spinner.tag = data
-        //add the items
-        val adapter = FormSelectAdapter(context, data.options)
-        spinner.adapter = adapter
-        //todo: Apply styles
-        return spinner
+    private fun createMultiSelectSelect(data: ConfigureDeviceData): View {
+        if (data.options.size > Constants.ITEM_TO_EXPAND) {
+            val spinner = inflateView(context, R.layout.form_multi_select) as MultiSpinner
+            spinner.tag = data
+            spinner.defaultHintText = data.title
+            spinner.setItems(getDataForMultiSpinner(data.options), multiSpinnerListener)
+            applyParams(spinner)
+            return spinner
+        } else {
+            val adapter = MultiSelectAdapter<Options>()
+            adapter.setItems(data.options)
+            val recyclerView = RecyclerView(context)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = GridLayoutManager(context, 2)
+            applyParams(recyclerView)
+            return recyclerView
+
+        }
+
 
     }
 
@@ -228,28 +283,13 @@ class FormBuilder constructor(val context: Context) {
      * */
     private fun createErrorView(): TextView {
         val textView = TextView(context)
-        //todo: Apply styles
         return textView
 
     }
 
 
-    private fun createBottomButtons(): LinearLayout {
-        val bottomLayout = LinearLayout(context)
-        bottomLayout.orientation = LinearLayout.HORIZONTAL
-
-        val saveButton = Button(context)
-        saveButton.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-
-        val resetButton = Button(context)
-        resetButton.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-
-//        TODO: Add Styles
-
-        bottomLayout.addView(saveButton)
-        bottomLayout.addView(resetButton)
-
-        return bottomLayout
+    private fun createBottomButtons(): View {
+        return inflateView(context, R.layout.form_bottom)
     }
 
 

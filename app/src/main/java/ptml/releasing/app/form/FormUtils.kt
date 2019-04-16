@@ -3,8 +3,13 @@ package ptml.releasing.app.form
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.annotation.LayoutRes
 import ptml.releasing.R
+import ptml.releasing.app.utils.SizeUtils
+import ptml.releasing.configuration.models.Options
+
 
 internal object FormUtils {
 
@@ -15,11 +20,43 @@ internal object FormUtils {
 
 
     fun getImageResourceByType(type: String): Int {
-        return when (FormType.valueOf(type)) {
+        return when (FormType.fromType(type)) {
             FormType.IMAGES -> R.drawable.ic_images
             FormType.PRINTER -> R.drawable.ic_print
             else -> R.drawable.ic_damages
         }
     }
+
+
+     fun getDataForMultiSpinner(list: List<Options>): LinkedHashMap<String, Boolean> {
+        val linkedHashMap = LinkedHashMap<String, Boolean>()
+        for (s in list) {
+            linkedHashMap.put(s.name, false)
+        }
+
+        return linkedHashMap
+    }
+
+    fun applyParams(view: View){
+        val params  = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        params.setMargins(SizeUtils.dp2px(view.context, 16f), SizeUtils.dp2px(view.context, 8f), SizeUtils.dp2px(view.context, 16f), 0)
+
+        view.layoutParams = params
+    }
+
+    fun applyTopParams(view: View){
+        val params  = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        params.setMargins(SizeUtils.dp2px(view.context, 16f), SizeUtils.dp2px(view.context, 16f), SizeUtils.dp2px(view.context, 16f), 0)
+
+        view.layoutParams = params
+    }
+
+
 
 }

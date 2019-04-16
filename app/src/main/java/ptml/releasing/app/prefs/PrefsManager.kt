@@ -1,14 +1,17 @@
 package ptml.releasing.app.prefs
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import ptml.releasing.app.utils.AssetHelper
+import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 import javax.inject.Inject
 
-class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson) : Prefs {
+class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) : Prefs {
     companion object {
         const val FIRST = "is_first"
         const val CONFIG = "config"
@@ -60,8 +63,9 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
-        return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), ConfigureDeviceResponse::class.java)
-    }
+        /*return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), ConfigureDeviceResponse::class.java)*/
+        return FormLoader.loadFromAssets(context)
+   }
 
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?) {
         sharedPreferences.edit().putString(DEVICE_CONFIG, gson.toJson(response)).apply()

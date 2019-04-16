@@ -87,7 +87,6 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/constraint_default_margin_32dp"
             android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
             app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
@@ -108,6 +107,7 @@
             style="@style/RippleLayoutStyle.Configure"
             android:layout_marginTop="@dimen/constraint_default_margin_16dp"
             android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
@@ -115,6 +115,7 @@
 
             <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_back"
+                android:visibility="gone"
                 style="@style/ButtonStyle.GoBack"
                 android:onClick="@{() -> viewModel.goBack()}"
                 android:text="@string/back_to_home" />

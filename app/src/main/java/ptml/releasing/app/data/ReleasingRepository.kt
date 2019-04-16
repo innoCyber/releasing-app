@@ -113,6 +113,10 @@ open class ReleasingRepository @Inject constructor(
             remoteResponse
         }
     }
+
+    override suspend fun getFormConfigAsync(): Deferred<ConfigureDeviceResponse> {
+        return local.getDeviceConfiguration()?.toDeferredAsync() as Deferred<ConfigureDeviceResponse>
+    }
 }
 
 
