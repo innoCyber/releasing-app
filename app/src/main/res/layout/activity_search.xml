@@ -5,83 +5,83 @@
     <data>
 
         <variable
-                name="viewModel"
-                type="ptml.releasing.search.viewmodel.SearchViewModel" />
+            name="viewModel"
+            type="ptml.releasing.search.viewmodel.SearchViewModel" />
     </data>
 
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+
+        <include
+            android:id="@+id/include_home_top"
+            layout="@layout/include_home_top"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_l"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_r"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-            <include
-                android:id="@+id/include_home_top"
-                layout="@layout/include_home_top"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:id="@+id/include_home"
+            layout="@layout/home_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-            <include
-                android:id="@+id/include_home"
-                layout="@layout/home_top"
-                android:layout_width="match_parent"
-                android:visibility="visible"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:id="@+id/include_search"
+            layout="@layout/include_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/include_home"
+            app:layout_constraintVertical_bias="0"
+            app:viewModel="@{viewModel}" />
 
 
-            <include
-                android:id="@+id/include_search"
-                layout="@layout/include_search"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/constraint_default_margin_32dp"
-                app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/include_home"
-                app:layout_constraintVertical_bias="0" />
+        <ptml.releasing.app.views.MaterialRippleLayout
+            android:id="@+id/btn_back_layout"
+            style="@style/RippleLayoutStyle.Configure"
+            android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+            android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/include_search">
 
+            <ptml.releasing.app.views.SupportVectorDrawablesButton
+                android:id="@+id/btn_back"
+                style="@style/ButtonStyle.GoBack"
+                android:onClick="@{() -> viewModel.goBack()}"
+                android:text="@string/back_to_home" />
+        </ptml.releasing.app.views.MaterialRippleLayout>
 
-            <ptml.releasing.app.views.MaterialRippleLayout
-                    android:id="@+id/btn_back_layout"
-                    style="@style/RippleLayoutStyle.Configure"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/include_search">
-
-                <ptml.releasing.app.views.SupportVectorDrawablesButton
-                        android:id="@+id/btn_back"
-                        style="@style/ButtonStyle.GoBack"
-                        android:onClick="@{() -> viewModel.goBack()}"
-                        android:text="@string/back_to_home"/>
-            </ptml.releasing.app.views.MaterialRippleLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

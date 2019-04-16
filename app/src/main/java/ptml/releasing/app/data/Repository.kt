@@ -27,6 +27,8 @@ interface Repository {
         imei: String
     ): Deferred<ConfigureDeviceResponse>
 
+    suspend fun getFormConfigAsync(): Deferred<ConfigureDeviceResponse>
+
      fun getSavedConfigAsync(): Configuration
      fun setSavedConfigAsync(configuration: Configuration)
 

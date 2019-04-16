@@ -10,6 +10,7 @@ import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
+import ptml.releasing.find_cargo.view_model.FindCargoViewModel
 import ptml.releasing.home.viewmodel.HomeViewModel
 import ptml.releasing.search.viewmodel.SearchViewModel
 
@@ -57,4 +58,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AdminConfigViewModel::class)
     abstract fun bindAdminConfigViewModel(myViewModel: AdminConfigViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FindCargoViewModel::class)
+    abstract fun bindFindCargoViewModel(myViewModel: FindCargoViewModel): ViewModel
 }

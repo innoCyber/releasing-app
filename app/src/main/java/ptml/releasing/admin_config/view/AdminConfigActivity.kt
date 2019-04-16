@@ -5,14 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import me.seebrock3r.elevationtester.TweakableOutlineProvider
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding

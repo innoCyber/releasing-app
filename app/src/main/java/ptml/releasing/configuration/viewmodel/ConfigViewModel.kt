@@ -104,7 +104,7 @@ class ConfigViewModel @Inject constructor(
     private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
         val list = mutableListOf<OperationStep>()
         for (operationStep in configResponse.value?.operationStepList ?: mutableListOf()) {
-            if (operationStep.categoryTypeId == cargoType.id) {
+            if (operationStep.cargo_type == cargoType.id) {
                 Timber.d("Operation step has  a category_id: %s", cargoType.id)
                 list.add(operationStep)
             } else {

@@ -18,8 +18,8 @@ class DbModule {
 
     @Provides
     @ReleasingAppScope
-    fun providePrefsHelper(sharedPreferences: SharedPreferences, gson: Gson): Prefs {
-        return PrefsManager(sharedPreferences, gson)
+    fun providePrefsHelper(sharedPreferences: SharedPreferences, gson: Gson, context: Context): Prefs {
+        return PrefsManager(sharedPreferences, gson, context)
     }
 
     @Provides

@@ -8,14 +8,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/constraint_default_margin_8dp"
         android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+        android:drawablePadding="@dimen/constraint_default_margin_8dp"
         android:ellipsize="marquee"
         android:gravity="start"
-        android:textColor="@color/colorGray"
-        android:drawablePadding="@dimen/constraint_default_margin_8dp"
         android:padding="@dimen/constraint_default_margin_8dp"
-        android:singleLine="true"
         android:text="@string/app_name"
         android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/colorGray"
         app:drawableEndCompat="@drawable/ic_arrow_drop_down" />
 
 

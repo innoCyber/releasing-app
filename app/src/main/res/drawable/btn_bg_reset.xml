@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/colorBlueGray" android:state_activated="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <solid android:color="@color/colorAccent"/>
+            <!--<corners android:radius="@dimen/constraint_default_margin_10dp"/>-->
+        </shape>
+    </item>
+    <item android:drawable="@color/colorBlueGray" android:state_pressed="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <solid android:color="@color/colorAccent"/>
+            <!--<corners android:radius="@dimen/constraint_default_margin_10dp"/>-->
+        </shape>
+    </item>
+    <item android:drawable="@color/colorBlueGray" android:state_selected="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <solid android:color="@color/colorAccent"/>
+            <!--<corners android:radius="@dimen/constraint_default_margin_10dp"/>-->
+        </shape>
+    </item>
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <solid android:color="@color/colorAccent"/>
+            <!--<corners android:radius="@dimen/constraint_default_margin_10dp"/>-->
+        </shape>
+    </item>
+</selector>

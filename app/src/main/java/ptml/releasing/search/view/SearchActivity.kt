@@ -1,17 +1,16 @@
 package ptml.releasing.search.view
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import me.seebrock3r.elevationtester.TweakableOutlineProvider
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.configuration.models.CargoType
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
+import ptml.releasing.find_cargo.view.FindCargoActivity
 import ptml.releasing.search.viewmodel.SearchViewModel
 import java.util.*
 
@@ -21,18 +20,23 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         super.onCreate(savedInstanceState)
 
         viewModel.goBack.observe(this, Observer {
-            if(it){
-                onBackPressed()
-            }
+            onBackPressed()
         })
+
 
         viewModel.savedConfiguration.observe(this, Observer {
             updateTop(it)
         })
 
+        viewModel.verify.observe(this, Observer {
+            startNewActivity(FindCargoActivity::class.java)
+        })
+
         viewModel.getSavedConfig()
 
         showUpEnabled(true)
+
+
 
 
 

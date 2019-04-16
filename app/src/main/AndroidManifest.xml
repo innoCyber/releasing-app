@@ -66,6 +66,9 @@
         <activity android:name=".admin_config.view.AdminConfigActivity"
                   android:parentActivityName=".home.view.HomeActivity"
                   android:label="@string/admin_configuration"/>
+        <activity android:name=".find_cargo.view.FindCargoActivity"
+            android:parentActivityName=".search.view.SearchActivity"
+            android:label="@string/find_cargo"/>
     </application>
 
 </manifest>

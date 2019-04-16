@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ptml.releasing.search.viewmodel.SearchViewModel"/>
+    </data>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -88,6 +95,7 @@
                     <ptml.releasing.app.views.SupportVectorDrawablesButton
                         android:id="@+id/btn_verify"
                         style="@style/ButtonStyle.Save"
+                        android:onClick="@{() -> viewModel.verify()}"
                         android:text="@string/verify" />
                 </ptml.releasing.app.views.MaterialRippleLayout>
 
