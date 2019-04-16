@@ -19,4 +19,6 @@ class SearchViewModel @Inject constructor(
     fun goBack(){
         _goBack.postValue(true)
     }
+
+
 }

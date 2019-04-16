@@ -26,11 +26,15 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         super.onCreate(savedInstanceState)
         binding.includeProgress.root.visibility = View.VISIBLE
         initErrorDrawable(binding.includeError.imgError)
+        if(!viewModel.checkIfFirst()){
+            startNewActivity(HomeActivity::class.java, true)
+            return
+        }
 
         viewModel.baseLiveData.observe(this, Observer {
             if (true == it?.isSuccess) {
                 hideLoading(binding.includeError.root)
-                startNewActivity(AdminConfigActivity::class.java, true)
+                startNewActivity(HomeActivity::class.java, true)
             } else if (false == it?.isSuccess) {
                 showError()
             }
@@ -38,7 +42,11 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
 
         viewModel.networkState.observe(this, Observer {
             if (NetworkState.LOADING == it) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.configure_device_message)
+                showLoading(
+                    binding.includeProgress.root,
+                    binding.includeProgress.tvMessage,
+                    R.string.configure_device_message
+                )
                 Timber.e("Loading...")
             }
             if (it?.status == Status.FAILED) {
@@ -49,6 +57,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
             }
         })
 
+        verifyDeviceIdWithPermissionCheck()
 
         binding.includeDeviceConfigError.btnClose.setOnClickListener {
             finish()
@@ -57,7 +66,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
             verifyDeviceIdWithPermissionCheck()
         }
 
-        verifyDeviceIdWithPermissionCheck()
+
     }
 
 
@@ -75,7 +84,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
             buttonText = getString(android.R.string.ok),

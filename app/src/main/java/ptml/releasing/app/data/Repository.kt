@@ -5,6 +5,7 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.auth.model.User
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 
 interface Repository {
@@ -19,11 +20,18 @@ interface Repository {
     suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse>
     suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse>
 
+    suspend fun setConfigurationDeviceAsync(
+        cargoTypeId: Int,
+        operationStepId: Int,
+        terminal: Int,
+        imei: String
+    ): Deferred<ConfigureDeviceResponse>
+
      fun getSavedConfigAsync(): Configuration
      fun setSavedConfigAsync(configuration: Configuration)
 
-    suspend fun isFirstAsync(): Deferred<Boolean>
-    suspend fun setFirst(value: Boolean)
+     fun isFirstAsync(): Boolean
+     fun setFirst(value: Boolean)
      fun isConfiguredAsync(): Boolean
      fun setConfigured(isConfigured: Boolean)
 }

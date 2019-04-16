@@ -5,6 +5,7 @@ import ptml.releasing.app.base.AppResponse
 import ptml.releasing.app.base.BaseModel
 import ptml.releasing.app.base.BaseResponse
 
+
 open class BaseConfig : BaseModel() {
 
     @SerializedName("value")
@@ -40,7 +41,32 @@ class CargoType : BaseConfig(){
     }
 }
 
-class Terminal : BaseConfig()
+data class Terminal( @SerializedName("cargo_id")
+                     val categoryTypeId: Int) : BaseConfig(){
+
+
+    override fun toString(): String {
+        return "Terminal(categoryTypeId=$categoryTypeId) Super=(${super.toString()})"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Terminal) return false
+        if (!super.equals(other)) return false
+
+        if (categoryTypeId != other.categoryTypeId) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + categoryTypeId
+        return result
+    }
+
+
+}
 
 
 data class OperationStep(
@@ -73,11 +99,11 @@ data class OperationStep(
 
 data class AdminConfigResponse(
     @SerializedName("cargo_type")
-    val cargoTypeList: List<CargoType>,
+    val cargoTypeList: List<CargoType>?,
     @SerializedName("operation_step")
-    val operationStepList: List<OperationStep>,
+    val operationStepList: List<OperationStep>?,
     @SerializedName("terminal")
-    val terminalList: List<Terminal>
+    val terminalList: List<Terminal>?
 ) : AppResponse() {
 
 
@@ -144,15 +170,29 @@ data class Configuration(
 
 }
 
-data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse()
+data class ConfigureDeviceParams(@SerializedName("cargo_type") val cargoTypeId: Int,
+                                 @SerializedName("operation_step") val operationStepId: Int,
+                                 @SerializedName("terminal") val terminal: Int,
+                                 @SerializedName("imei") val imei: String)
+
+data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse(){
+    override fun toString(): String {
+        return "ConfigureDeviceResponse(data=$data)"
+    }
+}
 
 data class ConfigureDeviceData(
+    @SerializedName("position") val position: Int = 0,
     @SerializedName("type") val type: String,
     @SerializedName("title") val title: String,
     @SerializedName("is_required") val required: Boolean,
     @SerializedName("is_editable") val editable: Boolean,
     @SerializedName("options") val options: List<Options>,
     @SerializedName("data_validation") val dataValidation: String
-) : BaseModel()
+) : BaseModel(){
+    override fun toString(): String {
+        return "ConfigureDeviceData(position=$position, type='$type', title='$title', required=$required, editable=$editable, options=$options, dataValidation='$dataValidation')"
+    }
+}
 
 class Options()

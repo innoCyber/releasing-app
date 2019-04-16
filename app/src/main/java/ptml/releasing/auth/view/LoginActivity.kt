@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ptml.releasing.BR
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
@@ -47,7 +48,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         viewModel.response.observe(this, Observer {
             when (it.isSuccess) {
                 true -> {
-                    startNewActivity(ConfigActivity::class.java, true)
+                    startNewActivity(AdminConfigActivity::class.java, true)
                 }
 
                 else -> {

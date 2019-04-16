@@ -7,6 +7,7 @@ import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.auth.model.User
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 import timber.log.Timber
 import javax.inject.Inject
@@ -79,14 +80,12 @@ open class ReleasingRepository @Inject constructor(
         local.setSavedConfig(configuration)
     }
 
-    override suspend fun isFirstAsync(): Deferred<Boolean> {
-        return GlobalScope.async { local.isFirst() }
+    override fun isFirstAsync(): Boolean {
+        return local.isFirst()
     }
 
-    override suspend fun setFirst(value: Boolean) {
-        withContext(appCoroutineDispatchers.db) {
-            local.setFirst(value)
-        }
+    override fun setFirst(value: Boolean) {
+        local.setFirst(value)
     }
 
     override fun isConfiguredAsync(): Boolean {
@@ -96,6 +95,23 @@ open class ReleasingRepository @Inject constructor(
     override fun setConfigured(isConfigured: Boolean) {
 
         local.setConfigured(isConfigured)
+    }
+
+    override suspend fun setConfigurationDeviceAsync(
+        cargoTypeId: Int,
+        operationStepId: Int,
+        terminal: Int,
+        imei: String
+    ): Deferred<ConfigureDeviceResponse> {
+        return withContext(appCoroutineDispatchers.network) {
+            val remoteResponse = remote.setConfigurationDeviceAsync(cargoTypeId, operationStepId, terminal, imei)
+            Timber.d("Gotten response: %s", remoteResponse)
+            withContext(appCoroutineDispatchers.db) {
+                local.saveDeviceConfiguration(remoteResponse.await())
+                Timber.d("Saved response")
+            }
+            remoteResponse
+        }
     }
 }
 

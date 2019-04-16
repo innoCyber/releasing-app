@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="configuration"
+            type="ptml.releasing.configuration.models.Configuration" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlueGray">
+
+
+        <TextView
+            android:id="@+id/tv_cargo_header"
+            style="@style/HomeTopTextStyle.Header"
+            android:text="@string/cargo_type"
+            app:layout_constraintEnd_toEndOf="@id/img_cargo_type"
+            app:layout_constraintStart_toStartOf="@id/img_cargo_type"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/img_cargo_type"
+            style="@style/HomeTopImageStyle"
+            app:layout_constraintEnd_toStartOf="@id/img_operation_step"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_cargo_header"
+            app:srcCompat="@drawable/ic_container" />
+
+
+        <TextView
+            android:id="@+id/tv_cargo_footer"
+            style="@style/HomeTopTextStyle.Footer"
+            android:text="@string/container"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_operation_step_footer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/img_cargo_type"
+            app:layout_constraintStart_toStartOf="@id/img_cargo_type"
+            app:layout_constraintTop_toBottomOf="@id/img_cargo_type" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_cargo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="tv_cargo_footer,tv_cargo_header" />
+
+
+        <TextView
+            android:id="@+id/tv_operation_step_header"
+            style="@style/HomeTopTextStyle.Header"
+            android:text="@string/operation_step"
+            app:layout_constraintEnd_toEndOf="@id/img_operation_step"
+            app:layout_constraintStart_toStartOf="@id/img_operation_step"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_operation_step"
+            style="@style/HomeTopImageStyle"
+            app:layout_constraintEnd_toStartOf="@id/img_terminal"
+            app:layout_constraintStart_toEndOf="@id/img_cargo_type"
+            app:layout_constraintTop_toBottomOf="@id/tv_operation_step_header"
+            app:srcCompat="@drawable/ic_operation_step" />
+
+
+        <TextView
+            android:id="@+id/tv_operation_step_footer"
+            style="@style/HomeTopTextStyle.Footer"
+            android:text="Buffer Area"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/img_operation_step"
+            app:layout_constraintStart_toStartOf="@id/img_operation_step"
+            app:layout_constraintTop_toBottomOf="@id/img_operation_step" />
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_operation_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="tv_operation_step_header,tv_operation_step_footer" />
+
+
+        <TextView
+            android:id="@+id/tv_terminal_header"
+            style="@style/HomeTopTextStyle.Header"
+            android:text="@string/terminal"
+            app:layout_constraintEnd_toEndOf="@id/img_terminal"
+            app:layout_constraintStart_toStartOf="@id/img_terminal"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_terminal"
+            style="@style/HomeTopImageStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_operation_step"
+            app:layout_constraintTop_toBottomOf="@id/tv_terminal_header"
+            app:srcCompat="@drawable/ic_terminal" />
+
+
+        <TextView
+            android:id="@+id/tv_terminal_footer"
+            style="@style/HomeTopTextStyle.Footer"
+            android:text="Main"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_operation_step_footer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/img_terminal"
+            app:layout_constraintStart_toStartOf="@id/img_terminal"
+            app:layout_constraintTop_toBottomOf="@id/img_terminal" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

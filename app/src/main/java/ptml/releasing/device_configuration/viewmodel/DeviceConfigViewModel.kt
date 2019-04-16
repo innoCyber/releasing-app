@@ -1,5 +1,6 @@
 package ptml.releasing.device_configuration.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -36,6 +37,9 @@ class DeviceConfigViewModel @Inject constructor(
 
                 val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
+                    if(response.isSuccess){
+                        repository.setFirst(false)
+                    }
                     baseLiveData.postValue(response)
                     networkState.postValue(NetworkState.LOADED)
                 }
@@ -47,6 +51,12 @@ class DeviceConfigViewModel @Inject constructor(
         }
 
     }
+
+    fun checkIfFirst():Boolean{
+        return repository.isFirstAsync()
+    }
+
+
 
 
 

@@ -15,7 +15,7 @@ import androidx.core.widget.TextViewCompat
 import ptml.releasing.R
 import ptml.releasing.configuration.models.BaseConfig
 
-class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<T>) : ArrayAdapter<T>(context, id, list) where T : BaseConfig {
+class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<T>?) : ArrayAdapter<T>(context, id, list ?: mutableListOf()) where T : BaseConfig {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -28,7 +28,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, drawable, null)
 
-        textView.text = list[position].value
+        textView.text = list?.get(position)?.value
         return view
     }
 
@@ -45,7 +45,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, null, null)
 
-        textView?.text = list[position].value
+        textView?.text = list?.get(position)?.value
         return view
     }
 }

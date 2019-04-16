@@ -5,8 +5,8 @@
     <data>
 
         <variable
-                name="configuration"
-                type="ptml.releasing.configuration.models.Configuration" />
+            name="configuration"
+            type="ptml.releasing.configuration.models.Configuration" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,14 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2" />
+            app:layout_constraintGuide_percent="0.03" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.8" />
+            app:layout_constraintGuide_percent="0.97" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,33 +44,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05" />
+                app:layout_constraintGuide_percent="0.01" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_r"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_operation_step"
-                style="@style/HomeTopTitleLabelStyle"
-                android:text="@string/operation_step"
-                app:layout_constraintEnd_toEndOf="@id/btn_operation_step"
-                app:layout_constraintStart_toStartOf="@id/btn_operation_step"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ptml.releasing.app.views.ReleasingHomeButton
-                android:id="@+id/btn_operation_step"
-                style="@style/ReleasingButtonStyle.Home"
-                app:layout_constraintEnd_toStartOf="@id/btn_cargo_type"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/tv_operation_step"
-                app:rb_icon="@drawable/ic_operation_step"
-                app:rb_textSize="14sp" />
+                app:layout_constraintGuide_percent="0.99" />
 
 
             <TextView
@@ -85,14 +66,32 @@
             <ptml.releasing.app.views.ReleasingHomeButton
                 android:id="@+id/btn_cargo_type"
                 style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintEnd_toStartOf="@id/btn_operation_step"
+                app:layout_constraintStart_toEndOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/tv_cargo_type"
                 app:layout_constraintVertical_bias="0"
-                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step"
-                app:layout_constraintEnd_toStartOf="@id/btn_terminal"
-                app:layout_constraintStart_toEndOf="@id/btn_operation_step"
-                app:layout_constraintTop_toTopOf="@id/btn_operation_step"
                 app:rb_icon="@drawable/ic_container"
 
                 />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_operation_step"
+                style="@style/HomeTopTitleLabelStyle"
+                android:text="@string/operation_step"
+                app:layout_constraintEnd_toEndOf="@id/btn_operation_step"
+                app:layout_constraintStart_toStartOf="@id/btn_operation_step"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ptml.releasing.app.views.ReleasingHomeButton
+                android:id="@+id/btn_operation_step"
+                style="@style/ReleasingButtonStyle.Home"
+                app:layout_constraintBottom_toBottomOf="@id/btn_cargo_type"
+                app:layout_constraintEnd_toStartOf="@id/btn_terminal"
+                app:layout_constraintStart_toEndOf="@id/btn_cargo_type"
+                app:layout_constraintTop_toTopOf="@id/btn_cargo_type"
+                app:rb_icon="@drawable/ic_operation_step" />
 
 
             <TextView
@@ -107,13 +106,12 @@
             <ptml.releasing.app.views.ReleasingHomeButton
                 android:id="@+id/btn_terminal"
                 style="@style/ReleasingButtonStyle.Home"
-                app:layout_constraintVertical_bias="0"
-                app:layout_constraintBottom_toBottomOf="@id/btn_operation_step"
+                app:layout_constraintBottom_toBottomOf="@id/btn_cargo_type"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toEndOf="@id/btn_cargo_type"
-                app:layout_constraintTop_toTopOf="@id/btn_operation_step"
-                app:rb_icon="@drawable/ic_terminal"
-                 />
+                app:layout_constraintStart_toEndOf="@id/btn_operation_step"
+                app:layout_constraintTop_toTopOf="@id/btn_cargo_type"
+                app:layout_constraintVertical_bias="0"
+                app:rb_icon="@drawable/ic_terminal" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

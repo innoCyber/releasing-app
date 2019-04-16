@@ -17,31 +17,13 @@ class HomeViewModel @Inject constructor(
     private val _openConfiguration = MutableLiveData<Boolean>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
     private val _openSearch = MutableLiveData<Boolean>()
-    private val _firstTimeLogin = MutableLiveData<Boolean>()
-    private val _firstTimeFindCargo = MutableLiveData<Boolean>()
-    private var first = true
 
 
     val openConfiguration: LiveData<Boolean> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openSearch: LiveData<Boolean> = _openSearch
-    val firstTimeLogin: LiveData<Boolean> = _firstTimeLogin
-    val firstTimeFindCargo: LiveData<Boolean> = _firstTimeFindCargo
 
 
-    private fun navigateToLoginIfFirstTime() {
-        if (first) {
-            _firstTimeLogin.postValue(true)
-            first = false
-        }
-    }
-
-    private fun navigateToFindCargoIfFirstTime(){
-        if (first) {
-            _firstTimeFindCargo.postValue(true)
-            first = false
-        }
-    }
 
 
 
@@ -68,14 +50,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun handleDeviceConfigured(configured: Boolean) {
-        super.handleDeviceConfigured(configured)
-        if(configured){
-            navigateToFindCargoIfFirstTime()
-        }else{
-            navigateToLoginIfFirstTime()
-        }
-    }
+
+
+
 
 
 }

@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
 import javax.inject.Inject
 
@@ -14,6 +15,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val CONFIGURED = "configured"
         const val DAMAGES = "damages"
         const val SAVED_CONFIG = "saved_config"
+        const val DEVICE_CONFIG = "device_config"
     }
 
 
@@ -55,5 +57,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun setConfigured(isConfigured: Boolean) {
         return sharedPreferences.edit().putBoolean(CONFIGURED, isConfigured).apply()
+    }
+
+    override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
+        return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), ConfigureDeviceResponse::class.java)
+    }
+
+    override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?) {
+        sharedPreferences.edit().putString(DEVICE_CONFIG, gson.toJson(response)).apply()
     }
 }

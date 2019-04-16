@@ -1,8 +1,9 @@
 package ptml.releasing.admin_config.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import me.seebrock3r.elevationtester.TweakableOutlineProvider
 import ptml.releasing.BR
@@ -12,16 +13,16 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.auth.view.LoginActivity
-import ptml.releasing.configuration.models.CargoType
-import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.search.view.SearchActivity
-import java.util.*
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
-    private lateinit var outlineProvider: TweakableOutlineProvider
+    companion object {
+        const val RC = 111
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,17 +31,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                 if (it) View.GONE else View.VISIBLE //hide or show the not configured message
         })
 
-        viewModel.firstTimeLogin.observe(this, Observer {
-            if(it){
-                startNewActivity(LoginActivity::class.java)
-            }
-        })
-
-        viewModel.firstTimeFindCargo.observe(this, Observer {
-            if(it){
-                startNewActivity(SearchActivity::class.java)
-            }
-        })
 
         viewModel.getSavedConfig()
 
@@ -53,16 +43,12 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         })
 
         viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivityForResult(intent, RC )
         })
 
 
         showUpEnabled(true)
-
-
-        binding.includeAdminConfig.btnImei.setOnClickListener {
-            showImeiDialog()
-        }
 
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
             viewModel.openConfiguration()
@@ -73,20 +59,23 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         }
 
 
+
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == RC && resultCode == Activity.RESULT_OK){
+            startNewActivity(SearchActivity::class.java)
+            finish()
+        }else{
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 
     override fun onResume() {
         super.onResume()
         viewModel.getSavedConfig()
-    }
-
-    private fun showImeiDialog() {
-        val dialogFragment =  InfoDialog.newInstance(
-            title = getString(R.string.device_IMEI),
-            message = (application as ReleasingApplication).provideImei(),
-            buttonText = getString(R.string.dismiss))
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     private fun showConfigurationErrorDialog() {

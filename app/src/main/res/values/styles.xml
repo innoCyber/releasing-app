@@ -182,7 +182,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="rb_bg_drawable">@drawable/shadow_bg_home_top</item>
         <item name="rb_textColor">@color/colorBlack</item>
-        <item name="rb_textSize">14sp</item>
+        <item name="rb_textSize">16sp</item>
         <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
         <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
     </style>
@@ -229,6 +229,42 @@
         <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
         <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
         <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
+    </style>
+
+    
+    <style name="HomeTopTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
+        <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
+        <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+
+    <style name="HomeTopTextStyle.Header">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+    <style name="HomeTopTextStyle.Footer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">@dimen/constraint_default_margin_4dp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+
+    <style name="HomeTopImageStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+
     </style>
 
 

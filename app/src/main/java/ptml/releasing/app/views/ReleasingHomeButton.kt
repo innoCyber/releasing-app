@@ -1,6 +1,7 @@
 package ptml.releasing.app.views
 
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
@@ -168,6 +169,8 @@ open class ReleasingHomeButton : ReleasingButton {
             textView.visibility = View.GONE
         }
 
+        textView.setTypeface(textView.typeface, Typeface.BOLD)
+
         //add padding
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             imageView.updatePadding(
@@ -184,9 +187,9 @@ open class ReleasingHomeButton : ReleasingButton {
                 iconPaddingBottom
             )
         }
-        if (showText) {
+       /* if (showText) {
             TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView, 10, 48, 1, TypedValue.COMPLEX_UNIT_SP)
-        }
+        }*/
     }
 
 

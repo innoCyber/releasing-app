@@ -23,35 +23,23 @@
             app:layout_constraintGuide_percent="0.95" />
 
 
-        <ptml.releasing.app.views.MaterialRippleLayout
-            android:id="@+id/btn_configuration_layout"
-            style="@style/RippleLayoutStyle.HomeTop"
-            app:layout_constraintEnd_toStartOf="@id/guideline_r"
-            app:layout_constraintStart_toStartOf="@id/guideline_l"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ptml.releasing.app.views.SupportVectorDrawablesButton
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_configuration"
                 style="@style/ButtonStyle.HomeBottom"
-                android:text="@string/admin_configuration"
-                app:drawableStartCompat="@drawable/ic_config" />
-        </ptml.releasing.app.views.MaterialRippleLayout>
+                android:text="@string/device_configuration"
+                app:drawableStartCompat="@drawable/ic_config"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-
-        <ptml.releasing.app.views.MaterialRippleLayout
-            android:id="@+id/btn_search_layout"
-            style="@style/RippleLayoutStyle.HomeTop"
-            android:layout_marginTop="@dimen/constraint_default_margin_32dp"
-            app:layout_constraintEnd_toStartOf="@id/guideline_r"
-            app:layout_constraintStart_toStartOf="@id/guideline_l"
-            app:layout_constraintTop_toBottomOf="@id/btn_configuration_layout">
-
-            <ptml.releasing.app.views.SupportVectorDrawablesButton
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
                 android:id="@+id/btn_search"
                 style="@style/ButtonStyle.HomeBottom"
                 android:text="@string/cargo_search"
-                app:drawableStartCompat="@drawable/ic_search" />
-        </ptml.releasing.app.views.MaterialRippleLayout>
+                app:drawableStartCompat="@drawable/ic_search"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/btn_configuration"/>
 
 
 

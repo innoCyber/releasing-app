@@ -9,15 +9,12 @@
                 type="ptml.releasing.search.viewmodel.SearchViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_l"
@@ -39,6 +36,18 @@
                 layout="@layout/include_home_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <include
+                android:id="@+id/include_home"
+                layout="@layout/home_top"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,10 +59,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/constraint_default_margin_32dp"
-
+                app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/include_home_top"
+                app:layout_constraintTop_toBottomOf="@id/include_home"
                 app:layout_constraintVertical_bias="0" />
 
 
@@ -75,5 +84,4 @@
             </ptml.releasing.app.views.MaterialRippleLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
 </layout>

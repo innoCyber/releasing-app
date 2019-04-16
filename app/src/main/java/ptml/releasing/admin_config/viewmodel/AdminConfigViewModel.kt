@@ -20,11 +20,11 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private var first = true
     val firstTimeLogin: LiveData<Boolean> = _firstTimeLogin
     val firstTimeFindCargo: LiveData<Boolean> = _firstTimeFindCargo
-
+    private val _openSearch = MutableLiveData<Boolean>()
 
     val openConfiguration: LiveData<Boolean> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
-
+    val openSearch: LiveData<Boolean> = _openSearch
 
     fun openConfiguration() {
         _openConfiguration.postValue(true)
@@ -54,6 +54,14 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         }
     }
 
+    fun openSearch() {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val configured = repository.isConfiguredAsync()
+            withContext(appCoroutineDispatchers.main) {
+                _openSearch.postValue(configured)
+            }
+        }
+    }
 
     override fun handleDeviceConfigured(configured: Boolean) {
         super.handleDeviceConfigured(configured)

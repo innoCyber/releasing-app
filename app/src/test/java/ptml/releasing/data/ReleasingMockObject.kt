@@ -54,7 +54,7 @@ fun getSavedConfig(): Configuration {
 }
 
 fun mockTerminal(): Terminal {
-    val terminal = Terminal()
+    val terminal = Terminal(2)
     terminal.id = MOCK_TERMINAL_ID
     terminal.value = MOCK_TERMINAL_VALUE
     return terminal

@@ -19,6 +19,7 @@ class ConfigViewModel @Inject constructor(
 
     val configResponse = MutableLiveData<AdminConfigResponse>()
     val operationStepList = MutableLiveData<List<OperationStep>>()
+    val terminalList = MutableLiveData<List<Terminal>>()
     val networkState = MutableLiveData<NetworkState>()
     val savedSuccess = MutableLiveData<Boolean>()
     val configuration = MutableLiveData<Configuration>()
@@ -63,13 +64,26 @@ class ConfigViewModel @Inject constructor(
 
     }
 
-    fun setConfig(terminal: Terminal, operationStep: OperationStep, cargoType: CargoType, checked: Boolean) {
+    fun setConfig(
+        terminal: Terminal,
+        operationStep: OperationStep,
+        cargoType: CargoType,
+        checked: Boolean,
+        imei: String
+    ) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
         val configuration = Configuration(terminal, operationStep, cargoType, checked)
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {
                 repository.setSavedConfigAsync(configuration)
+                val result = repository.setConfigurationDeviceAsync(
+                    cargoTypeId = cargoType.id,
+                    terminal = terminal.id,
+                    operationStepId = operationStep.id,
+                    imei = imei
+                )
+                Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)
                 savedSuccess.postValue(true)
                 networkState.postValue(NetworkState.LOADED)
@@ -84,6 +98,7 @@ class ConfigViewModel @Inject constructor(
     fun cargoTypeSelected(cargoType: CargoType) {
         //populate
         operationStepList.postValue(getOperationStepForCargo(cargoType))
+        terminalList.postValue(getTerminalsCargo(cargoType))
     }
 
     private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
@@ -100,6 +115,18 @@ class ConfigViewModel @Inject constructor(
     }
 
 
+    private fun getTerminalsCargo(cargoType: CargoType): MutableList<Terminal> {
+        val list = mutableListOf<Terminal>()
+        for (terminal in configResponse.value?.terminalList ?: mutableListOf()) {
+            if (terminal.categoryTypeId == cargoType.id) {
+                Timber.d("terminal has  a category_id: %s", cargoType.id)
+                list.add(terminal)
+            } else {
+                Timber.d("terminal  does not have a category_id: %s", cargoType.id)
+            }
+        }
+        return list
+    }
 
 
 }
