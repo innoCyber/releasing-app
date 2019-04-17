@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -316,7 +316,7 @@
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
     </style>
 
-    <style name="Form.MultiSelect" parent="Form.SingleSelect"/>
+    <style name="Form.MultiSelect" parent="Form.SingleSelect" />
 
     <style name="Form.Check">
         <item name="android:layout_width">wrap_content</item>

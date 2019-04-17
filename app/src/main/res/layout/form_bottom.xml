@@ -4,12 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <Button
-        style="@style/Form.SaveButton"
-        />
 
-    <Button
-        style="@style/Form.ResetButton"
-        />
+    <Button style="@style/Form.ResetButton" />
+
+    <Button style="@style/Form.SaveButton" />
 
 </LinearLayout>
