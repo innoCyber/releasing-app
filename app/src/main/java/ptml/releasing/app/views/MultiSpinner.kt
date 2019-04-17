@@ -16,20 +16,36 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import ptml.releasing.R
-import ptml.releasing.configuration.models.Options
-
-
-import java.util.ArrayList
-import java.util.LinkedHashMap
+import ptml.releasing.databinding.ItemChipBinding
+import timber.log.Timber
+import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListener {
 
-    private var items: List<String>? = null
+    private var items: MutableList<String>? = null
     private var selected = mutableListOf<Boolean>()
     var defaultHintText = "Select Items"
     private var spinnerTitle: String? = ""
     private var listener: MultiSpinnerListener? = null
+    private var selectedItems = LinkedHashMap<String, Int>()
+    private val chipsListener = object : ChipListener {
+        override fun onItemClose(position: Int, item: String, itemsRemaining: Int) {
+            Timber.d("Removed %s", item)
+            selected[position] = false
+            if(itemsRemaining<=0){
+                val adapter = MultiSpinnerAdapter(context, defaultHintText)
+                setAdapter(adapter)
+            }
+            if (selected.size > 0) {
+                listener?.onItemsSelected(selected)
+            }
+        }
+    }
 
     constructor(context: Context) : super(context) {}
 
@@ -53,23 +69,22 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
     override fun onCancel(dialog: DialogInterface?) {
         // refresh text on spinner
-        val spinnerBuffer = StringBuilder()
+        selectedItems.clear()
         for (i in items?.indices ?: 0 until 0) {
             if (selected[i]) {
-                spinnerBuffer.append(items!![i])
-                spinnerBuffer.append(", ")
+                selectedItems[items!![i]] = i
             }
         }
 
-        var spinnerText = spinnerBuffer.toString()
-        if (spinnerText.length > 2) {
-            spinnerText = spinnerText.substring(0, spinnerText.length - 2)
-        } else {
-            spinnerText = defaultHintText
-        }
 
-        val adapter = MultiSpinnerAdapter(context, spinnerText)
-        setAdapter(adapter)
+
+        if(selectedItems.size >0){
+            val adapter = ChipsMultiSpinnerAdapter(context, selectedItems, chipsListener)
+            setAdapter(adapter)
+        }else{
+            val adapter = MultiSpinnerAdapter(context, defaultHintText)
+            setAdapter(adapter)
+        }
         if (selected.size > 0) {
             listener?.onItemsSelected(selected)
         }
@@ -113,14 +128,14 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         setAdapter(adapter)
 
         // Set Spinner Text
-        onCancel(null)
+        // onCancel(null)
     }
 
 
 }
 
-internal class MultiSpinnerAdapter(context: Context, text: String)
-    : ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, arrayListOf(text)) {
+internal class MultiSpinnerAdapter(context: Context, text: String) :
+        ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, arrayListOf(text)) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -131,14 +146,15 @@ internal class MultiSpinnerAdapter(context: Context, text: String)
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, drawable, null)
+                textView, null, null, drawable, null
+        )
 
         textView.text = getItem(position)
         return view
     }
 
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+    /*override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
@@ -148,13 +164,103 @@ internal class MultiSpinnerAdapter(context: Context, text: String)
 
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, null, null)
+                textView, null, null, null, null
+        )
 
         textView?.text = getItem(position)
         return view
+    }*/
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return convertView ?: View(context)
     }
 }
+
+
+internal class ChipsMultiSpinnerAdapter(context: Context, var items: LinkedHashMap<String, Int>, val listener: ChipListener?) :
+        ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, items.keys.toList()) {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        var view = convertView
+        if (view == null) {
+            val inflater = LayoutInflater.from(context)
+            val rvAdapter = ChipAdapter()
+            rvAdapter.setItems(items)
+            rvAdapter.listener = listener
+            val layoutManager = GridLayoutManager(context, 2)
+            val rootView = inflater.inflate(R.layout.spinner_multi_select, parent, false)
+            val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_view)
+            recyclerView.adapter = rvAdapter
+            recyclerView.layoutManager = layoutManager
+            recyclerView.addItemDecoration(SpacesItemDecoration(8))
+            view = rootView
+
+        }
+
+        return view ?: View(context)
+    }
+
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return convertView ?: View(context)
+    }
+}
+
 
 interface MultiSpinnerListener {
     fun onItemsSelected(selected: List<Boolean>)
 }
+
+class ChipAdapter : RecyclerView.Adapter<ChipViewHolder>() {
+    internal var items = LinkedHashMap<String, Int>()
+    internal var itemsList = mutableListOf<String>()
+    var listener: ChipListener? = null
+
+    fun setItems(items: LinkedHashMap<String, Int>) {
+        this.items.clear()
+        this.itemsList.addAll(items.keys)
+        this.items.putAll(items)
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChipViewHolder {
+        return ChipViewHolder(
+                this,
+                ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
+                listener
+        )
+    }
+
+    override fun getItemCount() = itemsList.size
+
+    override fun onBindViewHolder(holder: ChipViewHolder, position: Int) {
+        holder.performBind(itemsList[position])
+    }
+
+}
+
+class ChipViewHolder(
+        val adapter:ChipAdapter,
+        val binding: ItemChipBinding,
+        val listener: ChipListener? = null
+) :
+        RecyclerView.ViewHolder(binding.root) {
+
+    fun performBind(item: String) {
+        Timber.w("TEXT: %s", item)
+        binding.chip.text = item
+        binding.chip.isCheckable = false
+        binding.chip.isClickable = true
+        binding.chip.isChipIconVisible = false
+        binding.chip.isCloseIconVisible = true
+        binding.chip.setOnCloseIconClickListener {
+            adapter.itemsList.removeAt(adapterPosition)
+            adapter.notifyDataSetChanged()
+            adapter.items[item]?.let { it1 -> listener?.onItemClose(it1, item,adapter.itemsList.size ) }
+        }
+    }
+}
+
+interface ChipListener {
+    fun onItemClose(position: Int, item: String, itemsRemaining:Int)
+}
+
