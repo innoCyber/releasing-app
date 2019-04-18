@@ -51,10 +51,17 @@ class FormBuilder constructor(val context: Context) {
      * @param configDataList the list of configuration options
      * @return a linear layout of the form
      * */
+
+
+
+
+
+
     fun build(configDataList: List<ConfigureDeviceData>?): LinearLayout {
         //sort the list based on the position
+        Timber.d("Config list: %s", configDataList)
         val positionComparator = Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
-        Collections.sort(configDataList, positionComparator)
+        Collections.sort(configDataList ?: mutableListOf(), positionComparator)
         val params = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -153,7 +160,7 @@ class FormBuilder constructor(val context: Context) {
      * */
     private fun createLabel(data: ConfigureDeviceData): TextView {
         val textView = inflateView(context, R.layout.form_label) as TextView
-        textView.tag = data
+        textView.tag = data.id
         textView.text = data.title
         applyTopParams(textView)
         return textView

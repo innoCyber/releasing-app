@@ -10,7 +10,7 @@ import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.auth.viewmodel.LoginViewModel
 import ptml.releasing.damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
-import ptml.releasing.find_cargo.view_model.FindCargoViewModel
+import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.home.viewmodel.HomeViewModel
 import ptml.releasing.search.viewmodel.SearchViewModel
 
@@ -62,6 +62,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(FindCargoViewModel::class)
-    abstract fun bindFindCargoViewModel(myViewModel: FindCargoViewModel): ViewModel
+    @ViewModelKey(CargoInfoViewModel::class)
+    abstract fun bindFindCargoViewModel(myInfoViewModel: CargoInfoViewModel): ViewModel
 }

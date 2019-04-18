@@ -10,7 +10,7 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
-import ptml.releasing.find_cargo.view.FindCargoActivity
+import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.search.viewmodel.SearchViewModel
 import java.util.*
 
@@ -29,7 +29,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         viewModel.verify.observe(this, Observer {
-            startNewActivity(FindCargoActivity::class.java)
+            startNewActivity(CargoInfoActivity::class.java)
         })
 
         viewModel.getSavedConfig()

@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="ptml.releasing.find_cargo.view_model.FindCargoViewModel" />
+            type="ptml.releasing.cargo_info.view_model.CargoInfoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

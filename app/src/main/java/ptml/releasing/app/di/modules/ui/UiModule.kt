@@ -7,7 +7,7 @@ import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.auth.view.LoginActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
-import ptml.releasing.find_cargo.view.FindCargoActivity
+import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.home.view.HomeActivity
 import ptml.releasing.search.view.SearchActivity
 
@@ -40,6 +40,6 @@ abstract class UiModule {
     abstract fun adminConfigActivity(): AdminConfigActivity
 
     @ContributesAndroidInjector()
-    abstract fun findCargoActivity(): FindCargoActivity
+    abstract fun findCargoActivity(): CargoInfoActivity
 
 }

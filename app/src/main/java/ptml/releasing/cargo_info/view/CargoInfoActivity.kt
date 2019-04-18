@@ -1,4 +1,4 @@
-package ptml.releasing.find_cargo.view
+package ptml.releasing.cargo_info.view
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -10,10 +10,10 @@ import ptml.releasing.app.form.FormBuilder
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.find_cargo.view_model.FindCargoViewModel
+import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import java.util.*
 
-class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databinding.ActivityFindCargoBinding>() {
+class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,8 @@ class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databi
         })
 
         viewModel.getFormConfig()
+
+
     }
 
 
@@ -70,9 +72,9 @@ class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databi
     }
 
 
-    override fun getViewModelClass() = FindCargoViewModel::class.java
+    override fun getViewModelClass() = CargoInfoViewModel::class.java
 
-    override fun getLayoutResourceId() = R.layout.activity_find_cargo
+    override fun getLayoutResourceId() = R.layout.activity_cargo_info
 
     override fun getBindingVariable() = BR.viewModel
 }

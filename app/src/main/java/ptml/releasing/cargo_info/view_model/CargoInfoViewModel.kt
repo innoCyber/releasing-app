@@ -1,4 +1,4 @@
-package ptml.releasing.find_cargo.view_model
+package ptml.releasing.cargo_info.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +11,7 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import javax.inject.Inject
 
-class FindCargoViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers)
+class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers)
     : BaseViewModel(repository, appCoroutineDispatchers) {
 
     private val _goBack = MutableLiveData<Boolean>()
