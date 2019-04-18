@@ -37,7 +37,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         override fun onItemClose(position: Int, item: String, itemsRemaining: Int) {
             Timber.d("Removed %s", item)
             selected[position] = false
-            if(itemsRemaining<=0){
+            if (itemsRemaining <= 0) {
                 val adapter = MultiSpinnerAdapter(context, defaultHintText)
                 setAdapter(adapter)
             }
@@ -78,10 +78,10 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
 
 
-        if(selectedItems.size >0){
+        if (selectedItems.size > 0) {
             val adapter = ChipsMultiSpinnerAdapter(context, selectedItems, chipsListener)
             setAdapter(adapter)
-        }else{
+        } else {
             val adapter = MultiSpinnerAdapter(context, defaultHintText)
             setAdapter(adapter)
         }
@@ -96,10 +96,10 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         val builder = AlertDialog.Builder(context)
         builder.setTitle(spinnerTitle)
         builder.setMultiChoiceItems(
-                items?.toTypedArray<CharSequence>(), selected.toBooleanArray(), this
+            items?.toTypedArray<CharSequence>(), selected.toBooleanArray(), this
         )
         builder.setPositiveButton(
-                android.R.string.ok
+            android.R.string.ok
         ) { dialog, which -> dialog.cancel() }
         builder.setOnCancelListener(this)
         builder.show()
@@ -132,10 +132,17 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
     }
 
 
+    fun setSelection(selection: List<Int>?) {
+        for (i in selection ?: mutableListOf()) {
+            selected[i] = true
+        }
+        onCancel(null)
+    }
+
 }
 
 internal class MultiSpinnerAdapter(context: Context, text: String) :
-        ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, arrayListOf(text)) {
+    ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, arrayListOf(text)) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -146,7 +153,7 @@ internal class MultiSpinnerAdapter(context: Context, text: String) :
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, drawable, null
+            textView, null, null, drawable, null
         )
 
         textView.text = getItem(position)
@@ -176,8 +183,16 @@ internal class MultiSpinnerAdapter(context: Context, text: String) :
 }
 
 
-internal class ChipsMultiSpinnerAdapter(context: Context, var items: LinkedHashMap<String, Int>, val listener: ChipListener?) :
-        ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, items.keys.toList()) {
+internal class ChipsMultiSpinnerAdapter(
+    context: Context,
+    var items: LinkedHashMap<String, Int>,
+    val listener: ChipListener?
+) :
+    ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, items.keys.toList()) {
+
+    companion object {
+        const val SPAN_TWO_SIZE = 3
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -186,7 +201,15 @@ internal class ChipsMultiSpinnerAdapter(context: Context, var items: LinkedHashM
             val rvAdapter = ChipAdapter()
             rvAdapter.setItems(items)
             rvAdapter.listener = listener
-            val layoutManager = GridLayoutManager(context, 2)
+            val layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    Timber.e("ITem %s", items.size)
+                    if (items.size > SPAN_TWO_SIZE) return 1
+                    else return 2
+                }
+
+            }
             val rootView = inflater.inflate(R.layout.spinner_multi_select, parent, false)
             val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_view)
             recyclerView.adapter = rvAdapter
@@ -224,9 +247,9 @@ class ChipAdapter : RecyclerView.Adapter<ChipViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChipViewHolder {
         return ChipViewHolder(
-                this,
-                ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
-                listener
+            this,
+            ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
+            listener
         )
     }
 
@@ -239,11 +262,11 @@ class ChipAdapter : RecyclerView.Adapter<ChipViewHolder>() {
 }
 
 class ChipViewHolder(
-        val adapter:ChipAdapter,
-        val binding: ItemChipBinding,
-        val listener: ChipListener? = null
+    val adapter: ChipAdapter,
+    val binding: ItemChipBinding,
+    val listener: ChipListener? = null
 ) :
-        RecyclerView.ViewHolder(binding.root) {
+    RecyclerView.ViewHolder(binding.root) {
 
     fun performBind(item: String) {
         Timber.w("TEXT: %s", item)
@@ -255,12 +278,12 @@ class ChipViewHolder(
         binding.chip.setOnCloseIconClickListener {
             adapter.itemsList.removeAt(adapterPosition)
             adapter.notifyDataSetChanged()
-            adapter.items[item]?.let { it1 -> listener?.onItemClose(it1, item,adapter.itemsList.size ) }
+            adapter.items[item]?.let { it1 -> listener?.onItemClose(it1, item, adapter.itemsList.size) }
         }
     }
 }
 
 interface ChipListener {
-    fun onItemClose(position: Int, item: String, itemsRemaining:Int)
+    fun onItemClose(position: Int, item: String, itemsRemaining: Int)
 }
 

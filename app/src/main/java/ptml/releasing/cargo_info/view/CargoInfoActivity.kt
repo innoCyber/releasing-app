@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.form.FormBuilder
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -42,17 +44,29 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         viewModel.getFormConfig()
 
-        val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
-        Timber.d("Response: %s", findCargoResponse)
+
+
+
+
 
 
     }
 
 
     private fun createForm(it: ConfigureDeviceResponse?) {
-        val formBuilder = FormBuilder(this)
+        var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+        Timber.d("From sever: %s", findCargoResponse)
+        if(BuildConfig.DEBUG){
+            findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+            Timber.w("From assets: %s", findCargoResponse)
+        }
+
+        val formView = FormBuilder(this)
+            .init(findCargoResponse)
             .build(it?.data)
-        binding.formContainer.addView(formBuilder)
+        binding.formContainer.addView(formView)
+
+
     }
 
 

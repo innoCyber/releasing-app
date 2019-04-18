@@ -12,6 +12,7 @@ import ptml.releasing.app.form.FormUtils.applyTopParams
 import ptml.releasing.app.form.FormUtils.getDataForMultiSpinner
 import ptml.releasing.app.form.FormUtils.getImageResourceByType
 import ptml.releasing.app.form.FormUtils.inflateView
+import ptml.releasing.app.form.adapter.BaseSelectAdapter
 import ptml.releasing.app.form.adapter.FormSelectAdapter
 import ptml.releasing.app.form.adapter.MultiSelectAdapter
 import ptml.releasing.app.form.adapter.SingleSelectAdapter
@@ -19,12 +20,17 @@ import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.SizeUtils
 import ptml.releasing.app.views.MultiSpinner
 import ptml.releasing.app.views.MultiSpinnerListener
+import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.Option
+import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import ptml.releasing.configuration.models.Options
 import timber.log.Timber
 import java.util.*
 
 class FormBuilder constructor(val context: Context) {
+    private var values: List<Value>? = null
+    private var options: List<Option>? = null
     private val rootLayout = LinearLayout(context)
     private var listener: FormListener? = null
     private var multiSpinnerListener: MultiSpinnerListener? = null
@@ -32,7 +38,7 @@ class FormBuilder constructor(val context: Context) {
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
 
@@ -46,25 +52,34 @@ class FormBuilder constructor(val context: Context) {
         return this
     }
 
+
+    /**
+     * Initializes the form with pre-filled data
+     * @param findCargoResponse The object with the pre-filled data, referenced by the form id
+     * */
+    fun init(findCargoResponse: FindCargoResponse?): FormBuilder {
+        this.values = findCargoResponse?.values
+        this.options = findCargoResponse?.options
+
+
+        return this
+    }
+
+
     /**
      * Creates a form view from the list of configuration options
      * @param configDataList the list of configuration options
      * @return a linear layout of the form
      * */
-
-
-
-
-
-
     fun build(configDataList: List<ConfigureDeviceData>?): LinearLayout {
         //sort the list based on the position
         Timber.d("Config list: %s", configDataList)
         val positionComparator = Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
         Collections.sort(configDataList ?: mutableListOf(), positionComparator)
         val params = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
 
 
         //iterate over the list to get each config
@@ -82,7 +97,7 @@ class FormBuilder constructor(val context: Context) {
                     params.setMargins(0, 0, 0, 0)
                 }
                 rootLayout.addView(
-                        formView
+                    formView
                 )
 
             }
@@ -96,6 +111,7 @@ class FormBuilder constructor(val context: Context) {
             rootLayout.addView(bottom)
         }
 
+        initializeData()
 
         return rootLayout
     }
@@ -193,7 +209,7 @@ class FormBuilder constructor(val context: Context) {
      * */
     private fun createMultilineTextBox(data: ConfigureDeviceData): EditText {
         val editText = inflateView(context, R.layout.form_textbox_multiline) as EditText
-        editText.tag = data
+        editText.tag = data.id
         editText.hint = data.title
         applyParams(editText)
         return editText
@@ -213,7 +229,7 @@ class FormBuilder constructor(val context: Context) {
         val imageView = view.findViewById<ImageView>(R.id.img)
         titleView.text = data.title
         imageView.setImageResource(getImageResourceByType(data.type))
-        view.tag = data
+        view.tag = data.id
         view.setOnClickListener {
             listener?.onClickFormButton(FormType.fromType(data.type))
         }
@@ -231,23 +247,24 @@ class FormBuilder constructor(val context: Context) {
      * */
     private fun createSingleSelect(data: ConfigureDeviceData): View {
         if (data.options.size > Constants.ITEM_TO_EXPAND) {
-        val spinner = inflateView(context, R.layout.form_single_select) as Spinner
-        spinner.tag = data
-        //add the items
-        val adapter = FormSelectAdapter(context, data.options)
-        spinner.adapter = adapter
+            val spinner = inflateView(context, R.layout.form_single_select) as Spinner
+            spinner.tag = data.id
+            //add the items
+            val adapter = FormSelectAdapter(context, data.options)
+            spinner.adapter = adapter
 
 
 
-        applyParams(spinner)
-        return spinner
-        }else{
+            applyParams(spinner)
+            return spinner
+        } else {
             val adapter = SingleSelectAdapter<Options>()
             adapter.setItems(data.options)
             val recyclerView = RecyclerView(context)
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(context, 2)
             applyParams(recyclerView)
+            recyclerView.tag = data.id
             return recyclerView
         }
 
@@ -263,7 +280,7 @@ class FormBuilder constructor(val context: Context) {
     private fun createMultiSelectSelect(data: ConfigureDeviceData): View {
         if (data.options.size > Constants.ITEM_TO_EXPAND) {
             val spinner = inflateView(context, R.layout.form_multi_select) as MultiSpinner
-            spinner.tag = data
+            spinner.tag = data.id
             spinner.defaultHintText = data.title
             spinner.setItems(getDataForMultiSpinner(data.options), multiSpinnerListener)
             applyParams(spinner)
@@ -275,6 +292,7 @@ class FormBuilder constructor(val context: Context) {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(context, 2)
             applyParams(recyclerView)
+            recyclerView.tag = data.id
             return recyclerView
 
         }
@@ -298,6 +316,61 @@ class FormBuilder constructor(val context: Context) {
     private fun createBottomButtons(): View {
         return inflateView(context, R.layout.form_bottom)
     }
+
+    private fun initializeData() {
+        initializeValues()
+        initializeOptions()
+    }
+
+    private fun initializeValues() {
+        for (value in values ?: mutableListOf()) {
+            bindValuesDataToView(rootLayout.findViewWithTag<View>(value.id), value.value)
+        }
+    }
+
+    private fun initializeOptions() {
+        for (option in options ?: mutableListOf()) {
+            bindOptionsDataToView(rootLayout.findViewWithTag<View>(option.id), option.selected)
+        }
+    }
+
+    private fun bindValuesDataToView(view: View, data: String?) {
+        when (view) {
+            is EditText -> view.setText(data)
+            is TextView -> view.text = data
+            else -> {
+                Timber.d("Unknown view %s", view::class.java.name)
+            }
+        }
+    }
+
+
+    private fun bindOptionsDataToView(view: View, data: List<Int>?) {
+        when (view) {
+            is MultiSpinner -> { //check this first, for multi select
+                view.setSelection(data)
+            }
+
+            is Spinner -> { //for single select
+                if (data?.isEmpty() == false) { //there is data
+                    val position = data[0]
+                    view.setSelection(position)
+                }
+            }
+            is RecyclerView -> {
+                if(data?.isEmpty() == false && view.adapter  is BaseSelectAdapter<*, *>){
+                    ((view.adapter) as BaseSelectAdapter<*,*>).initSelectedItems(data)
+                }else{
+                    Timber.d("Unknown adapter %s", view.adapter)
+                }
+            }
+            else ->{
+                Timber.d("Unknown view %s", view::class.java.name)
+            }
+        }
+    }
+
+
 
 
 }
