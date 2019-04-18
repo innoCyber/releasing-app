@@ -18,7 +18,7 @@ import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivityHomeBinding
 import ptml.releasing.home.viewmodel.HomeViewModel
-import ptml.releasing.search.view.SearchActivity
+import ptml.releasing.cargo_search.view.SearchActivity
 import java.util.*
 
 

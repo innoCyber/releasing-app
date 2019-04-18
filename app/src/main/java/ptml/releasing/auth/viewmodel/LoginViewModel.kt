@@ -22,8 +22,9 @@ class LoginViewModel @Inject constructor(
 
 
     val usernameValidation = MutableLiveData<Int>()
+    val errorMessage = MutableLiveData<String>()
     val passwordValidation = MutableLiveData<Int>()
-    val response = MutableLiveData<BaseResponse>()
+    val loadNext= MutableLiveData<Unit>()
 
     val networkState = MutableLiveData<NetworkState>()
 
@@ -51,11 +52,14 @@ class LoginViewModel @Inject constructor(
             try {
                 val result = repository.loginAsync(user).await()
                 withContext(appCoroutineDispatchers.main) {
-
-                    response.postValue(result)
                     Timber.d("Response: %s", result)
+                    if(result.isSuccess){
+                        loadNext.postValue(Unit)
+                    }else{
+                        errorMessage.postValue(result.message)
+                    }
                     networkState.postValue(NetworkState.LOADED)
-                                   }
+                }
             } catch (it: Throwable) {
                 Timber.e(it)
                 networkState.postValue(NetworkState.error(it))

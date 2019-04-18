@@ -1,11 +1,13 @@
 package ptml.releasing.app.base
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 import com.google.gson.JsonObject
 
 
-open class BaseModel {
+open class BaseModel() : Parcelable {
     @SerializedName("id")
     open var id: Int = 0
 
@@ -26,5 +28,18 @@ open class BaseModel {
         return "BaseModel(id=$id)"
     }
 
+    constructor(source: Parcel) : this(
+    )
 
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {}
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<BaseModel> = object : Parcelable.Creator<BaseModel> {
+            override fun createFromParcel(source: Parcel): BaseModel = BaseModel(source)
+            override fun newArray(size: Int): Array<BaseModel?> = arrayOfNulls(size)
+        }
+    }
 }

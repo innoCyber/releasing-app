@@ -13,7 +13,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
-import ptml.releasing.search.view.SearchActivity
+import ptml.releasing.cargo_search.view.SearchActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 

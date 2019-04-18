@@ -9,7 +9,7 @@ import ptml.releasing.damages.view.DamageActivity
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.home.view.HomeActivity
-import ptml.releasing.search.view.SearchActivity
+import ptml.releasing.cargo_search.view.SearchActivity
 
 
 @Module

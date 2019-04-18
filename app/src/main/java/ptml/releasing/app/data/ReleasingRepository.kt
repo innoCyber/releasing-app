@@ -13,9 +13,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 open class ReleasingRepository @Inject constructor(
-    var remote: Remote,
-    var local: Local,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
+        var remote: Remote,
+        var local: Local,
+        var appCoroutineDispatchers: AppCoroutineDispatchers
 ) : Repository {
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
@@ -98,10 +98,10 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun setConfigurationDeviceAsync(
-        cargoTypeId: Int,
-        operationStepId: Int,
-        terminal: Int,
-        imei: String
+            cargoTypeId: Int,
+            operationStepId: Int,
+            terminal: Int,
+            imei: String
     ): Deferred<ConfigureDeviceResponse> {
         return withContext(appCoroutineDispatchers.network) {
             val remoteResponse = remote.setConfigurationDeviceAsync(cargoTypeId, operationStepId, terminal, imei)
@@ -117,6 +117,14 @@ open class ReleasingRepository @Inject constructor(
     override suspend fun getFormConfigAsync(): Deferred<ConfigureDeviceResponse> {
         return local.getDeviceConfiguration()?.toDeferredAsync() as Deferred<ConfigureDeviceResponse>
     }
+
+
+    override suspend fun findCargo(cargoTypeId: Int,
+                                   operationStepId: Int,
+                                   terminal: Int,
+                                   imei: String,
+                                   cargoNumber:String
+    ) = remote.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
 }
 
 

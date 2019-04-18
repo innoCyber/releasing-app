@@ -7,15 +7,20 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.form.FormBuilder
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
+import ptml.releasing.cargo_search.model.FindCargoResponse
+import timber.log.Timber
 import java.util.*
 
 class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
-
+    companion object{
+        const val  RESPONSE = "response"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
@@ -36,6 +41,9 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         })
 
         viewModel.getFormConfig()
+
+        val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+        Timber.d("Response: %s", findCargoResponse)
 
 
     }

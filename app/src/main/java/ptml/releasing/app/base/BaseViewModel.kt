@@ -20,10 +20,10 @@ open class BaseViewModel @Inject constructor(
 
     var compositeJob: Job? = null
 
-    private val _isConfigured = MutableLiveData<Boolean>()
+    protected val _isConfigured = MutableLiveData<Boolean>()
     val isConfigured: LiveData<Boolean> = _isConfigured
 
-    private val _configuration = MutableLiveData<Configuration>()
+    protected val _configuration = MutableLiveData<Configuration>()
 
     val savedConfiguration: LiveData<Configuration> = _configuration
 

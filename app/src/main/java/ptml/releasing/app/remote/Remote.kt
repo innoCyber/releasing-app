@@ -5,7 +5,7 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
-import retrofit2.http.Query
+import ptml.releasing.cargo_search.model.FindCargoResponse
 
 interface Remote {
     suspend fun verifyDeviceIdAsync(imei: String): Deferred<BaseResponse>
@@ -18,4 +18,10 @@ interface Remote {
         terminal: Int,
         imei: String
     ): Deferred<ConfigureDeviceResponse>
+    suspend fun findCargo(
+            cargoTypeId: Int,
+            operationStepId: Int,
+            terminal: Int,
+            imei: String,
+            cargoNumber:String):Deferred<FindCargoResponse>
 }

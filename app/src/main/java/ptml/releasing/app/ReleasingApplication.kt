@@ -43,8 +43,8 @@ open class ReleasingApplication : DaggerApplication() {
 
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-        return when (true) {
-            true -> "0000000001"
+        return when (BuildConfig.DEBUG) {
+            true -> "861327032935756"
             else -> {
                 val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

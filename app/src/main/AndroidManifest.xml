@@ -59,7 +59,7 @@
                 android:name=".damages.view.DamageActivity"
                 android:parentActivityName=".home.view.HomeActivity"
                 android:label="@string/damages"/>
-        <activity android:name=".search.view.SearchActivity"
+        <activity android:name=".cargo_search.view.SearchActivity"
                   android:parentActivityName=".home.view.HomeActivity"
                   android:label="@string/cargo_search"/>
 
@@ -67,7 +67,7 @@
                   android:parentActivityName=".home.view.HomeActivity"
                   android:label="@string/admin_configuration"/>
         <activity android:name=".cargo_info.view.CargoInfoActivity"
-            android:parentActivityName=".search.view.SearchActivity"
+            android:parentActivityName=".cargo_search.view.SearchActivity"
             android:label="@string/cargo_info"/>
     </application>
 

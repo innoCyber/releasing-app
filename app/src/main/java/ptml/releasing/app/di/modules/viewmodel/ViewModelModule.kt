@@ -12,7 +12,7 @@ import ptml.releasing.damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.home.viewmodel.HomeViewModel
-import ptml.releasing.search.viewmodel.SearchViewModel
+import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 
 @Module
 abstract class ViewModelModule {
