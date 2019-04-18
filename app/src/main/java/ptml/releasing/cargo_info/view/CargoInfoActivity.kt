@@ -1,21 +1,28 @@
-package ptml.releasing.find_cargo.view
+package ptml.releasing.cargo_info.view
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.form.FormBuilder
+import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.find_cargo.view_model.FindCargoViewModel
+import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
+import ptml.releasing.cargo_search.model.FindCargoResponse
+import timber.log.Timber
 import java.util.*
 
-class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databinding.ActivityFindCargoBinding>() {
+class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
-
+    companion object{
+        const val  RESPONSE = "response"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
@@ -36,13 +43,30 @@ class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databi
         })
 
         viewModel.getFormConfig()
+
+
+
+
+
+
+
     }
 
 
     private fun createForm(it: ConfigureDeviceResponse?) {
-        val formBuilder = FormBuilder(this)
+        var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+        Timber.d("From sever: %s", findCargoResponse)
+        if(BuildConfig.DEBUG){
+            findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+            Timber.w("From assets: %s", findCargoResponse)
+        }
+
+        val formView = FormBuilder(this)
+            .init(findCargoResponse)
             .build(it?.data)
-        binding.formContainer.addView(formBuilder)
+        binding.formContainer.addView(formView)
+
+
     }
 
 
@@ -70,9 +94,9 @@ class FindCargoActivity : BaseActivity<FindCargoViewModel, ptml.releasing.databi
     }
 
 
-    override fun getViewModelClass() = FindCargoViewModel::class.java
+    override fun getViewModelClass() = CargoInfoViewModel::class.java
 
-    override fun getLayoutResourceId() = R.layout.activity_find_cargo
+    override fun getLayoutResourceId() = R.layout.activity_cargo_info
 
     override fun getBindingVariable() = BR.viewModel
 }

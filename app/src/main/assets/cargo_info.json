@@ -3,7 +3,7 @@
   "message": "",
   "data": [
     {
-      "id": 3,
+      "id": 1,
       "type": "images",
       "position": 0,
       "title": "Photos",
@@ -14,7 +14,7 @@
     },
 
     {
-      "id": 3,
+      "id": 2,
       "type": "damages",
       "position": 1,
       "title": "Damages",
@@ -24,7 +24,7 @@
       "data_validation": "images"
     },
     {
-      "id": 4,
+      "id": 3,
       "type": "printer",
       "position": 2,
       "title": "Print Barcode",
@@ -35,7 +35,7 @@
     },
 
     {
-      "id": 1,
+      "id": 4,
       "type": "label",
       "position": 3,
       "title": "Grid",
@@ -56,7 +56,7 @@
     },
 
     {
-      "id": 111,
+      "id": 6,
       "type": "label",
       "position": 5,
       "title": "Seal",
@@ -66,7 +66,7 @@
       "data_validation": ""
     },
     {
-      "id": 522,
+      "id": 7,
       "type": "textbox",
       "title": "Enter Seal",
       "position": 6,
@@ -76,7 +76,7 @@
       "data_validation": "alphanumeric"
     },
     {
-      "id": 2,
+      "id": 8,
       "type": "label",
       "title": "Bar Code",
       "position": 7,
@@ -87,7 +87,7 @@
     },
 
     {
-      "id": 6,
+      "id": 9,
       "type": "textbox",
       "title": "Badge ID",
       "position": 8,
@@ -97,20 +97,41 @@
       "data_validation": "aplanumeric"
     },
     {
-      "id": 7,
-      "type": "textbox",
+      "id": 10,
+      "type": "label",
       "title": "Operator Name",
       "position": 9,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 11,
+      "type": "textbox",
+      "title": "Enter Operator Name",
+      "position": 10,
       "is_required": true,
       "is_editable": true,
       "options": [],
       "data_validation": "aplanumeric"
     },
+
     {
-      "id": 8,
-      "type": "multi_select",
+      "id": 12,
+      "type": "label",
       "title": "Remarks",
-      "position": 10,
+      "position": 11,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 13,
+      "type": "multi_select",
+      "title": "Select Remarks",
+      "position": 12,
       "is_required": true,
       "is_editable": false,
       "options": [
@@ -146,21 +167,32 @@
       ],
       "data_validation": ""
     },
+
     {
-      "id": 9,
+      "id": 14,
+      "type": "label",
+      "title": "More Remark",
+      "position": 13,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 15,
       "type": "multi_line_textbox",
-      "title": "More Remarks",
-      "position": 11,
+      "title": "Enter More Remarks",
+      "position": 14,
       "is_required": true,
       "is_editable": true,
       "options": [],
-      "data_validation": "aplanumeric"
+      "data_validation": "alphanumeric"
     },
 
     {
-      "id": 144,
+      "id": 16,
       "type": "label",
-      "position": 12,
+      "position": 15,
       "title": "Options",
       "is_required": false,
       "is_editable": false,
@@ -168,10 +200,10 @@
       "data_validation": ""
     },
     {
-      "id": 8,
+      "id": 17,
       "type": "multi_select",
       "title": "Select options",
-      "position": 13,
+      "position": 16,
       "is_required": true,
       "is_editable": false,
       "options": [
@@ -214,9 +246,9 @@
       "data_validation": ""
     },
     {
-      "id": 144,
+      "id": 18,
       "type": "label",
-      "position": 14,
+      "position": 17,
       "title": "Color",
       "is_required": false,
       "is_editable": false,
@@ -224,10 +256,10 @@
       "data_validation": ""
     },
     {
-      "id": 433,
+      "id": 19,
       "type": "single_select",
       "title": "Select color",
-      "position": 15,
+      "position": 18,
       "is_required": true,
       "is_editable": false,
       "options": [
@@ -264,9 +296,9 @@
       "data_validation": ""
     },
     {
-      "id": 144,
+      "id": 20,
       "type": "label",
-      "position": 16,
+      "position": 19,
       "title": "Length",
       "is_required": false,
       "is_editable": false,
@@ -274,10 +306,10 @@
       "data_validation": ""
     },
     {
-      "id": 433,
+      "id": 21,
       "type": "single_select",
       "title": "Select length",
-      "position": 17,
+      "position": 20,
       "is_required": true,
       "is_editable": false,
       "options": [

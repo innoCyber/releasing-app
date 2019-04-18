@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.databinding.ItemCheckboxBinding
 
-class SingleSelectAdapter<T> : RecyclerView.Adapter<SingleSelectViewHolder<T>>() where T : SelectModel {
-    internal val items = mutableListOf<T>()
+class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>() where T : SelectModel {
     var listener: SingleSelectListener<T>? = null
 
     fun setItems(items:List<T>){
@@ -28,6 +27,14 @@ class SingleSelectAdapter<T> : RecyclerView.Adapter<SingleSelectViewHolder<T>>()
     override fun onBindViewHolder(holder: SingleSelectViewHolder<T>, position: Int) {
         holder.performBind(items[position])
     }
+
+    override fun initSelectedItems(selected: List<Int>?) { //overridden to ensure only one item is selected
+        if(selected?.isEmpty() == false){
+            items[selected[0]].checked = true
+            notifyDataSetChanged()
+        }
+    }
+
 
 }
 

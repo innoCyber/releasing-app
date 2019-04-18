@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.databinding.ItemCheckboxBinding
 import timber.log.Timber
 
-class MultiSelectAdapter<T> : RecyclerView.Adapter<MultiSelectViewHolder<T>>() where T : SelectModel {
-    private val items = mutableListOf<T>()
+class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() where T : SelectModel {
+
     val selectedItems = mutableListOf<T>()
     var listener: MultiSelectListener<T>? = null
 

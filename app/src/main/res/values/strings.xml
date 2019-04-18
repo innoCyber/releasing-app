@@ -81,9 +81,10 @@
     <string name="back_to_home">Back to Home</string>
     <string name="printer_settings">Printer settings</string>
     <string name="device_configuration">Device Configuration</string>
-    <string name="find_cargo">Find Cargo</string>
+    <string name="cargo_info">Cargo Information</string>
     <string name="reset">Reset</string>
     <string name="save">Save</string>
 
     <string name="chip_ellipsis">&#8230;</string>
+    <string name="cargo_number_invalid_message">Please enter a valid cargo number</string>
 </resources>

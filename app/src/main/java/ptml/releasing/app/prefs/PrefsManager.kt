@@ -63,7 +63,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
-        /*return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), ConfigureDeviceResponse::class.java)*/
+        /*return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)*/
         return FormLoader.loadFromAssets(context)
    }
 

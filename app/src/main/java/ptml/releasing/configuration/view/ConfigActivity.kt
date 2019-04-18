@@ -21,7 +21,6 @@ import ptml.releasing.configuration.models.Terminal
 import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.databinding.ActivityConfigBinding
-import ptml.releasing.search.view.SearchActivity
 import timber.log.Timber
 
 @RuntimePermissions

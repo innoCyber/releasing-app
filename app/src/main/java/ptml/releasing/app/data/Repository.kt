@@ -7,6 +7,7 @@ import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.auth.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.cargo_search.model.FindCargoResponse
 
 interface Repository {
 
@@ -29,6 +30,14 @@ interface Repository {
 
     suspend fun getFormConfigAsync(): Deferred<ConfigureDeviceResponse>
 
+
+    suspend fun findCargo(
+            cargoTypeId: Int,
+            operationStepId: Int,
+            terminal: Int,
+            imei: String,
+            cargoNumber:String):Deferred<FindCargoResponse>
+
      fun getSavedConfigAsync(): Configuration
      fun setSavedConfigAsync(configuration: Configuration)
 
@@ -36,4 +45,7 @@ interface Repository {
      fun setFirst(value: Boolean)
      fun isConfiguredAsync(): Boolean
      fun setConfigured(isConfigured: Boolean)
+
+
+
 }

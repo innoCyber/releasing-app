@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="ptml.releasing.search.viewmodel.SearchViewModel" />
+            type="ptml.releasing.cargo_search.viewmodel.SearchViewModel" />
     </data>
 
 
@@ -82,6 +82,21 @@
                 android:onClick="@{() -> viewModel.goBack()}"
                 android:text="@string/back_to_home" />
         </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        <include layout="@layout/progress_bar_layout"
+            android:id="@+id/include_progress"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent"/>
+
+
+        <include
+            android:id="@+id/include_error"
+            layout="@layout/error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "message": "",
+  "values": [
+    {
+      "id": 5,
+      "value": "Ford"
+    },
+    {
+      "id": 7,
+      "value": "Lexus"
+    },
+    {
+      "id": 9,
+      "value": "Suzuki"
+    },
+    {
+      "id": 11,
+      "value": "Mercedes-Benz"
+    },
+    {
+      "id": 15,
+      "value": "Ford"
+    }
+  ],
+  "options": [
+    {
+      "id": 13,
+      "selected": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 17,
+      "selected": [
+        3
+      ]
+    },
+    {
+      "id": 19,
+      "selected": [
+        3
+      ]
+    },
+    {
+      "id": 21,
+      "selected": [
+        3
+      ]
+    }
+  ]
+}

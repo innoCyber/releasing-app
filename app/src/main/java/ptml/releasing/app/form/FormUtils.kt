@@ -31,7 +31,7 @@ internal object FormUtils {
      fun getDataForMultiSpinner(list: List<Options>): LinkedHashMap<String, Boolean> {
         val linkedHashMap = LinkedHashMap<String, Boolean>()
         for (s in list) {
-            linkedHashMap.put(s.name, false)
+            linkedHashMap[s.name] = false
         }
 
         return linkedHashMap

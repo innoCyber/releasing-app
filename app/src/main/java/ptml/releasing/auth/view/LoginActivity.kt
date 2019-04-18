@@ -45,18 +45,14 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
             }
         })
 
-        viewModel.response.observe(this, Observer {
-            when (it.isSuccess) {
-                true -> {
-                    startNewActivity(AdminConfigActivity::class.java, true)
-                }
-
-                else -> {
-                    Timber.d("message: %s", it.message)
-                    showErrorDialog(it.message)
-                }
-            }
+        viewModel.loadNext.observe(this, Observer {
+            startNewActivity(AdminConfigActivity::class.java, true)
         })
+
+        viewModel.errorMessage.observe(this, Observer {
+            showErrorDialog(it)
+        })
+
 
         viewModel.passwordValidation.observe(this, Observer {
             if (it != null) {

@@ -179,9 +179,9 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 //        observeNetworkChanges(networkSubject)
     }
 
-
-    fun startNewActivity(name: Class<*>, finish: Boolean = false) {
+    fun startNewActivity(name: Class<*>, finish: Boolean = false, data:Bundle? = null){
         val intent = Intent(this, name)
+        intent.putExtra(Constants.EXTRAS, data)
         startActivity(intent)
         if (finish) {
             finish()
