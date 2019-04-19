@@ -12,6 +12,7 @@ import ptml.releasing.damages.model.DamageResponse
 import timber.log.Timber
 import javax.inject.Inject
 
+@Suppress("UNCHECKED_CAST")
 open class ReleasingRepository @Inject constructor(
         var remote: Remote,
         var local: Local,

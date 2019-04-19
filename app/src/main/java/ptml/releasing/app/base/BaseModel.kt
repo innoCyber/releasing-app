@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName
 import com.google.gson.JsonObject
 
 
+@Suppress("UNUSED_PARAMETER")
 open class BaseModel() : Parcelable {
     @SerializedName("id")
     open var id: Int = 0
@@ -28,8 +29,7 @@ open class BaseModel() : Parcelable {
         return "BaseModel(id=$id)"
     }
 
-    constructor(source: Parcel) : this(
-    )
+    constructor(source: Parcel) : this()
 
     override fun describeContents() = 0
 

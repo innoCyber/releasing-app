@@ -73,6 +73,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             //pass it on to the cargo info activity
             val bundle = Bundle()
             bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
+            bundle.putString(CargoInfoActivity.QUERY, binding.includeSearch.editInput.text.toString())
             startNewActivity(CargoInfoActivity::class.java, data = bundle)
             hideLoading(binding.includeError.root)
             hideLoading(binding.includeProgress.root)

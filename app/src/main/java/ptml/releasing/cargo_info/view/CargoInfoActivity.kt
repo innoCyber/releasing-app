@@ -22,6 +22,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
     companion object{
         const val  RESPONSE = "response"
+        const val QUERY = "query"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,9 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
 
     private fun createForm(it: ConfigureDeviceResponse?) {
+        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
+        binding.tvNumber.text = input
+
         var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         if(BuildConfig.DEBUG){
