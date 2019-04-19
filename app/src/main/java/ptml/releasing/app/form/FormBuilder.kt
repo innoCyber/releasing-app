@@ -7,6 +7,7 @@ import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.R
+import ptml.releasing.app.form.FormUtils.applyBottomParams
 import ptml.releasing.app.form.FormUtils.applyParams
 import ptml.releasing.app.form.FormUtils.applyTopParams
 import ptml.releasing.app.form.FormUtils.getDataForMultiSpinner
@@ -96,9 +97,7 @@ class FormBuilder constructor(val context: Context) {
                 } else {
                     params.setMargins(0, 0, 0, 0)
                 }
-                rootLayout.addView(
-                    formView
-                )
+                rootLayout.addView(formView)
 
             }
         }
@@ -107,7 +106,7 @@ class FormBuilder constructor(val context: Context) {
             rootLayout.addView(createErrorView())
         } else { //add the save and reset buttons
             val bottom = createBottomButtons()
-            applyParams(bottom)
+            applyBottomParams(bottom)
             rootLayout.addView(bottom)
         }
 

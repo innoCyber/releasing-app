@@ -21,7 +21,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.spinner_configuration_layout, parent, false)
+            view = inflater.inflate(R.layout.spinner_single, parent, false)
         }
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
@@ -37,7 +37,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.spinner_configuration_layout, parent, false)
+            view = inflater.inflate(R.layout.spinner_single, parent, false)
         }
 
 

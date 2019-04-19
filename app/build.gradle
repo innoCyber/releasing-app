@@ -105,6 +105,7 @@ dependencies {
     //secure shared preferences
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
 
+
     // unit testing
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'android.arch.core:core-testing:1.1.1'

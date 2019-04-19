@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnCancelListener
 import android.content.DialogInterface.OnMultiChoiceClickListener
-
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +15,17 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import ptml.releasing.R
+import ptml.releasing.app.views.flex.FlexDirection
+import ptml.releasing.app.views.flex.FlexWrap
+import ptml.releasing.app.views.flex.FlexboxLayoutManager
+import ptml.releasing.app.views.flex.JustifyContent
 import ptml.releasing.databinding.ItemChipBinding
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.LinkedHashMap
+
 
 class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListener {
 
@@ -37,14 +39,23 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         override fun onItemClose(position: Int, item: String, itemsRemaining: Int) {
             Timber.d("Removed %s", item)
             selected[position] = false
+            selectedItems.remove(item)
+
             if (itemsRemaining <= 0) {
                 val adapter = MultiSpinnerAdapter(context, defaultHintText)
                 setAdapter(adapter)
+            }else{
+                chipAdapter()
             }
             if (selected.size > 0) {
                 listener?.onItemsSelected(selected)
             }
         }
+    }
+
+    private fun chipAdapter() {
+        val adapter = ChipsMultiSpinnerAdapter(context, selectedItems, chipsListener)
+        setAdapter(adapter)
     }
 
     constructor(context: Context) : super(context) {}
@@ -142,13 +153,13 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 }
 
 internal class MultiSpinnerAdapter(context: Context, text: String) :
-    ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, arrayListOf(text)) {
+    ArrayAdapter<String>(context, R.layout.spinner_single, arrayListOf(text)) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.spinner_configuration_layout, parent, false)
+            view = inflater.inflate(R.layout.spinner_single, parent, false)
         }
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
@@ -165,7 +176,7 @@ internal class MultiSpinnerAdapter(context: Context, text: String) :
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.spinner_configuration_layout, parent, false)
+            view = inflater.inflate(R.layout.spinner_single, parent, false)
         }
 
 
@@ -188,7 +199,7 @@ internal class ChipsMultiSpinnerAdapter(
     var items: LinkedHashMap<String, Int>,
     val listener: ChipListener?
 ) :
-    ArrayAdapter<String>(context, R.layout.spinner_configuration_layout, items.keys.toList()) {
+    ArrayAdapter<String>(context, R.layout.spinner_single, items.keys.toList()) {
 
     companion object {
         const val SPAN_TWO_SIZE = 3
@@ -201,20 +212,18 @@ internal class ChipsMultiSpinnerAdapter(
             val rvAdapter = ChipAdapter()
             rvAdapter.setItems(items)
             rvAdapter.listener = listener
-            val layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
-            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    Timber.e("ITem %s", items.size)
-                    if (items.size > SPAN_TWO_SIZE) return 1
-                    else return 2
-                }
 
-            }
-            val rootView = inflater.inflate(R.layout.spinner_multi_select, parent, false)
+            val rootView = inflater.inflate(R.layout.spinner_multi, parent, false)
+            val layoutManager = FlexboxLayoutManager(context)
+            layoutManager.flexDirection = FlexDirection.ROW
+            layoutManager.justifyContent = JustifyContent.FLEX_START
+            layoutManager.flexWrap = FlexWrap.WRAP
+
             val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_view)
             recyclerView.adapter = rvAdapter
             recyclerView.layoutManager = layoutManager
-            recyclerView.addItemDecoration(SpacesItemDecoration(8))
+            recyclerView.addItemDecoration(SpacesItemDecoration(4))
+
             view = rootView
 
         }

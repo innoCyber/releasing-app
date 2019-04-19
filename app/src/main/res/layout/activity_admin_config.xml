@@ -21,7 +21,7 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/include_home_top">
+                    app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                         android:id="@+id/tv_config_message"
@@ -30,7 +30,6 @@
                         android:background="@color/colorOtherAccentAlpha"
                         android:gravity="center_vertical"
                         android:padding="@dimen/constraint_default_margin_10dp"
-
                         android:text="@string/device_not_configured_message"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/colorBlack"

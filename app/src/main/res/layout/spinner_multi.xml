@@ -6,20 +6,22 @@
         android:id="@+id/rv_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/constraint_default_margin_8dp"
-        android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+        android:layout_marginStart="@dimen/constraint_default_margin_4dp"
+        android:layout_marginEnd="@dimen/constraint_default_margin_4dp"
         android:orientation="horizontal"
-        android:padding="@dimen/constraint_default_margin_8dp">
+        >
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/img_drop_down"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+                android:id="@+id/recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintWidth_max="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/img_drop_down"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 
         <ImageView
@@ -30,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:background="?selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:padding="@dimen/constraint_default_margin_8dp"
+            android:padding="@dimen/constraint_default_margin_4dp"
             app:srcCompat="@drawable/ic_arrow_drop_down" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

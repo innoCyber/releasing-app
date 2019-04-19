@@ -15,6 +15,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
@@ -98,6 +99,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     private fun search() {
+        binding.includeSearch.btnVerify.hideSoftInputFromWindow()
         findCargoWithPermissionCheck(binding.includeSearch.editInput.text.toString())
     }
 
@@ -107,7 +109,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-    fun findCargo(cargoNumber:String?){
+    fun findCargo(cargoNumber: String?) {
         viewModel.findCargo(cargoNumber, (application as ReleasingApplication).provideImei())
     }
 
@@ -142,27 +144,36 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
 
-
     private fun updateTop(it: Configuration) {
         binding.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.includeHome.tvOperationStepFooter.text = it.operationStep.value
         binding.includeHome.tvTerminalFooter.text = it.terminal.value
 
-        if(it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE){
-            binding.includeHome.imgCargoType.setImageDrawable(ContextCompat.getDrawable(themedContext, R.drawable.ic_car))
-        }else{
-            binding.includeHome.imgCargoType.setImageDrawable(ContextCompat.getDrawable(themedContext, R.drawable.ic_container))
+        if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_car
+                )
+            )
+        } else {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_container
+                )
+            )
         }
 
-        if(it.cameraEnabled){
+        if (it.cameraEnabled) {
             showCameraScan()
-        }else{
+        } else {
             hideCameraScan()
         }
 
     }
 
-    private fun showCameraScan(){
+    private fun showCameraScan() {
         binding.includeSearch.tvScan.visibility = View.VISIBLE
         binding.includeSearch.dividerL.visibility = View.VISIBLE
         binding.includeSearch.dividerR.visibility = View.VISIBLE
@@ -171,7 +182,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     }
 
-    private fun hideCameraScan(){
+    private fun hideCameraScan() {
         binding.includeSearch.tvScan.visibility = View.GONE
         binding.includeSearch.dividerL.visibility = View.GONE
         binding.includeSearch.dividerR.visibility = View.GONE
@@ -180,10 +191,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
 
+    override fun getLayoutResourceId() = R.layout.activity_search
 
-    override fun getLayoutResourceId()  = R.layout.activity_search
-
-    override fun getBindingVariable()  = BR.viewModel
+    override fun getBindingVariable() = BR.viewModel
 
     override fun getViewModelClass() = SearchViewModel::class.java
 }
