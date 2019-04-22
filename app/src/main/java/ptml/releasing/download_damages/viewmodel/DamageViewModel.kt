@@ -1,4 +1,4 @@
-package ptml.releasing.damages.viewmodel
+package ptml.releasing.download_damages.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +9,7 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.damages.model.Damage
+import ptml.releasing.download_damages.model.Damage
 import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject

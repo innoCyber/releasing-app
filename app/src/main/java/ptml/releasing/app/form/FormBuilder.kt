@@ -43,6 +43,13 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
+    fun findView(any: Any):View{
+        return rootLayout.findViewWithTag<View>(any)
+    }
+
+
+
+
     fun setListener(listener: FormListener): FormBuilder {
         this.listener = listener
         return this
@@ -218,7 +225,10 @@ class FormBuilder constructor(val context: Context) {
 
     /**
      * Creates a Button for the form
-     *  Applies the necessary styles
+     *  Applies the necessary styles. Form Types expected are
+     *  @see FormType.DAMAGES
+     *  @see FormType.IMAGES
+     *  @see FormType.PRINTER
      *  @param @param data the config
      * @return the button view
      * */
@@ -230,12 +240,14 @@ class FormBuilder constructor(val context: Context) {
         imageView.setImageResource(getImageResourceByType(data.type))
         view.tag = data.id
         view.setOnClickListener {
-            listener?.onClickFormButton(FormType.fromType(data.type))
+            listener?.onClickFormButton(FormType.fromType(data.type), it)
         }
         applyTopParams(view)
         return view
 
     }
+
+
 
 
     /**

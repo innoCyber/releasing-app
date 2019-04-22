@@ -3,12 +3,11 @@ package ptml.releasing.app.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import ptml.releasing.app.utils.AssetHelper
 import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.DamageResponse
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) : Prefs {

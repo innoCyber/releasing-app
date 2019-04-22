@@ -1,6 +1,10 @@
 package ptml.releasing.cargo_info.view
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
@@ -8,6 +12,8 @@ import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.form.FormBuilder
+import ptml.releasing.app.form.FormListener
+import ptml.releasing.app.form.FormType
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.CargoType
@@ -15,19 +21,51 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.damages.view.DamagesActivity
+import ptml.releasing.download_damages.view.DamageActivity
 import timber.log.Timber
 import java.util.*
+
 
 class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
     companion object{
         const val  RESPONSE = "response"
         const val QUERY = "query"
+        const val DAMAGES_RC = 1234
+    }
+
+    var formBuilder: FormBuilder? = null
+    var damageView: View? = null
+
+    val formListener = object : FormListener(){
+        @Suppress("NON_EXHAUSTIVE_WHEN")
+        override fun onClickFormButton(type: FormType, view:View) {
+            when(type){
+                FormType.PRINTER ->{
+
+                }
+
+                FormType.IMAGES ->{
+
+                }
+
+                FormType.DAMAGES ->{
+                    damageView = view
+                    startActivityForResult(
+                        Intent(this@CargoInfoActivity, DamagesActivity::class.java),
+                        DAMAGES_RC
+                    )
+                }
+            }
+        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
 
+        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
+        binding.tvNumber.text = input
 
         viewModel.goBack.observe(this, Observer {
             onBackPressed()
@@ -44,19 +82,17 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         })
 
         viewModel.getFormConfig()
+    }
 
 
-
-
-
-
-
+    override fun onResume() {
+        super.onResume()
+        damageView?.findViewById<TextView>(R.id.tv_number)?.text = DamagesActivity.currentDamages.size.toString()
     }
 
 
     private fun createForm(it: ConfigureDeviceResponse?) {
-        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
-        binding.tvNumber.text = input
+
 
         var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
@@ -65,9 +101,12 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
             Timber.w("From assets: %s", findCargoResponse)
         }
 
-        val formView = FormBuilder(this)
-            .init(findCargoResponse)
-            .build(it?.data)
+
+        formBuilder = FormBuilder(this)
+        val formView = formBuilder
+            ?.setListener(formListener)
+            ?.init(findCargoResponse)
+            ?.build(it?.data)
         binding.formContainer.addView(formView)
 
 

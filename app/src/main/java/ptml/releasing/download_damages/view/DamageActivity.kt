@@ -1,4 +1,4 @@
-package ptml.releasing.damages.view
+package ptml.releasing.download_damages.view
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -13,8 +13,8 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.damages.model.Damage
-import ptml.releasing.damages.viewmodel.DamageViewModel
+import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.download_damages.viewmodel.DamageViewModel
 import ptml.releasing.databinding.ActivityDamageBinding
 import timber.log.Timber
 

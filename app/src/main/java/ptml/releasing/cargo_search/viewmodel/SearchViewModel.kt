@@ -21,6 +21,7 @@ class SearchViewModel @Inject constructor(
 
     private val _goBack = MutableLiveData<Unit>()
     private val _verify = MutableLiveData<Unit>()
+    private val _scan = MutableLiveData<Unit>()
     private val _networkState = MutableLiveData<NetworkState>()
     private val _cargoNumberValidation = MutableLiveData<Int>()
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
@@ -28,6 +29,7 @@ class SearchViewModel @Inject constructor(
 
     val networkState: LiveData<NetworkState> = _networkState
     val goBack: LiveData<Unit> = _goBack
+    val scan: LiveData<Unit> = _scan
     val verify: LiveData<Unit> = _verify
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
@@ -72,16 +74,16 @@ class SearchViewModel @Inject constructor(
                     }
                     _networkState.postValue(NetworkState.LOADED)
                 }
-
             } catch (e: Throwable) {
                 Timber.e(e)
                 _networkState.postValue(NetworkState.error(e))
             }
-
-
         }
+    }
 
 
+    fun openBarcodeScan() {
+        _scan.postValue(Unit)
     }
 
 

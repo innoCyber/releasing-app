@@ -1,5 +1,6 @@
 package ptml.releasing.cargo_search.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,10 +13,7 @@ import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.ErrorHandler
-import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.Status
-import ptml.releasing.app.utils.hideSoftInputFromWindow
+import ptml.releasing.app.utils.*
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
@@ -26,6 +24,10 @@ import java.util.*
 
 @RuntimePermissions
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
+
+    companion object {
+        const val RC = 4343;
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             hideLoading(binding.includeError.root)
             hideLoading(binding.includeProgress.root)
         })
+
+        viewModel.scan.observe(this, Observer {
+            openBarcodeScannerWithPermissionCheck()
+        })
+
         showUpEnabled(true)
 
         binding.includeSearch.editInput.addTextChangedListener(object : TextWatcher {
@@ -97,7 +104,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.includeError.btnReloadLayout.setOnClickListener {
             search()
         }
+
+        binding.includeSearch.imgQrCode.setOnClickListener {
+            viewModel.openBarcodeScan()
+        }
     }
+
 
     private fun search() {
         binding.includeSearch.btnVerify.hideSoftInputFromWindow()
@@ -109,6 +121,38 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.getSavedConfig()
     }
 
+    @NeedsPermission(android.Manifest.permission.CAMERA)
+    fun openBarcodeScanner() {
+        val intent = Intent(this@SearchActivity, BarcodeScanActivity::class.java)
+        startActivityForResult(intent, RC)
+    }
+
+
+    @OnShowRationale(android.Manifest.permission.CAMERA)
+    fun showCameraRationale(request: PermissionRequest) {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_camera_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnPermissionDenied(android.Manifest.permission.CAMERA)
+    fun showDeniedForCamera() {
+        notifyUser(binding.root, getString(R.string.camera_permission_denied))
+    }
+
+    @OnNeverAskAgain(android.Manifest.permission.CAMERA)
+    fun neverAskForCamera() {
+        notifyUser(binding.root, getString(R.string.camera_permission_never_ask))
+    }
+
+
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?) {
         viewModel.findCargo(cargoNumber, (application as ReleasingApplication).provideImei())
@@ -116,7 +160,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
-    fun showInitRecognizerRationale(request: PermissionRequest) {
+    fun showPhoneStateRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
@@ -130,12 +174,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
-    fun showDeniedForInitRecognizer() {
+    fun showDeniedForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
     }
 
     @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
-    fun neverAskForInitRecognizer() {
+    fun neverAskForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 
@@ -144,6 +188,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         onRequestPermissionsResult(requestCode, grantResults)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC && resultCode == RESULT_OK) {
+            binding.includeSearch.editInput.setText(data?.getStringExtra(Constants.BAR_CODE))
+        }
+    }
 
     private fun updateTop(it: Configuration) {
         binding.includeHome.tvCargoFooter.text = it.cargoType.value

@@ -1,9 +1,9 @@
-package ptml.releasing.damages.view
+package ptml.releasing.download_damages.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ptml.releasing.damages.model.Damage
+import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.databinding.ItemDamageBinding
 
 class DamageAdapter(val listener: DamageListener) : RecyclerView.Adapter<DamageViewHolder>() {

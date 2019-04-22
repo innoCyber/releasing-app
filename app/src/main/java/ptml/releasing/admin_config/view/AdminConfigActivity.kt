@@ -5,15 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_admin_settings_advanced_printer.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.configuration.view.ConfigActivity
-import ptml.releasing.damages.view.DamageActivity
+import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.printer.AdminPrinterSettingsAdvancedActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
@@ -39,6 +41,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             }
         })
 
+        viewModel.openPrinterSettings.observe(this, Observer {
+          startNewActivity(AdminPrinterSettingsAdvancedActivity::class.java)
+        })
+
         viewModel.openConfiguration.observe(this, Observer {
             val intent = Intent(this, ConfigActivity::class.java)
             startActivityForResult(intent, RC )
@@ -53,6 +59,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         binding.includeAdminConfig.btnDownload.setOnClickListener {
             viewModel.openDownloadDamages()
+        }
+
+        binding.includeAdminConfig.btnSettings.setOnClickListener {
+            viewModel.openPrinterSetting()
         }
 
 

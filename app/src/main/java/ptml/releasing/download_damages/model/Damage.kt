@@ -1,4 +1,4 @@
-package ptml.releasing.damages.model
+package ptml.releasing.download_damages.model
 
 import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.BaseModel

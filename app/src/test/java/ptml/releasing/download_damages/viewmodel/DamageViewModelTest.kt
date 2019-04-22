@@ -1,4 +1,4 @@
-package ptml.releasing.damages.viewmodel
+package ptml.releasing.download_damages.viewmodel
 
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -8,7 +8,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.base.BaseTest
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.data.DAMAGE_SIZE
 import ptml.releasing.data.IMEI
 import ptml.releasing.data.downloadDamagesSuccess

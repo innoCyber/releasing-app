@@ -4,7 +4,7 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.DamageResponse
 import javax.inject.Inject
 
 class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {

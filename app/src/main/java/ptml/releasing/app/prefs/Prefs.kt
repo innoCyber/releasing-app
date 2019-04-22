@@ -3,7 +3,7 @@ package ptml.releasing.app.prefs
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.DamageResponse
 
 interface Prefs {
     fun isFirst(): Boolean

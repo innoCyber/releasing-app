@@ -8,7 +8,7 @@ import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.auth.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.DamageResponse
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -13,7 +13,8 @@ import javax.inject.Inject
 class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers) :
     BaseViewModel(repository, appCoroutineDispatchers) {
 
-    private val _openConfiguration = MutableLiveData<Boolean>()
+    private val _openConfiguration = MutableLiveData<Unit>()
+    private val _openPrinterSettings = MutableLiveData<Unit>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
@@ -22,14 +23,19 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     val firstTimeFindCargo: LiveData<Boolean> = _firstTimeFindCargo
     private val _openSearch = MutableLiveData<Boolean>()
 
-    val openConfiguration: LiveData<Boolean> = _openConfiguration
+    val openConfiguration: LiveData<Unit> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
+    val openPrinterSettings: LiveData<Unit> = _openPrinterSettings
     val openSearch: LiveData<Boolean> = _openSearch
 
     fun openConfiguration() {
-        _openConfiguration.postValue(true)
+        _openConfiguration.postValue(Unit)
     }
 
+
+    fun openPrinterSetting(){
+        _openPrinterSettings.postValue(Unit)
+    }
 
     fun openDownloadDamages() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {

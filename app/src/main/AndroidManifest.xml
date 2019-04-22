@@ -56,7 +56,7 @@
                 android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-                android:name=".damages.view.DamageActivity"
+                android:name=".download_damages.view.DamageActivity"
                 android:parentActivityName=".home.view.HomeActivity"
                 android:label="@string/damages"/>
         <activity android:name=".cargo_search.view.SearchActivity"
@@ -69,6 +69,14 @@
         <activity android:name=".cargo_info.view.CargoInfoActivity"
             android:parentActivityName=".cargo_search.view.SearchActivity"
             android:label="@string/cargo_info"/>
+
+        <activity android:name=".damages.view.ReleasingDamagesSelectDamageActivity"/>
+        <activity android:name=".damages.view.ReleasingDamagesSelectSideActivity"/>
+        <activity android:name=".damages.view.ReleasingDamagesSelectFrontActivity"/>
+        <activity android:name=".damages.view.ReleasingDamagesSelectZoneActivity"/>
+        <activity android:name=".damages.view.DamagesActivity"/>
+        <activity android:name=".printer.AdminPrinterSettingsAdvancedActivity"/>
+        <activity android:name=".cargo_search.view.BarcodeScanActivity"/>
     </application>
 
 </manifest>
