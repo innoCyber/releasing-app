@@ -1,4 +1,4 @@
-package ptml.releasing.cargo_search.view
+package ptml.releasing.barcode_scan
 
 import android.app.Activity
 import android.content.Intent

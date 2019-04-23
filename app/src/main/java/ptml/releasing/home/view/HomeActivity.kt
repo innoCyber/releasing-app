@@ -12,7 +12,7 @@ import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.auth.view.LoginActivity
+import ptml.releasing.login.view.LoginActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration

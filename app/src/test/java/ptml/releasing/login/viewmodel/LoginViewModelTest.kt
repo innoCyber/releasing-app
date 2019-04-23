@@ -1,4 +1,4 @@
-package ptml.releasing.auth.viewmodel
+package ptml.releasing.login.viewmodel
 
 import io.mockk.coEvery
 import io.mockk.every
@@ -8,7 +8,7 @@ import org.junit.Test
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.data.ReleasingRepository
-import ptml.releasing.auth.model.User
+import ptml.releasing.login.model.User
 import ptml.releasing.base.BaseTest
 import ptml.releasing.data.getLoginFail
 import ptml.releasing.data.getLoginSuccess

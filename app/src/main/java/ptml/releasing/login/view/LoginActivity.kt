@@ -1,4 +1,4 @@
-package ptml.releasing.auth.view
+package ptml.releasing.login.view
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,11 +12,9 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.auth.viewmodel.LoginViewModel
-import ptml.releasing.configuration.view.ConfigActivity
+import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
-import timber.log.Timber
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 

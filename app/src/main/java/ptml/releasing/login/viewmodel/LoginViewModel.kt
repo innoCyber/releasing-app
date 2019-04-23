@@ -1,18 +1,16 @@
-package ptml.releasing.auth.viewmodel
+package ptml.releasing.login.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.R
-import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.auth.model.User
+import ptml.releasing.login.model.User
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(

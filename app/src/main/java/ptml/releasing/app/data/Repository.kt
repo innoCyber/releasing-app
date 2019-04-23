@@ -4,7 +4,7 @@ import kotlinx.coroutines.Deferred
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
-import ptml.releasing.auth.model.User
+import ptml.releasing.login.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse

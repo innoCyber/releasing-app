@@ -1,6 +1,6 @@
 package ptml.releasing.app.remote
 
-import ptml.releasing.auth.model.api.LoginApiService
+import ptml.releasing.login.model.api.LoginApiService
 import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.download_damages.model.api.DamageApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService

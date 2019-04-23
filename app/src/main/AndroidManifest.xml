@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".auth.view.LoginActivity"
+                android:name=".login.view.LoginActivity"
                 android:label="@string/admin_login"
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity
@@ -76,7 +76,7 @@
         <activity android:name=".damages.view.ReleasingDamagesSelectZoneActivity"/>
         <activity android:name=".damages.view.DamagesActivity"/>
         <activity android:name=".printer.view.PrinterSettingsActivity"/>
-        <activity android:name=".cargo_search.view.BarcodeScanActivity"/>
+        <activity android:name=".barcode_scan.BarcodeScanActivity"/>
     </application>
 
 </manifest>

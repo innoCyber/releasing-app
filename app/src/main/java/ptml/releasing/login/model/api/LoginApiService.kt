@@ -1,4 +1,4 @@
-package ptml.releasing.auth.model.api
+package ptml.releasing.login.model.api
 
 import kotlinx.coroutines.Deferred
 import ptml.releasing.app.base.BaseResponse

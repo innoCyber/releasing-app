@@ -4,11 +4,11 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.configuration.view.ConfigActivity
-import ptml.releasing.auth.view.LoginActivity
+import ptml.releasing.login.view.LoginActivity
 import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
-import ptml.releasing.cargo_search.view.BarcodeScanActivity
+import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.home.view.HomeActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.damages.view.*
