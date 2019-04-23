@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -14,8 +15,10 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     BaseViewModel(repository, appCoroutineDispatchers) {
 
     private val _openConfiguration = MutableLiveData<Unit>()
+    private val _openBarCodeScanner = MutableLiveData<Unit>()
     private val _openPrinterSettings = MutableLiveData<Unit>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
+    private val _savedOperatorName = MutableLiveData<Int>()
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
     private var first = true
@@ -24,10 +27,11 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private val _openSearch = MutableLiveData<Boolean>()
 
     val openConfiguration: LiveData<Unit> = _openConfiguration
+    val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openPrinterSettings: LiveData<Unit> = _openPrinterSettings
     val openSearch: LiveData<Boolean> = _openSearch
-
+    val savedOperatorName: LiveData<Int> = _savedOperatorName
     fun openConfiguration() {
         _openConfiguration.postValue(Unit)
     }
@@ -65,6 +69,20 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
             val configured = repository.isConfiguredAsync()
             withContext(appCoroutineDispatchers.main) {
                 _openSearch.postValue(configured)
+            }
+        }
+    }
+
+    fun openBarCodeScanner(){
+        _openBarCodeScanner.postValue(Unit)
+    }
+
+
+    fun saveOperatorName(name:String?){
+        CoroutineScope(appCoroutineDispatchers.db).launch {
+            repository.saveOperatorName(name)
+            withContext(appCoroutineDispatchers.main){
+                _savedOperatorName.postValue(R.string.operator_name_saved_success_msg)
             }
         }
     }

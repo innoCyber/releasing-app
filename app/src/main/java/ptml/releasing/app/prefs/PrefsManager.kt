@@ -21,6 +21,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val SAVED_CONFIG = "saved_config"
         const val DEVICE_CONFIG = "device_config"
         const val SETTINGS = "settings"
+        const val OPERATOR_NAME = "operator_name"
     }
 
 
@@ -79,5 +80,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun getSettings(): Settings {
         return gson.fromJson(sharedPreferences.getString(SETTINGS, "{}"), Settings::class.java)
+    }
+
+    override fun getOperatorName(): String? {
+        return sharedPreferences.getString(OPERATOR_NAME,  null)
+    }
+
+    override fun saveOperatorName(name: String?) {
+        sharedPreferences.edit().putString(OPERATOR_NAME, name).apply()
     }
 }

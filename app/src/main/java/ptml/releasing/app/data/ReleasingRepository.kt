@@ -150,6 +150,10 @@ open class ReleasingRepository @Inject constructor(
 
     override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
 
+    override fun getOperatorName() = local.getOperatorName()
+
+    override fun saveOperatorName(name: String?) = local.saveOperatorName(name)
+
 }
 
 

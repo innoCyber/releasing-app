@@ -209,7 +209,7 @@
         <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
         <item name="rb_iconPaddingTop">@dimen/constraint_default_margin_4dp</item>
         <item name="rb_iconPaddingBottom">@dimen/constraint_default_margin_4dp</item>
-        <item name="rb_icon">@drawable/ic_qr_scanner</item>
+        <item name="rb_icon">@drawable/ic_qr_scanner_white</item>
 
     </style>
 
@@ -224,7 +224,7 @@
         <item name="android:paddingRight">@dimen/constraint_default_margin_16dp</item>
         <item name="android:paddingTop">@dimen/constraint_default_margin_8dp</item>
         <item name="android:paddingBottom">@dimen/constraint_default_margin_8dp</item>
-        <item name="srcCompat">@drawable/ic_qr_scanner</item>
+        <item name="srcCompat">@drawable/ic_qr_scanner_white</item>
         <item name="android:contentDescription">@string/qrcode</item>
 
     </style>

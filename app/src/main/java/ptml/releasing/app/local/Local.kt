@@ -25,4 +25,7 @@ interface Local {
 
     fun saveSettings(settings: Settings?)
     fun getSettings(): Settings
+
+    fun saveOperatorName(name:String?)
+    fun getOperatorName():String?
 }
