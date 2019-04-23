@@ -64,8 +64,17 @@
 
     <style name="ButtonStyle.GoBack">
         <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
         <item name="android:background">@drawable/save_btn_bg</item>
         <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
+    </style>
+
+    <style name="GoBack">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="drawableStartCompat">@drawable/ic_arrow_back</item>
     </style>
 
     <style name="ButtonStyle.Delete">
@@ -101,6 +110,10 @@
 
     <style name="RippleLayoutStyle.Configure">
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.BackButton">
+        <item name="android:layout_width">wrap_content</item>
     </style>
 
 

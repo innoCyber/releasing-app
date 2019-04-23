@@ -235,7 +235,9 @@ class FormBuilder constructor(val context: Context) {
     private fun createButton(data: ConfigureDeviceData): View {
         val view = inflateView(context, R.layout.button_layout)
         val titleView = view.findViewById<TextView>(R.id.tv_title)
+        val numberView = view.findViewById<TextView>(R.id.tv_number)
         val imageView = view.findViewById<ImageView>(R.id.img)
+        numberView.visibility = if(data.type == FormType.PRINTER.type) View.INVISIBLE else View.VISIBLE
         titleView.text = data.title
         imageView.setImageResource(getImageResourceByType(data.type))
         view.tag = data.id

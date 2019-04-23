@@ -4,6 +4,7 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.printer.model.Settings
 
 interface Prefs {
     fun isFirst(): Boolean
@@ -20,4 +21,6 @@ interface Prefs {
 
     fun getDeviceConfiguration(): ConfigureDeviceResponse?
     fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)
+    fun saveSettings(settings:Settings?)
+    fun getSettings():Settings
 }

@@ -75,7 +75,7 @@
         <activity android:name=".damages.view.ReleasingDamagesSelectFrontActivity"/>
         <activity android:name=".damages.view.ReleasingDamagesSelectZoneActivity"/>
         <activity android:name=".damages.view.DamagesActivity"/>
-        <activity android:name=".printer.AdminPrinterSettingsAdvancedActivity"/>
+        <activity android:name=".printer.view.PrinterSettingsActivity"/>
         <activity android:name=".cargo_search.view.BarcodeScanActivity"/>
     </application>
 

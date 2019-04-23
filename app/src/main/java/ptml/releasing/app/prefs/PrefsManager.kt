@@ -8,9 +8,11 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.printer.model.Settings
 import javax.inject.Inject
 
-class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) : Prefs {
+class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
+    Prefs {
     companion object {
         const val FIRST = "is_first"
         const val CONFIG = "config"
@@ -18,6 +20,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES = "damages"
         const val SAVED_CONFIG = "saved_config"
         const val DEVICE_CONFIG = "device_config"
+        const val SETTINGS = "settings"
     }
 
 
@@ -64,9 +67,17 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
         /*return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)*/
         return FormLoader.loadFromAssets(context)
-   }
+    }
 
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?) {
         sharedPreferences.edit().putString(DEVICE_CONFIG, gson.toJson(response)).apply()
+    }
+
+    override fun saveSettings(settings: Settings?) {
+        sharedPreferences.edit().putString(SETTINGS, gson.toJson(settings)).apply()
+    }
+
+    override fun getSettings(): Settings {
+        return gson.fromJson(sharedPreferences.getString(SETTINGS, "{}"), Settings::class.java)
     }
 }

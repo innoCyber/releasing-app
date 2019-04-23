@@ -135,6 +135,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/CellCargoDamagesVerticalGuideline"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.24722221" />
+        app:layout_constraintGuide_percent="0.28" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

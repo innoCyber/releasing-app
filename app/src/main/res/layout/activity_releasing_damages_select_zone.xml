@@ -58,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/container_full" />
+            app:srcCompat="@drawable/ic_container_full" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"

@@ -12,7 +12,7 @@ import ptml.releasing.cargo_search.view.BarcodeScanActivity
 import ptml.releasing.home.view.HomeActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.damages.view.*
-import ptml.releasing.printer.AdminPrinterSettingsAdvancedActivity
+import ptml.releasing.printer.view.PrinterSettingsActivity
 
 
 @Module
@@ -65,7 +65,7 @@ abstract class UiModule {
 
 
     @ContributesAndroidInjector()
-    abstract fun printer(): AdminPrinterSettingsAdvancedActivity
+    abstract fun printer(): PrinterSettingsActivity
 
 
     @ContributesAndroidInjector()

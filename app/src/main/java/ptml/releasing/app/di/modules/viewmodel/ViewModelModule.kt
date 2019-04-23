@@ -13,6 +13,8 @@ import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.home.viewmodel.HomeViewModel
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
+import ptml.releasing.damages.view_model.SelectDamageViewModel
+import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -64,4 +66,15 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CargoInfoViewModel::class)
     abstract fun bindFindCargoViewModel(myInfoViewModel: CargoInfoViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SelectDamageViewModel::class)
+    abstract fun bindSelectDamageViewModel(myInfoViewModel: SelectDamageViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrinterSettingsViewModel::class)
+    abstract fun bindPrinterSettingsViewModel(myInfoViewModel: PrinterSettingsViewModel): ViewModel
 }

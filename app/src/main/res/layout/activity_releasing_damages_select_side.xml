@@ -67,14 +67,13 @@
             android:id="@+id/ReleasingDamagesImgSide"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
             android:background="@android:color/holo_green_light"
             android:contentDescription="@string/releasing_damages_description_continer_side"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/container_side" />
+            app:srcCompat="@drawable/ic_container_side" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"

@@ -8,6 +8,8 @@ import ptml.releasing.auth.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.printer.model.Settings
 
 interface Repository {
 
@@ -46,6 +48,11 @@ interface Repository {
      fun isConfiguredAsync(): Boolean
      fun setConfigured(isConfigured: Boolean)
 
+    suspend  fun getDamagesByPosition(imei: String, position:String) : List<Damage>
+
+
+    fun saveSettings(settings: Settings?)
+    fun getSettings(): Settings
 
 
 }

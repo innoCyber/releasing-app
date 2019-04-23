@@ -73,6 +73,7 @@
         </ptml.releasing.app.views.MaterialRippleLayout>
 
 
+
         <include layout="@layout/progress_bar_layout"
             android:id="@+id/include_progress"
             android:layout_width="match_parent"

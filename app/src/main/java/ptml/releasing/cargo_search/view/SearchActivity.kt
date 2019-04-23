@@ -14,12 +14,11 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
+import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
-import ptml.releasing.cargo_info.view.CargoInfoActivity
-import ptml.releasing.cargo_search.viewmodel.SearchViewModel
-import ptml.releasing.configuration.view.onRequestPermissionsResult
 import java.util.*
 
 @RuntimePermissions

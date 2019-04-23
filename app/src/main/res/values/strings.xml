@@ -165,7 +165,10 @@
     <string name="admin_settings_btn_close">Close</string>
     <string name="admin_settings_btn_restore_code">Reset Label Format</string>
 
-    <string name="admin_settings_advanced_title">Admin Configuration</string>
+    <string name="admin_settings_advanced_title">Printer Settings</string>
     <string name="releasing_scan_txt_keep_the_bar_code_inside_the_square">Keep the bar code inside the square</string>
     <string name="releasing_scan_title">Barcode scan</string>
+    <string name="search">Search</string>
+    <string name="general_msg_print_error">Print error</string>
+    <string name="back">Back</string>
 </resources>
