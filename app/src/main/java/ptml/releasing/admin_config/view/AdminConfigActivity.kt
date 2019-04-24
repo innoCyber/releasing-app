@@ -51,8 +51,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         })
 
 
-
-
         showUpEnabled(true)
 
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {

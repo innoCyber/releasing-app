@@ -21,6 +21,7 @@ import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
+import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import java.util.*
 
@@ -95,6 +96,15 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             openBarCodeScannerWithPermissionCheck(RC_BARCODE)
         })
 
+        viewModel.noOperator.observe(this, Observer {
+            //show dialog
+            showOperatorErrorDialog()
+        })
+
+        viewModel.openConfiguration.observe(this, Observer {
+            startNewActivity(LoginActivity::class.java)
+        })
+
         showUpEnabled(true)
 
         binding.includeSearch.editInput.addTextChangedListener(object : TextWatcher {
@@ -129,6 +139,23 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 neutralButtonText = getString(R.string.continue_uploading_text),
                 neutralListener = dialogListener)
         Timber.e("Error occurred during search: msg: %s", message)
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+
+
+    private fun showOperatorErrorDialog() {
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.error),
+            message = getString(R.string.no_operator_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener{
+                override fun onConfirm() {
+                    viewModel.openConfiguration()
+                }
+            },
+            hasNeutralButton = true,
+            neutralButtonText = getString(android.R.string.cancel))
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
