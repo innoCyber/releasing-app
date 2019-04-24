@@ -176,4 +176,5 @@
     <string name="change">Change</string>
     <string name="operator_name">Operator name</string>
     <string name="anonymous">Anonymous</string>
+    <string name="continue_uploading_text">Continue Uploading Cargo</string>
 </resources>

@@ -25,6 +25,7 @@ class SearchViewModel @Inject constructor(
     private val _networkState = MutableLiveData<NetworkState>()
     private val _cargoNumberValidation = MutableLiveData<Int>()
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
+    private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
     private val _errorMessage = MutableLiveData<String>()
 
     val networkState: LiveData<NetworkState> = _networkState
@@ -70,6 +71,7 @@ class SearchViewModel @Inject constructor(
                         _findCargoResponse.postValue(findCargoResponse)
                     } else {
                         Timber.e("Find Cargo failed with message =%s", findCargoResponse.message)
+                        _findCargoHolder.value = findCargoResponse
                         _errorMessage.postValue(findCargoResponse.message)
                     }
                     _networkState.postValue(NetworkState.LOADED)
@@ -79,6 +81,10 @@ class SearchViewModel @Inject constructor(
                 _networkState.postValue(NetworkState.error(e))
             }
         }
+    }
+
+    fun continueToUploadCargo(){
+        _findCargoResponse.postValue(_findCargoHolder.value)
     }
 
 

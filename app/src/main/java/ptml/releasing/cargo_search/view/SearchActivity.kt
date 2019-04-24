@@ -20,13 +20,22 @@ import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
+import timber.log.Timber
 import java.util.*
 
 @RuntimePermissions
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     companion object {
-        const val RC = 4343;
+        const val RC = 4343
+    }
+
+    private val dialogListener = object :InfoDialog.NeutralListener{
+        override fun onNeutralClick() {
+            //2. Clicking on this option sets the cargo_id = 0
+            //3. This then follows the same process as all other cargo
+            viewModel.continueToUploadCargo()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +73,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         viewModel.errorMessage.observe(this, Observer {
-            showErrorDialog(it)
+            showSearchErrorDialog(it)
         })
 
         viewModel.cargoNumberValidation.observe(this, Observer {
@@ -108,6 +117,18 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.includeSearch.imgQrCode.setOnClickListener {
             viewModel.openBarcodeScan()
         }
+    }
+
+    private fun showSearchErrorDialog(message: String?) {
+        val dialogFragment =  InfoDialog.newInstance(
+                title = getString(R.string.error),
+                message = message,
+                buttonText = getString(android.R.string.cancel),
+                hasNeutralButton = true,
+                neutralButtonText = getString(R.string.continue_uploading_text),
+                neutralListener = dialogListener)
+        Timber.e("Error occurred during search: msg: %s", message)
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 
