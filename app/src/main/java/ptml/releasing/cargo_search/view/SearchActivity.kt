@@ -12,6 +12,7 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -91,7 +92,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         viewModel.scan.observe(this, Observer {
-            openBarcodeScannerWithPermissionCheck()
+            openBarCodeScannerWithPermissionCheck(RC_BARCODE)
         })
 
         showUpEnabled(true)
@@ -142,36 +143,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.getSavedConfig()
     }
 
-    @NeedsPermission(android.Manifest.permission.CAMERA)
-    fun openBarcodeScanner() {
-        val intent = Intent(this@SearchActivity, BarcodeScanActivity::class.java)
-        startActivityForResult(intent, RC)
-    }
 
 
-    @OnShowRationale(android.Manifest.permission.CAMERA)
-    fun showCameraRationale(request: PermissionRequest) {
-        val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.allow_permission),
-            message = getString(R.string.allow_camera_permission_msg),
-            buttonText = getString(android.R.string.ok),
-            listener = object : InfoDialog.InfoListener {
-                override fun onConfirm() {
-                    request.proceed()
-                }
-            })
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
-    }
-
-    @OnPermissionDenied(android.Manifest.permission.CAMERA)
-    fun showDeniedForCamera() {
-        notifyUser(binding.root, getString(R.string.camera_permission_denied))
-    }
-
-    @OnNeverAskAgain(android.Manifest.permission.CAMERA)
-    fun neverAskForCamera() {
-        notifyUser(binding.root, getString(R.string.camera_permission_never_ask))
-    }
 
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)

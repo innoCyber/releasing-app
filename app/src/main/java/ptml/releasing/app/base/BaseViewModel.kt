@@ -23,13 +23,13 @@ open class BaseViewModel @Inject constructor(
 
     protected val _openBarCodeScanner = MutableLiveData<Unit>()
     protected val _isConfigured = MutableLiveData<Boolean>()
-    protected val _operatorName = MutableLiveData<String>()
+    protected val _operatorName = MutableLiveData<String?>()
     val isConfigured: LiveData<Boolean> = _isConfigured
     private val _savedOperatorName = MutableLiveData<Int>()
 
     protected val _configuration = MutableLiveData<Configuration>()
 
-    val operatorName: LiveData<String> = _operatorName
+    val operatorName: LiveData<String?> = _operatorName
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val savedConfiguration: LiveData<Configuration> = _configuration
     val savedOperatorName: LiveData<Int> = _savedOperatorName
