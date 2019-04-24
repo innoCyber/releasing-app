@@ -84,7 +84,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getOperatorName(): String? {
-        return sharedPreferences.getString(OPERATOR_NAME,  context.getString(R.string.anonymous))
+        return sharedPreferences.getString(OPERATOR_NAME,  null)
     }
 
     override fun saveOperatorName(name: String?) {

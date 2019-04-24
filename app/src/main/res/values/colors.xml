@@ -21,4 +21,5 @@
     <color name="chip_default_icon_background_color">#517FA4</color>
 
     <color name="color_highlight">#008751</color>
+    <color name="colorOperator">#24A793</color>
 </resources>

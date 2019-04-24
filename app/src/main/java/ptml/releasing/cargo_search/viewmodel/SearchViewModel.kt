@@ -66,10 +66,12 @@ class SearchViewModel @Inject constructor(
                     cargoNumber
                 ).await()
                 withContext(appCoroutineDispatchers.main) {
+                    findCargoResponse.isSuccess = false
                     if (findCargoResponse.isSuccess) {
                         Timber.v("findCargoResponse: %s", findCargoResponse)
                         _findCargoResponse.postValue(findCargoResponse)
                     } else {
+                        findCargoResponse.message = "The cargo number is not recognized"
                         Timber.e("Find Cargo failed with message =%s", findCargoResponse.message)
                         _findCargoHolder.value = findCargoResponse
                         _errorMessage.postValue(findCargoResponse.message)
