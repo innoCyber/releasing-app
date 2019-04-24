@@ -13,15 +13,16 @@
             android:layout_height="match_parent">
 
 
+
+
             <include
-                    android:id="@+id/include_home"
-                    layout="@layout/include_home_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/include_operator_badge"
+                layout="@layout/include_operator_badge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/tv_config_message_container"
@@ -31,7 +32,7 @@
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/include_home">
+                app:layout_constraintTop_toBottomOf="@id/include_operator_badge">
 
                 <TextView
                     android:id="@+id/tv_config_message"

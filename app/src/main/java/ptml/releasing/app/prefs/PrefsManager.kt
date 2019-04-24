@@ -3,6 +3,7 @@ package ptml.releasing.app.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import ptml.releasing.R
 import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
@@ -83,7 +84,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getOperatorName(): String? {
-        return sharedPreferences.getString(OPERATOR_NAME,  null)
+        return sharedPreferences.getString(OPERATOR_NAME,  context.getString(R.string.anonymous))
     }
 
     override fun saveOperatorName(name: String?) {

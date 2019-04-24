@@ -2,9 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-        <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_back"
-                style="@style/GoBack"
-                android:text="@string/back"/>
+    <Button
+        android:id="@+id/btn_back"
+        style="@style/GoBack"
+        android:text="@string/back" />
 
 </layout>

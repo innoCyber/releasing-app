@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:focusableInTouchMode="true">
+<layout>
 
-    <Button
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true">
+
+        <Button
             android:id="@+id/ReleasingDamagesBtnReturn"
             android:layout_width="200dp"
             android:layout_height="40dp"
@@ -19,7 +21,18 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
-    <TextView
+
+        <include
+            android:id="@+id/include_operator_badge"
+            layout="@layout/include_operator_badge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
             android:id="@+id/ReleasingDamagesHeaderText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -33,9 +46,9 @@
             android:textColor="@color/color_highlight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/include_operator_badge"/>
 
-    <TextView
+        <TextView
             android:id="@+id/ReleasingDamagesTxtPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +63,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ReleasingDamagesHeaderText"
             tools:text="Detail: Position"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -62,7 +75,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ReleasingDamagesHeaderText">
 
-        <ImageView
+            <ImageView
                 android:id="@+id/ReleasingDamagesImgFront"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -75,77 +88,77 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_container_front"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.2"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.69"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.79"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.32"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.22"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.33"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.41"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.59"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.7"/>
 
-        <androidx.constraintlayout.widget.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.8"/>
 
-        <ImageButton
+            <ImageButton
                 android:id="@+id/ReleasingDamagesBtnBody"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="0dp"
@@ -165,7 +178,7 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toTopOf="@+id/guideline8"/>
 
-        <ImageButton
+            <ImageButton
                 android:id="@+id/ReleasingDamagesBtnRight"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="0dp"
@@ -181,7 +194,7 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toTopOf="@+id/guideline8"/>
 
-        <ImageButton
+            <ImageButton
                 android:id="@+id/ReleasingDamagesBtnLeft"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="0dp"
@@ -197,7 +210,7 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toTopOf="@+id/guideline8"/>
 
-        <ImageButton
+            <ImageButton
                 android:id="@+id/ReleasingDamagesBtnTop"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="0dp"
@@ -215,7 +228,7 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toTopOf="@+id/guideline7"/>
 
-        <ImageButton
+            <ImageButton
                 android:id="@+id/ReleasingDamagesBtnBottom"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="0dp"
@@ -233,6 +246,7 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toTopOf="@+id/guideline11"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

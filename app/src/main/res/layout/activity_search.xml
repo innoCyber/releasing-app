@@ -31,6 +31,16 @@
 
 
         <include
+            android:id="@+id/include_operator_badge"
+            layout="@layout/include_operator_badge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <include
             android:id="@+id/include_home"
             layout="@layout/include_home_top"
             android:layout_width="match_parent"
@@ -38,7 +48,7 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/include_operator_badge" />
 
 
         <include
@@ -46,7 +56,7 @@
             layout="@layout/include_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+            android:layout_marginTop="@dimen/constraint_default_margin_16dp"
             app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
@@ -59,7 +69,7 @@
             android:id="@+id/btn_back_layout"
             style="@style/RippleLayoutStyle.Configure"
             android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-            android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
+            android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
@@ -73,12 +83,12 @@
         </ptml.releasing.app.views.MaterialRippleLayout>
 
 
-
-        <include layout="@layout/progress_bar_layout"
+        <include
             android:id="@+id/include_progress"
+            layout="@layout/progress_bar_layout"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
 
         <include

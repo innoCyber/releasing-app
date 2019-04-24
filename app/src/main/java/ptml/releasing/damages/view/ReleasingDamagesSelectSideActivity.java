@@ -8,50 +8,46 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
+
 import dagger.android.support.DaggerAppCompatActivity;
+import ptml.releasing.BR;
 import ptml.releasing.R;
+import ptml.releasing.app.base.BaseActivity;
+import ptml.releasing.damages.view_model.DummyViewModel;
+import ptml.releasing.databinding.ActivityReleasingDamagesSelectSideBinding;
 
-public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity {
+public class ReleasingDamagesSelectSideActivity extends BaseActivity<DummyViewModel, ActivityReleasingDamagesSelectSideBinding> {
 
-    private Button btnReturn;
-    private ImageButton btnBack;
-    private ImageButton btnBackBody;
-    private ImageButton btnBackRight;
-    private ImageButton btnBackLeft;
-    private ImageButton btnCenterBack;
-    private ImageButton btnCenterBody;
-    private ImageButton btnCenterRight;
-    private ImageButton btnCenterLeft;
-    private ImageButton btnFrontCenter;
-    private ImageButton btnFrontRight;
-    private ImageButton btnFrontBody;
-    private ImageButton btnFrontLeft;
-    private ImageButton btnFront;
 
-    private TextView txtPosition;
+    @Override
+    public int getLayoutResourceId() {
+        return R.layout.activity_releasing_damages_select_side;
+    }
+
+    @Override
+    public int getBindingVariable() {
+        return BR.viewModel;
+    }
+
+    @NotNull
+    @Override
+    protected Class<DummyViewModel> getViewModelClass() {
+        return DummyViewModel.class;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_releasing_damages_select_side);
         setTitle(R.string.releasing_damages_select_position_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
 
-        btnBack = (ImageButton) findViewById(R.id.ReleasingDamagesBtnBack);
-        btnBackBody = (ImageButton) findViewById(R.id.ReleasingDamagesBtnBackBody);
-        btnBackRight = (ImageButton) findViewById(R.id.ReleasingDamagesBtnBackRight);
-        btnBackLeft = (ImageButton) findViewById(R.id.ReleasingDamagesBtnBackLeft);
-        btnCenterBack = (ImageButton) findViewById(R.id.ReleasingDamagesBtnCenterBack);
-        btnCenterLeft = (ImageButton) findViewById(R.id.ReleasingDamagesBtnCenterLeft);
-        btnCenterBody = (ImageButton) findViewById(R.id.ReleasingDamagesBtnCenterBody);
-        btnCenterRight = (ImageButton) findViewById(R.id.ReleasingDamagesBtnCenterRight);
-        btnFrontCenter = (ImageButton) findViewById(R.id.ReleasingDamagesBtnFrontCenter);
-        btnFrontLeft = (ImageButton) findViewById(R.id.ReleasingDamagesBtnFrontLeft);
-        btnFrontBody = (ImageButton) findViewById(R.id.ReleasingDamagesBtnFrontBody);
-        btnFrontRight = (ImageButton) findViewById(R.id.ReleasingDamagesBtnFrontRight);
-        btnFront = (ImageButton) findViewById(R.id.ReleasingDamagesBtnFront);
 
-        txtPosition = (TextView)findViewById(R.id.ReleasingDamagesTxtPosition);
+        TextView txtPosition = (TextView) findViewById(R.id.ReleasingDamagesTxtPosition);
 
         if(DamagesActivity.currentDamageZone.equals("T"))
             txtPosition.setText("Detail: Top");
@@ -65,26 +61,14 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             txtPosition.setText("Detail: Unknown");
 
 
-        btnReturn = (Button) findViewById(R.id.ReleasingDamagesBtnReturn);
 
         setupListeners();
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
     private void setupListeners() {
 
 
-        btnReturn.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(-1);
@@ -92,7 +76,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "BAC";
@@ -100,7 +84,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnBackRight.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnBackRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "BRI";
@@ -108,7 +92,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnBackBody.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnBackBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "BBO";
@@ -116,7 +100,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnBackLeft.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnBackLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "BLE";
@@ -124,7 +108,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnCenterBack.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnCenterBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "CBA";
@@ -132,7 +116,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnCenterRight.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnCenterRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "CRI";
@@ -140,7 +124,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnCenterBody.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnCenterBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "CBO";
@@ -148,7 +132,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnCenterLeft.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnCenterLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "CLE";
@@ -156,7 +140,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnFrontCenter.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnFrontCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "FCE";
@@ -164,7 +148,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnFrontRight.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnFrontRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "FRI";
@@ -172,7 +156,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnFrontBody.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnFrontBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "FBO";
@@ -180,7 +164,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnFrontLeft.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnFrontLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "FLE";
@@ -188,7 +172,7 @@ public class ReleasingDamagesSelectSideActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnFront.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamagePoint = "FRO";

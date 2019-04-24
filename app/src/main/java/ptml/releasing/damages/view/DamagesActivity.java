@@ -12,24 +12,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AlertDialog;
+
+import org.jetbrains.annotations.NotNull;
+
 import dagger.android.support.DaggerAppCompatActivity;
+import ptml.releasing.BR;
 import ptml.releasing.R;
+import ptml.releasing.app.base.BaseActivity;
 import ptml.releasing.damages.model.AssignedDamage;
+import ptml.releasing.damages.view_model.DummyViewModel;
+import ptml.releasing.databinding.ActivityReleasingDamagesBinding;
+import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class DamagesActivity extends DaggerAppCompatActivity {
+public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleasingDamagesBinding> {
 
-    private Button btnAdd;
-    private ListView lstDamages;
-    private Button btnReturn;
-    private TextView txtNoItems;
+
 
     public static List<AssignedDamage> currentDamages = new LinkedList<AssignedDamage>();
 
     public static String currentDamageZone = ""; // R,T,L,D,F,B
     public static String currentDamagePoint = ""; // BAC,BRI,BBO,BLE,CBA,CRI,CBO,CLE,FCE,FRI,FBO,FLE,FRO
+
+    @Override
+    public int getLayoutResourceId() {
+        return R.layout.activity_releasing_damages;
+    }
+
+    @Override
+    public int getBindingVariable() {
+        return BR.viewModel;
+    }
+
+    @NotNull
+    @Override
+    protected Class<DummyViewModel> getViewModelClass() {
+        return DummyViewModel.class;
+    }
 
     class CargoDamagesAdapter extends BaseAdapter {
 
@@ -194,13 +215,11 @@ public class DamagesActivity extends DaggerAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_releasing_damages);
         setTitle(R.string.releasing_damages_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        btnAdd = (Button) findViewById(R.id.ReleasingDamagesBtnAssign);
-        lstDamages = (ListView) findViewById(R.id.ReleasingDamagesLstDamages);
-        btnReturn = (Button) findViewById(R.id.ReleasingDamagesBtnReturn);
-        txtNoItems = (TextView)findViewById(R.id.ReleasingDamagesTxtNoItems);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
 
         if(DamagesActivity.currentDamages.size() == 0)
             addDamage();
@@ -209,19 +228,10 @@ public class DamagesActivity extends DaggerAppCompatActivity {
         setupListeners();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setupListeners() {
 
 
-        btnReturn.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(0);
@@ -229,7 +239,7 @@ public class DamagesActivity extends DaggerAppCompatActivity {
             }
         });
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnAssign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addDamage();
@@ -253,12 +263,14 @@ public class DamagesActivity extends DaggerAppCompatActivity {
 
     private void refreshDamages() {
         CargoDamagesAdapter adapter = new CargoDamagesAdapter(this, currentDamages);
-        lstDamages.setAdapter(adapter);
+        binding.ReleasingDamagesLstDamages.setAdapter(adapter);
 
-        if(lstDamages.getAdapter().getCount()==0) {
-            txtNoItems.setVisibility(View.VISIBLE);
+        if( binding.ReleasingDamagesLstDamages.getAdapter().getCount()==0) {
+            binding.ReleasingDamagesTxtNoItems.setVisibility(View.VISIBLE);
         } else {
-            txtNoItems.setVisibility(View.INVISIBLE);
+            binding.ReleasingDamagesTxtNoItems.setVisibility(View.INVISIBLE);
         }
     }
+
+
 }

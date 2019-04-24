@@ -44,9 +44,9 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
             }
         })
 
-        viewModel.savedConfiguration.observe(this, Observer {
+    /*    viewModel.savedConfiguration.observe(this, Observer {
             updateTop(it)
-        })
+        })*/
 
 
 
@@ -82,7 +82,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         }
     }
 
-    private fun updateTop(it: Configuration) {
+  /*  private fun updateTop(it: Configuration) {
         binding.appBarHome.content.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.appBarHome.content.includeHome.tvOperationStepHeader.text = it.operationStep.value
         binding.appBarHome.content.includeHome.tvTerminalHeader.text = it.terminal.value
@@ -97,7 +97,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
             )
         }
     }
-
+*/
     override fun onResume() {
         super.onResume()
         viewModel.getSavedConfig()

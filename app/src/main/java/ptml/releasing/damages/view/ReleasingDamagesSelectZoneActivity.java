@@ -8,33 +8,44 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import dagger.android.support.DaggerAppCompatActivity;
+import ptml.releasing.BR;
 import ptml.releasing.R;
+import ptml.releasing.app.base.BaseActivity;
+import ptml.releasing.damages.view_model.DummyViewModel;
+import ptml.releasing.databinding.ActivityReleasingDamagesSelectZoneBinding;
 
-public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity {
+public class ReleasingDamagesSelectZoneActivity extends BaseActivity<DummyViewModel, ActivityReleasingDamagesSelectZoneBinding> {
 
-    private Button btnReturn;
-    private ImageButton btnBack;
-    private ImageButton btnFront;
-    private ImageButton btnRight;
-    private ImageButton btnTop;
-    private ImageButton btnLeft;
-    private ImageButton btnDown;
+
+    @Override
+    public int getLayoutResourceId() {
+        return R.layout.activity_releasing_damages_select_zone;
+    }
+
+    @Override
+    public int getBindingVariable() {
+        return BR.viewModel;
+    }
+
+    @NotNull
+    @Override
+    protected Class<DummyViewModel> getViewModelClass() {
+        return DummyViewModel.class;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_releasing_damages_select_zone);
-        setTitle(R.string.releasing_damages_select_zone_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        btnFront = (ImageButton) findViewById(R.id.ReleasingDamagesBtnFront);
-        btnBack = (ImageButton) findViewById(R.id.ReleasingDamagesBtnBack);
-        btnRight = (ImageButton) findViewById(R.id.ReleasingDamagesBtnRight);
-        btnTop = (ImageButton) findViewById(R.id.ReleasingDamagesBtnTop);
-        btnLeft = (ImageButton) findViewById(R.id.ReleasingDamagesBtnLeft);
-        btnDown = (ImageButton) findViewById(R.id.ReleasingDamagesBtnDown);
 
-        btnReturn = (Button) findViewById(R.id.ReleasingDamagesBtnReturn);
+        setTitle(R.string.releasing_damages_select_zone_title);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
+
 
         setupListeners();
 
@@ -46,7 +57,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
 
     private void setupListeners() {
 
-        btnReturn.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(0);
@@ -54,7 +65,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnFront.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamageZone = "F";
@@ -62,7 +73,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamageZone = "B";
@@ -70,7 +81,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnRight.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamageZone = "R";
@@ -78,7 +89,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnTop.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamageZone = "T";
@@ -86,7 +97,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnLeft.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamageZone = "L";
@@ -94,7 +105,7 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
             }
         });
 
-        btnDown.setOnClickListener(new View.OnClickListener() {
+        binding.ReleasingDamagesBtnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DamagesActivity.currentDamageZone = "D";
@@ -114,16 +125,6 @@ public class ReleasingDamagesSelectZoneActivity extends DaggerAppCompatActivity 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != -1 /*|| (ReleasingActivity.cargo.getContainerType() == 2) */)
             finish();
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

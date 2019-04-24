@@ -22,7 +22,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     companion object {
         const val RC = 111
-        const val RC_BARCODE = 112
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +50,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             startActivityForResult(intent, RC)
         })
 
-        viewModel.openBarCodeScanner.observe(this, Observer {
-            val intent = Intent(this@AdminConfigActivity, BarcodeScanActivity::class.java)
-            startActivityForResult(intent, RC_BARCODE)
-        })
 
-        viewModel.savedOperatorName.observe(this, Observer {
-            notifyUser(binding.root, getString(it))
-        })
+
 
         showUpEnabled(true)
 
@@ -85,10 +78,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         if (requestCode == RC && resultCode == Activity.RESULT_OK) {
             startNewActivity(SearchActivity::class.java)
             finish()
-        } else if (requestCode == SearchActivity.RC && resultCode == RESULT_OK) {
-            val operatorName = data?.getStringExtra(Constants.BAR_CODE)
-            //save
-            viewModel.saveOperatorName(operatorName)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

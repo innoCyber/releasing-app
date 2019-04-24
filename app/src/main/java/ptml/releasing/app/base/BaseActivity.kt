@@ -15,10 +15,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
@@ -36,8 +33,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.barcode_scan.BarcodeScanActivity
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -56,6 +55,10 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
 
+    companion object{
+        const val RC_BARCODE = 112
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -71,6 +74,37 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         }
 
         initBinding()
+
+        viewModel.openBarCodeScanner.observe(this, Observer {
+            openBarCodeScanner()
+        })
+
+        viewModel.savedOperatorName.observe(this, Observer {
+            notifyUser(binding.root, getString(it))
+        })
+
+
+        viewModel.operatorName.observe(this, Observer {
+            initOperator(it)
+        })
+
+        viewModel.getOperatorName()
+    }
+
+    private fun openBarCodeScanner() {
+        val intent = Intent(this@BaseActivity, BarcodeScanActivity::class.java)
+        startActivityForResult(intent, RC_BARCODE)
+    }
+
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RC_BARCODE && resultCode == RESULT_OK) {
+            val operatorName = data?.getStringExtra(Constants.BAR_CODE)
+            //save
+            viewModel.saveOperatorName(operatorName)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     open fun initBeforeView() {
@@ -151,6 +185,8 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         }
 
     }
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -303,5 +339,17 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
 
     protected abstract fun getViewModelClass(): Class<T>
+
+
+    protected fun initOperator(operatorName: String){
+        val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
+        operatorNameTextView.text = operatorName
+        val changeOperator = findViewById<Button>(R.id.btn_change)
+        changeOperator.setOnClickListener {
+            openBarCodeScanner()
+        }
+
+    }
+
 
 }
