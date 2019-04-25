@@ -101,9 +101,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             showOperatorErrorDialog()
         })
 
-        viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
-        })
+
 
         showUpEnabled(true)
 

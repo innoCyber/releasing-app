@@ -23,13 +23,13 @@ class InfoDialog : DialogFragment() {
 
         @JvmStatic
         fun newInstance(
-                title: String?,
-                message: String?,
-                buttonText: String? = null,
-                listener: InfoListener? = null,
-                hasNeutralButton:Boolean = false,
-                neutralButtonText:String? = null,
-                neutralListener: NeutralListener? = null
+            title: String?,
+            message: String?,
+            buttonText: String? = null,
+            listener: InfoListener? = null,
+            hasNeutralButton: Boolean = false,
+            neutralButtonText: String? = null,
+            neutralListener: NeutralListener? = null
         ): InfoDialog {
             val bundle = Bundle()
             bundle.putString(TITLE, title)
@@ -57,18 +57,17 @@ class InfoDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(buttonText) { _, _ ->
-                    listener?.onConfirm()
-                }
-
-                if(hasNeutralButton == true){
-                    builder.setNeutralButton(neutralButtonText ){ _,_->
-                        neutralListener?.onNeutralClick()
-                    }
-                }
-
+            .setTitle(title)
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(buttonText) { _, _ ->
+                listener?.onConfirm()
+            }
+        if (hasNeutralButton == true) {
+            builder.setNegativeButton(neutralButtonText) { _, _ ->
+                neutralListener?.onNeutralClick()
+            }
+        }
         return builder.create()
     }
 
@@ -77,7 +76,7 @@ class InfoDialog : DialogFragment() {
         fun onConfirm()
     }
 
-    interface NeutralListener{
+    interface NeutralListener {
         fun onNeutralClick()
     }
 

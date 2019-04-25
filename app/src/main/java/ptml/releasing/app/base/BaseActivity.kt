@@ -39,6 +39,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_search.view.onRequestPermissionsResult
+import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -80,6 +81,10 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
         viewModel.openBarCodeScanner.observe(this, Observer {
             openBarCodeScannerWithPermissionCheck(RC_BARCODE)
+        })
+
+        viewModel.openConfiguration.observe(this, Observer {
+            startNewActivity(LoginActivity::class.java)
         })
 
         viewModel.savedOperatorName.observe(this, Observer {
@@ -135,6 +140,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         if (requestCode == RC_BARCODE && resultCode == RESULT_OK) {
             val operatorName = data?.getStringExtra(Constants.BAR_CODE)
             //save
+            Timber.d("Scanned Operator name: %s", operatorName)
             viewModel.saveOperatorName(operatorName)
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -378,17 +384,17 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected fun initOperator(operatorName: String?){
         if(operatorName == null){
             Timber.d("Operator name is null")
-            findViewById<View>(R.id.operator_root)?.visibility = View.GONE
+            findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
             return
         }
 
-        Timber.d("Operator name is %s", operatorName)
-        findViewById<View>(R.id.operator_root)?.visibility = View.VISIBLE
+        Timber.d("Passed Operator name is %s", operatorName)
+        findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text = operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
         changeOperator?.setOnClickListener {
-            viewModel.openBarCodeScanner()
+            viewModel.openConfiguration()
         }
 
     }

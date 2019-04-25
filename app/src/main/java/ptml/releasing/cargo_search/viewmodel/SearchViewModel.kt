@@ -28,7 +28,7 @@ class SearchViewModel @Inject constructor(
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
     private val _errorMessage = MutableLiveData<String>()
-    private val _openConfiguration = MutableLiveData<Unit>()
+
 
     val networkState: LiveData<NetworkState> = _networkState
     val goBack: LiveData<Unit> = _goBack
@@ -38,7 +38,7 @@ class SearchViewModel @Inject constructor(
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
     val errorMessage: LiveData<String> = _errorMessage
-    val openConfiguration: LiveData<Unit> = _openConfiguration
+
 
     fun goBack() {
         _goBack.postValue(Unit)
@@ -78,12 +78,10 @@ class SearchViewModel @Inject constructor(
                     cargoNumber
                 ).await()
                 withContext(appCoroutineDispatchers.main) {
-                    findCargoResponse.isSuccess = false
                     if (findCargoResponse.isSuccess) {
                         Timber.v("findCargoResponse: %s", findCargoResponse)
                         _findCargoResponse.postValue(findCargoResponse)
                     } else {
-                        findCargoResponse.message = "The cargo number is not recognized"
                         Timber.e("Find Cargo failed with message =%s", findCargoResponse.message)
                         _findCargoHolder.value = findCargoResponse
                         _errorMessage.postValue(findCargoResponse.message)
@@ -106,9 +104,6 @@ class SearchViewModel @Inject constructor(
         _scan.postValue(Unit)
     }
 
-    fun openConfiguration() {
-        _openConfiguration.postValue(Unit)
-    }
 
 
 }

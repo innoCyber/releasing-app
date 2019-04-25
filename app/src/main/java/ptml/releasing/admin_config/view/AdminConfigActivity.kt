@@ -45,7 +45,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             startNewActivity(PrinterSettingsActivity::class.java)
         })
 
-        viewModel.openConfiguration.observe(this, Observer {
+        viewModel.openConfig.observe(this, Observer {
             val intent = Intent(this, ConfigActivity::class.java)
             startActivityForResult(intent, RC)
         })
@@ -54,7 +54,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         showUpEnabled(true)
 
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
-            viewModel.openConfiguration()
+            viewModel.openConfig()
         }
 
         binding.includeAdminConfig.btnDownload.setOnClickListener {
@@ -106,6 +106,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 //                    viewModel.openConfiguration()
                 }
             })
+        dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
