@@ -2,49 +2,50 @@
 <layout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  xmlns:tools="http://schemas.android.com/tools"
-                  android:layout_width="match_parent"
-                  android:id="@+id/operator_root"
-                  android:visibility="gone"
-                  android:layout_height="wrap_content"
-                  android:background="@color/colorBlack"
-                  android:orientation="horizontal"
-                  android:padding="@dimen/constraint_default_margin_4dp">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/operator_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
+        android:orientation="horizontal"
+        android:padding="@dimen/constraint_default_margin_4dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/constraint_default_margin_10dp"
-                android:layout_marginEnd="@dimen/constraint_default_margin_10dp"
-                android:contentDescription="@string/operator_name"
-                android:padding="@dimen/constraint_default_margin_4dp"
-                app:srcCompat="@drawable/operator_circle"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/constraint_default_margin_10dp"
+            android:layout_marginEnd="@dimen/constraint_default_margin_10dp"
+            android:contentDescription="@string/operator_name"
+            android:padding="@dimen/constraint_default_margin_4dp"
+            app:srcCompat="@drawable/operator_circle" />
 
         <TextView
-                android:id="@+id/tv_operator_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/colorWhite"
-                tools:text="@tools:sample/full_names"/>
+            android:id="@+id/tv_operator_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Paul Akhamiogu"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorWhite"
+            tools:text="@tools:sample/full_names" />
 
         <Button
-                android:id="@+id/btn_change"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/constraint_default_margin_4dp"
-                android:background="@drawable/btn_bg_accent"
-                android:text="@string/change"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-        />
+            android:id="@+id/btn_change"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/constraint_default_margin_4dp"
+            android:background="@drawable/btn_bg_accent"
+            android:text="@string/change"
+            android:textAllCaps="false"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 </layout>
