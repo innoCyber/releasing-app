@@ -33,9 +33,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         })
 
 
-        viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
-        })
+
         viewModel.openSearch.observe(this, Observer {
             if (it) {
                 startNewActivity(SearchActivity::class.java)

@@ -28,6 +28,10 @@ open class BaseViewModel @Inject constructor(
     private val _savedOperatorName = MutableLiveData<Int>()
 
     protected val _configuration = MutableLiveData<Configuration>()
+    private val _openConfiguration = MutableLiveData<Unit>()
+
+
+    val openConfiguration: LiveData<Unit> = _openConfiguration
 
     val operatorName: LiveData<String?> = _operatorName
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
@@ -42,6 +46,10 @@ open class BaseViewModel @Inject constructor(
             }
         }
         super.onCleared()
+    }
+
+    fun openConfiguration() {
+        _openConfiguration.postValue(Unit)
     }
 
 

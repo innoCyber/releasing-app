@@ -14,12 +14,10 @@ class HomeViewModel @Inject constructor(
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(repository, appCoroutineDispatchers) {
-    private val _openConfiguration = MutableLiveData<Boolean>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
     private val _openSearch = MutableLiveData<Boolean>()
 
 
-    val openConfiguration: LiveData<Boolean> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openSearch: LiveData<Boolean> = _openSearch
 
@@ -28,9 +26,7 @@ class HomeViewModel @Inject constructor(
 
 
 
-    fun openConfiguration() {
-        _openConfiguration.postValue(true)
-    }
+
 
     fun openSearch() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
