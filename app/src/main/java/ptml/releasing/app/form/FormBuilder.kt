@@ -7,6 +7,7 @@ import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.R
+import ptml.releasing.app.form.FormUtils.applyBottomParams
 import ptml.releasing.app.form.FormUtils.applyParams
 import ptml.releasing.app.form.FormUtils.applyTopParams
 import ptml.releasing.app.form.FormUtils.getDataForMultiSpinner
@@ -40,6 +41,13 @@ class FormBuilder constructor(val context: Context) {
         rootLayout.layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
+
+
+    fun findView(any: Any):View{
+        return rootLayout.findViewWithTag<View>(any)
+    }
+
+
 
 
     fun setListener(listener: FormListener): FormBuilder {
@@ -96,9 +104,7 @@ class FormBuilder constructor(val context: Context) {
                 } else {
                     params.setMargins(0, 0, 0, 0)
                 }
-                rootLayout.addView(
-                    formView
-                )
+                rootLayout.addView(formView)
 
             }
         }
@@ -107,7 +113,7 @@ class FormBuilder constructor(val context: Context) {
             rootLayout.addView(createErrorView())
         } else { //add the save and reset buttons
             val bottom = createBottomButtons()
-            applyParams(bottom)
+            applyBottomParams(bottom)
             rootLayout.addView(bottom)
         }
 
@@ -219,24 +225,31 @@ class FormBuilder constructor(val context: Context) {
 
     /**
      * Creates a Button for the form
-     *  Applies the necessary styles
+     *  Applies the necessary styles. Form Types expected are
+     *  @see FormType.DAMAGES
+     *  @see FormType.IMAGES
+     *  @see FormType.PRINTER
      *  @param @param data the config
      * @return the button view
      * */
     private fun createButton(data: ConfigureDeviceData): View {
         val view = inflateView(context, R.layout.button_layout)
         val titleView = view.findViewById<TextView>(R.id.tv_title)
+        val numberView = view.findViewById<TextView>(R.id.tv_number)
         val imageView = view.findViewById<ImageView>(R.id.img)
+        numberView.visibility = if(data.type == FormType.PRINTER.type) View.INVISIBLE else View.VISIBLE
         titleView.text = data.title
         imageView.setImageResource(getImageResourceByType(data.type))
         view.tag = data.id
         view.setOnClickListener {
-            listener?.onClickFormButton(FormType.fromType(data.type))
+            listener?.onClickFormButton(FormType.fromType(data.type), it)
         }
         applyTopParams(view)
         return view
 
     }
+
+
 
 
     /**

@@ -22,7 +22,9 @@
     <string name="terminal">Terminal</string>
     <string name="parking_step">Parking Step</string>
     <string name="enable_camera_scan">Enable Camera Scan</string>
-    <string name="verification_error_message">This device has not been registered for this application, please contact the administrator davide.minervini@ptml-ng.com for more information</string>
+    <string name="verification_error_message">This device has not been registered for this application, please contact
+        the administrator davide.minervini@ptml-ng.com for more information
+    </string>
     <string name="verification_error_title">Verification Error</string>
     <string name="configure_device_message">Please wait, configuring device…</string>
 
@@ -30,6 +32,10 @@
     <string name="allow_phone_state_permission_msg">For the app to work as expected, allow the permissions</string>
     <string name="phone_state_permission_denied">For the app to work as expected, please allow the permission</string>
     <string name="phone_state_permission_never_ask">To use this feature, allow the permissions in settings</string>
+
+    <string name="allow_camera_permission_msg">For the app to scan bar codes, allow the permissions</string>
+    <string name="camera_permission_denied">For the app to scan bar codes, please allow the permission</string>
+    <string name="camera_permission_never_ask">To scan bar code, allow the permissions in settings</string>
     <string name="info">Info</string>
     <string name="info_msg">Message</string>
     <string name="retry">Retry</string>
@@ -73,8 +79,11 @@
     <string name="config_saved_success">Configuration saved successfully</string>
     <string name="saved_successful">Success</string>
     <string name="config_error">Configuration Error</string>
-    <string name="config_error_message">To perform this operation, your device needs to be configured. Please contact the administrator</string>
-    <string name="device_not_configured_message">This device is not yet configured, please contact the administrator</string>
+    <string name="config_error_message">To perform this operation, your device needs to be configured. Please contact
+        the administrator
+    </string>
+    <string name="device_not_configured_message">This device is not yet configured, please contact the administrator
+    </string>
     <string name="nav_about">Device IMEI</string>
     <string name="device_IMEI">Device IMEI</string>
     <string name="dismiss">Dismiss</string>
@@ -87,4 +96,86 @@
 
     <string name="chip_ellipsis">&#8230;</string>
     <string name="cargo_number_invalid_message">Please enter a valid cargo number</string>
+
+
+    <!--OLD-->
+    <string name="releasing_damages_list_header">Summary Damages</string>
+    <string name="releasing_damages_txt_search">Search</string>
+    <string name="releasing_damages_txt_add">Add</string>
+    <string name="releasing_damages_btn_return">Return</string>
+    <string name="releasing_damages_btn_cancel">Cancel</string>
+    <string name="releasing_damages_btn_back">Back</string>
+    <string name="releasing_damages_txt_no_items">No damages yet. To add a new damage tap on the ADD button</string>
+
+    <string name="cell_cargo_damages_txt_high">Large</string>
+    <string name="cell_cargo_damages_txt_low">Small</string>
+    <string name="cell_cargo_damages_btn_decrease_number">-</string>
+    <string name="cell_cargo_damages_btn_increase_number">+</string>
+    <string name="cell_cargo_damages_txt_number">Number</string>
+    <string name="cell_cargo_damages_btn_unassign">Unassing</string>
+    <string name="cell_cargo_damages_txt_damage_remarks">Remarks</string>
+    <string name="cell_cargo_damages_btn_sace">Save</string>
+
+    <string name="cell_cargo_dsc_remove_damage_button">Remove damage button</string>
+    <string name="cell_photos_dsc_remove_image_button">Remove Image button</string>
+
+
+    <string name="general_btn_yes">Yes</string>
+    <string name="general_btn_no">No</string>
+    <string name="general_msg_cargo_not_found">Bar code not found</string>
+    <string name="general_msg_cargo_not_found_detail">The specified cargo was not found.</string>
+    <string name="general_msg_confirm">Confirm</string>
+    <string name="general_msg_confirm_unassign_damage">Are you sure you want to unassign the damage?</string>
+    <string name="general_msg_confirm_remove_image">Are you sure you want to remove this image?</string>
+    <string name="general_msg_cant_create_photo_file">Can\'t create file to store the photo.</string>
+    <string name="general_msg_please_wait">Please wait&#8230;</string>
+    <string name="general_msg_splash_version">Version {0}</string>
+    <string name="general_msg_x_of_y_please_wait">{0} of {1} records processed, {2} uploaded. Please wait&#8230;
+    </string>
+    <string name="general_msg_successful_download_x_parking_steps">Successfully downloaded {0} parking steps.</string>
+    <string name="general_msg_successful_download_x_damages">Successfully downloaded {0} damages.</string>
+    <string name="general_msg_successful_download_x_quick_remarks">Successfully downloaded {0} quick remarks.</string>
+    <string name="general_msg_successful_download_x_cargos">Successfully downloaded {0} cargo elements. {1} elements
+        dicarded.
+    </string>
+    <string name="general_msg_grant_camera_permission">"Please grant camera permission."</string>
+    <string name="general_msg_grant_fine_location_permission">"Please grant fine location permission."</string>
+
+    <string name="releasing_damages_title">Damages</string>
+
+
+    <string name="releasing_damages_select_zone_header_text">STEP 1: Select damage zone</string>
+    <string name="releasing_damages_select_size_header_text">STEP 2: Select damage position</string>
+    <string name="releasing_damages_select_damage_header_text">STEP 3: Assign type damage</string>
+    <string name="releasing_admin_select_front_header_text">STEP 2: Select damage position</string>
+    <string name="releasing_damages_no_description"/>
+    <string name="releasing_damages_description_continer_side">Immagine del container laterale</string>
+    <string name="releasing_admin_description_container_image_front">Immagine frontale o di coda del container</string>
+    <string name="releasing_damages_select_damage_title">Select Damage</string>
+    <string name="releasing_damages_select_zone_title">Select Zone</string>
+    <string name="releasing_damages_select_position_title">Select Position</string>
+    <string name="releasing_damages_img_description_full_container">Immagine del container totale per la selezione della
+        zona
+    </string>
+
+    <string name="admin_settings_txt_printer">Printer:</string>
+    <string name="admin_settings_btn_change_printer">Select Printer</string>
+    <string name="admin_settings_txt_label_format_cpcl">Label Format (CPCL)</string>
+
+    <string name="admin_settings_btn_close">Close</string>
+    <string name="admin_settings_btn_restore_code">Reset Label Format</string>
+
+    <string name="admin_settings_advanced_title">Printer Settings</string>
+    <string name="releasing_scan_txt_keep_the_bar_code_inside_the_square">Keep the bar code inside the square</string>
+    <string name="releasing_scan_title">Barcode scan</string>
+    <string name="search">Search</string>
+    <string name="general_msg_print_error">Print error</string>
+    <string name="back">Back</string>
+    <string name="scan_operator_badge">Scan Operator Badge</string>
+    <string name="operator_name_saved_success_msg">Operator name successfully saved</string>
+    <string name="change">Change</string>
+    <string name="operator_name">Operator name</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="continue_uploading_text">Continue Uploading Cargo</string>
+    <string name="no_operator_msg">Please scan the operator\'s ID badge</string>
 </resources>

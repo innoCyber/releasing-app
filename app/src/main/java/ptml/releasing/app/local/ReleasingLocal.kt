@@ -4,7 +4,8 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.printer.model.Settings
 import javax.inject.Inject
 
 class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
@@ -26,5 +27,10 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getDeviceConfiguration() = prefs.getDeviceConfiguration()
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)= prefs.saveDeviceConfiguration(response)
+    override fun getSettings() = prefs.getSettings()
+    override fun saveSettings(settings: Settings?) = prefs.saveSettings(settings)
 
+    override fun getOperatorName() = prefs.getOperatorName()
+
+    override fun saveOperatorName(name: String?) = prefs.saveOperatorName(name)
 }

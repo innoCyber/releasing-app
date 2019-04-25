@@ -15,10 +15,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
@@ -35,12 +32,17 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
+import permissions.dispatcher.*
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.barcode_scan.BarcodeScanActivity
+import ptml.releasing.cargo_search.view.onRequestPermissionsResult
 import timber.log.Timber
 import javax.inject.Inject
 
+@RuntimePermissions
 abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseViewModel, D : ViewDataBinding {
     private val networkSubject = MutableLiveData<Boolean>()
     private lateinit var receiver: BroadcastReceiver
@@ -55,6 +57,10 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     @Inject
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
+
+    companion object{
+        const val RC_BARCODE = 112
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +77,67 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         }
 
         initBinding()
+
+        viewModel.openBarCodeScanner.observe(this, Observer {
+            openBarCodeScannerWithPermissionCheck(RC_BARCODE)
+        })
+
+        viewModel.savedOperatorName.observe(this, Observer {
+            notifyUser(binding.root, getString(it))
+        })
+
+
+        viewModel.operatorName.observe(this, Observer {
+            initOperator(it)
+        })
+
+        viewModel.getOperatorName()
+    }
+
+    @NeedsPermission(android.Manifest.permission.CAMERA)
+    fun openBarCodeScanner(requestCode: Int) {
+        val intent = Intent(this@BaseActivity, BarcodeScanActivity::class.java)
+        startActivityForResult(intent, requestCode)
+    }
+
+
+    @OnShowRationale(android.Manifest.permission.CAMERA)
+    fun showCameraRationale(request: PermissionRequest) {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_camera_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnPermissionDenied(android.Manifest.permission.CAMERA)
+    fun showDeniedForCamera() {
+        notifyUser(binding.root, getString(R.string.camera_permission_denied))
+    }
+
+    @OnNeverAskAgain(android.Manifest.permission.CAMERA)
+    fun neverAskForCamera() {
+        notifyUser(binding.root, getString(R.string.camera_permission_never_ask))
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RC_BARCODE && resultCode == RESULT_OK) {
+            val operatorName = data?.getStringExtra(Constants.BAR_CODE)
+            //save
+            viewModel.saveOperatorName(operatorName)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     open fun initBeforeView() {
@@ -151,6 +218,8 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         }
 
     }
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -252,6 +321,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
 
+    @Suppress("DEPRECATION")
     fun isOffline(): Boolean {
         val manager = this
                 .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -303,5 +373,25 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
 
     protected abstract fun getViewModelClass(): Class<T>
+
+
+    protected fun initOperator(operatorName: String?){
+        if(operatorName == null){
+            Timber.d("Operator name is null")
+            findViewById<View>(R.id.operator_root)?.visibility = View.GONE
+            return
+        }
+
+        Timber.d("Operator name is %s", operatorName)
+        findViewById<View>(R.id.operator_root)?.visibility = View.VISIBLE
+        val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
+        operatorNameTextView?.text = operatorName
+        val changeOperator = findViewById<Button>(R.id.btn_change)
+        changeOperator?.setOnClickListener {
+            viewModel.openBarCodeScanner()
+        }
+
+    }
+
 
 }

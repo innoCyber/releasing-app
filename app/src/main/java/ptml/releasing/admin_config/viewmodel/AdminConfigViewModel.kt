@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -13,8 +14,10 @@ import javax.inject.Inject
 class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers) :
     BaseViewModel(repository, appCoroutineDispatchers) {
 
-    private val _openConfiguration = MutableLiveData<Boolean>()
+    private val _openConfiguration = MutableLiveData<Unit>()
+    private val _openPrinterSettings = MutableLiveData<Unit>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
+
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
     private var first = true
@@ -22,14 +25,19 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     val firstTimeFindCargo: LiveData<Boolean> = _firstTimeFindCargo
     private val _openSearch = MutableLiveData<Boolean>()
 
-    val openConfiguration: LiveData<Boolean> = _openConfiguration
+    val openConfiguration: LiveData<Unit> = _openConfiguration
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
+    val openPrinterSettings: LiveData<Unit> = _openPrinterSettings
     val openSearch: LiveData<Boolean> = _openSearch
 
     fun openConfiguration() {
-        _openConfiguration.postValue(true)
+        _openConfiguration.postValue(Unit)
     }
 
+
+    fun openPrinterSetting(){
+        _openPrinterSettings.postValue(Unit)
+    }
 
     fun openDownloadDamages() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
@@ -62,6 +70,9 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
             }
         }
     }
+
+
+
 
     override fun handleDeviceConfigured(configured: Boolean) {
         super.handleDeviceConfigured(configured)

@@ -5,9 +5,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import ptml.releasing.configuration.models.*
 import ptml.releasing.app.base.BaseResponse
-import ptml.releasing.auth.model.User
-import ptml.releasing.damages.model.Damage
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.login.model.User
+import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.download_damages.model.DamageResponse
 import java.net.SocketTimeoutException
 
 const val IMEI = ""

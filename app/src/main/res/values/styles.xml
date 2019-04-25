@@ -64,8 +64,17 @@
 
     <style name="ButtonStyle.GoBack">
         <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
         <item name="android:background">@drawable/save_btn_bg</item>
         <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
+    </style>
+
+    <style name="GoBack">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="drawableStartCompat">@drawable/ic_arrow_back</item>
     </style>
 
     <style name="ButtonStyle.Delete">
@@ -101,6 +110,10 @@
 
     <style name="RippleLayoutStyle.Configure">
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.BackButton">
+        <item name="android:layout_width">wrap_content</item>
     </style>
 
 
@@ -196,7 +209,7 @@
         <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
         <item name="rb_iconPaddingTop">@dimen/constraint_default_margin_4dp</item>
         <item name="rb_iconPaddingBottom">@dimen/constraint_default_margin_4dp</item>
-        <item name="rb_icon">@drawable/ic_qr_scanner</item>
+        <item name="rb_icon">@drawable/ic_qr_scanner_white</item>
 
     </style>
 
@@ -211,7 +224,7 @@
         <item name="android:paddingRight">@dimen/constraint_default_margin_16dp</item>
         <item name="android:paddingTop">@dimen/constraint_default_margin_8dp</item>
         <item name="android:paddingBottom">@dimen/constraint_default_margin_8dp</item>
-        <item name="srcCompat">@drawable/ic_qr_scanner</item>
+        <item name="srcCompat">@drawable/ic_qr_scanner_white</item>
         <item name="android:contentDescription">@string/qrcode</item>
 
     </style>
@@ -236,10 +249,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
-        <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
-        <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
@@ -252,7 +261,7 @@
 
     <style name="HomeTopTextStyle.Footer">
         <item name="android:layout_width">0dp</item>
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">@dimen/constraint_default_margin_4dp</item>
         <item name="android:textStyle">bold</item>

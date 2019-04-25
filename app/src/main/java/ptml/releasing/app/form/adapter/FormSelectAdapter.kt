@@ -12,14 +12,14 @@ import ptml.releasing.R
 import ptml.releasing.configuration.models.Options
 
 internal class FormSelectAdapter(context: Context, private val list: List<Options>?)
-        : ArrayAdapter<Options>(context, R.layout.spinner_configuration_layout, list
+        : ArrayAdapter<Options>(context, R.layout.spinner_single, list
             ?: mutableListOf()) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var view = convertView
             if (view == null) {
                 val inflater = LayoutInflater.from(context)
-                view = inflater.inflate(R.layout.spinner_configuration_layout, parent, false)
+                view = inflater.inflate(R.layout.spinner_single, parent, false)
             }
             val textView = view!!.findViewById<TextView>(R.id.tv_category)
             val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
@@ -35,7 +35,7 @@ internal class FormSelectAdapter(context: Context, private val list: List<Option
             var view = convertView
             if (view == null) {
                 val inflater = LayoutInflater.from(context)
-                view = inflater.inflate(R.layout.spinner_configuration_layout, parent, false)
+                view = inflater.inflate(R.layout.spinner_single, parent, false)
             }
 
 

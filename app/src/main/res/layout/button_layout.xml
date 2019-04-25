@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_marginStart="@dimen/constraint_default_margin_8dp"
             android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
             android:layout_weight="1"
-            android:text="Photos"
+            tools:text="Photos"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@color/colorWhite" />
 
@@ -39,7 +39,7 @@
             android:layout_marginStart="@dimen/constraint_default_margin_8dp"
             android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
             android:padding="@dimen/constraint_default_margin_8dp"
-            android:text="6"
+            android:text="0"
             android:textAppearance="?android:textAppearanceLarge"
             android:textColor="@color/colorWhite" />
 

@@ -12,7 +12,6 @@
       "options": [],
       "data_validation": "images"
     },
-
     {
       "id": 2,
       "type": "damages",
@@ -33,7 +32,6 @@
       "options": [],
       "data_validation": "printer"
     },
-
     {
       "id": 4,
       "type": "label",
@@ -54,7 +52,6 @@
       "options": [],
       "data_validation": "alphanumeric"
     },
-
     {
       "id": 6,
       "type": "label",
@@ -85,7 +82,6 @@
       "options": [],
       "data_validation": ""
     },
-
     {
       "id": 9,
       "type": "textbox",
@@ -116,7 +112,6 @@
       "options": [],
       "data_validation": "aplanumeric"
     },
-
     {
       "id": 12,
       "type": "label",
@@ -152,22 +147,17 @@
           "id": 4,
           "name": "Contact admin"
         },
-
         {
           "id": 5,
           "name": "Fraticinidas cantare! "
         },
-
         {
           "id": 6,
           "name": "Pulchritudines mori! "
         }
-
-
       ],
       "data_validation": ""
     },
-
     {
       "id": 14,
       "type": "label",
@@ -188,7 +178,6 @@
       "options": [],
       "data_validation": "alphanumeric"
     },
-
     {
       "id": 16,
       "type": "label",
@@ -209,12 +198,12 @@
       "options": [
         {
           "id": 1,
-          "name": "Everything is fine",
+          "name": "Everything ",
           "is_selected": false
         },
         {
           "id": 2,
-          "name": "Some issues need to be fixed"
+          "name": "Some issues"
         },
         {
           "id": 3,
@@ -224,24 +213,18 @@
           "id": 4,
           "name": "Contact admin"
         },
-
         {
           "id": 5,
-          "name": "Fraticinidas cantare! "
+          "name": "Fraticinidas"
         },
-
         {
           "id": 6,
-          "name": "Pulchritudines mori! "
+          "name": "Pulchritudines"
         },
-
-
         {
           "id": 7,
-          "name": "Ignigenas ire!"
+          "name": "Ignigenas"
         }
-
-
       ],
       "data_validation": ""
     },
@@ -280,18 +263,14 @@
           "id": 4,
           "name": "Green"
         },
-
         {
           "id": 5,
           "name": "Black "
         },
-
         {
           "id": 6,
           "name": "White"
         }
-
-
       ],
       "data_validation": ""
     },
@@ -330,23 +309,18 @@
           "id": 4,
           "name": "4m"
         },
-
         {
           "id": 5,
           "name": "5m"
         },
-
         {
           "id": 6,
           "name": "6m"
         },
-
         {
           "id": 7,
           "name": "7m"
         }
-
-
       ],
       "data_validation": ""
     }

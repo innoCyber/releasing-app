@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/CellCargoDamagesTxtDamage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center_vertical|start"
+        android:textAlignment="viewStart"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/CellCargoDamagesBtnUnassign"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/CellCargoDamagesBtnUnassign"
+        app:layout_constraintTop_toTopOf="@+id/CellCargoDamagesBtnUnassign"
+        tools:text="Damage name" />
+
+    <ImageButton
+        android:id="@+id/CellCargoDamagesBtnUnassign"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/cell_cargo_damages_btn_unassign"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/cell_cargo_dsc_remove_damage_button" />
+
+    <TextView
+        android:id="@+id/CellCargoTxtDamageRemarks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/cell_cargo_damages_txt_damage_remarks"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/CellCargoDamagesVerticalGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/CellCargoDamagesTxtNumber" />
+
+    <EditText
+        android:id="@+id/CellCargoEdtDamageRemarks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:inputType="text|textCapCharacters"
+        android:minHeight="30dp"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/CellCargoTxtDamageRemarks"
+        app:layout_constraintLeft_toLeftOf="@+id/CellCargoDamagesVerticalGuideline"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="Remarks on damage" />
+
+    <TextView
+        android:id="@+id/CellCargoDamagesTxtNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/cell_cargo_damages_txt_number"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/CellCargoDamagesVerticalGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/CellCargoDamagesTxtDamage" />
+
+    <TextView
+        android:id="@+id/CellCargoDamagesTxtNumberValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/CellCargoDamagesTxtNumber"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintLeft_toLeftOf="@+id/CellCargoDamagesVerticalGuideline"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="0" />
+
+    <Button
+        android:id="@+id/CellCargoDamagesBtnDecreaseNumber"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/cell_cargo_damages_btn_decrease_number"
+        android:textSize="24sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/CellCargoDamagesTxtNumberValue"
+        app:layout_constraintRight_toLeftOf="@+id/CellCargoDamagesTxtNumberValue" />
+
+    <Button
+        android:id="@+id/CellCargoDamagesBtnIncreaseNumber"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/cell_cargo_damages_btn_increase_number"
+        android:textSize="24sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/CellCargoDamagesTxtNumberValue"
+        app:layout_constraintLeft_toRightOf="@+id/CellCargoDamagesTxtNumberValue" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/CellCargoDamagesVerticalGuideline"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.28" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

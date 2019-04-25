@@ -10,10 +10,13 @@ import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.utils.Constants
+import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.configuration.view.ConfigActivity
-import ptml.releasing.damages.view.DamageActivity
+import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.printer.view.PrinterSettingsActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
@@ -28,7 +31,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                 if (it) View.GONE else View.VISIBLE //hide or show the not configured message
         })
 
-
         viewModel.getSavedConfig()
 
         viewModel.openDownloadDamages.observe(this, Observer {
@@ -39,9 +41,13 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             }
         })
 
+        viewModel.openPrinterSettings.observe(this, Observer {
+            startNewActivity(PrinterSettingsActivity::class.java)
+        })
+
         viewModel.openConfiguration.observe(this, Observer {
             val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, RC )
+            startActivityForResult(intent, RC)
         })
 
 
@@ -55,16 +61,22 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openDownloadDamages()
         }
 
+        binding.includeAdminConfig.btnSettings.setOnClickListener {
+            viewModel.openPrinterSetting()
+        }
 
+        binding.includeAdminConfig.btnScanOperator.setOnClickListener {
+            viewModel.openBarCodeScanner()
+        }
 
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == RC && resultCode == Activity.RESULT_OK){
+        if (requestCode == RC && resultCode == Activity.RESULT_OK) {
             startNewActivity(SearchActivity::class.java)
             finish()
-        }else{
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }

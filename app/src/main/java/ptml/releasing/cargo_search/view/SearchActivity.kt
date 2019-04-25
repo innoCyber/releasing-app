@@ -1,5 +1,6 @@
 package ptml.releasing.cargo_search.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,20 +12,33 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.ErrorHandler
-import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.Status
+import ptml.releasing.app.utils.*
+import ptml.releasing.barcode_scan.BarcodeScanActivity
+import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.databinding.ActivitySearchBinding
-import ptml.releasing.cargo_info.view.CargoInfoActivity
-import ptml.releasing.cargo_search.viewmodel.SearchViewModel
-import ptml.releasing.configuration.view.onRequestPermissionsResult
+import ptml.releasing.login.view.LoginActivity
+import timber.log.Timber
 import java.util.*
 
 @RuntimePermissions
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
+
+    companion object {
+        const val RC = 4343
+    }
+
+    private val dialogListener = object :InfoDialog.NeutralListener{
+        override fun onNeutralClick() {
+            //2. Clicking on this option sets the cargo_id = 0
+            //3. This then follows the same process as all other cargo
+            viewModel.continueToUploadCargo()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +75,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         viewModel.errorMessage.observe(this, Observer {
-            showErrorDialog(it)
+            showSearchErrorDialog(it)
         })
 
         viewModel.cargoNumberValidation.observe(this, Observer {
@@ -72,10 +86,25 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             //pass it on to the cargo info activity
             val bundle = Bundle()
             bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
+            bundle.putString(CargoInfoActivity.QUERY, binding.includeSearch.editInput.text.toString())
             startNewActivity(CargoInfoActivity::class.java, data = bundle)
             hideLoading(binding.includeError.root)
             hideLoading(binding.includeProgress.root)
         })
+
+        viewModel.scan.observe(this, Observer {
+            openBarCodeScannerWithPermissionCheck(RC_BARCODE)
+        })
+
+        viewModel.noOperator.observe(this, Observer {
+            //show dialog
+            showOperatorErrorDialog()
+        })
+
+        viewModel.openConfiguration.observe(this, Observer {
+            startNewActivity(LoginActivity::class.java)
+        })
+
         showUpEnabled(true)
 
         binding.includeSearch.editInput.addTextChangedListener(object : TextWatcher {
@@ -95,9 +124,44 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.includeError.btnReloadLayout.setOnClickListener {
             search()
         }
+
+        binding.includeSearch.imgQrCode.setOnClickListener {
+            viewModel.openBarcodeScan()
+        }
     }
 
+    private fun showSearchErrorDialog(message: String?) {
+        val dialogFragment =  InfoDialog.newInstance(
+                title = getString(R.string.error),
+                message = message,
+                buttonText = getString(android.R.string.cancel),
+                hasNeutralButton = true,
+                neutralButtonText = getString(R.string.continue_uploading_text),
+                neutralListener = dialogListener)
+        Timber.e("Error occurred during search: msg: %s", message)
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+
+
+    private fun showOperatorErrorDialog() {
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.error),
+            message = getString(R.string.no_operator_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener{
+                override fun onConfirm() {
+                    viewModel.openConfiguration()
+                }
+            },
+            hasNeutralButton = true,
+            neutralButtonText = getString(android.R.string.cancel))
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+
     private fun search() {
+        binding.includeSearch.btnVerify.hideSoftInputFromWindow()
         findCargoWithPermissionCheck(binding.includeSearch.editInput.text.toString())
     }
 
@@ -106,14 +170,18 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.getSavedConfig()
     }
 
+
+
+
+
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-    fun findCargo(cargoNumber:String?){
+    fun findCargo(cargoNumber: String?) {
         viewModel.findCargo(cargoNumber, (application as ReleasingApplication).provideImei())
     }
 
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
-    fun showInitRecognizerRationale(request: PermissionRequest) {
+    fun showPhoneStateRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
@@ -127,12 +195,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
-    fun showDeniedForInitRecognizer() {
+    fun showDeniedForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
     }
 
     @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
-    fun neverAskForInitRecognizer() {
+    fun neverAskForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 
@@ -141,28 +209,43 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         onRequestPermissionsResult(requestCode, grantResults)
     }
 
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC && resultCode == RESULT_OK) {
+            binding.includeSearch.editInput.setText(data?.getStringExtra(Constants.BAR_CODE))
+        }
+    }
 
     private fun updateTop(it: Configuration) {
         binding.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.includeHome.tvOperationStepFooter.text = it.operationStep.value
         binding.includeHome.tvTerminalFooter.text = it.terminal.value
 
-        if(it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE){
-            binding.includeHome.imgCargoType.setImageDrawable(ContextCompat.getDrawable(themedContext, R.drawable.ic_car))
-        }else{
-            binding.includeHome.imgCargoType.setImageDrawable(ContextCompat.getDrawable(themedContext, R.drawable.ic_container))
+        if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_car
+                )
+            )
+        } else {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_container
+                )
+            )
         }
 
-        if(it.cameraEnabled){
+        if (it.cameraEnabled) {
             showCameraScan()
-        }else{
+        } else {
             hideCameraScan()
         }
 
     }
 
-    private fun showCameraScan(){
+    private fun showCameraScan() {
         binding.includeSearch.tvScan.visibility = View.VISIBLE
         binding.includeSearch.dividerL.visibility = View.VISIBLE
         binding.includeSearch.dividerR.visibility = View.VISIBLE
@@ -171,7 +254,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     }
 
-    private fun hideCameraScan(){
+    private fun hideCameraScan() {
         binding.includeSearch.tvScan.visibility = View.GONE
         binding.includeSearch.dividerL.visibility = View.GONE
         binding.includeSearch.dividerR.visibility = View.GONE
@@ -180,10 +263,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
 
+    override fun getLayoutResourceId() = R.layout.activity_search
 
-    override fun getLayoutResourceId()  = R.layout.activity_search
-
-    override fun getBindingVariable()  = BR.viewModel
+    override fun getBindingVariable() = BR.viewModel
 
     override fun getViewModelClass() = SearchViewModel::class.java
 }

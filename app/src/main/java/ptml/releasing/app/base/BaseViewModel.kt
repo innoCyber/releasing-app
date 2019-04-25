@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ptml.releasing.R
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -20,12 +21,18 @@ open class BaseViewModel @Inject constructor(
 
     var compositeJob: Job? = null
 
+    protected val _openBarCodeScanner = MutableLiveData<Unit>()
     protected val _isConfigured = MutableLiveData<Boolean>()
+    protected val _operatorName = MutableLiveData<String?>()
     val isConfigured: LiveData<Boolean> = _isConfigured
+    private val _savedOperatorName = MutableLiveData<Int>()
 
     protected val _configuration = MutableLiveData<Configuration>()
 
+    val operatorName: LiveData<String?> = _operatorName
+    val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val savedConfiguration: LiveData<Configuration> = _configuration
+    val savedOperatorName: LiveData<Int> = _savedOperatorName
 
 
     override fun onCleared() {
@@ -64,6 +71,30 @@ open class BaseViewModel @Inject constructor(
 
     fun isConfigured(): Boolean {
         return repository.isConfiguredAsync()
+    }
+
+    fun openBarCodeScanner(){
+        _openBarCodeScanner.postValue(Unit)
+    }
+
+
+    fun saveOperatorName(name:String?){
+        CoroutineScope(appCoroutineDispatchers.db).launch {
+            repository.saveOperatorName(name)
+            withContext(appCoroutineDispatchers.main){
+                _savedOperatorName.postValue(R.string.operator_name_saved_success_msg)
+                _operatorName.postValue(name)
+            }
+        }
+    }
+
+    fun getOperatorName(){
+        CoroutineScope(appCoroutineDispatchers.db).launch {
+            val operator = repository.getOperatorName();
+            withContext(appCoroutineDispatchers.main){
+                _operatorName.postValue(operator)
+            }
+        }
     }
 
     open fun handleDeviceConfigured(configured: Boolean) {

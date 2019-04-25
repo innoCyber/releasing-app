@@ -6,12 +6,15 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.auth.model.User
+import ptml.releasing.login.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.damages.model.DamageResponse
+import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.printer.model.Settings
 import timber.log.Timber
 import javax.inject.Inject
 
+@Suppress("UNCHECKED_CAST")
 open class ReleasingRepository @Inject constructor(
         var remote: Remote,
         var local: Local,
@@ -125,6 +128,32 @@ open class ReleasingRepository @Inject constructor(
                                    imei: String,
                                    cargoNumber:String
     ) = remote.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
+
+
+    override suspend fun getDamagesByPosition(imei:String, position: String): List<Damage> {
+        return withContext(appCoroutineDispatchers.db){
+            val filteredList = mutableListOf<Damage>()
+            val damageResponse = getDamagesAsync(imei).await()
+            val list = damageResponse.data
+            for (damage in list) {
+                if(damage.position == position){
+                    filteredList.add(damage)
+                }
+            }
+            Timber.d("Filtered List: %s", filteredList)
+            Timber.d("Filtered Size: %s", filteredList.size)
+            filteredList
+        }
+    }
+
+    override fun getSettings() = local.getSettings()
+
+    override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
+
+    override fun getOperatorName() = local.getOperatorName()
+
+    override fun saveOperatorName(name: String?) = local.saveOperatorName(name)
+
 }
 
 
