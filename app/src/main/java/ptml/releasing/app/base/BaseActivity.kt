@@ -109,8 +109,13 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.getOperatorName()
     }
+
 
     @NeedsPermission(android.Manifest.permission.CAMERA)
     fun openBarCodeScanner(requestCode: Int) {

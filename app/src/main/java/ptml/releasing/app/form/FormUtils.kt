@@ -52,7 +52,7 @@ internal object FormUtils {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)
 
-        params.setMargins(SizeUtils.dp2px(view.context, 8f), SizeUtils.dp2px(view.context, 16f), SizeUtils.dp2px(view.context, 8f), 0)
+        params.setMargins(SizeUtils.dp2px(view.context, 8f), SizeUtils.dp2px(view.context, 8f), SizeUtils.dp2px(view.context, 8f), 0)
 
         view.layoutParams = params
     }
