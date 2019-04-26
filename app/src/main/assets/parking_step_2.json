@@ -1,0 +1,106 @@
+{
+  "success": true,
+  "message": "",
+  "data": [{
+      "id": 1,
+      "type": "label",
+      "title": "Surcharge",
+      "is_required": true,
+      "options": [{
+        "id": 1,
+        "name": "Everything is fine",
+        "is_selected": false
+      }, {
+        "id": 2,
+        "name": "Some issues need to be fixed"
+      }, {
+        "id": 3,
+        "name": "Resoltion in progress"
+      }],
+      "data_validation": "numeric"
+    },
+    {
+      "id": 8,
+      "type": "mlti_selct",
+      "title": "Remarks",
+      "is_required": true,
+      "options": [{
+        "id": 1,
+        "name": "Everything is fine",
+        "is_selected": false
+      }, {
+        "id": 2,
+        "name": "Some issues need to be fixed"
+      }, {
+        "id": 3,
+        "name": "Resoltion in progress"
+      }],
+      "data_validation": ""
+    },
+    {
+      "id": 7,
+      "type": "damages",
+      "title": "Print Barcode",
+      "is_required": false,
+      "options": [],
+      "data_validation": "printer"
+    },
+    {
+      "id": 6,
+      "type": "multi_li_textbox",
+      "title": "Remarks",
+      "is_required": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 4,
+      "type": "textboxx",
+      "title": "Operator Name",
+      "is_required": true,
+      "options": [{
+        "id": 1,
+        "name": "Everything is fine",
+        "is_selected": false
+      }, {
+        "id": 2,
+        "name": "Some issues need to be fixed"
+      }, {
+        "id": 3,
+        "name": "Resoltion in progress"
+      }],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 10,
+      "type": "photos",
+      "title": "Barcode",
+      "is_required": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 11,
+      "type": "images",
+      "title": "Description",
+      "is_required": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 8,
+      "type": "single_select",
+      "title": "Remarks",
+      "is_required": true,
+      "options": [{
+        "id": 1,
+        "name": "Everything is fine",
+        "is_selected": false
+      }, {
+        "id": 2,
+        "name": "Some issues need to be fixed"
+      }],
+      "data_validation": ""
+    }
+  ]
+}

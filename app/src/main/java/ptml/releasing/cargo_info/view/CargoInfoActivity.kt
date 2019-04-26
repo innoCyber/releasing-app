@@ -175,6 +175,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                 ?.init(findCargoResponse)
                 ?.build(it?.data)
         binding.formContainer.addView(formView)
+        binding.formBottom.addView(formBuilder?.getBottomButtons())
     }
 
 

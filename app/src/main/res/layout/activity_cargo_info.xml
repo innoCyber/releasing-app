@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
+            android:id="@+id/scrollView"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,7 +74,7 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge"/>
+                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge" />
 
 
                 <TextView
@@ -124,26 +124,16 @@
         </androidx.core.widget.NestedScrollView>
 
 
-        <ptml.releasing.app.views.MaterialRippleLayout
-            android:id="@+id/btn_back_layout"
-            style="@style/RippleLayoutStyle.Configure"
-            android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-            android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <FrameLayout
+            android:id="@+id/form_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
+            app:layout_constraintTop_toBottomOf="@id/scrollView"
             app:layout_constraintEnd_toEndOf="@id/guideline_rr"
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
-            app:layout_constraintTop_toBottomOf="@id/include_search"
-            tools:visibility="visible">
+            app:layout_constraintVertical_bias="0" />
 
-            <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_back"
-                style="@style/ButtonStyle.GoBack"
-                android:onClick="@{() -> viewModel.goBack()}"
-                android:text="@string/back_to_home"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </ptml.releasing.app.views.MaterialRippleLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

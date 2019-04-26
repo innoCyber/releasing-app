@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.R
 import ptml.releasing.app.form.FormUtils.applyBottomParams
+import ptml.releasing.app.form.FormUtils.applyCheckboxParams
 import ptml.releasing.app.form.FormUtils.applyParams
 import ptml.releasing.app.form.FormUtils.applyTopParams
 import ptml.releasing.app.form.FormUtils.getDataForMultiSpinner
@@ -71,6 +72,14 @@ class FormBuilder constructor(val context: Context) {
         return this
     }
 
+    fun getBottomButtons(): View? {
+        if (rootLayout.childCount > 0) {
+            val bottom = createBottomButtons()
+            applyBottomParams(bottom)
+            return bottom;
+        }
+        return null
+    }
 
     /**
      * Creates a form view from the list of configuration options
@@ -109,10 +118,6 @@ class FormBuilder constructor(val context: Context) {
 
         if (rootLayout.childCount <= 0) { //show an error view if no view had been added
             rootLayout.addView(createErrorView())
-        } else { //add the save and reset buttons
-            val bottom = createBottomButtons()
-            applyBottomParams(bottom)
-            rootLayout.addView(bottom)
         }
 
         initializeData()
@@ -161,7 +166,6 @@ class FormBuilder constructor(val context: Context) {
                 FormType.CHECK_BOX -> {
                     return createCheckBox(data)
                 }
-
 
                 else -> {
                     Timber.e("Could not find form type for %s", data?.type)
@@ -316,7 +320,7 @@ class FormBuilder constructor(val context: Context) {
         val checkBox = inflateView(context, R.layout.item_checkbox) as CheckBox
         checkBox.tag = data?.id
         checkBox.text = data?.title
-        applyParams(checkBox)
+        applyCheckboxParams(checkBox)
         return checkBox
     }
 

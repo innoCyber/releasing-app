@@ -47,6 +47,16 @@ internal object FormUtils {
         view.layoutParams = params
     }
 
+    fun applyCheckboxParams(view: View){
+        val params  = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        params.setMargins(SizeUtils.dp2px(view.context, 8f), SizeUtils.dp2px(view.context, 16f), SizeUtils.dp2px(view.context, 8f), 0)
+
+        view.layoutParams = params
+    }
+
 
     fun applyBottomParams(view: View){
         val params  = LinearLayout.LayoutParams(
