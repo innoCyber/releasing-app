@@ -82,6 +82,8 @@
       "options": [],
       "data_validation": ""
     },
+
+
     {
       "id": 9,
       "type": "textbox",
@@ -323,6 +325,16 @@
         }
       ],
       "data_validation": ""
+    },
+    {
+      "id": 22,
+      "type": "checkbox",
+      "position": 21,
+      "title": "Coloured item",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "true"
     }
   ]
 }

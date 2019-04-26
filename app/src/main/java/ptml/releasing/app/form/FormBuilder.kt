@@ -158,6 +158,10 @@ class FormBuilder constructor(val context: Context) {
                     return createMultiSelectSelect(data)
                 }
 
+                FormType.CHECK_BOX -> {
+                    return createCheckBox(data)
+                }
+
 
                 else -> {
                     Timber.e("Could not find form type for %s", data?.type)
@@ -305,8 +309,15 @@ class FormBuilder constructor(val context: Context) {
             return recyclerView
 
         }
+    }
 
 
+    private fun createCheckBox(data: ConfigureDeviceData?): View {
+        val checkBox = inflateView(context, R.layout.item_checkbox) as CheckBox
+        checkBox.tag = data?.id
+        checkBox.text = data?.title
+        applyParams(checkBox)
+        return checkBox
     }
 
 
