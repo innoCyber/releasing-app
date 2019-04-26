@@ -8,9 +8,9 @@ import ptml.releasing.databinding.ItemCheckboxBinding
 class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>() where T : SelectModel {
     var listener: SingleSelectListener<T>? = null
 
-    fun setItems(items:List<T>){
+    fun setItems(items:List<T>?){
         this.items.clear()
-        this.items.addAll(items)
+        this.items.addAll(items ?: mutableListOf())
         notifyDataSetChanged()
     }
 

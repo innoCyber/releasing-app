@@ -57,8 +57,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                 FormType.DAMAGES -> {
                     damageView = view
                     startActivityForResult(
-                        Intent(this@CargoInfoActivity, DamagesActivity::class.java),
-                        DAMAGES_RC
+                            Intent(this@CargoInfoActivity, DamagesActivity::class.java),
+                            DAMAGES_RC
                     )
                 }
             }
@@ -75,7 +75,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
                 val macAddress = settings.currentPrinter
                 val labelCpclData = settings.labelCpclData
-                    /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
+                /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
 
 
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
@@ -108,11 +108,11 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                     printerView?.isEnabled = true
 
                     AlertDialog.Builder(this@CargoInfoActivity)
-                        .setTitle(R.string.general_msg_print_error)
-                        .setMessage("Error printing label: " + e.localizedMessage)
-                        .setPositiveButton(android.R.string.ok, { dialog, which -> })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show()
+                            .setTitle(R.string.general_msg_print_error)
+                            .setMessage("Error printing label: " + e.localizedMessage)
+                            .setPositiveButton(android.R.string.ok, { dialog, which -> })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show()
 
                     e.printStackTrace()
                 }
@@ -165,20 +165,16 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
-        if (BuildConfig.DEBUG) {
-            findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
-            Timber.w("From assets: %s", findCargoResponse)
-        }
-
-
+        /*     if (BuildConfig.DEBUG) {
+                 findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+                 Timber.w("From assets: %s", findCargoResponse)
+             }*/
         formBuilder = FormBuilder(this)
         val formView = formBuilder
-            ?.setListener(formListener)
-            ?.init(findCargoResponse)
-            ?.build(it?.data)
+                ?.setListener(formListener)
+                ?.init(findCargoResponse)
+                ?.build(it?.data)
         binding.formContainer.addView(formView)
-
-
     }
 
 
@@ -189,17 +185,17 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_car
-                )
+                    ContextCompat.getDrawable(
+                            themedContext,
+                            R.drawable.ic_car
+                    )
             )
         } else {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_container
-                )
+                    ContextCompat.getDrawable(
+                            themedContext,
+                            R.drawable.ic_container
+                    )
             )
         }
 

@@ -19,7 +19,7 @@ internal object FormUtils {
     }
 
 
-    fun getImageResourceByType(type: String): Int {
+    fun getImageResourceByType(type: String?): Int {
         return when (FormType.fromType(type)) {
             FormType.IMAGES -> R.drawable.ic_images
             FormType.PRINTER -> R.drawable.ic_print
@@ -28,9 +28,9 @@ internal object FormUtils {
     }
 
 
-     fun getDataForMultiSpinner(list: List<Options>): LinkedHashMap<String, Boolean> {
+     fun getDataForMultiSpinner(list: List<Options>?): LinkedHashMap<String, Boolean> {
         val linkedHashMap = LinkedHashMap<String, Boolean>()
-        for (s in list) {
+        for (s in list ?: mutableListOf()) {
             linkedHashMap[s.name] = false
         }
 

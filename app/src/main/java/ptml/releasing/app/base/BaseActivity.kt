@@ -94,6 +94,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
         viewModel.operatorName.observe(this, Observer {
             initOperator(it)
+
         })
 
         viewModel.getOperatorName()

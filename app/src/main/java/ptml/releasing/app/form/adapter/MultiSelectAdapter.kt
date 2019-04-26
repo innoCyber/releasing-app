@@ -11,9 +11,9 @@ class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() w
     val selectedItems = mutableListOf<T>()
     var listener: MultiSelectListener<T>? = null
 
-    fun setItems(items:List<T>){
+    fun setItems(items:List<T>?){
         this.items.clear()
-        this.items.addAll(items)
+        this.items.addAll(items ?: mutableListOf())
         notifyDataSetChanged()
     }
 

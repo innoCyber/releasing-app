@@ -178,4 +178,5 @@
     <string name="anonymous">Anonymous</string>
     <string name="continue_uploading_text">Continue Uploading Cargo</string>
     <string name="no_operator_msg">Please scan the operator\'s ID badge</string>
+    <string name="form_error_msg">An error occurred while trying to load, please contact the administrator</string>
 </resources>

@@ -31,7 +31,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
     private var items: MutableList<String>? = null
     private var selected = mutableListOf<Boolean>()
-    var defaultHintText = "Select Items"
+    var defaultHintText : String? = "Select Items"
     private var spinnerTitle: String? = ""
     private var listener: MultiSpinnerListener? = null
     private var selectedItems = LinkedHashMap<String, Int>()
@@ -152,7 +152,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
 }
 
-internal class MultiSpinnerAdapter(context: Context, text: String) :
+internal class MultiSpinnerAdapter(context: Context, text: String?) :
     ArrayAdapter<String>(context, R.layout.spinner_single, arrayListOf(text)) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

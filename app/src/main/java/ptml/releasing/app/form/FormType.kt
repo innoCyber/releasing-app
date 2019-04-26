@@ -15,7 +15,7 @@ enum class FormType constructor(val type: String) {
 
 
     companion object{
-        fun fromType(type: String): FormType {
+        fun fromType(type: String?): FormType {
             return when (type) {
                 Constants.LABEL -> LABEL
                 Constants.TEXT_BOX -> TEXTBOX

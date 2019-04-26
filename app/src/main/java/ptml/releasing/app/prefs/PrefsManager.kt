@@ -13,7 +13,7 @@ import ptml.releasing.printer.model.Settings
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
-    Prefs {
+        Prefs {
     companion object {
         const val FIRST = "is_first"
         const val CONFIG = "config"
@@ -67,8 +67,8 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
-        /*return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)*/
-        return FormLoader.loadFromAssets(context)
+        return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)
+        /*return FormLoader.loadFromAssets(context)*/
     }
 
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?) {
@@ -84,7 +84,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getOperatorName(): String? {
-        return sharedPreferences.getString(OPERATOR_NAME,  null)
+        return sharedPreferences.getString(OPERATOR_NAME, null)
     }
 
     override fun saveOperatorName(name: String?) {
