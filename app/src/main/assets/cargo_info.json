@@ -70,7 +70,7 @@
       "is_required": true,
       "is_editable": true,
       "options": [],
-      "data_validation": "alphanumeric"
+      "data_validation": "numeric"
     },
     {
       "id": 8,

@@ -20,6 +20,7 @@ import ptml.releasing.app.form.adapter.MultiSelectAdapter
 import ptml.releasing.app.form.adapter.SingleSelectAdapter
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.SizeUtils
+import ptml.releasing.app.utils.setValidation
 import ptml.releasing.app.views.MultiSpinner
 import ptml.releasing.app.views.MultiSpinnerListener
 import ptml.releasing.cargo_search.model.FindCargoResponse
@@ -205,8 +206,7 @@ class FormBuilder constructor(val context: Context) {
         val editText = inflateView(context, R.layout.form_textbox) as EditText
         editText.tag = data?.id
         editText.hint = data?.title
-
-
+        editText.setValidation(data?.dataValidation)
         applyParams(editText)
         return editText
 
@@ -223,6 +223,7 @@ class FormBuilder constructor(val context: Context) {
         val editText = inflateView(context, R.layout.form_textbox_multiline) as EditText
         editText.tag = data?.id
         editText.hint = data?.title
+        editText.setValidation(data?.dataValidation)
         applyParams(editText)
         return editText
 
@@ -398,3 +399,5 @@ class FormBuilder constructor(val context: Context) {
 
 
 }
+
+

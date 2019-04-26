@@ -40,4 +40,7 @@ object Constants{
             "FORM\r\n" +
             "PRINT\r\n"
 
+    const val ALPHANUMERIC = "alphanumeric"
+    const val NUMERIC = "numeric"
+
 }
