@@ -25,7 +25,7 @@ open class BaseViewModel @Inject constructor(
     protected val _isConfigured = MutableLiveData<Boolean>()
     protected val _operatorName = MutableLiveData<String?>()
     val isConfigured: LiveData<Boolean> = _isConfigured
-    private val _savedOperatorName = MutableLiveData<Int>()
+    private val _savedOperatorName = MutableLiveData<String>()
 
     protected val _configuration = MutableLiveData<Configuration>()
     private val _openConfiguration = MutableLiveData<Unit>()
@@ -36,7 +36,7 @@ open class BaseViewModel @Inject constructor(
     val operatorName: LiveData<String?> = _operatorName
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val savedConfiguration: LiveData<Configuration> = _configuration
-    val savedOperatorName: LiveData<Int> = _savedOperatorName
+    val savedOperatorName: LiveData<String> = _savedOperatorName
 
 
     override fun onCleared() {
@@ -90,7 +90,7 @@ open class BaseViewModel @Inject constructor(
         CoroutineScope(appCoroutineDispatchers.db).launch {
             repository.saveOperatorName(name)
             withContext(appCoroutineDispatchers.main){
-                _savedOperatorName.postValue(R.string.operator_name_saved_success_msg)
+                _savedOperatorName.postValue(name)
                 _operatorName.postValue(name)
             }
         }

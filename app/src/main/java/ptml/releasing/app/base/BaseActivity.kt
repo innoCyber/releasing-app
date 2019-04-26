@@ -88,7 +88,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         })
 
         viewModel.savedOperatorName.observe(this, Observer {
-            notifyUser(binding.root, getString(it))
+            notifyUser(binding.root, getString(R.string.operator_name_saved_success_msg, it))
         })
 
 
