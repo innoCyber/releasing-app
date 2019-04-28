@@ -10,7 +10,7 @@ import com.google.gson.JsonObject
 @Suppress("UNUSED_PARAMETER")
 open class BaseModel() : Parcelable {
     @SerializedName("id")
-    open var id: Int = 0
+    open var id: Int? = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -22,7 +22,7 @@ open class BaseModel() : Parcelable {
     }
 
     override fun hashCode(): Int {
-        return id
+        return id ?: 0
     }
 
     override fun toString(): String {

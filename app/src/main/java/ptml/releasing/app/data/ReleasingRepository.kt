@@ -101,9 +101,9 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun setConfigurationDeviceAsync(
-            cargoTypeId: Int,
-            operationStepId: Int,
-            terminal: Int,
+            cargoTypeId: Int?,
+            operationStepId: Int?,
+            terminal: Int?,
             imei: String
     ): Deferred<ConfigureDeviceResponse> {
         return withContext(appCoroutineDispatchers.network) {
@@ -122,9 +122,9 @@ open class ReleasingRepository @Inject constructor(
     }
 
 
-    override suspend fun findCargo(cargoTypeId: Int,
-                                   operationStepId: Int,
-                                   terminal: Int,
+    override suspend fun findCargo(cargoTypeId: Int?,
+                                   operationStepId: Int?,
+                                   terminal: Int?,
                                    imei: String,
                                    cargoNumber:String
     ) = remote.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)

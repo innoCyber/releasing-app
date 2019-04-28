@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <ptml.releasing.app.views.MultiSpinner
-        android:id="@+id/multi_spinner"
+        android:id="@+id/select"
         style="@style/Form.MultiSelect"
         android:entries="@array/sample" />
 

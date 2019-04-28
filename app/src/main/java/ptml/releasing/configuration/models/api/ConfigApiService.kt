@@ -16,7 +16,7 @@ interface ConfigApiService {
     @GET("setConfigurationDevice")
     fun setConfigurationDeviceAsync(
 //        @Query("cargo_type") cargoTypeId: Int,
-        @Query("operation_step") operationStepId: Int,
+        @Query("operation_step") operationStepId: Int?,
 //        @Query("terminal") terminal: Int,
         @Query("imei") imei: String
     ): Deferred<ConfigureDeviceResponse>

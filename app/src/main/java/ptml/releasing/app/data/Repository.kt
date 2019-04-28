@@ -24,9 +24,9 @@ interface Repository {
     suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse>
 
     suspend fun setConfigurationDeviceAsync(
-        cargoTypeId: Int,
-        operationStepId: Int,
-        terminal: Int,
+        cargoTypeId: Int?,
+        operationStepId: Int?,
+        terminal: Int?,
         imei: String
     ): Deferred<ConfigureDeviceResponse>
 
@@ -34,9 +34,9 @@ interface Repository {
 
 
     suspend fun findCargo(
-            cargoTypeId: Int,
-            operationStepId: Int,
-            terminal: Int,
+            cargoTypeId: Int?,
+            operationStepId: Int?,
+            terminal: Int?,
             imei: String,
             cargoNumber:String):Deferred<FindCargoResponse>
 

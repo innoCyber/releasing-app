@@ -34,8 +34,8 @@ import timber.log.Timber
 import java.util.*
 
 class FormBuilder constructor(val context: Context) {
-    private var values: List<Value>? = null
-    private var options: List<Option>? = null
+    private var values = mutableMapOf<Int?, Value>()
+    private var options = mutableMapOf<Int?, Option>()
     internal var data: List<ConfigureDeviceData>? = null
     private val rootLayout = LinearLayout(context)
     private var listener: FormListener? = null
@@ -46,6 +46,7 @@ class FormBuilder constructor(val context: Context) {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
     }
 
 
@@ -70,8 +71,14 @@ class FormBuilder constructor(val context: Context) {
      * @param findCargoResponse The object with the pre-filled data, referenced by the form id
      * */
     fun init(findCargoResponse: FindCargoResponse?): FormBuilder {
-        this.values = findCargoResponse?.values
-        this.options = findCargoResponse?.options
+        for (value in findCargoResponse?.values ?: mutableListOf()) {
+            Timber.w("Value: %s", value)
+            this.values[value.id] = value
+        }
+        for (option in findCargoResponse?.options ?: mutableListOf()) {
+            Timber.w("Option: %s", option)
+            this.options[option.id] = option
+        }
 
         return this
     }
@@ -96,10 +103,14 @@ class FormBuilder constructor(val context: Context) {
      * */
     fun build(configDataList: List<ConfigureDeviceData>?): LinearLayout {
         //sort the list based on the position
+        listener?.onStartLoad()
         Timber.d("Config list: %s", configDataList)
         this.data = configDataList
+
         val positionComparator = Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
         Collections.sort(data ?: mutableListOf(), positionComparator)
+
+
         val params = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -129,7 +140,7 @@ class FormBuilder constructor(val context: Context) {
         }
 
         initializeData()
-
+        listener?.onEndLoad()
         return rootLayout
     }
 
@@ -139,17 +150,21 @@ class FormBuilder constructor(val context: Context) {
             val formType = FormType.fromType(data?.type)
             when (formType) {
                 FormType.LABEL -> {
+
                     return createLabel(data)
                 }
 
                 FormType.TEXTBOX -> {
+                    initializeDefaultValue(data)
                     return createTextBox(data)
                 }
 
                 FormType.MULTI_LINE_TEXTBOX -> {
+                    initializeDefaultValue(data)
                     return createMultilineTextBox(data)
                 }
                 FormType.IMAGES -> {
+                    //todo: HAndle this
                     return createButton(data)
                 }
 
@@ -158,20 +173,24 @@ class FormBuilder constructor(val context: Context) {
                 }
 
                 FormType.DAMAGES -> {
+                    //todo: HAndle this
                     return createButton(data)
                 }
 
 
                 FormType.SINGLE_SELECT -> {
+                    initializeDefaultOption(data)
                     return createSingleSelect(data)
                 }
 
 
                 FormType.MULTI_SELECT -> {
+                    initializeDefaultOption(data)
                     return createMultiSelectSelect(data)
                 }
 
                 FormType.CHECK_BOX -> {
+                    //todo: HAndle this
                     return createCheckBox(data)
                 }
 
@@ -185,6 +204,8 @@ class FormBuilder constructor(val context: Context) {
             return null
         }
     }
+
+
 
     /**
      * Creates a TextView that functions as a label
@@ -335,7 +356,7 @@ class FormBuilder constructor(val context: Context) {
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val view = inflateView(context, R.layout.form_single_select)
             view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
-            val spinner = view.findViewById<Spinner>(R.id.spinner)
+            val spinner = view.findViewById<Spinner>(R.id.select)
             view.tag = data?.id
             //add the items
             val adapter = FormSelectAdapter(context, data?.options)
@@ -345,7 +366,7 @@ class FormBuilder constructor(val context: Context) {
         } else {
             val view = inflateView(context, R.layout.form_rv)
             val textView = view.findViewById<TextView>(R.id.tv_error)
-            val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = SingleSelectAdapter<Options>()
             adapter.setItems(data?.options)
             adapter.listener = object : SingleSelectListener<Options> {
@@ -370,7 +391,7 @@ class FormBuilder constructor(val context: Context) {
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             return true
         } else {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as SingleSelectAdapter<*>
             if (adapter.selectedItem == null) {
                 val message = context.getString(R.string.select_one_item)
@@ -397,7 +418,7 @@ class FormBuilder constructor(val context: Context) {
             val view = inflateView(context, R.layout.form_multi_select)
             val textView = view.findViewById<TextView>(R.id.tv_error)
             textView.visibility = View.INVISIBLE
-            val spinner = view.findViewById<MultiSpinner>(R.id.multi_spinner)
+            val spinner = view.findViewById<MultiSpinner>(R.id.select)
             view.tag = data?.id
             spinner.defaultHintText = data?.title
             spinner.setItems(getDataForMultiSpinner(data?.options), object : MultiSpinnerListener {
@@ -411,7 +432,7 @@ class FormBuilder constructor(val context: Context) {
             return view
         } else {
             val view = inflateView(context, R.layout.form_rv)
-            val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val textView = view.findViewById<TextView>(R.id.tv_error)
             val adapter = MultiSelectAdapter<Options>()
             adapter.listener = object : MultiSelectListener<Options> {
@@ -433,7 +454,7 @@ class FormBuilder constructor(val context: Context) {
     fun validateMultiSelect(data: ConfigureDeviceData?): Boolean? {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val spinner = view.findViewById<MultiSpinner>(R.id.multi_spinner)
+            val spinner = view.findViewById<MultiSpinner>(R.id.select)
             val items = spinner.selectedItems.size
             if (items <= 0) {
                 multiSelectError(view)
@@ -442,7 +463,7 @@ class FormBuilder constructor(val context: Context) {
             }
 
         } else {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as MultiSelectAdapter<*>
             val items = adapter.selectedItems.size
             if (items <= 0) {
@@ -526,15 +547,32 @@ class FormBuilder constructor(val context: Context) {
     }
 
     private fun initializeValues() {
-        for (value in values ?: mutableListOf()) {
-            bindValuesDataToView(rootLayout.findViewWithTag<View>(value.id), value.value)
+        for (value in values.values) {
+            val inputLayout = rootLayout.findViewWithTag<View>(value.id)
+            val editText = inputLayout?.findViewById<EditText>(R.id.edit)
+            bindValuesDataToView(editText, value.value)
         }
     }
 
     private fun initializeOptions() {
-        for (option in options ?: mutableListOf()) {
-            bindOptionsDataToView(rootLayout.findViewWithTag<View>(option.id), option.selected)
+        for (option in options.values) {
+            Timber.d("Options: %s", option)
+            val view = rootLayout.findViewWithTag<View>(option.id)
+            val select = view?.findViewById<View>(R.id.select)
+            bindOptionsDataToView(select, option.selected)
         }
+    }
+
+    private fun initializeDefaultValue(data: ConfigureDeviceData?) {
+        val value = Value("")
+        value.id = data?.id
+        values[data?.id] = value
+    }
+
+    private fun initializeDefaultOption(data: ConfigureDeviceData?) {
+        val option = Option(null)
+        option.id = data?.id
+        options[data?.id] = option
     }
 
     private fun bindValuesDataToView(view: View?, data: String?) {
@@ -554,17 +592,24 @@ class FormBuilder constructor(val context: Context) {
     private fun bindOptionsDataToView(view: View?, data: List<Int>?) {
         when (view) {
             is MultiSpinner -> { //check this first, for multi select
+                Timber.d("MultiSpinner initialization")
                 view.setSelection(data)
             }
 
             is Spinner -> { //for single select
+                Timber.d("Spinner initialization")
                 if (data?.isEmpty() == false) { //there is data
+                    Timber.d("Single select: data exists: %s", data.size)
                     val position = data[0]
                     view.setSelection(position)
+                }else{
+                    Timber.d("Data does not exist, selecting 0")
+                    view.setSelection(0)
                 }
             }
             is RecyclerView -> {
-                if (data?.isEmpty() == false && view.adapter is BaseSelectAdapter<*, *>) {
+                Timber.d("RV initialization")
+                if (view.adapter is BaseSelectAdapter<*, *>) {
                     ((view.adapter) as BaseSelectAdapter<*, *>).initSelectedItems(data)
                 } else {
                     Timber.d("Unknown adapter %s", view.adapter)

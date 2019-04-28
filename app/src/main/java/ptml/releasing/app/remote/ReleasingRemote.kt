@@ -25,16 +25,16 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
     override suspend fun downloadDamagesAsync(imei: String) = damageService.downloadDamagesAsync(imei)
 
     override suspend fun setConfigurationDeviceAsync(
-            cargoTypeId: Int,
-            operationStepId: Int,
-            terminal: Int,
+            cargoTypeId: Int?,
+            operationStepId: Int?,
+            terminal: Int?,
             imei: String
     ) = adminConfigService.setConfigurationDeviceAsync(operationStepId, imei)
 
 
-    override suspend fun findCargo(cargoTypeId: Int,
-                                   operationStepId: Int,
-                                   terminal: Int,
+    override suspend fun findCargo(cargoTypeId: Int?,
+                                   operationStepId: Int?,
+                                   terminal: Int?,
                                    imei: String,
                                    cargoNumber:String
     ) = findCargoService.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)

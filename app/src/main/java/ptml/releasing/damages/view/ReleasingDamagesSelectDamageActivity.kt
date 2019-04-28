@@ -62,7 +62,7 @@ class ReleasingDamagesSelectDamageActivity :
         }
 
         override fun getItemId(position: Int): Long {
-            return damages[position].id.toLong()
+            return damages[position].id?.toLong() ?: 0
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -83,7 +83,7 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
                     AssignedDamage(
-                        d.id,
+                        d.id ?: 0,
                         d.description,
                         "",
                         1,
@@ -100,7 +100,7 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
                     AssignedDamage(
-                        d.id,
+                        d.id ?:0,
                         d.description,
                         "",
                         1,

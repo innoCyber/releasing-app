@@ -13,15 +13,15 @@ interface Remote {
     suspend fun setAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse>
     suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse>
     suspend fun setConfigurationDeviceAsync(
-        cargoTypeId: Int,
-        operationStepId: Int,
-        terminal: Int,
+        cargoTypeId: Int?,
+        operationStepId: Int?,
+        terminal: Int?,
         imei: String
     ): Deferred<ConfigureDeviceResponse>
     suspend fun findCargo(
-            cargoTypeId: Int,
-            operationStepId: Int,
-            terminal: Int,
+            cargoTypeId: Int?,
+            operationStepId: Int?,
+            terminal: Int?,
             imei: String,
             cargoNumber:String):Deferred<FindCargoResponse>
 }
