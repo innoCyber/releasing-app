@@ -186,4 +186,5 @@
     <string name="select_at_least_one_item">Please select at least one item</string>
     <string name="field_required">This field is required</string>
     <string name="select_one_item">Please select an item</string>
+    <string name="errors_present_in_form">Some error(s) are present in the form</string>
 </resources>

@@ -6,6 +6,8 @@ import timber.log.Timber
 class FormValidator constructor(var formBuilder: FormBuilder?) {
 
     private var validForm = true
+    var listener: ValidatorListener? = null
+
 
     fun validate(): Boolean {
         var isValid: Boolean
@@ -16,6 +18,10 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
                 isValid = validateBasedOnType(form) ?: false
                 validationResult(isValid)
             }
+        }
+
+        if(!validForm){
+            listener?.onError()
         }
 
         return validForm
@@ -89,8 +95,7 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
     }
 
 
-
-
-
-
+    interface ValidatorListener{
+        fun onError()
+    }
 }

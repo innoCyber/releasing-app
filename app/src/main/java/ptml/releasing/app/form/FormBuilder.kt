@@ -179,13 +179,11 @@ class FormBuilder constructor(val context: Context) {
                     Timber.e("Could not find form type for %s", data?.type)
                     return null
                 }
-
             }
         } catch (e: Exception) { //return an error view
             Timber.e(e, "Could not create form for %s", data?.type)
             return null
         }
-
     }
 
     /**
@@ -199,7 +197,6 @@ class FormBuilder constructor(val context: Context) {
         textView.text = data?.title
         applyTopParams(textView)
         return textView
-
     }
 
 
@@ -251,7 +248,6 @@ class FormBuilder constructor(val context: Context) {
     private fun createMultilineTextBox(data: ConfigureDeviceData?): TextInputLayout {
         val inputLayout = inflateView(context, R.layout.form_textbox_multiline) as TextInputLayout
         inputLayout.tag = data?.id
-
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
         editText.hint = data?.title
         editText.setValidation(data?.dataValidation)
@@ -299,7 +295,6 @@ class FormBuilder constructor(val context: Context) {
         view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
         applyTopParams(view)
         return view
-
     }
 
 
@@ -310,13 +305,11 @@ class FormBuilder constructor(val context: Context) {
             val numberView = view.findViewById<TextView>(R.id.tv_number)
             val text = numberView.text.toString()
             Timber.d("Error text view for button text: %s", text)
-
             val number = try {
                 text.toInt()
             } catch (e: Throwable) {
                 0
             }
-
             Timber.d("Error text view for button text parsed as number: %s", number)
             if (number <= 0) { //if it is required, when no items are selected, selected item will be zero or less
                 val message = context.getString(getButtonValidationErrorMessage(data?.type))
@@ -328,9 +321,7 @@ class FormBuilder constructor(val context: Context) {
             }
             return true // valid when the selected item is greater than 0,
         }
-
         Timber.e("Printer type")
-
         return true
     }
 
@@ -349,7 +340,6 @@ class FormBuilder constructor(val context: Context) {
             //add the items
             val adapter = FormSelectAdapter(context, data?.options)
             spinner.adapter = adapter
-
             applyParams(view)
             return view
         } else {
@@ -365,7 +355,6 @@ class FormBuilder constructor(val context: Context) {
                     changeBgColor(recyclerView, false)
                 }
             }
-
             view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(context, 2)
@@ -380,7 +369,6 @@ class FormBuilder constructor(val context: Context) {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             return true
-
         } else {
             val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
             val adapter = recyclerView.adapter as SingleSelectAdapter<*>
@@ -393,7 +381,6 @@ class FormBuilder constructor(val context: Context) {
                 changeBgColor(recyclerView, true)
                 return false
             }
-
             return true
         }
     }
@@ -451,7 +438,6 @@ class FormBuilder constructor(val context: Context) {
             if (items <= 0) {
                 multiSelectError(view)
                 changeBgDrawable(spinner, true)
-
                 return false
             }
 
@@ -465,10 +451,7 @@ class FormBuilder constructor(val context: Context) {
                 return false
             }
         }
-
-
         return true
-
     }
 
     private fun multiSelectError(view: View) {
@@ -519,7 +502,6 @@ class FormBuilder constructor(val context: Context) {
         val textView = view.findViewById<TextView>(R.id.tv_config_message)
         textView.text = context.getString(R.string.form_error_msg)
         return view
-
     }
 
 
@@ -593,8 +575,6 @@ class FormBuilder constructor(val context: Context) {
             }
         }
     }
-
-
 }
 
 

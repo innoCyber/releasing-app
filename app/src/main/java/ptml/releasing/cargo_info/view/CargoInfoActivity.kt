@@ -45,6 +45,13 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     var damageView: View? = null
     var printerView: View? = null
 
+    var validatorListener = object :FormValidator.ValidatorListener{
+        override fun onError() {
+            val msg = getString(R.string.errors_present_in_form)
+            notifyUser(binding.root, msg)
+        }
+    }
+
     private val formListener = object : FormListener() {
         @Suppress("NON_EXHAUSTIVE_WHEN")
         override fun onClickFormButton(type: FormType, view: View) {
@@ -70,14 +77,14 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         }
 
         override fun onError(message: String) {
-            Timber.e("Form validation error occurred on %s", message)
-            notifyUser(binding.root, message)
-
+            Timber.e("Error: %s", message)
         }
+
 
         override fun onClickSave() {
             //create a new form validator
             val formValidator = FormValidator(formBuilder)
+            formValidator.listener = validatorListener
             if (formValidator.validate()) {
                 Timber.d("Validated")
                 notifyUser("Validated")
