@@ -309,11 +309,15 @@
 
 
     <style name="Form.Error">
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
         <item name="android:textColor">@color/colorRed</item>
-        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:paddingTop">@dimen/constraint_default_margin_4dp</item>
+        <item name="android:paddingBottom">@dimen/constraint_default_margin_4dp</item>
+        <item name="android:paddingStart">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingLeft">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingRight">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingEnd">@dimen/constraint_default_margin_12dp</item>
     </style>
 
 
@@ -337,7 +341,7 @@
     <style name="Form.MultiSelect" parent="Form.SingleSelect" />
 
     <style name="Form.Check">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
     <style name="Form.Button">
@@ -362,6 +366,8 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:text">@string/reset</item>
     </style>
+
+
 
     <style name="DefaultChipSuggestionTextView">
         <item name="chipHorizontalSpacing">6dp</item>

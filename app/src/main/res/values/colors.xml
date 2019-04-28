@@ -12,6 +12,7 @@
     <color name="colorRed">#E53935</color>
     <color name="colorGray">#777777</color>
     <color name="colorGrayAlpha">#99777777</color>
+    <color name="colorGrayHint">#9e9e9e</color>
     <color name="colorBlueGray">#cdd4da</color>
     <color name="colorHomeTop">#2A2A2A</color>
     <color name="colorTransparent">#0000</color>

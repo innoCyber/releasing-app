@@ -7,6 +7,7 @@ import ptml.releasing.databinding.ItemCheckboxBinding
 
 class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>() where T : SelectModel {
     var listener: SingleSelectListener<T>? = null
+    var selectedItem:T? = null
 
     fun setItems(items:List<T>?){
         this.items.clear()
@@ -49,6 +50,7 @@ class SingleSelectViewHolder<T>(
         binding.checkBox.text = item?.getText()
         binding.checkBox.isChecked = item?.checked?: false
         binding.root.setOnClickListener {
+            adapter.selectedItem  = item
             deselectOthers(adapterPosition)
             listener?.onItemSelected(item)
         }

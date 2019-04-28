@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -16,12 +18,14 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.form.FormBuilder
 import ptml.releasing.app.form.FormListener
 import ptml.releasing.app.form.FormType
+import ptml.releasing.app.form.FormValidator
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceData
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
@@ -41,11 +45,12 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     var damageView: View? = null
     var printerView: View? = null
 
-    val formListener = object : FormListener() {
+    private val formListener = object : FormListener() {
         @Suppress("NON_EXHAUSTIVE_WHEN")
         override fun onClickFormButton(type: FormType, view: View) {
             when (type) {
                 FormType.PRINTER -> {
+
                     printerView = view
                     viewModel.getSettings()
                 }
@@ -57,12 +62,33 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                 FormType.DAMAGES -> {
                     damageView = view
                     startActivityForResult(
-                            Intent(this@CargoInfoActivity, DamagesActivity::class.java),
-                            DAMAGES_RC
+                        Intent(this@CargoInfoActivity, DamagesActivity::class.java),
+                        DAMAGES_RC
                     )
                 }
             }
         }
+
+        override fun onError(message: String) {
+            Timber.e("Form validation error occurred on %s", message)
+            notifyUser(binding.root, message)
+
+        }
+
+        override fun onClickSave() {
+            //create a new form validator
+            val formValidator = FormValidator(formBuilder)
+            if (formValidator.validate()) {
+                Timber.d("Validated")
+                notifyUser("Validated")
+            }
+        }
+
+        override fun onClickReset() {
+            formBuilder?.reset()
+        }
+
+
     }
 
     private fun handlePrint(settings: Settings) {
@@ -108,11 +134,11 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                     printerView?.isEnabled = true
 
                     AlertDialog.Builder(this@CargoInfoActivity)
-                            .setTitle(R.string.general_msg_print_error)
-                            .setMessage("Error printing label: " + e.localizedMessage)
-                            .setPositiveButton(android.R.string.ok, { dialog, which -> })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show()
+                        .setTitle(R.string.general_msg_print_error)
+                        .setMessage("Error printing label: " + e.localizedMessage)
+                        .setPositiveButton(android.R.string.ok, { dialog, which -> })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show()
 
                     e.printStackTrace()
                 }
@@ -157,6 +183,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     override fun onResume() {
         super.onResume()
         damageView?.findViewById<TextView>(R.id.tv_number)?.text = DamagesActivity.currentDamages.size.toString()
+        val errorView : View? = if(damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+        errorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
     }
 
 
@@ -165,15 +193,15 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
-        /*     if (BuildConfig.DEBUG) {
-                 findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
-                 Timber.w("From assets: %s", findCargoResponse)
-             }*/
+      /*  if (BuildConfig.DEBUG) {
+            findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+            Timber.w("From assets: %s", findCargoResponse)
+        }*/
         formBuilder = FormBuilder(this)
         val formView = formBuilder
-                ?.setListener(formListener)
-                ?.init(findCargoResponse)
-                ?.build(it?.data)
+            ?.setListener(formListener)
+            ?.init(findCargoResponse)
+            ?.build(it?.data)
         binding.formContainer.addView(formView)
         binding.formBottom.addView(formBuilder?.getBottomButtons())
     }
@@ -186,17 +214,17 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            themedContext,
-                            R.drawable.ic_car
-                    )
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_car
+                )
             )
         } else {
             binding.includeHome.imgCargoType.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            themedContext,
-                            R.drawable.ic_container
-                    )
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_container
+                )
             )
         }
 

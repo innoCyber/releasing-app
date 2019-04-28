@@ -179,4 +179,11 @@
     <string name="continue_uploading_text">Continue Uploading Cargo</string>
     <string name="no_operator_msg">Please scan the operator\'s ID badge</string>
     <string name="form_error_msg">An error occurred while trying to load, please contact the administrator</string>
+    <string name="required_field_msg">Please enter a value, the field is required</string>
+    <string name="form_select_image_msg">Please select at least one image</string>
+    <string name="form_printer_error_msg">Printer settings is required</string>
+    <string name="form_select_damage_msg">Please select at least one damage</string>
+    <string name="select_at_least_one_item">Please select at least one item</string>
+    <string name="field_required">This field is required</string>
+    <string name="select_one_item">Please select an item</string>
 </resources>

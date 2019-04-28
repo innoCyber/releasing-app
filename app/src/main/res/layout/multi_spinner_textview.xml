@@ -5,6 +5,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@null"
+          android:textColor="@color/colorGrayHint"
           android:gravity="center_vertical"
           android:layout_marginStart="@dimen/constraint_default_margin_8dp"
           android:layout_marginEnd="@dimen/constraint_default_margin_8dp"

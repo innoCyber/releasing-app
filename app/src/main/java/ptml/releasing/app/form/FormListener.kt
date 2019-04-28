@@ -5,9 +5,15 @@ import ptml.releasing.configuration.models.ConfigureDeviceData
 
 @Suppress("UNUSED_PARAMETER")
 abstract class FormListener {
-    fun onFormAdded(data: ConfigureDeviceData?) {
+    open fun onFormAdded(data: ConfigureDeviceData?) {
 
     }
 
+    open fun onError(message:String) {
+
+    }
+
+    abstract fun onClickSave()
+    abstract fun onClickReset()
     abstract fun onClickFormButton(type: FormType, view: View)
 }

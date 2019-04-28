@@ -12,10 +12,9 @@
         android:padding="@dimen/constraint_default_margin_8dp"
         android:ellipsize="marquee"
         android:gravity="start"
-
         android:text="@string/app_name"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/colorGray"
+        android:textColor="@color/colorGrayHint"
         app:drawableEndCompat="@drawable/ic_arrow_drop_down" />
 
 

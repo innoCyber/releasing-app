@@ -34,7 +34,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
     var defaultHintText : String? = "Select Items"
     private var spinnerTitle: String? = ""
     private var listener: MultiSpinnerListener? = null
-    private var selectedItems = LinkedHashMap<String, Int>()
+    var selectedItems = LinkedHashMap<String, Int>()
     private val chipsListener = object : ChipListener {
         override fun onItemClose(position: Int, item: String, itemsRemaining: Int) {
             Timber.d("Removed %s", item)
