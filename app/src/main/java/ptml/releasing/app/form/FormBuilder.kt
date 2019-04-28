@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout
 import ptml.releasing.R
 import ptml.releasing.app.form.FormUtils.applyBottomParams
 import ptml.releasing.app.form.FormUtils.applyParams
+import ptml.releasing.app.form.FormUtils.applyLabelParams
 import ptml.releasing.app.form.FormUtils.applyTopParams
 import ptml.releasing.app.form.FormUtils.changeBgColor
 import ptml.releasing.app.form.FormUtils.changeBgDrawable
@@ -21,7 +22,6 @@ import ptml.releasing.app.form.FormUtils.getImageResourceByType
 import ptml.releasing.app.form.FormUtils.inflateView
 import ptml.releasing.app.form.adapter.*
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.SizeUtils
 import ptml.releasing.app.utils.setValidation
 import ptml.releasing.app.views.MultiSpinner
 import ptml.releasing.app.views.MultiSpinnerListener
@@ -110,28 +110,17 @@ class FormBuilder constructor(val context: Context) {
         val positionComparator = Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
         Collections.sort(data ?: mutableListOf(), positionComparator)
 
-
-        val params = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-
-
         //iterate over the list to get each config
         for (i in 0 until (data?.size ?: mutableListOf<ConfigureDeviceData>().size)) {
             //create and add the view gotten based on the config
             val configureDeviceData = data?.get(i)
 
-            val formView = createViewFromConfig(configureDeviceData)
+            val formView = createViewFromConfig(configureDeviceData, i)
             listener?.onFormAdded(configureDeviceData)
             if (formView != null) {
-                if (i == 0) {
-                    params.setMargins(0, SizeUtils.dp2px(context, 32f), 0, 0)
-                } else {
-                    params.setMargins(0, 0, 0, 0)
-                }
                 rootLayout.addView(formView)
-
+            } else {
+                Timber.e("Form view is null")
             }
         }
 
@@ -145,53 +134,52 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    private fun createViewFromConfig(data: ConfigureDeviceData?): View? {
+    private fun createViewFromConfig(data: ConfigureDeviceData?, i: Int): View? {
         try {
-            val formType = FormType.fromType(data?.type)
-            when (formType) {
+            when (FormType.fromType(data?.type)) {
                 FormType.LABEL -> {
 
-                    return createLabel(data)
+                    return createLabel(data, i)
                 }
 
                 FormType.TEXTBOX -> {
                     initializeDefaultValue(data)
-                    return createTextBox(data)
+                    return createTextBox(data, i)
                 }
 
                 FormType.MULTI_LINE_TEXTBOX -> {
                     initializeDefaultValue(data)
-                    return createMultilineTextBox(data)
+                    return createMultilineTextBox(data, i)
                 }
                 FormType.IMAGES -> {
-                    //todo: HAndle this
-                    return createButton(data)
+                    //todo: Handle this
+                    return createButton(data, i)
                 }
 
                 FormType.PRINTER -> {
-                    return createButton(data)
+                    return createButton(data, i)
                 }
 
                 FormType.DAMAGES -> {
-                    //todo: HAndle this
-                    return createButton(data)
+                    //todo: Handle this
+                    return createButton(data, i)
                 }
 
 
                 FormType.SINGLE_SELECT -> {
                     initializeDefaultOption(data)
-                    return createSingleSelect(data)
+                    return createSingleSelect(data, i)
                 }
 
 
                 FormType.MULTI_SELECT -> {
                     initializeDefaultOption(data)
-                    return createMultiSelectSelect(data)
+                    return createMultiSelectSelect(data, i)
                 }
 
                 FormType.CHECK_BOX -> {
                     //todo: HAndle this
-                    return createCheckBox(data)
+                    return createCheckBox(data, i)
                 }
 
                 else -> {
@@ -206,17 +194,20 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-
     /**
      * Creates a TextView that functions as a label
      *  @param data the config
      * @return TextView
      * */
-    private fun createLabel(data: ConfigureDeviceData?): TextView {
+    private fun createLabel(data: ConfigureDeviceData?, i: Int): TextView {
         val textView = inflateView(context, R.layout.form_label) as TextView
         textView.tag = data?.id
         textView.text = data?.title
-        applyTopParams(textView)
+        if (i == 0) {
+            applyTopParams(textView)
+        } else {
+            applyLabelParams(textView)
+        }
         return textView
     }
 
@@ -226,7 +217,7 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return EditText
      * */
-    private fun createTextBox(data: ConfigureDeviceData?): TextInputLayout {
+    private fun createTextBox(data: ConfigureDeviceData?, i: Int): TextInputLayout {
         val inputLayout = inflateView(context, R.layout.form_textbox) as TextInputLayout
         inputLayout.tag = data?.id
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
@@ -245,7 +236,11 @@ class FormBuilder constructor(val context: Context) {
                 inputLayout.error = ""
             }
         })
-        applyParams(inputLayout)
+        if (i == 0) {
+            applyTopParams(inputLayout)
+        } else {
+            applyParams(inputLayout)
+        }
         return inputLayout
     }
 
@@ -266,7 +261,7 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return EditText
      * */
-    private fun createMultilineTextBox(data: ConfigureDeviceData?): TextInputLayout {
+    private fun createMultilineTextBox(data: ConfigureDeviceData?, i: Int): TextInputLayout {
         val inputLayout = inflateView(context, R.layout.form_textbox_multiline) as TextInputLayout
         inputLayout.tag = data?.id
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
@@ -285,7 +280,12 @@ class FormBuilder constructor(val context: Context) {
                 inputLayout.error = ""
             }
         })
-        applyParams(inputLayout)
+
+        if (i == 0) {
+            applyTopParams(inputLayout)
+        } else {
+            applyParams(inputLayout)
+        }
         return inputLayout
 
     }
@@ -300,7 +300,7 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return the button view
      * */
-    private fun createButton(data: ConfigureDeviceData?): View {
+    private fun createButton(data: ConfigureDeviceData?, i: Int): View {
         val view = inflateView(context, R.layout.button_layout)
         val rootView = view.findViewById<View>(R.id.button_root);
         val titleView = view.findViewById<TextView>(R.id.tv_title)
@@ -314,7 +314,11 @@ class FormBuilder constructor(val context: Context) {
             listener?.onClickFormButton(FormType.fromType(data?.type), it)
         }
         view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
-        applyTopParams(view)
+        if (i == 0) {
+            applyTopParams(view)
+        } else {
+            applyParams(view)
+        }
         return view
     }
 
@@ -352,7 +356,7 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return Spinner
      * */
-    private fun createSingleSelect(data: ConfigureDeviceData?): View {
+    private fun createSingleSelect(data: ConfigureDeviceData?, i: Int): View {
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val view = inflateView(context, R.layout.form_single_select)
             view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
@@ -361,7 +365,11 @@ class FormBuilder constructor(val context: Context) {
             //add the items
             val adapter = FormSelectAdapter(context, data?.options)
             spinner.adapter = adapter
-            applyParams(view)
+            if (i == 0) {
+                applyTopParams(view)
+            } else {
+                applyParams(view)
+            }
             return view
         } else {
             val view = inflateView(context, R.layout.form_rv)
@@ -380,7 +388,11 @@ class FormBuilder constructor(val context: Context) {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(context, 2)
             view.tag = data?.id
-            applyParams(view)
+            if (i == 0) {
+                applyTopParams(view)
+            } else {
+                applyParams(view)
+            }
             return view
         }
 
@@ -413,7 +425,7 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return Spinner
      * */
-    private fun createMultiSelectSelect(data: ConfigureDeviceData?): View {
+    private fun createMultiSelectSelect(data: ConfigureDeviceData?, i: Int): View {
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val view = inflateView(context, R.layout.form_multi_select)
             val textView = view.findViewById<TextView>(R.id.tv_error)
@@ -428,7 +440,11 @@ class FormBuilder constructor(val context: Context) {
                     changeBgDrawable(spinner, false)
                 }
             })
-            applyParams(view)
+            if (i == 0) {
+                applyTopParams(view)
+            } else {
+                applyParams(view)
+            }
             return view
         } else {
             val view = inflateView(context, R.layout.form_rv)
@@ -444,7 +460,11 @@ class FormBuilder constructor(val context: Context) {
             adapter.setItems(data?.options)
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(context, 2)
-            applyParams(view)
+            if (i == 0) {
+                applyTopParams(view)
+            } else {
+                applyParams(view)
+            }
             view.tag = data?.id
             return view
 
@@ -483,7 +503,7 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    private fun createCheckBox(data: ConfigureDeviceData?): View {
+    private fun createCheckBox(data: ConfigureDeviceData?, i: Int): View {
         val view = inflateView(context, R.layout.form_check_box)
         val textView = view.findViewById<TextView>(R.id.tv_error)
         textView.visibility = View.INVISIBLE
@@ -494,7 +514,11 @@ class FormBuilder constructor(val context: Context) {
             changeBgColor(buttonView, false)
             textView.text = ""
         }
-        applyParams(view)
+        if (i == 0) {
+            applyTopParams(view)
+        } else {
+            applyParams(view)
+        }
         return view
     }
 
@@ -602,7 +626,7 @@ class FormBuilder constructor(val context: Context) {
                     Timber.d("Single select: data exists: %s", data.size)
                     val position = data[0]
                     view.setSelection(position)
-                }else{
+                } else {
                     Timber.d("Data does not exist, selecting 0")
                     view.setSelection(0)
                 }

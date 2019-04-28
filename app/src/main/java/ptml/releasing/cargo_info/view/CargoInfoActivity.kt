@@ -95,6 +95,10 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         override fun onClickReset() {
             showResetConfirmDialog()
         }
+
+        override fun onEndLoad() {
+
+        }
     }
 
     private fun handlePrint(settings: Settings) {
@@ -194,8 +198,6 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
 
     private fun createForm(it: ConfigureDeviceResponse?) {
-
-
         var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*  if (BuildConfig.DEBUG) {
@@ -245,6 +247,14 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                 listener = object : InfoDialog.InfoListener {
                     override fun onConfirm() {
                         formBuilder?.reset()
+
+                        //reset the errors for the buttons
+                        val damageErrorView: View? = if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+                        damageErrorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+
+                        val printerErrorView: View? = if (printerView != null) (printerView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+                        printerErrorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+
                     }
                 })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)

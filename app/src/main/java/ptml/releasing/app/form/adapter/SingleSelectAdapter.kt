@@ -43,6 +43,7 @@ class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>()
             }
         }
 
+        listener?.onItemSelected(selectedItem)
         notifyDataSetChanged()
     }
 

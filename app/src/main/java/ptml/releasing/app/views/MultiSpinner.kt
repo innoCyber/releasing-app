@@ -157,6 +157,8 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
                 selected[i] = false
             }
         }
+
+        listener?.onItemsSelected(selected)
         onCancel(null)
     }
 

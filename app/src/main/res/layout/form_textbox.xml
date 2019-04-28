@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/constraint_default_margin_8dp"
     app:errorEnabled="true"
     app:errorTextAppearance="@style/TextLimitError"
     app:hintEnabled="false">
