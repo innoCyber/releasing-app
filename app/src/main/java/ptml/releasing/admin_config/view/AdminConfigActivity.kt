@@ -10,12 +10,9 @@ import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.configuration.view.ConfigActivity
-import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
-import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
@@ -28,7 +25,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         super.onCreate(savedInstanceState)
         viewModel.isConfigured.observe(this, Observer {
             binding.tvConfigMessageContainer.visibility =
-                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+                    if (it) View.GONE else View.VISIBLE //hide or show the not configured message
         })
 
         viewModel.getSavedConfig()
@@ -50,6 +47,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             startActivityForResult(intent, RC)
         })
 
+        viewModel.openSearch.observe(this, Observer {
+            onBackPressed()
+        })
+
 
         showUpEnabled(true)
 
@@ -69,12 +70,15 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openBarCodeScanner()
         }
 
+        binding.includeAdminConfig.btnSearch.setOnClickListener {
+            viewModel.openSearch()
+        }
+
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC && resultCode == Activity.RESULT_OK) {
-            startNewActivity(SearchActivity::class.java)
             finish()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -98,14 +102,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
              })*/
 
         val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.config_error),
-            message = getString(R.string.config_error_message),
-            buttonText = getString(android.R.string.ok),
-            listener = object : InfoDialog.InfoListener {
-                override fun onConfirm() {
+                title = getString(R.string.config_error),
+                message = getString(R.string.config_error_message),
+                buttonText = getString(android.R.string.ok),
+                listener = object : InfoDialog.InfoListener {
+                    override fun onConfirm() {
 //                    viewModel.openConfiguration()
-                }
-            })
+                    }
+                })
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }

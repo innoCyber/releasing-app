@@ -44,13 +44,22 @@
             app:layout_constraintTop_toBottomOf="@id/btn_configuration" />
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_search"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/cargo_search"
+            app:drawableStartCompat="@drawable/ic_search"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_operator"/>
+
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
             android:id="@+id/btn_download"
             style="@style/ButtonStyle.HomeBottom"
             android:text="@string/download_damages"
             app:drawableStartCompat="@drawable/ic_download"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
-            app:layout_constraintTop_toBottomOf="@id/btn_scan_operator" />
+            app:layout_constraintTop_toBottomOf="@id/btn_search" />
 
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton

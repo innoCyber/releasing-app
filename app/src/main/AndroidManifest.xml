@@ -50,21 +50,17 @@
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"
                 android:label="@string/configuration"/>
 
-        <activity
-                android:name=".home.view.HomeActivity"
-                android:label="@string/home"
-                android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
                 android:name=".download_damages.view.DamageActivity"
-                android:parentActivityName=".home.view.HomeActivity"
+                android:parentActivityName=".admin_config.view.AdminConfigActivity"
                 android:label="@string/damages"/>
         <activity android:name=".cargo_search.view.SearchActivity"
-                  android:parentActivityName=".home.view.HomeActivity"
-                  android:label="@string/cargo_search"/>
+            android:theme="@style/AppTheme.NoActionBar"
+                  android:label="@string/home"/>
 
         <activity android:name=".admin_config.view.AdminConfigActivity"
-                  android:parentActivityName=".home.view.HomeActivity"
+                  android:parentActivityName=".cargo_search.view.SearchActivity"
                   android:label="@string/admin_configuration"/>
         <activity android:name=".cargo_info.view.CargoInfoActivity"
             android:parentActivityName=".cargo_search.view.SearchActivity"

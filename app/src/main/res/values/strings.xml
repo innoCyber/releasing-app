@@ -191,4 +191,5 @@
     <string name="proceed_to_reset_msg">Are you sure you want to proceed to reset the form?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="admin_settings">Admin Settings</string>
 </resources>

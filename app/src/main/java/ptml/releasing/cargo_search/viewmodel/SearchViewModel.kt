@@ -19,7 +19,7 @@ class SearchViewModel @Inject constructor(
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(repository, appCoroutineDispatchers) {
 
-    private val _goBack = MutableLiveData<Unit>()
+    private val _openAdmin = MutableLiveData<Unit>()
     private val _verify = MutableLiveData<Unit>()
     private val _scan = MutableLiveData<Unit>()
     private val _noOperator = MutableLiveData<Unit>()
@@ -31,7 +31,7 @@ class SearchViewModel @Inject constructor(
 
 
     val networkState: LiveData<NetworkState> = _networkState
-    val goBack: LiveData<Unit> = _goBack
+    val openAdMin: LiveData<Unit> = _openAdmin
     val scan: LiveData<Unit> = _scan
     val noOperator: LiveData<Unit> = _noOperator
     val verify: LiveData<Unit> = _verify
@@ -40,8 +40,8 @@ class SearchViewModel @Inject constructor(
     val errorMessage: LiveData<String> = _errorMessage
 
 
-    fun goBack() {
-        _goBack.postValue(Unit)
+    fun openAdmin() {
+        _openAdmin.postValue(Unit)
     }
 
     fun verify() {
