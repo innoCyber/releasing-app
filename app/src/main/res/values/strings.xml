@@ -192,4 +192,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="admin_settings">Admin Settings</string>
+    <string name="badge_id_hint">Badge ID</string>
+
+    <string name="server_url">Server url</string>
+    <string name="enter_valid_url">Please enter a valid URL</string>
 </resources>

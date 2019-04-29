@@ -31,12 +31,12 @@
             app:layout_constraintGuide_percent="0.95" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            android:id="@+id/scrollView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/form_bottom">
+            app:layout_constraintBottom_toTopOf="@id/form_bottom"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -99,6 +99,34 @@
                     app:layout_constraintTop_toBottomOf="@id/include_home" />
 
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_badge"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                    app:errorEnabled="true"
+                    app:boxStrokeColor="@color/colorGrayHint"
+                    app:hintTextColor="@color/colorGrayHint"
+                    app:boxStrokeWidth="1dp"
+                    app:errorTextAppearance="@style/TextLimitError"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                    app:layout_constraintHorizontal_bias="0.2"
+                    app:layout_constraintStart_toStartOf="@id/guideline_l"
+                    app:layout_constraintTop_toBottomOf="@id/tv_number">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_badge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/badge_id_hint"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        tools:text="0034933" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
@@ -107,7 +135,7 @@
                     android:background="@color/colorBlueGray"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/tv_number" />
+                    app:layout_constraintTop_toBottomOf="@id/til_badge" />
 
 
                 <FrameLayout
@@ -129,12 +157,12 @@
             android:id="@+id/form_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout_height="44dp"
             android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_rr"
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
-            app:layout_constraintVertical_bias="0" />
+            app:layout_constraintVertical_bias="0"
+            tools:layout_height="44dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
