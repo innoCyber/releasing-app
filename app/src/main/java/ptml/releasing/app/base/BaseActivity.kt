@@ -59,7 +59,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
 
-    companion object{
+    companion object {
         const val RC_BARCODE = 112
     }
 
@@ -67,7 +67,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
-                .get(getViewModelClass())
+            .get(getViewModelClass())
 
         initBeforeView()
 
@@ -93,16 +93,16 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
 
         viewModel.operatorName.observe(this, Observer {
-            when(this){
-                is AdminConfigActivity ->{
+            when (this) {
+                is AdminConfigActivity -> {
                     initOperator(null)
                 }
 
-                is LoginActivity ->{
+                is LoginActivity -> {
                     initOperator(null)
                 }
 
-                else ->{
+                else -> {
                     initOperator(it)
                 }
             }
@@ -244,8 +244,6 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
 
-
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupConnectionListener() {
         Timber.d("Setting up connectivity listener")
@@ -272,7 +270,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 //        observeNetworkChanges(networkSubject)
     }
 
-    fun startNewActivity(name: Class<*>, finish: Boolean = false, data:Bundle? = null){
+    fun startNewActivity(name: Class<*>, finish: Boolean = false, data: Bundle? = null) {
         val intent = Intent(this, name)
         intent.putExtra(Constants.EXTRAS, data)
         startActivity(intent)
@@ -285,15 +283,15 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     private fun showSnackBarError() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(R.string.no_internet),
-                Snackbar.LENGTH_INDEFINITE
+            findViewById(android.R.id.content),
+            getString(R.string.no_internet),
+            Snackbar.LENGTH_INDEFINITE
         )
         val param = snackBar?.view?.layoutParams as FrameLayout.LayoutParams
         val snackBarLayout = snackBar?.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorRed))
         snackBarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+            .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         param.gravity = Gravity.TOP
 
 
@@ -309,15 +307,15 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     private fun showSnackBar() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(R.string.internet_restored),
-                Snackbar.LENGTH_SHORT
+            findViewById(android.R.id.content),
+            getString(R.string.internet_restored),
+            Snackbar.LENGTH_SHORT
         )
         val param = snackBar?.view?.layoutParams as FrameLayout.LayoutParams
         val snackBarLayout = snackBar?.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
         snackBarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+            .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         param.gravity = Gravity.TOP
         snackBar?.view?.layoutParams = param
         if (!firstTime) {
@@ -339,7 +337,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         val snackBarLayout = snackBar.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorAccent))
         (snackBarLayout.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView)
-                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+            .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         /*snackBar.getView().setLayoutParams(param);*/
         snackBar.show()
     }
@@ -348,7 +346,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     @Suppress("DEPRECATION")
     fun isOffline(): Boolean {
         val manager = this
-                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         return !(manager.activeNetworkInfo != null && manager.activeNetworkInfo.isConnectedOrConnecting)
     }
@@ -366,8 +364,8 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     fun hideLoading(view: View) {
 
         val slide = AnimationUtils.loadAnimation(
-                this,
-                R.anim.up_down
+            this,
+            R.anim.up_down
         )
         view.startAnimation(slide)
         view.visibility = View.GONE
@@ -378,10 +376,11 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
     fun showDialog(title: String?, message: String?) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = title,
             message = message,
-            buttonText = getString(android.R.string.ok))
+            buttonText = getString(android.R.string.ok)
+        )
         Timber.e("msg: %s", message)
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
@@ -399,8 +398,8 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected abstract fun getViewModelClass(): Class<T>
 
 
-    protected fun initOperator(operatorName: String?){
-        if(operatorName == null){
+    protected fun initOperator(operatorName: String?) {
+        if (operatorName == null) {
             Timber.d("Operator name is null")
             findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
             return

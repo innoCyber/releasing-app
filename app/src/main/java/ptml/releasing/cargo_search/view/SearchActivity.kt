@@ -312,6 +312,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                         //TODO handle nav
                         showImeiDialog()
                     }
+
+                    R.id.nav_scan_operator ->{
+                        viewModel.openBarCodeScanner()
+                    }
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 true
