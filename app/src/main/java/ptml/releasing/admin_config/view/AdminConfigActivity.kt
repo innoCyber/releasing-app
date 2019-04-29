@@ -66,9 +66,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openPrinterSetting()
         }
 
-        binding.includeAdminConfig.btnScanOperator.setOnClickListener {
-            viewModel.openBarCodeScanner()
-        }
+
 
         binding.includeAdminConfig.btnSearch.setOnClickListener {
             viewModel.openSearch()
