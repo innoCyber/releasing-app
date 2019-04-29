@@ -6,8 +6,15 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/til_server_url"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:theme="@style/InputLayoutStyle"
         android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+        android:paddingStart="@dimen/constraint_default_margin_8dp"
+        android:paddingEnd="@dimen/constraint_default_margin_8dp"
         android:layout_height="wrap_content"
+        app:boxStrokeColor="@color/colorGrayHint"
+        app:hintTextColor="@color/colorGrayHint"
+        app:boxStrokeWidth="1dp"
         app:errorEnabled="true"
         app:errorTextAppearance="@style/TextLimitError">
 
@@ -16,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/server_url"
+            android:inputType="textUri"
             android:maxLines="1"
             android:singleLine="true"
             tools:text="@tools:sample/full_names" />

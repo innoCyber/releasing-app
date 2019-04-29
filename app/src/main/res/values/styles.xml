@@ -373,4 +373,8 @@
         <item name="chipHeight">32dp</item>
         <item name="chipVerticalSpacing">4dp</item>
     </style>
+
+    <style name="InputLayoutStyle" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
 </resources>

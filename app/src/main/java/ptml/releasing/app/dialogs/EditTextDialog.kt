@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.utils.Validation
 import ptml.releasing.databinding.DialogEdittextBinding
@@ -35,9 +36,15 @@ class EditTextDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogEdittextBinding.inflate(LayoutInflater.from(context), null, false)
         val builder = AlertDialog.Builder(context!!)
+        builder.setTitle(R.string.change_server_url)
         builder.setView(binding.root)
-
-        binding.editServerUrl.setText(arguments?.getString(EXTRA_URL))
+                .setPositiveButton(getString(R.string.save), null)
+                .setNegativeButton(getString(R.string.cancel), null)
+        var serverUrl = arguments?.getString(EXTRA_URL)
+        if(TextUtils.isEmpty(serverUrl)){
+            serverUrl = BuildConfig.BASE_URL
+        }
+        binding.editServerUrl.setText(serverUrl)
 
         dialog = builder.create()
 
@@ -59,6 +66,7 @@ class EditTextDialog : DialogFragment() {
             return
         }
         listener?.onSave(url)
+        dialog?.dismiss()
     }
 
     override fun onStart() {
@@ -74,12 +82,8 @@ class EditTextDialog : DialogFragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!TextUtils.isEmpty(s)) {
-                    dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.isEnabled = true
-                } else {
-
-                    dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.isEnabled = true
-                }
+                binding.tilServerUrl.error =""
+                dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.isEnabled = !TextUtils.isEmpty(s)
             }
         })
     }

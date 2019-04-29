@@ -3,6 +3,7 @@ package ptml.releasing.app.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.AdminConfigResponse
@@ -23,6 +24,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DEVICE_CONFIG = "device_config"
         const val SETTINGS = "settings"
         const val OPERATOR_NAME = "operator_name"
+        const val SERVER_URL = "server_url"
     }
 
 
@@ -89,5 +91,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun saveOperatorName(name: String?) {
         sharedPreferences.edit().putString(OPERATOR_NAME, name).apply()
+    }
+
+    override fun saveServerUrl(url: String?) {
+        sharedPreferences.edit().putString(SERVER_URL, url).apply()
+    }
+
+    override fun getServerUrl(): String? {
+        return sharedPreferences.getString(SERVER_URL, BuildConfig.BASE_URL)
     }
 }

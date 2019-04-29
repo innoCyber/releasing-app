@@ -11,11 +11,12 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import javax.inject.Inject
 
 class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers) :
-    BaseViewModel(repository, appCoroutineDispatchers) {
+        BaseViewModel(repository, appCoroutineDispatchers) {
 
     private val _openConfig = MutableLiveData<Unit>()
     private val _openPrinterSettings = MutableLiveData<Unit>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
+    private val _serverUrl = MutableLiveData<String?>()
 
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
@@ -28,13 +29,14 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openPrinterSettings: LiveData<Unit> = _openPrinterSettings
     val openSearch: LiveData<Boolean> = _openSearch
+    val serverUrl:LiveData<String?> = _serverUrl
 
 
-    fun openConfig(){
+    fun openConfig() {
         _openConfig.postValue(Unit)
     }
 
-    fun openPrinterSetting(){
+    fun openPrinterSetting() {
         _openPrinterSettings.postValue(Unit)
     }
 
@@ -54,7 +56,7 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         }
     }
 
-    private fun navigateToFindCargoIfFirstTime(){
+    private fun navigateToFindCargoIfFirstTime() {
         if (first) {
             _firstTimeFindCargo.postValue(true)
             first = false
@@ -70,14 +72,27 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         }
     }
 
+    fun openServer(){
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val serverUrl = repository.getServerUrl()
+            withContext(appCoroutineDispatchers.main){
+                _serverUrl.postValue(serverUrl)
+            }
+        }
+    }
 
+    fun saveServerUrl(url:String?){
+        compositeJob  = CoroutineScope(appCoroutineDispatchers.db).launch {
+            repository.saveServerUrl(url)
+        }
+    }
 
 
     override fun handleDeviceConfigured(configured: Boolean) {
         super.handleDeviceConfigured(configured)
-        if(configured){
+        if (configured) {
             navigateToFindCargoIfFirstTime()
-        }else{
+        } else {
             navigateToLoginIfFirstTime()
         }
     }

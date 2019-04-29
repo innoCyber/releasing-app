@@ -57,5 +57,8 @@ interface Repository {
     fun saveOperatorName(name:String?)
     fun getOperatorName():String?
 
+    fun saveServerUrl(url:String?)
+    fun getServerUrl():String?
+
 
 }

@@ -9,6 +9,7 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
@@ -47,6 +48,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             startActivityForResult(intent, RC)
         })
 
+        viewModel.serverUrl.observe(this, Observer {
+            showServerUrlDialog(it)
+        })
+
         viewModel.openSearch.observe(this, Observer {
             onBackPressed()
         })
@@ -70,6 +75,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         binding.includeAdminConfig.btnSearch.setOnClickListener {
             viewModel.openSearch()
+        }
+
+        binding.includeAdminConfig.btnServer.setOnClickListener {
+            viewModel.openServer()
         }
 
 
@@ -110,6 +119,16 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                 })
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun showServerUrlDialog(url:String?){
+        val dialog = EditTextDialog.newInstance(url, object : EditTextDialog.EditTextDialogListener{
+            override fun onSave(url: String) {
+                viewModel.saveServerUrl(url)
+            }
+        })
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
     override fun getViewModelClass() = AdminConfigViewModel::class.java

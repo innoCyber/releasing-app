@@ -154,6 +154,10 @@ open class ReleasingRepository @Inject constructor(
 
     override fun saveOperatorName(name: String?) = local.saveOperatorName(name)
 
+    override fun getServerUrl(): String? = local.getServerUrl()
+
+    override fun saveServerUrl(url: String?)  = local.saveServerUrl(url)
+
 }
 
 

@@ -34,6 +34,8 @@
 
 
 
+
+
         <ptml.releasing.app.views.SupportVectorDrawablesButton
             android:id="@+id/btn_search"
             style="@style/ButtonStyle.HomeBottom"
@@ -58,10 +60,21 @@
             style="@style/ButtonStyle.HomeBottom"
             android:text="@string/printer_settings"
             app:drawableStartCompat="@drawable/ic_settings"
-            app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/btn_download" />
+
+
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_server"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/change_server_url"
+            app:drawableStartCompat="@drawable/ic_website"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_settings"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

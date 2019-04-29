@@ -196,4 +196,6 @@
 
     <string name="server_url">Server url</string>
     <string name="enter_valid_url">Please enter a valid URL</string>
+    <string name="change_server_url">Change Server URL</string>
+    <string name="cancel">Cancel</string>
 </resources>
