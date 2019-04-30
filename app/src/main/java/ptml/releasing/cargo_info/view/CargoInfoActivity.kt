@@ -165,7 +165,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
-
+        DamagesActivity.resetValues() //reset the static values
         val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
         binding.tvNumber.text = input
 

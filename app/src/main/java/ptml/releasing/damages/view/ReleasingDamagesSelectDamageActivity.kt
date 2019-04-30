@@ -36,6 +36,7 @@ import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
+import timber.log.Timber
 
 
 import javax.inject.Inject
@@ -85,6 +86,7 @@ class ReleasingDamagesSelectDamageActivity :
 
             btnHigh.setOnClickListener {
                 val d = damages[position]
+                Timber.d("Damage: %s", d)
                 DamagesActivity.currentDamages.add(
                     AssignedDamage(
                         d.id ?: 0,

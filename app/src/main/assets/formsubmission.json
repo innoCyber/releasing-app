@@ -1,0 +1,66 @@
+{
+  "cargo_code": " xhdhx",
+  "cargo_type": 1,
+  "damages": [
+    {
+      "location": "DCBO",
+      "number": 1,
+      "remarks": "NICR",
+      "size": "Small",
+      "type": 0,
+      "id": 790
+    },
+    {
+      "location": "RCRI",
+      "number": 1,
+      "remarks": "",
+      "size": "Large",
+      "type": 0,
+      "id": 808
+    }
+  ],
+  "operation_step": 32,
+  "selections": [
+    {
+      "selected_options": [
+        0
+      ],
+      "id": 17
+    },
+    {
+      "selected_options": [
+        0
+      ],
+      "id": 19
+    },
+    {
+      "selected_options": [
+        0
+      ],
+      "id": 21
+    }
+  ],
+  "terminal": 1,
+  "values": [
+    {
+      "value": "",
+      "id": 5
+    },
+    {
+      "value": "",
+      "id": 7
+    },
+    {
+      "value": "",
+      "id": 9
+    },
+    {
+      "value": "",
+      "id": 11
+    },
+    {
+      "value": "",
+      "id": 15
+    }
+  ]
+}

@@ -56,6 +56,8 @@ public class AssignedDamage extends Damage {
 
     @NotNull
     public FormDamage toFormDamage() {
-        return new FormDamage(getDamageCount(), getContainerType(), damageRemarks, location, size);
+        FormDamage damage = new FormDamage(getDamageCount(), getContainerType(), damageRemarks, location, size);
+        damage.setId(getId());
+        return damage;
     }
 }
