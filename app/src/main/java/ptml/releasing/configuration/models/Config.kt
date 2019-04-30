@@ -131,9 +131,9 @@ data class AdminConfigResponse(
      * Used in conjuction with @link AdminConfigResponse#equals to  check for equality in instances of this class
      * */
     override fun hashCode(): Int {
-        var result = cargoTypeList.hashCode() ?: 0
-        result = 31 * result + (operationStepList.hashCode() ?: 0)
-        result = 31 * result + (terminalList.hashCode() ?: 0)
+        var result = cargoTypeList.hashCode()
+        result = 31 * result + operationStepList.hashCode()
+        result = 31 * result + terminalList.hashCode()
         return result
     }
 

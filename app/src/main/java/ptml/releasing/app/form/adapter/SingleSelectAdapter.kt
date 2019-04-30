@@ -9,6 +9,7 @@ import timber.log.Timber
 class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>() where T : SelectModel {
     var listener: SingleSelectListener<T>? = null
     var selectedItem: T? = null
+    var selectedItemPosition: Int = 0
 
     fun setItems(items: List<T>?) {
         this.items.clear()
@@ -62,6 +63,7 @@ class SingleSelectViewHolder<T>(
         binding.checkBox.isChecked = item?.checked ?: false
         binding.root.setOnClickListener {
             adapter.selectedItem = item
+            adapter.selectedItemPosition = adapterPosition
             deselectOthers(adapterPosition)
             listener?.onItemSelected(item)
         }

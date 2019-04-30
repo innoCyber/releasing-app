@@ -14,14 +14,11 @@ import com.zebra.sdk.comm.BluetoothConnectionInsecure
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.form.FormBuilder
-import ptml.releasing.app.form.FormListener
-import ptml.releasing.app.form.FormType
-import ptml.releasing.app.form.FormValidator
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.FormLoader
+import ptml.releasing.app.form.*
+import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
@@ -88,7 +85,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
             formValidator.listener = validatorListener
             if (formValidator.validate()) {
                 Timber.d("Validated")
-                notifyUser("Validated")
+                submitForm(formValidator)
             }
         }
 
@@ -99,6 +96,11 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         override fun onEndLoad() {
 
         }
+    }
+
+    private fun submitForm(formValidator: FormValidator) {
+        val formSubmission = FormSubmission(formBuilder, formValidator)
+        viewModel.submitForm(formSubmission, intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY))
     }
 
     private fun handlePrint(settings: Settings) {
@@ -185,6 +187,29 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         viewModel.printerSettings.observe(this, Observer {
             handlePrint(it)
+        })
+
+        viewModel.networkState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.submitting_form)
+            } else {
+                hideLoading(binding.includeProgress.root)
+            }
+
+            if (it?.status == Status.FAILED) {
+                val error = ErrorHandler().getErrorMessage(it.throwable)
+                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+            } else {
+                hideLoading(binding.includeError.root)
+            }
+        })
+
+        viewModel.submitSuccess.observe(this, Observer {
+            notifyUser(binding.root, getString(it))
+        })
+
+        viewModel.errorMessage.observe(this, Observer {
+            showErrorDialog(it)
         })
     }
 

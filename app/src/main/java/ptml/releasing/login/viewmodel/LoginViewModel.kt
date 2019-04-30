@@ -20,8 +20,8 @@ class LoginViewModel @Inject constructor(
 
 
     val usernameValidation = MutableLiveData<Int>()
-    val errorMessage = MutableLiveData<String>()
     val passwordValidation = MutableLiveData<Int>()
+    val errorMessage = MutableLiveData<String>()
     val loadNext= MutableLiveData<Unit>()
 
     val networkState = MutableLiveData<NetworkState>()

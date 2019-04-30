@@ -1,11 +1,13 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.*
+import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.login.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
@@ -146,6 +148,8 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
+    override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
+
     override fun getSettings() = local.getSettings()
 
     override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
@@ -157,6 +161,8 @@ open class ReleasingRepository @Inject constructor(
     override fun getServerUrl(): String? = local.getServerUrl()
 
     override fun saveServerUrl(url: String?)  = local.saveServerUrl(url)
+
+
 
 }
 

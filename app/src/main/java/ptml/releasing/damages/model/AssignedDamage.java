@@ -1,5 +1,8 @@
 package ptml.releasing.damages.model;
 
+import org.jetbrains.annotations.NotNull;
+import ptml.releasing.cargo_info.model.FormDamage;
+
 /**
  * Created by marcojacovone on 14/04/17.
  */
@@ -49,5 +52,10 @@ public class AssignedDamage extends Damage {
 
     public void setDamageCount(int damageCount) {
         this.damageCount = damageCount;
+    }
+
+    @NotNull
+    public FormDamage toFormDamage() {
+        return new FormDamage(getDamageCount(), getContainerType(), damageRemarks, location, String.valueOf(size));
     }
 }

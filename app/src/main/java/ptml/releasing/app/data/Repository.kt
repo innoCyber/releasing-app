@@ -4,6 +4,7 @@ import kotlinx.coroutines.Deferred
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.login.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
@@ -59,6 +60,9 @@ interface Repository {
 
     fun saveServerUrl(url:String?)
     fun getServerUrl():String?
+
+
+    suspend fun uploadData(request: FormSubmissionRequest): Deferred<BaseResponse>
 
 
 }

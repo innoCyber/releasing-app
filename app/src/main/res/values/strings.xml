@@ -198,4 +198,6 @@
     <string name="enter_valid_url">Please enter a valid URL</string>
     <string name="change_server_url">Change Server URL</string>
     <string name="cancel">Cancel</string>
+    <string name="form_submit_success_msg">Form submitted successfully</string>
+    <string name="submitting_form">Submitting form</string>
 </resources>

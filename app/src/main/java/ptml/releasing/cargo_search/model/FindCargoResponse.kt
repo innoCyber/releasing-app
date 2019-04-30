@@ -9,6 +9,7 @@ data class FindCargoResponse(
     @SerializedName("values") val values: List<Value>,
     @SerializedName("options") val options: List<Option>
 ) : BaseResponse(), Parcelable {
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     constructor(parcel: Parcel) : this(
         parcel.createTypedArrayList(Value.CREATOR),
         parcel.createTypedArrayList(Option.CREATOR)

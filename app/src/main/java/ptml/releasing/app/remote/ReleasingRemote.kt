@@ -1,5 +1,9 @@
 package ptml.releasing.app.remote
 
+import kotlinx.coroutines.Deferred
+import ptml.releasing.app.base.BaseResponse
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_info.model.api.UploadDataService
 import ptml.releasing.login.model.api.LoginApiService
 import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.download_damages.model.api.DamageApiService
@@ -15,6 +19,7 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
     private val adminConfigService = retrofit.create(ConfigApiService::class.java)
     private val damageService = retrofit.create(DamageApiService::class.java)
     private val findCargoService = retrofit.create(FindCargoService::class.java)
+    private val uploadDataService = retrofit.create(UploadDataService::class.java)
 
     override suspend fun loginAsync(username: String?, password: String?) = loginService.loginAsync(username, password)
 
@@ -38,5 +43,7 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
                                    imei: String,
                                    cargoNumber:String
     ) = findCargoService.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
+
+    override suspend fun uploadData(request: FormSubmissionRequest) = uploadDataService.uploadData(request)
 }
 

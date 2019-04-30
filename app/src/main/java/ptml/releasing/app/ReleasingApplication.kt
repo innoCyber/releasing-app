@@ -41,6 +41,7 @@ open class ReleasingApplication : DaggerApplication() {
         LeakCanary.install(this)
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
         return when (BuildConfig.DEBUG) {

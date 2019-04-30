@@ -25,6 +25,7 @@ import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.setValidation
 import ptml.releasing.app.views.MultiSpinner
 import ptml.releasing.app.views.MultiSpinnerListener
+import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.Option
 import ptml.releasing.cargo_search.model.Value
@@ -45,7 +46,7 @@ class FormBuilder constructor(val context: Context) {
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
     }
 
@@ -255,6 +256,15 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
+    internal fun getTextBoxValue(data: ConfigureDeviceData?): Value {
+        val inputLayout = rootLayout.findViewWithTag<TextInputLayout>(data?.id)
+        val editText = inputLayout.findViewById<EditText>(R.id.edit)
+        val value = Value(editText.text.toString())
+        value.id = data?.id
+        return value
+    }
+
+
     /**
      * Creates a multiline edit text for the form
      *  Applies the necessary styles
@@ -350,6 +360,7 @@ class FormBuilder constructor(val context: Context) {
         return true
     }
 
+
     /**
      * Creates a Spinner for the form
      *  Applies the necessary styles
@@ -415,6 +426,25 @@ class FormBuilder constructor(val context: Context) {
                 return false
             }
             return true
+        }
+    }
+
+
+    fun getSingleSelect(data: ConfigureDeviceData?): FormSelection {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
+            val spinner = view.findViewById<Spinner>(R.id.select)
+            val selectedValues = listOf(spinner.selectedItemPosition)
+            val formSelection = FormSelection(selectedValues)
+            formSelection.id = data?.id
+            return formSelection
+        } else {
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+            val adapter = recyclerView.adapter as SingleSelectAdapter<*>
+            val selectedValues = listOf(adapter.selectedItemPosition)
+            val formSelection = FormSelection(selectedValues)
+            formSelection.id = data?.id
+            return formSelection
         }
     }
 
@@ -495,6 +525,27 @@ class FormBuilder constructor(val context: Context) {
         return true
     }
 
+
+    fun getMultiSelect(data: ConfigureDeviceData?): FormSelection {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
+            val spinner = view.findViewById<MultiSpinner>(R.id.select)
+            val list = spinner.selectedItems.values.toList()
+            val formSelection = FormSelection(list)
+            formSelection.id = data?.id
+            return formSelection
+
+        } else {
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+            val adapter = recyclerView.adapter as MultiSelectAdapter<*>
+            val items = adapter.selectedItemsPosition
+            val formSelection = FormSelection(items)
+            formSelection.id = data?.id
+            return formSelection
+        }
+    }
+
+
     private fun multiSelectError(view: View) {
         val message = context.getString(R.string.select_at_least_one_item)
         listener?.onError(message)
@@ -534,6 +585,13 @@ class FormBuilder constructor(val context: Context) {
             return false
         }
         return true
+    }
+
+
+    internal fun getCheckBoxValue(data: ConfigureDeviceData?): Boolean? {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val checkBox = view.findViewById<CheckBox>(R.id.check_box)
+        return checkBox.isChecked
     }
 
 

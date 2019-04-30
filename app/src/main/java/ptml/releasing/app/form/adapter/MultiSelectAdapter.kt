@@ -9,6 +9,7 @@ import timber.log.Timber
 class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() where T : SelectModel {
 
     val selectedItems = mutableListOf<T>()
+    val selectedItemsPosition = mutableListOf<Int>()
     var listener: MultiSelectListener<T>? = null
 
     fun setItems(items:List<T>?){
@@ -64,6 +65,7 @@ class MultiSelectViewHolder<T>(
         binding.checkBox.isChecked = item.checked
         binding.root.setOnClickListener {
             adapter.selectedItems.add(item)
+            adapter.selectedItemsPosition.add(adapterPosition)
             item.checked = binding.checkBox.isChecked
             listener?.onItemsSelected(adapter.selectedItems)
         }

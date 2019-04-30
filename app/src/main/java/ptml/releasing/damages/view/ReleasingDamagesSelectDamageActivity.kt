@@ -65,6 +65,7 @@ class ReleasingDamagesSelectDamageActivity :
             return damages[position].id?.toLong() ?: 0
         }
 
+        @Suppress("NAME_SHADOWING")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var convertView = convertView
 
@@ -116,7 +117,7 @@ class ReleasingDamagesSelectDamageActivity :
             txtDamageName.setOnClickListener {
                 AlertDialog.Builder(context)
                     .setMessage(damages[position].description)
-                    .setPositiveButton(android.R.string.ok) { dialog, which ->
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
                         // continue with delete
                     }
                     .setIcon(android.R.drawable.ic_dialog_info)
