@@ -68,7 +68,7 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
 
                 FormType.MULTI_SELECT -> {
                     Timber.d("Getting MULTI_SELECT value")
-                    _selectionsList.add(formBuilder?.getSingleSelect(data) ?: return)
+                    _selectionsList.add(formBuilder?.getMultiSelect(data) ?: return)
                 }
 
                 FormType.CHECK_BOX -> {

@@ -1,0 +1,151 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 787,
+      "description": "Front or Rear Corner Post",
+      "position": "S",
+      "typeContainer": "0"
+    },
+    {
+      "id": 788,
+      "description": "Cross Member",
+      "position": "S",
+      "typeContainer": "0"
+    },
+    {
+      "id": 789,
+      "description": "J-Bar",
+      "position": "S",
+      "typeContainer": "0"
+    },
+    {
+      "id": 790,
+      "description": "Patch Panel",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 791,
+      "description": "Straighten",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 792,
+      "description": "Side Rail",
+      "position": "S",
+      "typeContainer": "0"
+    },
+    {
+      "id": 793,
+      "description": "Ventilator",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 794,
+      "description": "Door Components: 1 Locking Bar",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 795,
+      "description": "Door Components: 1 Locking Bar Guide",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 796,
+      "description": "Door Components: 1 Door Handle",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 797,
+      "description": "Door Components: 1 Door Handle Retainer and Catch",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 798,
+      "description": "Floor Panel(s) Broken / Damaged / Contaminated",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 799,
+      "description": "Internal Side Affected with Adhesive Material per each Square Meter",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 800,
+      "description": "Internal Side Affected with Tapes: up to 5 Tapes (multiple of 5)",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 801,
+      "description": "Other type of Damages (NB: Multiplier MUST be used. If not sure contact Naples)",
+      "position": "",
+      "typeContainer": "0"
+    },
+    {
+      "id": 802,
+      "description": "Old Labels Not Removed (for EACH label)",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 803,
+      "description": "POP Cleaning 20 ft.",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 804,
+      "description": "Interior Side Wall Panels Stained of Oil / Dirty: Special Washing Interior Side Wall Panel 20’",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 805,
+      "description": "Floor Dirty: Normal floor washing of 20’",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 806,
+      "description": "Floor Contaminated or Oil Soaked: Complete Replace of 20’ Floor",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 807,
+      "description": "Interior Side Wall Panels Contaminated with Chemical / Material: Full Fefurbishment Inside 20’ container",
+      "position": "C",
+      "typeContainer": "0"
+    },
+    {
+      "id": 808,
+      "description": "Front or Rear Corner Post",
+      "position": "S",
+      "typeContainer": "1"
+    },
+
+    {
+      "id": 933,
+      "description": "Open Top Tarpaulin Replacement 40’",
+      "position": "S",
+      "typeContainer": "6"
+    },
+    {
+      "id": 934,
+      "description": "Open Top Tir cord 40’",
+      "position": "S",
+      "typeContainer": "6"
+    }
+  ]
+}
