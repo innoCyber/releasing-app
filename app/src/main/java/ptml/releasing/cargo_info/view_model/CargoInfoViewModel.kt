@@ -37,10 +37,10 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
 
 
     private val _errorMessage = MutableLiveData<String>()
-    private val _submitSuccess = MutableLiveData<Int>()
+    private val _submitSuccess = MutableLiveData<Unit>()
 
     val errorMessage : LiveData<String> = _errorMessage
-    val submitSuccess :LiveData<Int> = _submitSuccess
+    val submitSuccess :LiveData<Unit> = _submitSuccess
 
     fun goBack() {
         _goBack.postValue(true)
@@ -85,7 +85,7 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
 
                 withContext(appCoroutineDispatchers.main) {
                     if(result.isSuccess){
-                        _submitSuccess.postValue(R.string.form_submit_success_msg)
+                        _submitSuccess.postValue(Unit)
                     }else{
                         _errorMessage.postValue(result.message)
                     }

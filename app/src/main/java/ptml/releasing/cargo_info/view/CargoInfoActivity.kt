@@ -205,12 +205,27 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         })
 
         viewModel.submitSuccess.observe(this, Observer {
-            notifyUser(binding.root, getString(it))
+            showSuccessDialog()
         })
 
         viewModel.errorMessage.observe(this, Observer {
             showErrorDialog(it)
         })
+    }
+
+    private fun showSuccessDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.form_submit_success_title),
+            message = getString(R.string.form_submit_success_msg),
+            buttonText = getString(R.string.close),
+            listener = object : InfoDialog.InfoListener{
+                override fun onConfirm() {
+                    finish()
+                }
+            }
+        )
+        dialogFragment.isCancelable = false
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 

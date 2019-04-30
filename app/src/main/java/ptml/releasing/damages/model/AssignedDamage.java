@@ -11,7 +11,7 @@ public class AssignedDamage extends Damage {
 
     private String damageRemarks;
     private int damageCount;
-    private int size; // 0 = low, 1 = high
+    private String size; // Small or Large
     private String location;
 
     public String getLocation() {
@@ -22,15 +22,15 @@ public class AssignedDamage extends Damage {
         this.location = location;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(String size) {
         this.size = size;
     }
 
-    public AssignedDamage(int id, String name, String damageRemarks, int damageCount, int containerType, String position, String location, int size) {
+    public AssignedDamage(int id, String name, String damageRemarks, int damageCount, int containerType, String position, String location, String size) {
         super(id, name, containerType, position);
         this.damageRemarks = damageRemarks;
         this.damageCount = damageCount;
@@ -56,6 +56,6 @@ public class AssignedDamage extends Damage {
 
     @NotNull
     public FormDamage toFormDamage() {
-        return new FormDamage(getDamageCount(), getContainerType(), damageRemarks, location, String.valueOf(size));
+        return new FormDamage(getDamageCount(), getContainerType(), damageRemarks, location, size);
     }
 }

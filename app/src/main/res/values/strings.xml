@@ -200,4 +200,6 @@
     <string name="cancel">Cancel</string>
     <string name="form_submit_success_msg">Form submitted successfully</string>
     <string name="submitting_form">Submitting form</string>
+    <string name="close">Dismiss</string>
+    <string name="form_submit_success_title">Success</string>
 </resources>

@@ -110,6 +110,7 @@
                     app:boxStrokeColor="@color/colorGrayHint"
                     app:hintTextColor="@color/colorGrayHint"
                     app:boxStrokeWidth="1dp"
+                    android:visibility="gone"
                     app:errorTextAppearance="@style/TextLimitError"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0.2"

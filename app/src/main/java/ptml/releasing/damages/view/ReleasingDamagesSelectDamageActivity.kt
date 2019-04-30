@@ -23,6 +23,9 @@ import ptml.releasing.app.local.ReleasingLocal
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.cargo_info.model.FormDamageSize
+import ptml.releasing.cargo_info.model.LARGE
+import ptml.releasing.cargo_info.model.SMALL
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.OperationStep
@@ -91,7 +94,7 @@ class ReleasingDamagesSelectDamageActivity :
                         d.typeContainer,
                         d.position,
                         DamagesActivity.currentDamageZone + DamagesActivity.currentDamagePoint,
-                        1
+                        LARGE
                     )
                 )
                 finish()
@@ -108,7 +111,7 @@ class ReleasingDamagesSelectDamageActivity :
                         d.typeContainer,
                         d.position,
                         DamagesActivity.currentDamageZone + DamagesActivity.currentDamagePoint,
-                        0
+                        SMALL
                     )
                 )
                 finish()
