@@ -35,12 +35,18 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
 
                 FormType.TEXTBOX -> {
                     Timber.d("Getting TEXTBOX value")
-                    _valuesList.add(formBuilder?.getTextBoxValue(data) ?: return)
+                    val value  = formBuilder?.getTextBoxValue(data)
+                    if (value != null) {
+                        _valuesList.add(value)
+                    }
                 }
 
                 FormType.MULTI_LINE_TEXTBOX -> {
                     Timber.d("Getting MULTI_LINE_TEXTBOX value")
-                    _valuesList.add(formBuilder?.getTextBoxValue(data) ?: return)
+                    val value  = formBuilder?.getTextBoxValue(data)
+                    if (value != null) {
+                        _valuesList.add(value)
+                    }
 
                 }
                 FormType.IMAGES -> {
@@ -61,14 +67,20 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
 
                 FormType.SINGLE_SELECT -> {
                     Timber.d("Getting SINGLE_SELECT value")
-                    _selectionsList.add(formBuilder?.getSingleSelect(data) ?: return)
+                    val formSelection = formBuilder?.getSingleSelect(data)
+                    if (formSelection != null) {
+                        _selectionsList.add(formSelection)
+                    }
 
                 }
 
 
                 FormType.MULTI_SELECT -> {
                     Timber.d("Getting MULTI_SELECT value")
-                    _selectionsList.add(formBuilder?.getMultiSelect(data) ?: return)
+                    val formSelection = formBuilder?.getMultiSelect(data)
+                    if (formSelection != null) {
+                        _selectionsList.add(formSelection)
+                    }
                 }
 
                 FormType.CHECK_BOX -> {

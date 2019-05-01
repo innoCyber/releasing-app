@@ -62,7 +62,14 @@ interface Repository {
     fun getServerUrl():String?
 
 
-    suspend fun uploadData(request: FormSubmissionRequest): Deferred<BaseResponse>
+    suspend fun uploadData(request: FormSubmissionRequest,
+                           cargoTypeId: Int?,
+                           operationStepId: Int?,
+                           terminal: Int?,
+                           operator:String?,
+                           cargoNumber: String?,
+                           cargoId: Int?
+    ): Deferred<BaseResponse>
 
 
 }

@@ -256,11 +256,13 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    internal fun getTextBoxValue(data: ConfigureDeviceData?): Value {
+    internal fun getTextBoxValue(data: ConfigureDeviceData?): Value? {
         val inputLayout = rootLayout.findViewWithTag<TextInputLayout>(data?.id)
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        val value = Value(editText.text.toString())
-        value.id = data?.id
+        val text = editText.text.toString()
+
+        val value = if(text.isNotEmpty()) Value(text) else null
+        value?.id = data?.id
         return value
     }
 
@@ -430,20 +432,20 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    fun getSingleSelect(data: ConfigureDeviceData?): FormSelection {
+    fun getSingleSelect(data: ConfigureDeviceData?): FormSelection? {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val spinner = view.findViewById<Spinner>(R.id.select)
             val selectedValues = listOf(spinner.selectedItemPosition)
-            val formSelection = FormSelection(selectedValues)
-            formSelection.id = data?.id
+            val formSelection =  if(selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
+            formSelection?.id = data?.id
             return formSelection
         } else {
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as SingleSelectAdapter<*>
             val selectedValues = listOf(adapter.selectedItemPosition)
-            val formSelection = FormSelection(selectedValues)
-            formSelection.id = data?.id
+            val formSelection =  if(selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
+            formSelection?.id = data?.id
             return formSelection
         }
     }
@@ -526,21 +528,21 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    fun getMultiSelect(data: ConfigureDeviceData?): FormSelection {
+    fun getMultiSelect(data: ConfigureDeviceData?): FormSelection? {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val spinner = view.findViewById<MultiSpinner>(R.id.select)
             val list = spinner.selectedItems.values.toList()
-            val formSelection = FormSelection(list)
-            formSelection.id = data?.id
+            val formSelection =  if(list.isNotEmpty()) FormSelection(list) else null
+            formSelection?.id = data?.id
             return formSelection
 
         } else {
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-            val items = adapter.selectedItemsPosition
-            val formSelection = FormSelection(items)
-            formSelection.id = data?.id
+            val list = adapter.selectedItemsPosition
+            val formSelection =  if(list.isNotEmpty()) FormSelection(list) else null
+            formSelection?.id = data?.id
             return formSelection
         }
     }

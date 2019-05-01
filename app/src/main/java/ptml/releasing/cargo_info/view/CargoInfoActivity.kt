@@ -100,7 +100,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
     private fun submitForm(formValidator: FormValidator) {
         val formSubmission = FormSubmission(formBuilder, formValidator)
-        viewModel.submitForm(formSubmission, intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY))
+        val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+        viewModel.submitForm(formSubmission, intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY), findCargoResponse?.cargoId)
     }
 
     private fun handlePrint(settings: Settings) {

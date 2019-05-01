@@ -148,7 +148,13 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
+    override suspend fun uploadData(request: FormSubmissionRequest,
+                                    cargoTypeId: Int?,
+                                    operationStepId: Int?,
+                                    terminal: Int?,
+                                    operator:String?,
+                                    cargoNumber:String?,
+                                    cargoId: Int? ) = remote.uploadData(request, cargoTypeId, operationStepId, terminal, operator, cargoNumber,cargoId)
 
     override fun getSettings() = local.getSettings()
 

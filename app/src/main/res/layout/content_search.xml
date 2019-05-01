@@ -39,6 +39,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/tv_config_message_container"
             android:layout_width="match_parent"

@@ -1,42 +1,34 @@
 {
-  "cargo_code": "hhh",
+  "cargo_code": "vvv",
   "cargo_type": 1,
   "damages": [
     {
-      "location": "TFBO",
-      "number": 1,
-      "remarks": "REMEMBER",
+      "location": "BLEF",
+      "number": 5,
+      "remarks": "hELKO THRT",
       "size": "Small",
       "type": 0,
-      "id": 794
+      "id": 787
     },
     {
-      "location": "DBLE",
+      "location": "LCLE",
       "number": 3,
-      "remarks": "",
-      "size": "Large",
-      "type": 1,
-      "id": 808
-    },
-    {
-      "location": "DFBO",
-      "number": 5,
-      "remarks": "",
+      "remarks": "HI",
       "size": "Large",
       "type": 0,
-      "id": 798
+      "id": 792
+    },
+    {
+      "location": "RFRI",
+      "number": 11,
+      "remarks": "HELLO",
+      "size": "Large",
+      "type": 6,
+      "id": 913
     }
   ],
   "operation_step": 32,
   "selections": [
-    {
-      "selected_options": [],
-      "id": 13
-    },
-    {
-      "selected_options": [],
-      "id": 17
-    },
     {
       "selected_options": [
         0
@@ -51,26 +43,5 @@
     }
   ],
   "terminal": 2,
-  "values": [
-    {
-      "value": "",
-      "id": 5
-    },
-    {
-      "value": "",
-      "id": 7
-    },
-    {
-      "value": "",
-      "id": 9
-    },
-    {
-      "value": "",
-      "id": 11
-    },
-    {
-      "value": "",
-      "id": 15
-    }
-  ]
+  "values": []
 }

@@ -64,24 +64,23 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
         }
     }
 
-    fun submitForm(formSubmission: FormSubmission, cargoCode: String?) {
+    fun submitForm(formSubmission: FormSubmission, cargoCode: String?, cargoId:Int?) {
         if (_networkState.value == NetworkState.LOADING) return
         _networkState.postValue(NetworkState.LOADING)
         CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
                 formSubmission.submit()
                 val configuration = repository.getSavedConfigAsync()
+                val operator = repository.getOperatorName()
 
                 val formSubmissionRequest = FormSubmissionRequest(
-                    configuration.cargoType.id,
-                    configuration.operationStep.id,
-                    configuration.terminal.id,
-                    cargoCode,
                     formSubmission.valuesList,
                     formSubmission.selectionList,
                     getDamages()
                 )
-                val result = repository.uploadData(formSubmissionRequest).await()
+                val result = repository.uploadData(formSubmissionRequest,
+                    configuration.cargoType.id, configuration.operationStep.id,
+                    configuration.terminal.id, operator,  cargoCode, cargoId).await()
 
                 withContext(appCoroutineDispatchers.main) {
                     if(result.isSuccess){

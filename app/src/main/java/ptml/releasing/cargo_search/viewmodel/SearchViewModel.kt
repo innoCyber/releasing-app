@@ -96,7 +96,9 @@ class SearchViewModel @Inject constructor(
     }
 
     fun continueToUploadCargo(){
-        _findCargoResponse.postValue(_findCargoHolder.value)
+        val findCargoResponse  = _findCargoResponse.value
+        findCargoResponse?.cargoId = 0
+        _findCargoResponse.postValue(findCargoResponse)
     }
 
 
