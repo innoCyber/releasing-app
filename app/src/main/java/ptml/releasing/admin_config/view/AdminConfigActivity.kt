@@ -3,9 +3,11 @@ package ptml.releasing.admin_config.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
@@ -122,9 +124,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     }
 
     private fun showServerUrlDialog(url:String?){
-        val dialog = EditTextDialog.newInstance(url, object : EditTextDialog.EditTextDialogListener{
-            override fun onSave(url: String) {
-                viewModel.saveServerUrl(url)
+        val serverUrl = if(TextUtils.isEmpty(url)){
+            BuildConfig.BASE_URL
+        }else{
+            url
+        }
+        val dialog = EditTextDialog.newInstance(serverUrl, object : EditTextDialog.EditTextDialogListener{
+            override fun onSave(value: String) {
+                viewModel.saveServerUrl(value)
             }
         })
         dialog.isCancelable = false

@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.utils.Validation
 import ptml.releasing.databinding.DialogEdittextBinding
@@ -21,11 +20,23 @@ class EditTextDialog : DialogFragment() {
 
     companion object {
         const val EXTRA_URL = "extra.url"
+        const val EXTRA_TITLE = "extra.title"
+        const val EXTRA_HINT = "extra.hint"
+        const val EXTRA_IS_URL = "extra.is.url"
 
-        fun newInstance(url: String? = null, listener: EditTextDialogListener? = null): EditTextDialog {
+        fun newInstance(
+            url: String? = null,
+            listener: EditTextDialogListener? = null,
+            title: String? = null,
+            hint: String? = null,
+            isUrl:Boolean = true
+        ): EditTextDialog {
             val fragment = EditTextDialog()
             val bundle = Bundle()
             bundle.putString(EXTRA_URL, url)
+            bundle.putString(EXTRA_TITLE, title)
+            bundle.putString(EXTRA_HINT, hint)
+            bundle.putBoolean(EXTRA_IS_URL, isUrl)
             fragment.arguments = bundle
             fragment.listener = listener
             return fragment
@@ -36,15 +47,17 @@ class EditTextDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogEdittextBinding.inflate(LayoutInflater.from(context), null, false)
         val builder = AlertDialog.Builder(context!!)
-        builder.setTitle(R.string.change_server_url)
+        val title = arguments?.getString(EXTRA_TITLE)
+        builder.setTitle(if (TextUtils.isEmpty(title)) getString(R.string.change_server_url) else title)
         builder.setView(binding.root)
-                .setPositiveButton(getString(R.string.save), null)
-                .setNegativeButton(getString(R.string.cancel), null)
-        var serverUrl = arguments?.getString(EXTRA_URL)
-        if(TextUtils.isEmpty(serverUrl)){
-            serverUrl = BuildConfig.BASE_URL
-        }
+            .setPositiveButton(getString(R.string.save), null)
+            .setNegativeButton(getString(R.string.cancel), null)
+        val serverUrl = arguments?.getString(EXTRA_URL)
         binding.editServerUrl.setText(serverUrl)
+        val hint = arguments?.getString(EXTRA_HINT)
+        if (!TextUtils.isEmpty(hint)) {
+            binding.tilServerUrl.hint = hint
+        }
 
         dialog = builder.create()
 
@@ -60,12 +73,16 @@ class EditTextDialog : DialogFragment() {
     }
 
     private fun validate() {
-        val url = binding.editServerUrl.text.toString()
-        if (!Validation.isURL(url)) {
+        val text = binding.editServerUrl.text.toString()
+        val isUrl = arguments?.getBoolean(EXTRA_IS_URL, true)
+        if (isUrl == true && !Validation.isURL(text)) {
             binding.tilServerUrl.error = getString(R.string.enter_valid_url)
             return
+        }else if (text.isEmpty()){
+            binding.tilServerUrl.error = getString(R.string.enter_operator_name)
+            return
         }
-        listener?.onSave(url)
+        listener?.onSave(text)
         dialog?.dismiss()
     }
 
@@ -82,13 +99,13 @@ class EditTextDialog : DialogFragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.tilServerUrl.error =""
+                binding.tilServerUrl.error = ""
                 dialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.isEnabled = !TextUtils.isEmpty(s)
             }
         })
     }
 
     interface EditTextDialogListener {
-        fun onSave(url: String)
+        fun onSave(value: String)
     }
 }

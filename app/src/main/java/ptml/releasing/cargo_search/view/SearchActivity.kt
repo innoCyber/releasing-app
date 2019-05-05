@@ -171,7 +171,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 buttonText = getString(android.R.string.ok),
                 listener = object : InfoDialog.InfoListener {
                     override fun onConfirm() {
-                        viewModel.openConfiguration()
+                        viewModel.openBarcodeScan()
                     }
                 },
                 hasNeutralButton = true,

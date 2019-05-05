@@ -67,8 +67,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                 FormType.DAMAGES -> {
                     damageView = view
                     startActivityForResult(
-                            Intent(this@CargoInfoActivity, DamagesActivity::class.java),
-                            DAMAGES_RC
+                        Intent(this@CargoInfoActivity, DamagesActivity::class.java),
+                        DAMAGES_RC
                     )
                 }
             }
@@ -101,7 +101,11 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     private fun submitForm(formValidator: FormValidator) {
         val formSubmission = FormSubmission(formBuilder, formValidator)
         val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
-        viewModel.submitForm(formSubmission, intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY), findCargoResponse?.cargoId)
+        viewModel.submitForm(
+            formSubmission,
+            intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY),
+            findCargoResponse?.cargoId
+        )
     }
 
     private fun handlePrint(settings: Settings) {
@@ -146,11 +150,11 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                     printerView?.isEnabled = true
 
                     AlertDialog.Builder(this@CargoInfoActivity)
-                            .setTitle(R.string.general_msg_print_error)
-                            .setMessage("Error printing label: " + e.localizedMessage)
-                            .setPositiveButton(android.R.string.ok, { dialog, which -> })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show()
+                        .setTitle(R.string.general_msg_print_error)
+                        .setMessage("Error printing label " + "${if (e.localizedMessage.isNullOrEmpty()) "" else ":" + e.localizedMessage} ")
+                        .setPositiveButton(android.R.string.ok) { _, _ -> }
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show()
 
                     e.printStackTrace()
                 }
@@ -219,7 +223,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
             title = getString(R.string.form_submit_success_title),
             message = getString(R.string.form_submit_success_msg),
             buttonText = getString(R.string.close),
-            listener = object : InfoDialog.InfoListener{
+            listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     finish()
                 }
@@ -233,7 +237,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     override fun onResume() {
         super.onResume()
         damageView?.findViewById<TextView>(R.id.tv_number)?.text = DamagesActivity.currentDamages.size.toString()
-        val errorView: View? = if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+        val errorView: View? =
+            if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
         errorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
     }
 
@@ -247,9 +252,9 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
           }*/
         formBuilder = FormBuilder(this)
         val formView = formBuilder
-                ?.setListener(formListener)
-                ?.init(findCargoResponse)
-                ?.build(it?.data)
+            ?.setListener(formListener)
+            ?.init(findCargoResponse)
+            ?.build(it?.data)
         binding.formContainer.addView(formView)
         binding.formBottom.addView(formBuilder?.getBottomButtons())
     }
@@ -262,17 +267,17 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            themedContext,
-                            R.drawable.ic_car
-                    )
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_car
+                )
             )
         } else {
             binding.includeHome.imgCargoType.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            themedContext,
-                            R.drawable.ic_container
-                    )
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_container
+                )
             )
         }
 
@@ -280,24 +285,28 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
     private fun showResetConfirmDialog() {
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.confirm_action),
-                message = getString(R.string.proceed_to_reset_msg),
-                buttonText = getString(R.string.yes),
-                hasNeutralButton = true,
-                neutralButtonText = getString(R.string.no),
-                listener = object : InfoDialog.InfoListener {
-                    override fun onConfirm() {
-                        formBuilder?.reset()
+            title = getString(R.string.confirm_action),
+            message = getString(R.string.proceed_to_reset_msg),
+            buttonText = getString(R.string.yes),
+            hasNeutralButton = true,
+            neutralButtonText = getString(R.string.no),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    formBuilder?.reset()
 
-                        //reset the errors for the buttons
-                        val damageErrorView: View? = if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
-                        damageErrorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+                    //reset the errors for the buttons
+                    val damageErrorView: View? =
+                        if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+                    damageErrorView?.visibility =
+                        if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
 
-                        val printerErrorView: View? = if (printerView != null) (printerView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
-                        printerErrorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+                    val printerErrorView: View? =
+                        if (printerView != null) (printerView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+                    printerErrorView?.visibility =
+                        if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
 
-                    }
-                })
+                }
+            })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 

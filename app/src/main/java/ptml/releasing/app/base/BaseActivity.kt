@@ -11,6 +11,7 @@ import android.net.Network
 import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -34,11 +35,11 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
-import ptml.releasing.admin_config.view.AdminConfigActivity
+import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
+import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.barcode_scan.BarcodeScanActivity
-import ptml.releasing.cargo_search.view.onRequestPermissionsResult
 import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import javax.inject.Inject
@@ -94,9 +95,9 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
         viewModel.operatorName.observe(this, Observer {
             when (this) {
-                is AdminConfigActivity -> {
-                    initOperator(null)
-                }
+                /*  is AdminConfigActivity -> {
+                     hideOperator()
+                  }*/
 
                 is LoginActivity -> {
                     initOperator(null)
@@ -109,12 +110,47 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
         })
 
+        viewModel.openEnterDialog.observe(this, Observer {
+            openEnterDialog(it)
+        })
+
+
+        viewModel.openOperatorDialog.observe(this, Observer {
+            openOperatorDialog()
+        })
+
+    }
+
+    private fun openOperatorDialog(){
+        val dialog = ChooseOperatorInputDialog.newInstance(object : ChooseOperatorInputDialog.ChooseOperatorListener{
+            override fun onScan() {
+                viewModel.openBarCodeScanner()
+            }
+
+            override fun onEnter() {
+                viewModel.openEnterDialog()
+            }
+        })
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
+    }
+
+    private fun openEnterDialog(it: String?) {
+        val dialog = EditTextDialog.newInstance(it, object : EditTextDialog.EditTextDialogListener{
+            override fun onSave(value: String) {
+                viewModel.saveOperatorName(value)
+            }
+        }, getString(R.string.enter_operator_name), getString(R.string.operator_name), false)
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.getOperatorName()
     }
+
+
 
 
     @NeedsPermission(android.Manifest.permission.CAMERA)
@@ -399,19 +435,14 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 
 
     protected fun initOperator(operatorName: String?) {
-        if (operatorName == null) {
-            Timber.d("Operator name is null")
-            findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
-            return
-        }
-
         Timber.d("Passed Operator name is %s", operatorName)
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text = operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
+        changeOperator?.text = if(TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.change)
         changeOperator?.setOnClickListener {
-            viewModel.openConfiguration()
+            viewModel.openOperatorDialog()
         }
 
     }

@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ptml.releasing.R
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -26,6 +25,14 @@ open class BaseViewModel @Inject constructor(
     protected val _operatorName = MutableLiveData<String?>()
     val isConfigured: LiveData<Boolean> = _isConfigured
     private val _savedOperatorName = MutableLiveData<String>()
+    private val _openOperatorDialog = MutableLiveData<Unit>()
+    val openOperatorDialog : LiveData<Unit> = _openOperatorDialog
+
+
+    private val _openEnterDialog = MutableLiveData<String>()
+    val openEnterDialog = _openEnterDialog
+
+
 
     protected val _configuration = MutableLiveData<Configuration>()
     private val _openConfiguration = MutableLiveData<Unit>()
@@ -101,6 +108,19 @@ open class BaseViewModel @Inject constructor(
             val operator = repository.getOperatorName();
             withContext(appCoroutineDispatchers.main){
                 _operatorName.postValue(operator)
+            }
+        }
+    }
+
+    fun openOperatorDialog(){
+        _openOperatorDialog.postValue(Unit)
+    }
+
+    fun openEnterDialog(){
+        CoroutineScope(appCoroutineDispatchers.db).launch {
+            val operator = repository.getOperatorName();
+            withContext(appCoroutineDispatchers.main){
+                _openEnterDialog.postValue(operator)
             }
         }
     }
