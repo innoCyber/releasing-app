@@ -42,8 +42,11 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/constraint_default_margin_4dp"
+                android:gravity="center"
+                android:paddingStart="@dimen/constraint_default_margin_10dp"
+                android:paddingEnd="@dimen/constraint_default_margin_10dp"
                 android:background="@drawable/btn_bg_accent"
-                android:text="@string/change"
+                android:text="@string/add_operator"
                 android:textAllCaps="false"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/colorWhite"/>
