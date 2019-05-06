@@ -177,7 +177,7 @@
     <string name="operator_name">Operator name</string>
     <string name="anonymous">Anonymous</string>
     <string name="continue_uploading_text">Continue Uploading Cargo</string>
-    <string name="no_operator_msg">Please scan the operator\'s ID badge</string>
+    <string name="no_operator_msg">Please set up an operator to continue.</string>
     <string name="form_error_msg">An error occurred while trying to load, please contact the administrator</string>
     <string name="required_field_msg">Please enter a value, the field is required</string>
     <string name="form_select_image_msg">Please select at least one image</string>
@@ -205,4 +205,7 @@
     <string name="no_operator">No operator</string>
     <string name="add_operator">Add operator</string>
     <string name="enter_operator_name">Enter operator name</string>
+    <string name="log_off">Log off</string>
+    <string name="operator_log_out_msg">%s has successfully logged out</string>
+    <string name="log_out_confirm_message">Are you sure you want to log off?</string>
 </resources>

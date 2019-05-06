@@ -40,6 +40,8 @@ import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.barcode_scan.BarcodeScanActivity
+import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import javax.inject.Inject
@@ -99,12 +101,17 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
                      hideOperator()
                   }*/
 
-                is LoginActivity -> {
-                    initOperator(null)
+                is SearchActivity -> {
+                    initOperator(it)
+                }
+
+
+                is CargoInfoActivity -> {
+                    initOperator(it)
                 }
 
                 else -> {
-                    initOperator(it)
+                    hideOperator()
                 }
             }
 
@@ -119,10 +126,33 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
             openOperatorDialog()
         })
 
+        viewModel.logOutDialog.observe(this, Observer {
+            showLogOutConfirmDialog()
+        })
+
+        viewModel.logOutOperator.observe(this, Observer {
+            notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
+        })
+
     }
 
-    private fun openOperatorDialog(){
-        val dialog = ChooseOperatorInputDialog.newInstance(object : ChooseOperatorInputDialog.ChooseOperatorListener{
+    private fun showLogOutConfirmDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.confirm_action),
+            message = getString(R.string.log_out_confirm_message),
+            buttonText = getString(R.string.yes),
+            hasNeutralButton = true,
+            neutralButtonText = getString(R.string.no),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.logOutOperator()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun openOperatorDialog() {
+        val dialog = ChooseOperatorInputDialog.newInstance(object : ChooseOperatorInputDialog.ChooseOperatorListener {
             override fun onScan() {
                 viewModel.openBarCodeScanner()
             }
@@ -136,7 +166,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
     private fun openEnterDialog(it: String?) {
-        val dialog = EditTextDialog.newInstance(it, object : EditTextDialog.EditTextDialogListener{
+        val dialog = EditTextDialog.newInstance(it, object : EditTextDialog.EditTextDialogListener {
             override fun onSave(value: String) {
                 viewModel.saveOperatorName(value)
             }
@@ -149,8 +179,6 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         super.onResume()
         viewModel.getOperatorName()
     }
-
-
 
 
     @NeedsPermission(android.Manifest.permission.CAMERA)
@@ -440,11 +468,20 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text = operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
-        changeOperator?.text = if(TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.change)
+        changeOperator?.text =
+            if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
         changeOperator?.setOnClickListener {
-            viewModel.openOperatorDialog()
+            if(TextUtils.isEmpty(operatorName)){
+                viewModel.openOperatorDialog()
+            }else{
+                viewModel.showLogOutConfirmDialog()
+            }
         }
 
+    }
+
+    protected fun hideOperator() {
+        findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
     }
 
 
