@@ -161,7 +161,6 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
                 viewModel.openEnterDialog()
             }
         })
-        dialog.isCancelable = false
         dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
@@ -473,9 +472,9 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         changeOperator?.text =
             if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
         changeOperator?.setOnClickListener {
-            if(TextUtils.isEmpty(operatorName)){
+            if (TextUtils.isEmpty(operatorName)) {
                 viewModel.openOperatorDialog()
-            }else{
+            } else {
                 viewModel.showLogOutConfirmDialog()
             }
         }
