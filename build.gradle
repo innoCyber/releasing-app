@@ -5,6 +5,9 @@ buildscript {
         kotlin_version = '1.3.21'
     }
     repositories {
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
         google()
         jcenter()
 
@@ -12,6 +15,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'io.fabric.tools:gradle:1.28.1'
+
     }
 }
 
