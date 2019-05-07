@@ -1,4 +1,4 @@
-package ptml.releasing.app.utils
+package ptml.releasing.app.utils.bt
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -15,10 +15,10 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
-class BluetoothManager(var activity: Activity, enable: Boolean) {
-    val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+class BluetoothManager(var activity: Activity) {
+    var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     var bluetoothDevice: BluetoothDevice? = null
-    var bluetoothDeviceList = mutableListOf<BluetoothDevice>()
+    var bluetoothDeviceList = mutableMapOf<String, BluetoothDevice>()
     var bondedDeviceList = mutableListOf<BluetoothDevice>()
     var bluetoothNameList = mutableListOf<String>()
     var bondedDeviceNameList = mutableListOf<String>()
@@ -26,6 +26,8 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
     var socket: BluetoothSocket? = null
     var inputStream: InputStream? = null
     var outputStream: OutputStream? = null
+    var listener: Listener? = null
+    var adapterListener: AdapterListener? = null
 
     @Volatile
     var connectionState = false
@@ -34,60 +36,92 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
     @Volatile
     var outString = ""
 
+    init {
+        if(bluetoothAdapter == null){
+            adapterListener?.onAdapterError()
+        }
+    }
+
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == BluetoothDevice.ACTION_FOUND) {
                 val blueTemp = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                bluetoothDeviceList.add(blueTemp)
+                bluetoothDeviceList[blueTemp.address]= blueTemp
                 bluetoothNameList.add(blueTemp.name + "\n" + blueTemp.address)
+                Timber.d("Adding device: %s", blueTemp.name)
             } else if (intent.action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED) {
-                Toast.makeText(activity, "Discovery Completed", Toast.LENGTH_SHORT).show()
+                listener?.onDiscoveryComplete()
+                Timber.d("Discovery complete")
             }
         }
     }
 
-    init {
-        if (enable) {
-            if (!bluetoothAdapter.isEnabled) {
-                val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                activity.startActivity(intent)
-            }
-        }
-        activity.registerReceiver(broadcastReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+    /* init {
+         if (enable) {
+             if (!bluetoothAdapter.isEnabled) {
+                 val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                 activity.startActivity(intent)
+             }
+         }
+         activity.registerReceiver(broadcastReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
 
-        val bondedDevice = bluetoothAdapter.bondedDevices
-        for (device in bondedDevice) {
-            bondedDeviceList.add(device)
-            bondedDeviceNameList.add(device.name + "\n" + device.address)
-        }
-    }
+         val bondedDevice = bluetoothAdapter.bondedDevices
+         for (device in bondedDevice) {
+             bondedDeviceList.add(device)
+             bondedDeviceNameList.add(device.name + "\n" + device.address)
+         }
+     }*/
 
-    fun unregiterReceiver() {
+    fun unRegisterReceiver() {
+        Timber.d("Unregistering receiver")
         activity.unregisterReceiver(broadcastReceiver)
+    }
+
+    fun registerReceiver() {
+        Timber.d("Registering receiver")
+        activity.registerReceiver(
+            broadcastReceiver,
+            IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        )
+
+        activity.registerReceiver(
+            broadcastReceiver,
+            IntentFilter(BluetoothDevice.ACTION_FOUND)
+        )
+
+
+    }
+
+    fun pairDevice(device: BluetoothDevice){
+
     }
 
     fun enable(enable: Boolean) {
         if (enable) {
-            if (!bluetoothAdapter.isEnabled) {
+            bluetoothAdapter?.enable()
+            /*if (!bluetoothAdapter.isEnabled) {
                 val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 activity.startActivity(intent)
-            }
+            }*/
             activity.registerReceiver(
                 broadcastReceiver,
                 IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
             )
             //activity.registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
         } else {
-            bluetoothAdapter.disable()
+            bluetoothAdapter?.disable()
         }
     }
 
     fun startDiscovery() {
-        bluetoothAdapter.startDiscovery()
+        if (bluetoothAdapter?.isDiscovering == true) {
+            bluetoothAdapter?.cancelDiscovery();
+        }
+        bluetoothAdapter?.startDiscovery()
     }
 
-    fun cancelDiscovery() {
-        bluetoothAdapter.cancelDiscovery()
+    fun stopDiscovery() {
+        bluetoothAdapter?.cancelDiscovery()
     }
 
     fun setDiscoverable() {
@@ -97,11 +131,14 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
 
     fun createServerSocket() {
         try {
-            val serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord("bluetoothServer", uuid)
+            val serverSocket = bluetoothAdapter?.listenUsingRfcommWithServiceRecord(
+                "bluetoothServer",
+                uuid
+            )
             Toast.makeText(activity, "READY to connect to other device", Toast.LENGTH_LONG).show()
             Thread(Runnable {
                 try {
-                    socket = serverSocket.accept()
+                    socket = serverSocket?.accept()
                     Timber.d("SERVER SOCKET", "Server socket accepted")
                     listenForMessage()
                 } catch (ioe: IOException) {
@@ -161,7 +198,7 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
             Thread(Runnable {
                 val buffer = ByteArray(1024)
                 try {
-                    while (bluetoothAdapter.isEnabled) {
+                    while (bluetoothAdapter?.isEnabled ==true) {
                         val bytes = inputStream?.read(buffer)
                         outString += String(buffer, 0, 1024)
                     }
@@ -210,7 +247,7 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
     }
 
     fun writeBytes(str: String) {
-        Thread(Runnable {
+        run {
             try {
                 write('1')
                 Thread.sleep(1000)
@@ -231,13 +268,13 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
 
                 }
             }
-        }).start()
+        }
     }
 
     fun provideBondedDeviceList(): List<BluetoothDevice> {
-        val bondedDevice = bluetoothAdapter.bondedDevices
+        val bondedDevice = bluetoothAdapter?.bondedDevices
         bondedDeviceList.clear()
-        for (device in bondedDevice) {
+        for (device in bondedDevice ?: mutableSetOf()) {
             bondedDeviceList.add(device)
             bondedDeviceNameList.add(device.name + "\n" + device.address)
         }
@@ -249,7 +286,7 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
         try {
             socket?.close()
         } catch (ioe: IOException) {
-            ioe.printStackTrace()
+            Timber.e(ioe)
         }
 
     }
@@ -298,14 +335,14 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
     }
 
     fun disableBluetooth() {
-        if (bluetoothAdapter.isEnabled) {
-            bluetoothAdapter.disable()
+        if (bluetoothAdapter?.isEnabled == true) {
+            bluetoothAdapter?.disable()
         }
     }
 
     fun enableBluetooth() {
-        if (!bluetoothAdapter.isEnabled) {
-            bluetoothAdapter.enable()
+        if (bluetoothAdapter?.isEnabled == false) {
+            bluetoothAdapter?.enable()
         }
     }
 
@@ -347,6 +384,14 @@ class BluetoothManager(var activity: Activity, enable: Boolean) {
                 }
             }
         }
+    }
+
+    interface Listener {
+        fun onDiscoveryComplete()
+    }
+
+    interface AdapterListener{
+        fun onAdapterError()
     }
 }
 

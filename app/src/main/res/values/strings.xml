@@ -33,6 +33,10 @@
     <string name="phone_state_permission_denied">For the app to work as expected, please allow the permission</string>
     <string name="phone_state_permission_never_ask">To use this feature, allow the permissions in settings</string>
 
+    <string name="allow_location_permission_msg">For the app to connect to a printer via bluetooth, allow the permissions</string>
+    <string name="location_permission_denied">For the app to connect to a printer via bluetooth please allow the permission</string>
+    <string name="location_permission_never_ask">To use this feature, allow the permissions in settings</string>
+
     <string name="allow_camera_permission_msg">For the app to scan bar codes, allow the permissions</string>
     <string name="camera_permission_denied">For the app to scan bar codes, please allow the permission</string>
     <string name="camera_permission_never_ask">To scan bar code, allow the permissions in settings</string>
@@ -128,7 +132,7 @@
     <string name="general_msg_confirm_unassign_damage">Are you sure you want to unassign the damage?</string>
     <string name="general_msg_confirm_remove_image">Are you sure you want to remove this image?</string>
     <string name="general_msg_cant_create_photo_file">Can\'t create file to store the photo.</string>
-    <string name="general_msg_please_wait">Please wait&#8230;</string>
+    <string name="general_msg_please_wait">Please wait…</string>
     <string name="general_msg_splash_version">Version {0}</string>
     <string name="general_msg_x_of_y_please_wait">{0} of {1} records processed, {2} uploaded. Please wait&#8230;
     </string>
@@ -208,4 +212,15 @@
     <string name="log_off">Log off</string>
     <string name="operator_log_out_msg">%s has successfully logged out</string>
     <string name="log_out_confirm_message">Are you sure you want to log off?</string>
+    <string name="alert">Alert</string>
+    <string name="select_printer_error_message">The app needs to turn on the device bluetooth to be able to select a
+        printer
+    </string>
+    <string name="discovering_printers">Discovering printers…</string>
+    <string name="paired_devices">Previously connected devices</string>
+    <string name="pair_new_device">Pair new device</string>
+    <string name="discovering_devices">Searching for devices</string>
+    <string name="search_complete">Search complete</string>
+    <string name="no_devices_found">No devices were found \nEnsure the device is within range</string>
+    <string name="no_bt_message">No bluetooth functionality on your phone \nPlease contact the administrator</string>
 </resources>
