@@ -5,8 +5,14 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import com.zebra.sdk.comm.ConnectionException
+import com.zebra.sdk.printer.discovery.BluetoothDiscoverer
+import com.zebra.sdk.printer.discovery.DiscoveredPrinter
+import com.zebra.sdk.printer.discovery.DiscoveryHandler
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
@@ -16,9 +22,9 @@ import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.bt.BluetoothArrayAdapter
 import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.app.utils.bt.DiscoveringDevicesDialog
-import ptml.releasing.cargo_search.view.onRequestPermissionsResult
 import ptml.releasing.databinding.ActivityPrinterSettingsBinding
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
+import timber.log.Timber
 
 @RuntimePermissions
 class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityPrinterSettingsBinding>() {
@@ -61,7 +67,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
         }
 
         binding.AdminPrinterSettingsBtnChangePrinter.setOnClickListener {
-            handleSelectPrinterClick()
+            getBluetoothDevicesWithPermissionCheck()
 
 /*
             builderSingle.setAdapter(arrayAdapter) { dialog, which ->
@@ -139,7 +145,77 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     fun getBluetoothDevices() {
-        showPairedDevicesDialog()
+        val builderSingle = AlertDialog.Builder(this@PrinterSettingsActivity)
+        builderSingle.setTitle("Discovering printers...")
+
+        val arrayAdapter = ArrayAdapter<DiscoveredPrinter>(
+            this@PrinterSettingsActivity,
+            android.R.layout.select_dialog_singlechoice
+        )
+
+        builderSingle.setNegativeButton(
+            "cancel"
+        ) { dialog, which -> dialog.dismiss() }
+
+        builderSingle.setAdapter(arrayAdapter) { dialog, which ->
+            val address = arrayAdapter.getItem(which)!!.address
+            val name = arrayAdapter.getItem(which)!!.discoveryDataMap["FRIENDLY_NAME"]
+
+            for (settingsKey in arrayAdapter.getItem(which)!!.discoveryDataMap.keys) {
+                println("Key: " + settingsKey + " Value: " + arrayAdapter.getItem(which)!!.discoveryDataMap[settingsKey])
+            }
+
+            currentPrinterAddress = address
+            binding.AdminPrinterSettingsEdtPrinterValue.setText(name)
+            dialog.dismiss()
+        }
+
+        val printerDialog = builderSingle.show()
+
+        Thread(Runnable {
+            Looper.prepare()
+            Timber.d("Starting to connect...")
+            try {
+                BluetoothDiscoverer.findPrinters(this@PrinterSettingsActivity,
+                    object : DiscoveryHandler {
+                        override fun foundPrinter(discoveredPrinter: DiscoveredPrinter) {
+
+                            runOnUiThread {
+                                arrayAdapter.add(discoveredPrinter)
+                                arrayAdapter.notifyDataSetChanged()
+                            }
+                        }
+
+                        override fun discoveryFinished() {
+
+                            runOnUiThread {
+                                if (arrayAdapter.count == 0)
+                                    builderSingle.setTitle("No printers found.")
+                                else
+                                    builderSingle.setTitle("Select a printer:")
+                            }
+                        }
+
+                        override fun discoveryError(errorMessage: String) {
+
+                            runOnUiThread {
+                                printerDialog.dismiss()
+                                AlertDialog.Builder(this@PrinterSettingsActivity)
+                                    .setMessage(errorMessage)
+                                    .setPositiveButton(
+                                        android.R.string.ok
+                                    ) { dialog, which -> dialog.dismiss() }
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show()
+                            }
+                        }
+                    }) { true }
+            } catch (ce: ConnectionException) {
+                Timber.e(ce)
+            } finally {
+                Looper.myLooper()?.quit()
+            }
+        }).start()
     }
 
     @OnShowRationale(android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -247,7 +323,8 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
 
         val arrayAdapter = BluetoothArrayAdapter(
             this@PrinterSettingsActivity,
-            devicesList)
+            devicesList
+        )
 
         val builderSingle = AlertDialog.Builder(this@PrinterSettingsActivity)
         builderSingle.setTitle(getString(R.string.pair_new_device))
