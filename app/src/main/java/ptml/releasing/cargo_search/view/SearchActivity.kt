@@ -47,7 +47,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.getSavedConfig()
         viewModel.isConfigured.observe(this, Observer {
-            binding.appBarHome.content.tvConfigMessageContainer.visibility = if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+            binding.appBarHome.content.tvConfigMessageContainer.visibility =
+                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
             binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE
             binding.appBarHome.content.includeSearch.root.visibility = if (it) View.VISIBLE else View.GONE
 
@@ -72,14 +73,22 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(binding.appBarHome.content.includeProgress.root, binding.appBarHome.content.includeProgress.tvMessage, R.string.loading)
+                showLoading(
+                    binding.appBarHome.content.includeProgress.root,
+                    binding.appBarHome.content.includeProgress.tvMessage,
+                    R.string.loading
+                )
             } else {
                 hideLoading(binding.appBarHome.content.includeProgress.root)
             }
 
             if (it?.status == Status.FAILED) {
                 val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.appBarHome.content.includeError.root, binding.appBarHome.content.includeError.tvMessage, error)
+                showLoading(
+                    binding.appBarHome.content.includeError.root,
+                    binding.appBarHome.content.includeError.tvMessage,
+                    error
+                )
             } else {
                 hideLoading(binding.appBarHome.content.includeError.root)
             }
@@ -97,7 +106,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             //pass it on to the cargo info activity
             val bundle = Bundle()
             bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
-            bundle.putString(CargoInfoActivity.QUERY, binding.appBarHome.content.includeSearch.editInput.text.toString())
+            bundle.putString(
+                CargoInfoActivity.QUERY,
+                binding.appBarHome.content.includeSearch.editInput.text.toString()
+            )
             startNewActivity(CargoInfoActivity::class.java, data = bundle)
             hideLoading(binding.appBarHome.content.includeError.root)
             hideLoading(binding.appBarHome.content.includeProgress.root)
@@ -140,11 +152,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
-                this,
-                binding.drawerLayout,
-                binding.appBarHome.toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this,
+            binding.drawerLayout,
+            binding.appBarHome.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -153,12 +165,13 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     private fun showSearchErrorDialog(message: String?) {
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.error),
-                message = message,
-                buttonText = getString(android.R.string.cancel),
-                hasNeutralButton = true,
-                neutralButtonText = getString(R.string.continue_uploading_text),
-                neutralListener = dialogListener)
+            title = getString(R.string.error),
+            message = message,
+            buttonText = getString(android.R.string.cancel),
+            hasNeutralButton = true,
+            neutralButtonText = getString(R.string.continue_uploading_text),
+            neutralListener = dialogListener
+        )
         Timber.e("Error occurred during search: msg: %s", message)
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
@@ -166,16 +179,17 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     private fun showOperatorErrorDialog() {
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.error),
-                message = getString(R.string.no_operator_msg),
-                buttonText = getString(android.R.string.ok),
-                listener = object : InfoDialog.InfoListener {
-                    override fun onConfirm() {
-                        viewModel.openOperatorDialog()
-                    }
-                },
-                hasNeutralButton = true,
-                neutralButtonText = getString(android.R.string.cancel))
+            title = getString(R.string.error),
+            message = getString(R.string.no_operator_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.openOperatorDialog()
+                }
+            },
+            hasNeutralButton = true,
+            neutralButtonText = getString(android.R.string.cancel)
+        )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
@@ -195,14 +209,14 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showPhoneStateRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.allow_permission),
-                message = getString(R.string.allow_phone_state_permission_msg),
-                buttonText = getString(android.R.string.ok),
-                listener = object : InfoDialog.InfoListener {
-                    override fun onConfirm() {
-                        request.proceed()
-                    }
-                })
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
@@ -235,17 +249,24 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            themedContext,
-                            R.drawable.ic_car
-                    )
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_car
+                )
+            )
+        } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
+            binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_cargo
+                )
             )
         } else {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
-                    ContextCompat.getDrawable(
-                            themedContext,
-                            R.drawable.ic_container
-                    )
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_container
+                )
             )
         }
 
@@ -290,42 +311,42 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     private fun showConfigurationErrorDialog() {
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.config_error),
-                message = getString(R.string.config_error_message),
-                buttonText = getString(android.R.string.ok),
-                listener = object : InfoDialog.InfoListener {
-                    override fun onConfirm() {
+            title = getString(R.string.config_error),
+            message = getString(R.string.config_error_message),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
 //                    viewModel.openConfiguration()
-                    }
-                })
+                }
+            })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
     private val navigationListener =
-            NavigationView.OnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.nav_preferences -> {
-                        //TODO handle nav
-                    }
-
-                    R.id.nav_about -> {
-                        //TODO handle nav
-                        showImeiDialog()
-                    }
-
-                    R.id.nav_scan_operator ->{
-                        viewModel.openBarCodeScanner()
-                    }
+        NavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_preferences -> {
+                    //TODO handle nav
                 }
-                binding.drawerLayout.closeDrawer(GravityCompat.START)
-                true
+
+                R.id.nav_about -> {
+                    //TODO handle nav
+                    showImeiDialog()
+                }
+
+                R.id.nav_scan_operator -> {
+                    viewModel.openBarCodeScanner()
+                }
             }
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
     private fun showImeiDialog() {
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.device_IMEI),
-                message = (application as ReleasingApplication).provideImei(),
-                buttonText = getString(R.string.dismiss)
+            title = getString(R.string.device_IMEI),
+            message = (application as ReleasingApplication).provideImei(),
+            buttonText = getString(R.string.dismiss)
         )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }

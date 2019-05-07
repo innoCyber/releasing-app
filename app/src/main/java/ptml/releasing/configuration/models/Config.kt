@@ -39,6 +39,8 @@ open class BaseConfig : BaseModel() {
 class CargoType : BaseConfig() {
     companion object {
         const val VEHICLE = "vehicle"
+        const val CONTAINER = "container"
+        const val GENERAL = "general"
     }
 }
 

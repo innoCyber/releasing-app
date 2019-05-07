@@ -15,6 +15,7 @@ import com.zebra.sdk.printer.discovery.BluetoothDiscoverer
 import com.zebra.sdk.printer.discovery.DiscoveredPrinter
 import com.zebra.sdk.printer.discovery.DiscoveryHandler
 import dagger.android.support.DaggerAppCompatActivity
+import permissions.dispatcher.RuntimePermissions
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
@@ -23,7 +24,7 @@ import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityPrinterSettingsBinding
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
 
-
+@RuntimePermissions
 class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityPrinterSettingsBinding>() {
     private var currentPrinter: String? = null
 
