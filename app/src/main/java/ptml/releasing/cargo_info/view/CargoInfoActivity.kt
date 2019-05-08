@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
+import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
@@ -26,10 +27,11 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.printer.view.onRequestPermissionsResult
 import timber.log.Timber
 import java.util.*
 
-
+@RuntimePermissions
 class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
     companion object {
@@ -107,7 +109,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         )
     }
 
-    private fun handlePrint(settings: Settings) {
+    @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+    fun handlePrint(settings: Settings) {
         printerView?.isEnabled = false
         val t = Thread(Runnable {
             try {
@@ -190,7 +193,7 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         viewModel.getFormConfig()
 
         viewModel.printerSettings.observe(this, Observer {
-            handlePrint(it)
+            handlePrintWithPermissionCheck(it)
         })
 
         viewModel.networkState.observe(this, Observer {
@@ -307,6 +310,35 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
                 }
             })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnShowRationale(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+    fun showLocationRationale(request: PermissionRequest) {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_location_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnPermissionDenied(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+    fun showDeniedForLocation() {
+        notifyUser(binding.root, getString(R.string.location_permission_denied))
+    }
+
+    @OnNeverAskAgain(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+    fun neverAskForLocation() {
+        notifyUser(binding.root, getString(R.string.location_permission_never_ask))
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
     }
 
 

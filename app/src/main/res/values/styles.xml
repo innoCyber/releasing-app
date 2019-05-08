@@ -179,6 +179,7 @@
 
     <style name="TextLimitError" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/colorRed</item>
+        <item name="android:background">@color/form_textbox_color</item>
         <item name="android:textSize">9sp</item>
     </style>
 

@@ -24,4 +24,6 @@
     <color name="color_highlight">#008751</color>
     <color name="colorOperator">#24A793</color>
     <color name="colorOther">#3a80ee</color>
+
+    <color name="form_textbox_color">#EBEBEB</color>
 </resources>
