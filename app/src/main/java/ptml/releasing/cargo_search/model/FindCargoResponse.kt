@@ -7,11 +7,13 @@ import ptml.releasing.app.base.BaseResponse
 
 data class FindCargoResponse(
     @SerializedName("cargo_id") var cargoId: Int,
+    @SerializedName("barcode") var barcode: String?,
     @SerializedName("values") val values: List<Value>,
     @SerializedName("options") val options: List<Option>
 ) : BaseResponse(), Parcelable {
     constructor(source: Parcel) : this(
         source.readInt(),
+        source.readString(),
         ArrayList<Value>().apply { source.readList(this, Value::class.java.classLoader) },
         ArrayList<Option>().apply { source.readList(this, Option::class.java.classLoader) }
     )
@@ -20,15 +22,19 @@ data class FindCargoResponse(
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeInt(cargoId)
+        writeString(barcode)
         writeList(values)
         writeList(options)
     }
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<FindCargoResponse> = object : Parcelable.Creator<FindCargoResponse> {
-            override fun createFromParcel(source: Parcel): FindCargoResponse = FindCargoResponse(source)
-            override fun newArray(size: Int): Array<FindCargoResponse?> = arrayOfNulls(size)
-        }
+        val CREATOR: Parcelable.Creator<FindCargoResponse> =
+            object : Parcelable.Creator<FindCargoResponse> {
+                override fun createFromParcel(source: Parcel): FindCargoResponse =
+                    FindCargoResponse(source)
+
+                override fun newArray(size: Int): Array<FindCargoResponse?> = arrayOfNulls(size)
+            }
     }
 }
