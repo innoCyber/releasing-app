@@ -467,7 +467,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         val operatorIndicator = findViewById<ImageView>(R.id.img_indicator)
         operatorIndicator.setImageResource(if (TextUtils.isEmpty(operatorName)) R.drawable.operator_circle_red else R.drawable.operator_circle)
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
-        operatorNameTextView?.text = operatorName
+        operatorNameTextView?.text = if (TextUtils.isEmpty(operatorName)) getString(R.string.no_operator_logged_in) else operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
         changeOperator?.text =
             if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
