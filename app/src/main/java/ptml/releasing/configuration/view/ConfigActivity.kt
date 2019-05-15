@@ -114,6 +114,10 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             getConfigWithPermissionCheck()
         }
 
+        binding.fab.setOnClickListener {
+            refreshConfigWithPermissionCheck()
+        }
+
 
         //begin the request
         getConfigWithPermissionCheck()
@@ -124,6 +128,11 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getConfig() {
         viewModel.getConfig((application as ReleasingApplication).provideImei())
+    }
+
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    fun refreshConfig() {
+        viewModel.refreshConfiguration((application as ReleasingApplication).provideImei())
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)

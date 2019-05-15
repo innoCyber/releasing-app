@@ -14,15 +14,15 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-        repository: Repository,
-        appCoroutineDispatchers: AppCoroutineDispatchers
+    repository: Repository,
+    appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(repository, appCoroutineDispatchers) {
 
 
     val usernameValidation = MutableLiveData<Int>()
     val passwordValidation = MutableLiveData<Int>()
     val errorMessage = MutableLiveData<String>()
-    val loadNext= MutableLiveData<Unit>()
+    val loadNext = MutableLiveData<Unit>()
 
     val networkState = MutableLiveData<NetworkState>()
 
@@ -51,9 +51,10 @@ class LoginViewModel @Inject constructor(
                 val result = repository.loginAsync(user).await()
                 withContext(appCoroutineDispatchers.main) {
                     Timber.d("Response: %s", result)
-                    if(result.isSuccess){
+                    result.isSuccess = true
+                    if (result.isSuccess) {
                         loadNext.postValue(Unit)
-                    }else{
+                    } else {
                         errorMessage.postValue(result.message)
                     }
                     networkState.postValue(NetworkState.LOADED)

@@ -133,10 +133,10 @@ class CargoInfoActivity :
                     intent?.extras?.getBundle(Constants.EXTRAS)
                         ?.getParcelable<FindCargoResponse>(RESPONSE)
                 val barcode = findCargoResponse?.barcode
-                val labelCpclData =
+                var labelCpclData =
                     settings?.labelCpclData?.replace("var_barcode", barcode ?: input ?: "")
                 /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
-
+                Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
 
@@ -149,6 +149,19 @@ class CargoInfoActivity :
                 // This prints the label.
 
                 // Send the data to printer as a byte array.
+               /* labelCpclData = "! 0 200 200 406 1\n" +
+                        "PW 480\n" +
+                        "TONE 0\n" +
+                        "SPEED 4\n" +
+                        "ON-FEED IGNORE\n" +
+                        "NO-PACE\n" +
+                        "BAR-SENSE\n" +
+                        "T 4 0 179 47 PTML\n" +
+                        "BT 7 0 6\n" +
+                        "B 39 1 30 216 31 134 XXXB0005643\n" +
+                        "FORM\n" +
+                        "PRINT"*/
+//                labelCpclData = "Hello World"
                 thePrinterConn.write(labelCpclData?.toByteArray())
 
                 // Make sure the data got to the printer before closing the connection
@@ -275,6 +288,13 @@ class CargoInfoActivity :
     }
 
     private fun handleSelectPrinterClick(settings: Settings?) {
+//        handlePrintWithPermissionCheck(settings)
+        if(bluetoothManager.bluetoothAdapter == null){
+            showErrorDialog(getString(R.string.no_bt_message))
+            Timber.e("No Bluetooth device")
+            return
+        }
+
         if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
             handlePrintWithPermissionCheck(settings)
         } else {
@@ -317,6 +337,13 @@ class CargoInfoActivity :
                 ContextCompat.getDrawable(
                     themedContext,
                     R.drawable.ic_car
+                )
+            )
+        } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_cargo
                 )
             )
         } else {
