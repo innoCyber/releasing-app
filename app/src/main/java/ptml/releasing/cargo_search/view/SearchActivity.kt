@@ -146,9 +146,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             viewModel.openBarcodeScan()
         }
 
-        binding.appBarHome.content.btnBack.setOnClickListener {
-            viewModel.openAdmin()
-        }
+        binding.appBarHome.content.btnBack.visibility = View.GONE
 
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
@@ -327,6 +325,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             when (item.itemId) {
                 R.id.nav_preferences -> {
                     //TODO handle nav
+                    viewModel.openAdmin()
                 }
 
                 R.id.nav_about -> {

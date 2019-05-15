@@ -69,7 +69,7 @@
     <string name="main">Main</string>
     <string name="operation_step">Operation step</string>
     <string name="home">Home</string>
-    <string name="nav_preferences">Preferences</string>
+    <string name="nav_preferences">Admin Settings</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

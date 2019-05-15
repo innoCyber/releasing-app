@@ -133,6 +133,7 @@
                 style="@style/RippleLayoutStyle.Configure"
                 android:layout_marginTop="@dimen/constraint_default_margin_16dp"
                 android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
