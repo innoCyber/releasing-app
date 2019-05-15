@@ -124,6 +124,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             showOperatorErrorDialog()
         })
 
+        binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
+
         binding.appBarHome.content.includeSearch.editInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -159,7 +161,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
+
+
     }
+
 
     private fun showSearchErrorDialog(message: String?) {
         val dialogFragment = InfoDialog.newInstance(

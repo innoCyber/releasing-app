@@ -2,6 +2,7 @@ package ptml.releasing.app.utils
 
 import android.content.Context
 import android.os.Build
+import android.text.InputFilter
 import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
@@ -68,4 +69,11 @@ fun EditText.setValidation(validation:String?) {
             inputType = InputType.TYPE_CLASS_NUMBER
         }
     }
+}
+
+fun EditText.setAllCapInputFilter(){
+    val existingFilters = filters
+    val newFilters =  existingFilters.copyOf(existingFilters.size + 1)
+    newFilters.set(existingFilters.size, InputFilter.AllCaps())
+    filters = newFilters
 }
