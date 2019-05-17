@@ -30,7 +30,7 @@ open class BaseConfig : BaseModel() {
     }
 
     override fun toString(): String {
-        return "BaseConfig(value=$value)"
+        return "BaseConfig(value=$value) ${super.toString()}"
     }
 
 
@@ -42,6 +42,7 @@ class CargoType : BaseConfig() {
         const val CONTAINER = "container"
         const val GENERAL = "general"
     }
+
 }
 
 data class Terminal(
@@ -95,7 +96,7 @@ data class OperationStep(
     }
 
     override fun toString(): String {
-        return "OperationStep(cargo_type=$cargo_type) " + super.toString()
+        return "OperationStep(cargo_type=$cargo_type) ${super.toString()}"
     }
 
 
@@ -189,7 +190,7 @@ data class ConfigureDeviceResponse(@SerializedName("data") val data: List<Config
 }
 
 data class ConfigureDeviceData(
-        @SerializedName("position") val position: Int = 0,
+        @SerializedName("order_id") val position: Int = 0,
         @SerializedName("type") val type: String,
         @SerializedName("title") val title: String,
         @SerializedName("is_required") val required: Boolean,
@@ -198,7 +199,7 @@ data class ConfigureDeviceData(
         @SerializedName("data_validation") val dataValidation: String
 ) : BaseModel() {
     override fun toString(): String {
-        return "ConfigureDeviceData(position=$position, type='$type', title='$title', required=$required, editable=$editable, options=$options, dataValidation='$dataValidation')"
+        return "ConfigureDeviceData(position=$position, type='$type', title='$title', required=$required, editable=$editable, options=$options, dataValidation='$dataValidation') ${super.toString()}"
     }
 }
 

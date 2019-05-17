@@ -35,40 +35,36 @@ interface Repository {
 
 
     suspend fun findCargo(
-            cargoTypeId: Int?,
-            operationStepId: Int?,
-            terminal: Int?,
-            imei: String,
-            cargoNumber:String):Deferred<FindCargoResponse>
+        cargoTypeId: Int?,
+        operationStepId: Int?,
+        terminal: Int?,
+        imei: String,
+        cargoNumber: String
+    ): Deferred<FindCargoResponse?>?
 
-     fun getSavedConfigAsync(): Configuration
-     fun setSavedConfigAsync(configuration: Configuration)
+    fun getSavedConfigAsync(): Configuration
+    fun setSavedConfigAsync(configuration: Configuration)
 
-     fun isFirstAsync(): Boolean
-     fun setFirst(value: Boolean)
-     fun isConfiguredAsync(): Boolean
-     fun setConfigured(isConfigured: Boolean)
+    fun isFirstAsync(): Boolean
+    fun setFirst(value: Boolean)
+    fun isConfiguredAsync(): Boolean
+    fun setConfigured(isConfigured: Boolean)
 
-    suspend  fun getDamagesByPosition(imei: String, position:String) : List<Damage>
+    suspend fun getDamagesByPosition(imei: String, position: String): List<Damage>
 
 
     fun saveSettings(settings: Settings?)
     fun getSettings(): Settings
 
-    fun saveOperatorName(name:String?)
-    fun getOperatorName():String?
+    fun saveOperatorName(name: String?)
+    fun getOperatorName(): String?
 
-    fun saveServerUrl(url:String?)
-    fun getServerUrl():String?
+    fun saveServerUrl(url: String?)
+    fun getServerUrl(): String?
 
 
-    suspend fun uploadData(request: FormSubmissionRequest,
-                           cargoTypeId: Int?,
-                           operationStepId: Int?,
-                           terminal: Int?,
-                           operator:String?,
-                           cargoNumber: String?,
-                           cargoId: Int?
+    suspend fun uploadData(
+        request: FormSubmissionRequest
     ): Deferred<BaseResponse>
 
 

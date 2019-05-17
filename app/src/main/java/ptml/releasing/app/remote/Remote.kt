@@ -27,15 +27,9 @@ interface Remote {
         terminal: Int?,
         imei: String,
         cargoNumber: String
-    ): Deferred<FindCargoResponse>
+    ): Deferred<FindCargoResponse?>?
 
 
-    suspend fun uploadData(request: FormSubmissionRequest,
-                           cargoTypeId: Int?,
-                           operationStepId: Int?,
-                           terminal: Int?,
-                           operator:String?,
-                           cargoNumber: String?,
-                           cargoId: Int?
+    suspend fun uploadData(request: FormSubmissionRequest
                            ): Deferred<BaseResponse>
 }

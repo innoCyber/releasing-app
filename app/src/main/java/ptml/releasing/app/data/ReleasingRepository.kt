@@ -112,8 +112,9 @@ open class ReleasingRepository @Inject constructor(
             val remoteResponse = remote.setConfigurationDeviceAsync(cargoTypeId, operationStepId, terminal, imei)
             Timber.d("Gotten response: %s", remoteResponse)
             withContext(appCoroutineDispatchers.db) {
-                local.saveDeviceConfiguration(remoteResponse.await())
-                Timber.d("Saved response")
+                val response = remoteResponse.await()
+                local.saveDeviceConfiguration(response)
+                Timber.d("Saved response: %s", response)
             }
             remoteResponse
         }
@@ -148,13 +149,7 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override suspend fun uploadData(request: FormSubmissionRequest,
-                                    cargoTypeId: Int?,
-                                    operationStepId: Int?,
-                                    terminal: Int?,
-                                    operator:String?,
-                                    cargoNumber:String?,
-                                    cargoId: Int? ) = remote.uploadData(request, cargoTypeId, operationStepId, terminal, operator, cargoNumber,cargoId)
+    override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
 
     override fun getSettings() = local.getSettings()
 

@@ -80,7 +80,8 @@ class FormBuilder constructor(val context: Context) {
             Timber.w("Option: %s", option)
             this.options[option.id] = option
         }
-
+        Timber.e("Options Map: %s", options)
+        Timber.e("Values Map: %s", values)
         return this
     }
 
@@ -129,7 +130,7 @@ class FormBuilder constructor(val context: Context) {
             rootLayout.addView(createErrorView())
         }
 
-        initializeData()
+//        initializeData()
         listener?.onEndLoad()
         return rootLayout
     }
@@ -179,7 +180,8 @@ class FormBuilder constructor(val context: Context) {
                 }
 
                 FormType.CHECK_BOX -> {
-                    //todo: HAndle this
+                    Timber.d("Initializing checkbox: %s", data)
+                    initializeDefaultValue(data)
                     return createCheckBox(data, i)
                 }
 
@@ -590,10 +592,12 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    internal fun getCheckBoxValue(data: ConfigureDeviceData?): Boolean? {
+    internal fun getCheckBoxValue(data: ConfigureDeviceData?): Value {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         val checkBox = view.findViewById<CheckBox>(R.id.check_box)
-        return checkBox.isChecked
+        val value = Value(checkBox.isChecked.toString())
+        value.id = data?.id
+        return value
     }
 
 
@@ -625,20 +629,20 @@ class FormBuilder constructor(val context: Context) {
         return view
     }
 
-    private fun initializeData() {
+     fun initializeData() {
         initializeValues()
         initializeOptions()
     }
 
     private fun initializeValues() {
         for (value in values.values) {
-            val inputLayout = rootLayout.findViewWithTag<View>(value.id)
-            val editText = inputLayout?.findViewById<EditText>(R.id.edit)
-            bindValuesDataToView(editText, value.value)
+            val root = rootLayout.findViewWithTag<View>(value.id)
+            bindValuesDataToView(root, value.value)
         }
     }
 
     private fun initializeOptions() {
+        Timber.d("Options Values: %s",options.values)
         for (option in options.values) {
             Timber.d("Options: %s", option)
             val view = rootLayout.findViewWithTag<View>(option.id)
@@ -662,10 +666,23 @@ class FormBuilder constructor(val context: Context) {
     private fun bindValuesDataToView(view: View?, data: String?) {
         when (view) {
             is TextInputLayout -> {
+                Timber.d("Initializing texbox to: %s, ")
                 view.findViewById<EditText>(R.id.edit).setText(data)
                 view.findViewById<EditText>(R.id.edit).setSelection(data?.length ?: 0)
             }
             is TextView -> view.text = data
+
+            is ViewGroup ->{
+                val checkbox = view.findViewById<CheckBox>(R.id.check_box)
+                val checked = try {
+                    data?.toBoolean() ?: false
+                }catch (e:Exception){
+                    Timber.e(e)
+                    false
+                }
+                Timber.d("Checkbox initialization: %s", checked)
+                checkbox.isChecked = checked
+            }
             else -> {
                 Timber.d("Unknown view %s", view?.javaClass?.name)
             }
@@ -676,7 +693,8 @@ class FormBuilder constructor(val context: Context) {
     private fun bindOptionsDataToView(view: View?, data: List<Int>?) {
         when (view) {
             is MultiSpinner -> { //check this first, for multi select
-                Timber.d("MultiSpinner initialization")
+                Timber.d("MultiSpinner initialization: %s", data?.size)
+
                 view.setSelection(data)
             }
 

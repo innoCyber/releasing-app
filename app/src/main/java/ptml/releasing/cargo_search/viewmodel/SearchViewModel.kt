@@ -12,6 +12,7 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
@@ -76,15 +77,20 @@ class SearchViewModel @Inject constructor(
                     config?.terminal?.id ?: 0,
                     imei,
                     cargoNumber
-                ).await()
+                )?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (findCargoResponse.isSuccess) {
+                    if (findCargoResponse?.isSuccess ==  true) {
                         Timber.v("findCargoResponse: %s", findCargoResponse)
                         _findCargoResponse.postValue(findCargoResponse)
                     } else {
-                        Timber.e("Find Cargo failed with message =%s", findCargoResponse.message)
-                        _findCargoHolder.value = findCargoResponse
-                        _errorMessage.postValue(findCargoResponse.message)
+                        Timber.e("Find Cargo failed with message =%s", findCargoResponse?.message)
+                        if(findCargoResponse?.message?.isEmpty() == false){
+                            _findCargoHolder.value = findCargoResponse
+                            _errorMessage.postValue(findCargoResponse.message)
+                        }else{
+                            val e = Exception("Response is null")
+                            _networkState.postValue(NetworkState.error(e))
+                        }
                     }
                     _networkState.postValue(NetworkState.LOADED)
                 }

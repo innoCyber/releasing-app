@@ -6,7 +6,10 @@ import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import timber.log.Timber
 
-class FormSubmission constructor(val formBuilder: FormBuilder?, private val formValidator: FormValidator?) {
+class FormSubmission constructor(
+    val formBuilder: FormBuilder?,
+    private val formValidator: FormValidator?
+) {
     private val _valuesList = mutableListOf<Value>()
     val valuesList: List<Value> = _valuesList
 
@@ -18,12 +21,12 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
     val selectionList: List<FormSelection> = _selectionsList
 
 
-    fun submit(){
+    fun submit() {
         if (formValidator?.validate() == true) {
             for (form in formBuilder?.data ?: mutableListOf()) {
                 submitBasedOnType(form)
             }
-        }else{
+        } else {
             Timber.e("Form is invalid")
         }
     }
@@ -35,7 +38,7 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
 
                 FormType.TEXTBOX -> {
                     Timber.d("Getting TEXTBOX value")
-                    val value  = formBuilder?.getTextBoxValue(data)
+                    val value = formBuilder?.getTextBoxValue(data)
                     if (value != null) {
                         _valuesList.add(value)
                     }
@@ -43,7 +46,7 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
 
                 FormType.MULTI_LINE_TEXTBOX -> {
                     Timber.d("Getting MULTI_LINE_TEXTBOX value")
-                    val value  = formBuilder?.getTextBoxValue(data)
+                    val value = formBuilder?.getTextBoxValue(data)
                     if (value != null) {
                         _valuesList.add(value)
                     }
@@ -85,7 +88,10 @@ class FormSubmission constructor(val formBuilder: FormBuilder?, private val form
 
                 FormType.CHECK_BOX -> {
                     Timber.d("Getting CHECK_BOX value")
-                    //TODO
+                    val value = formBuilder?.getCheckBoxValue(data)
+                    if (value != null) {
+                        _valuesList.add(value)
+                    }
                 }
 
                 else -> {

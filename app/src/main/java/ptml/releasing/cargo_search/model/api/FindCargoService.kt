@@ -13,5 +13,5 @@ interface FindCargoService {
             @Query("terminal") terminal: Int?,
             @Query("imei") imei: String,
             @Query("cargo_code")cargoNumber:String
-    ): Deferred<FindCargoResponse>
+    ): Deferred<FindCargoResponse?>?
 }

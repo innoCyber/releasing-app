@@ -14,8 +14,8 @@ data class FindCargoResponse(
     constructor(source: Parcel) : this(
         source.readInt(),
         source.readString(),
-        ArrayList<Value>().apply { source.readList(this, Value::class.java.classLoader) },
-        ArrayList<Option>().apply { source.readList(this, Option::class.java.classLoader) }
+        source.createTypedArrayList(Value.CREATOR),
+        source.createTypedArrayList(Option.CREATOR)
     )
 
     override fun describeContents() = 0
@@ -23,8 +23,8 @@ data class FindCargoResponse(
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeInt(cargoId)
         writeString(barcode)
-        writeList(values)
-        writeList(options)
+        writeTypedList(values)
+        writeTypedList(options)
     }
 
     companion object {

@@ -29,7 +29,8 @@ open class BaseModel() : Parcelable {
         return "BaseModel(id=$id)"
     }
 
-    constructor(source: Parcel) : this()
+    constructor(source: Parcel) : this(
+    )
 
     override fun describeContents() = 0
 
