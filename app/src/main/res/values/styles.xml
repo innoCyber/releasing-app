@@ -283,7 +283,7 @@
     </style>
 
     <style name="CargoNumber">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_16dp</item>
@@ -322,7 +322,7 @@
 
     <style name="Form.TextBox">
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
-        <item name="android:background">@drawable/outline_bg</item>
+        <!--<item name="android:background">@drawable/outline_bg</item>-->
     </style>
 
     <style name="Form.Multiline" parent="Form.TextBox">

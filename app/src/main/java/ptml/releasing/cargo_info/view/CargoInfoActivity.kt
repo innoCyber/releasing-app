@@ -43,6 +43,7 @@ class CargoInfoActivity :
         const val RESPONSE = "response"
         const val QUERY = "query"
         const val DAMAGES_RC = 1234
+
     }
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -74,8 +75,11 @@ class CargoInfoActivity :
 
                 FormType.DAMAGES -> {
                     damageView = view
+                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+                    DamagesActivity.typeContainer = findCargoResponse?.typeContainer ?: 0
+                    val intent = Intent(this@CargoInfoActivity, DamagesActivity::class.java)
                     startActivityForResult(
-                        Intent(this@CargoInfoActivity, DamagesActivity::class.java),
+                        intent,
                         DAMAGES_RC
                     )
                 }

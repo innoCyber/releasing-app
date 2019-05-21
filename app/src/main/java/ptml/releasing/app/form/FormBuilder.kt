@@ -224,7 +224,7 @@ class FormBuilder constructor(val context: Context) {
         val inputLayout = inflateView(context, R.layout.form_textbox) as TextInputLayout
         inputLayout.tag = data?.id
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        editText.hint = data?.title
+        inputLayout.hint = data?.title
         editText.setValidation(data?.dataValidation)
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -279,7 +279,7 @@ class FormBuilder constructor(val context: Context) {
         val inputLayout = inflateView(context, R.layout.form_textbox_multiline) as TextInputLayout
         inputLayout.tag = data?.id
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        editText.hint = data?.title
+        inputLayout.hint = data?.title
         editText.setValidation(data?.dataValidation)
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -672,7 +672,7 @@ class FormBuilder constructor(val context: Context) {
             }
             is TextView -> view.text = data
 
-            is ViewGroup ->{
+            is LinearLayout ->{
                 val checkbox = view.findViewById<CheckBox>(R.id.check_box)
                 val checked = try {
                     data?.toBoolean() ?: false
@@ -681,7 +681,7 @@ class FormBuilder constructor(val context: Context) {
                     false
                 }
                 Timber.d("Checkbox initialization: %s", checked)
-                checkbox.isChecked = checked
+                checkbox?.isChecked = checked
             }
             else -> {
                 Timber.d("Unknown view %s", view?.javaClass?.name)

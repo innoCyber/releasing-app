@@ -18,9 +18,9 @@ import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
 open class ReleasingRepository @Inject constructor(
-        var remote: Remote,
-        var local: Local,
-        var appCoroutineDispatchers: AppCoroutineDispatchers
+    var remote: Remote,
+    var local: Local,
+    var appCoroutineDispatchers: AppCoroutineDispatchers
 ) : Repository {
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
@@ -103,13 +103,14 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun setConfigurationDeviceAsync(
-            cargoTypeId: Int?,
-            operationStepId: Int?,
-            terminal: Int?,
-            imei: String
+        cargoTypeId: Int?,
+        operationStepId: Int?,
+        terminal: Int?,
+        imei: String
     ): Deferred<ConfigureDeviceResponse> {
         return withContext(appCoroutineDispatchers.network) {
-            val remoteResponse = remote.setConfigurationDeviceAsync(cargoTypeId, operationStepId, terminal, imei)
+            val remoteResponse =
+                remote.setConfigurationDeviceAsync(cargoTypeId, operationStepId, terminal, imei)
             Timber.d("Gotten response: %s", remoteResponse)
             withContext(appCoroutineDispatchers.db) {
                 val response = remoteResponse.await()
@@ -125,21 +126,27 @@ open class ReleasingRepository @Inject constructor(
     }
 
 
-    override suspend fun findCargo(cargoTypeId: Int?,
-                                   operationStepId: Int?,
-                                   terminal: Int?,
-                                   imei: String,
-                                   cargoNumber:String
+    override suspend fun findCargo(
+        cargoTypeId: Int?,
+        operationStepId: Int?,
+        terminal: Int?,
+        imei: String,
+        cargoNumber: String
     ) = remote.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
 
 
-    override suspend fun getDamagesByPosition(imei:String, position: String): List<Damage> {
-        return withContext(appCoroutineDispatchers.db){
+    override suspend fun getDamagesByPosition(
+        imei: String,
+        position: String,
+        typeContainer: Int?
+    ): List<Damage> {
+        return withContext(appCoroutineDispatchers.db) {
             val filteredList = mutableListOf<Damage>()
             val damageResponse = getDamagesAsync(imei).await()
             val list = damageResponse.data
             for (damage in list) {
-                if(damage.position == position){
+                Timber.d("Damage: %s", damage)
+                if (damage.position == position && damage.typeContainer == typeContainer) {
                     filteredList.add(damage)
                 }
             }
@@ -161,8 +168,7 @@ open class ReleasingRepository @Inject constructor(
 
     override fun getServerUrl(): String? = local.getServerUrl()
 
-    override fun saveServerUrl(url: String?)  = local.saveServerUrl(url)
-
+    override fun saveServerUrl(url: String?) = local.saveServerUrl(url)
 
 
 }
