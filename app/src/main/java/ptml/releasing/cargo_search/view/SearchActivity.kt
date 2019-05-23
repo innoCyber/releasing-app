@@ -394,12 +394,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_preferences -> {
-                    //TODO handle nav
                     viewModel.openAdmin()
                 }
 
                 R.id.nav_about -> {
-                    //TODO handle nav
                     showImeiDialog()
                 }
 

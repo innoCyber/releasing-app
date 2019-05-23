@@ -19,4 +19,10 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/nav_preferences"
         android:visible="true"/>
+
+    <item
+        android:id="@+id/nav_device_configuration"
+        android:icon="@drawable/ic_config"
+        android:title="@string/device_configuration"
+        android:visible="true"/>
 </menu>

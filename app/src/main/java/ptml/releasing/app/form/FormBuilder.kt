@@ -629,6 +629,7 @@ class FormBuilder constructor(val context: Context) {
         //set listeners on the buttons
         val saveButton = view.findViewById<Button>(R.id.btn_save)
         saveButton.setOnClickListener {
+            it.setBackgroundResource(R.drawable.btn_bg_other)
             listener?.onClickSave()
         }
         val resetButton = view.findViewById<Button>(R.id.btn_reset)
