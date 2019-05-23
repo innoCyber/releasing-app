@@ -357,7 +357,7 @@
     <style name="Form.SaveButton" parent="Form.Button">
         <item name="android:background">@drawable/btn_bg_save</item>
         <item name="android:text">@string/save</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="Form.ResetButton" parent="Form.Button">
