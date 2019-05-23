@@ -123,7 +123,14 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             showOperatorErrorDialog()
         })
 
+
+
         binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
+        binding.appBarHome.content.includeSearch.editInput.setImeDoneListener(object : DonePressedListener{
+            override fun onDonePressed() {
+                viewModel.verify()
+            }
+        })
 
         binding.appBarHome.content.includeSearch.editInput.addTextChangedListener(object :
             TextWatcher {

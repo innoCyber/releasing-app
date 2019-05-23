@@ -14,6 +14,7 @@ import android.widget.*;
 import androidx.appcompat.app.AlertDialog;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import ptml.releasing.BR;
@@ -32,7 +33,8 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
 
 
     public static List<AssignedDamage> currentDamages = new LinkedList<AssignedDamage>();
-    public static int typeContainer = 0;
+    @Nullable
+    public static Integer typeContainer = 0;
     public static String currentDamageZone = ""; // R,T,L,D,F,B
     public static String currentDamagePoint = ""; // BAC,BRI,BBO,BLE,CBA,CRI,CBO,CLE,FCE,FRI,FBO,FLE,FRO
 
@@ -54,7 +56,7 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
 
     public static void resetValues() {
         currentDamages.clear();
-        typeContainer = 0;
+        typeContainer = null;
         currentDamageZone = "";
         currentDamagePoint = "";
     }

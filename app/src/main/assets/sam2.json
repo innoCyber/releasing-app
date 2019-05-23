@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "message": "",
+  "cargo_id": 139442,
+  "type_container": 1,
+  "data": [
+    {
+      "id": 11,
+      "type": "label",
+      "order_id": 1,
+      "title": "Label Title",
+      "is_required": true,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 38,
+      "type": "multi_select",
+      "title": "Remarks",
+      "order_id": 12,
+      "is_required": true,
+      "options": [
+        {
+          "id": 1,
+          "name": "No Key",
+          "is_selected": false
+        },
+        {
+          "id": 2,
+          "name": "1 Key"
+        },
+        {
+          "id": 3,
+          "name": "2 Keys"
+        }
+      ],
+      "data_validation": ""
+    }
+  ]
+}

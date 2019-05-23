@@ -76,7 +76,7 @@ class CargoInfoActivity :
                 FormType.DAMAGES -> {
                     damageView = view
                     val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
-                    DamagesActivity.typeContainer = findCargoResponse?.typeContainer ?: 0
+                    DamagesActivity.typeContainer = findCargoResponse?.typeContainer
                     val intent = Intent(this@CargoInfoActivity, DamagesActivity::class.java)
                     startActivityForResult(
                         intent,
@@ -331,7 +331,9 @@ class CargoInfoActivity :
             ?.initializeData()
 
         binding.formContainer.addView(formView)
-        binding.formBottom.addView(formBuilder?.getBottomButtons())
+        if(formBuilder?.error == false){
+            binding.formBottom.addView(formBuilder?.getBottomButtons())
+        }
     }
 
 

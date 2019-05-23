@@ -146,8 +146,14 @@ open class ReleasingRepository @Inject constructor(
             val list = damageResponse.data
             for (damage in list) {
                 Timber.d("Damage: %s", damage)
-                if (damage.position == position && damage.typeContainer == typeContainer) {
-                    filteredList.add(damage)
+                if (typeContainer != null) {
+                    if (damage.position == position && damage.typeContainer == typeContainer) {
+                        filteredList.add(damage)
+                    }
+                } else {
+                    if (damage.position == position) {
+                        filteredList.add(damage)
+                    }
                 }
             }
             Timber.d("Filtered List: %s", filteredList)

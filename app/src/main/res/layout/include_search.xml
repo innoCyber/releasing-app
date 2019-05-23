@@ -75,6 +75,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/round_rect_white"
                         android:hint="@string/search_hint"
+                        android:imeActionLabel="@string/verify"
                         android:inputType="text"
                         android:maxLines="1" />
 

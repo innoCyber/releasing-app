@@ -43,6 +43,8 @@ class FormBuilder constructor(val context: Context) {
     private var multiSpinnerListener: MultiSpinnerListener? = null
     private var singleSelectListener: SingleSelectListener<Options>? = null
 
+    var error = false
+
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
@@ -127,6 +129,7 @@ class FormBuilder constructor(val context: Context) {
         }
 
         if (rootLayout.childCount <= 0) { //show an error view if no view had been added
+            error = true
             rootLayout.addView(createErrorView())
         }
 

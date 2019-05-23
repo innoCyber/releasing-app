@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "message": "",
+  "cargo_id": 2,
+  "values": [
+    {
+      "id": 11,
+      "value": "2014 IVECO VAN"
+    }
+  ],
+  "options": [
+    {
+      "id": 38,
+      "selected": [
+        2
+      ]
+    }
+  ]
+}
