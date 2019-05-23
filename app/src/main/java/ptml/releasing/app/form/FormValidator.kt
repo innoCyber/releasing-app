@@ -1,5 +1,6 @@
 package ptml.releasing.app.form
 
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import timber.log.Timber
 
@@ -13,27 +14,26 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
         var isValid: Boolean
         Timber.d("validating form...")
         for (form in formBuilder?.data ?: mutableListOf()) {
-            if (form.required) {
+            if (form.required && (form.type != Constants.LABEL)) {
                 Timber.d("Form is required: %s", form.type)
                 isValid = validateBasedOnType(form) ?: false
                 validationResult(isValid)
             }
         }
 
-        if(!validForm){
+        if (!validForm) {
             listener?.onError()
         }
 
         return validForm
     }
 
-    private fun validationResult(isValid:Boolean): Boolean {
-        if(!isValid){
+    private fun validationResult(isValid: Boolean): Boolean {
+        if (!isValid) {
             validForm = isValid
         }
         return validForm
     }
-
 
 
     private fun validateBasedOnType(data: ConfigureDeviceData?): Boolean? {
@@ -95,7 +95,7 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
     }
 
 
-    interface ValidatorListener{
+    interface ValidatorListener {
         fun onError()
     }
 }

@@ -48,7 +48,10 @@ class FormBuilder constructor(val context: Context) {
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
 
     }
 
@@ -111,7 +114,8 @@ class FormBuilder constructor(val context: Context) {
         Timber.d("Config list: %s", configDataList)
         this.data = configDataList
 
-        val positionComparator = Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
+        val positionComparator =
+            Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }
         Collections.sort(data ?: mutableListOf(), positionComparator)
 
         //iterate over the list to get each config
@@ -266,7 +270,7 @@ class FormBuilder constructor(val context: Context) {
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
         val text = editText.text.toString()
 
-        val value = if(text.isNotEmpty()) Value(text) else null
+        val value = if (text.isNotEmpty()) Value(text) else null
         value?.id = data?.id
         return value
     }
@@ -323,7 +327,8 @@ class FormBuilder constructor(val context: Context) {
         val titleView = view.findViewById<TextView>(R.id.tv_title)
         val numberView = view.findViewById<TextView>(R.id.tv_number)
         val imageView = view.findViewById<ImageView>(R.id.img)
-        numberView.visibility = if (data?.type == FormType.PRINTER.type) View.INVISIBLE else View.VISIBLE
+        numberView.visibility =
+            if (data?.type == FormType.PRINTER.type) View.INVISIBLE else View.VISIBLE
         titleView.text = data?.title
         imageView.setImageResource(getImageResourceByType(data?.type))
         view.tag = data?.id
@@ -442,14 +447,16 @@ class FormBuilder constructor(val context: Context) {
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val spinner = view.findViewById<Spinner>(R.id.select)
             val selectedValues = listOf(spinner.selectedItemPosition)
-            val formSelection =  if(selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
+            val formSelection =
+                if (selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
             formSelection?.id = data?.id
             return formSelection
         } else {
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as SingleSelectAdapter<*>
             val selectedValues = listOf(adapter.selectedItemPosition)
-            val formSelection =  if(selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
+            val formSelection =
+                if (selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
             formSelection?.id = data?.id
             return formSelection
         }
@@ -538,7 +545,7 @@ class FormBuilder constructor(val context: Context) {
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val spinner = view.findViewById<MultiSpinner>(R.id.select)
             val list = spinner.selectedItems.values.toList()
-            val formSelection =  if(list.isNotEmpty()) FormSelection(list) else null
+            val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
             formSelection?.id = data?.id
             return formSelection
 
@@ -546,7 +553,7 @@ class FormBuilder constructor(val context: Context) {
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as MultiSelectAdapter<*>
             val list = adapter.selectedItemsPosition
-            val formSelection =  if(list.isNotEmpty()) FormSelection(list) else null
+            val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
             formSelection?.id = data?.id
             return formSelection
         }
@@ -632,7 +639,7 @@ class FormBuilder constructor(val context: Context) {
         return view
     }
 
-     fun initializeData() {
+    fun initializeData() {
         initializeValues()
         initializeOptions()
     }
@@ -645,7 +652,7 @@ class FormBuilder constructor(val context: Context) {
     }
 
     private fun initializeOptions() {
-        Timber.d("Options Values: %s",options.values)
+        Timber.d("Options Values: %s", options.values)
         for (option in options.values) {
             Timber.d("Options: %s", option)
             val view = rootLayout.findViewWithTag<View>(option.id)
@@ -669,17 +676,16 @@ class FormBuilder constructor(val context: Context) {
     private fun bindValuesDataToView(view: View?, data: String?) {
         when (view) {
             is TextInputLayout -> {
-                Timber.d("Initializing texbox to: %s, ")
                 view.findViewById<EditText>(R.id.edit).setText(data)
                 view.findViewById<EditText>(R.id.edit).setSelection(data?.length ?: 0)
             }
             is TextView -> view.text = data
 
-            is LinearLayout ->{
+            is LinearLayout -> {
                 val checkbox = view.findViewById<CheckBox>(R.id.check_box)
                 val checked = try {
                     data?.toBoolean() ?: false
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     Timber.e(e)
                     false
                 }

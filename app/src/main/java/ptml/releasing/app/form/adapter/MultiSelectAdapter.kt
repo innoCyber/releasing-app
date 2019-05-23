@@ -37,7 +37,10 @@ class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() w
             Timber.d("Selecting... %s", selected.size)
             for (i in selected) {
                 if(items.size > i){
-                    items[i].checked = true
+                    val item = items[i]
+                    item.checked = true
+                    selectedItems.add(item)
+                    selectedItemsPosition.add(i)
                 }
             }
         }else{
@@ -45,7 +48,11 @@ class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() w
             for (item in items) {
                 item.checked = false
             }
+            selectedItems.clear()
+            selectedItemsPosition.clear()
         }
+
+
 
         listener?.onItemsSelected(selectedItems)
         notifyDataSetChanged()

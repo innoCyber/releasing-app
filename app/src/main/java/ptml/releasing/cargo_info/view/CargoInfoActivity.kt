@@ -318,8 +318,8 @@ class CargoInfoActivity :
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*if (BuildConfig.DEBUG) {*/
-//        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
-//        Timber.w("From assets: %s", findCargoResponse)
+        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+        Timber.w("From assets: %s", findCargoResponse)
 //          }
         formBuilder = FormBuilder(this)
         val formView = formBuilder

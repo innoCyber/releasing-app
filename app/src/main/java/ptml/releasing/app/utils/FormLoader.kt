@@ -8,13 +8,13 @@ import ptml.releasing.configuration.models.ConfigureDeviceResponse
 object FormLoader {
     fun loadFromAssets(context: Context): ConfigureDeviceResponse? {
         val assetHelper = AssetHelper()
-        val data = assetHelper.getAssetFileContents(context, "cargo_info.json")
+        val data = assetHelper.getAssetFileContents(context, "sam2.json")
         return Gson().fromJson(data, ConfigureDeviceResponse::class.java)
     }
 
     fun loadFindCargoResponseFromAssets(context: Context): FindCargoResponse? {
         val assetHelper = AssetHelper()
-        val data = assetHelper.getAssetFileContents(context, "find_cargo.json")
+        val data = assetHelper.getAssetFileContents(context, "find_cargo_new.json")
         return Gson().fromJson(data, FindCargoResponse::class.java)
     }
 }

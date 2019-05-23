@@ -76,7 +76,7 @@ class SearchViewModel @Inject constructor(
                     config?.operationStep?.id ?: 0,
                     config?.terminal?.id ?: 0,
                     imei,
-                    cargoNumber
+                    cargoNumber.trim()
                 )?.await()
                 withContext(appCoroutineDispatchers.main) {
                     if (findCargoResponse?.isSuccess ==  true) {
