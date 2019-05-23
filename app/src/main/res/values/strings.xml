@@ -152,7 +152,7 @@
     <string name="releasing_damages_select_size_header_text">STEP 2: Select damage position</string>
     <string name="releasing_damages_select_damage_header_text">STEP 3: Assign type damage</string>
     <string name="releasing_admin_select_front_header_text">STEP 2: Select damage position</string>
-    <string name="releasing_damages_no_description"/>
+    <string name="releasing_damages_no_description" />
     <string name="releasing_damages_description_continer_side">Immagine del container laterale</string>
     <string name="releasing_admin_description_container_image_front">Immagine frontale o di coda del container</string>
     <string name="releasing_damages_select_damage_title">Select Damage</string>
@@ -224,4 +224,10 @@
     <string name="no_devices_found">No devices were found \nEnsure the device is within range</string>
     <string name="no_bt_message">No bluetooth functionality on your phone \nPlease contact the administrator</string>
     <string name="no_operator_logged_in">No operator logged in</string>
+
+    <string name="network_state_wifi">Wi-Fi</string>
+    <string name="network_state_mobile">Mobile</string>
+    <string name="network_state_offline">Offline</string>
+    <string name="offline_message">You are currently offline</string>
+    <string name="online_message">You are currently connected via %s</string>
 </resources>

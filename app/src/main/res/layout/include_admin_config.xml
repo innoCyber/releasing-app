@@ -28,6 +28,7 @@
             style="@style/ButtonStyle.HomeBottom"
             android:text="@string/device_configuration"
             app:drawableStartCompat="@drawable/ic_config"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toTopOf="parent" />

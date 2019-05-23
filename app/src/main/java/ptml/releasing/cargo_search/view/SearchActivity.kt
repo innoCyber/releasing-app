@@ -16,6 +16,7 @@ import com.google.android.material.navigation.NavigationView
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
@@ -26,6 +27,7 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
 import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
@@ -123,6 +125,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             showOperatorErrorDialog()
         })
 
+        viewModel.openDeviceConfiguration.observe(this, Observer {
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivityForResult(intent, AdminConfigActivity.RC)
+        })
 
 
         binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
@@ -393,7 +399,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     private val navigationListener =
         NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_preferences -> {
+                R.id.nav_admin_settings -> {
                     viewModel.openAdmin()
                 }
 
@@ -403,6 +409,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
                 R.id.nav_scan_operator -> {
                     viewModel.openBarCodeScanner()
+                }
+                R.id.nav_device_configuration -> {
+                    viewModel.openDeviceConfiguration()
                 }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
