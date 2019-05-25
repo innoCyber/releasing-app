@@ -379,46 +379,54 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return Spinner
      * */
-    private fun createSingleSelect(data: ConfigureDeviceData?, i: Int): View {
-        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val view = inflateView(context, R.layout.form_single_select)
-            view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
-            val spinner = view.findViewById<Spinner>(R.id.select)
-            view.tag = data?.id
-            //add the items
-            val adapter = FormSelectAdapter(context, data?.options)
-            spinner.adapter = adapter
-            if (i == 0) {
-                applyTopParams(view)
-            } else {
-                applyParams(view)
-            }
-            return view
-        } else {
-            val view = inflateView(context, R.layout.form_rv)
-            val textView = view.findViewById<TextView>(R.id.tv_error)
-            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-            val adapter = SingleSelectAdapter<Options>()
-            adapter.setItems(data?.options)
-            adapter.listener = object : SingleSelectListener<Options> {
-                override fun onItemSelected(item: Options?) {
-                    singleSelectListener?.onItemSelected(item)
-                    textView.text = ""
-                    changeBgColor(recyclerView, false)
+    private fun createSingleSelect(data: ConfigureDeviceData?, i: Int): View? {
+        if(data?.options?.size ?: 0 > 0){
+            if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
+                val view = inflateView(context, R.layout.form_single_select)
+                view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
+                val spinner = view.findViewById<Spinner>(R.id.select)
+                val titleTextView = view.findViewById<TextView>(R.id.tv_title)
+                titleTextView.text = data?.title
+                view.tag = data?.id
+                //add the items
+                val adapter = FormSelectAdapter(context, data?.options)
+                spinner.adapter = adapter
+                if (i == 0) {
+                    applyTopParams(view)
+                } else {
+                    applyParams(view)
                 }
-            }
-            view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = GridLayoutManager(context, 2)
-            view.tag = data?.id
-            if (i == 0) {
-                applyTopParams(view)
+                return view
             } else {
-                applyParams(view)
+                val view = inflateView(context, R.layout.form_rv)
+                val errorTextView = view.findViewById<TextView>(R.id.tv_error)
+                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+                val titleTextView = view.findViewById<TextView>(R.id.tv_title)
+                titleTextView.text = data?.title
+                val adapter = SingleSelectAdapter<Options>()
+                adapter.setItems(data?.options)
+                adapter.listener = object : SingleSelectListener<Options> {
+                    override fun onItemSelected(item: Options?) {
+                        singleSelectListener?.onItemSelected(item)
+                        errorTextView.text = ""
+                        changeBgColor(recyclerView, false)
+                    }
+                }
+                errorTextView.visibility = View.INVISIBLE
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = GridLayoutManager(context, 2)
+                view.tag = data?.id
+                if (i == 0) {
+                    applyTopParams(view)
+                } else {
+                    applyParams(view)
+                }
+                return view
             }
-            return view
+        }else{
+            Timber.e("No options for %s form type with data: %s", data?.type, data)
+            return null
         }
-
     }
 
     fun validateSingleSelect(data: ConfigureDeviceData?): Boolean? {
@@ -446,15 +454,24 @@ class FormBuilder constructor(val context: Context) {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val spinner = view.findViewById<Spinner>(R.id.select)
-            val selectedValues = listOf(spinner.selectedItemPosition)
+            val adapter = spinner.adapter as FormSelectAdapter
+            val selectedPosition = spinner.selectedItemPosition
+            val selectedValues = if (adapter.count > selectedPosition) {
+                val option = spinner.getItemAtPosition(selectedPosition) as Options?
+                listOf(option?.id ?: 0)
+            } else {
+                null
+            }
             val formSelection =
-                if (selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
+                if (selectedValues?.isNotEmpty() == true) FormSelection(selectedValues) else null
+
             formSelection?.id = data?.id
             return formSelection
         } else {
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as SingleSelectAdapter<*>
-            val selectedValues = listOf(adapter.selectedItemPosition)
+            val selectedItem = adapter.selectedItem as Options
+            val selectedValues = listOf(selectedItem.id ?: 0)
             val formSelection =
                 if (selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
             formSelection?.id = data?.id
@@ -469,49 +486,58 @@ class FormBuilder constructor(val context: Context) {
      *  @param @param data the config
      * @return Spinner
      * */
-    private fun createMultiSelectSelect(data: ConfigureDeviceData?, i: Int): View {
-        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val view = inflateView(context, R.layout.form_multi_select)
-            val textView = view.findViewById<TextView>(R.id.tv_error)
-            textView.visibility = View.INVISIBLE
-            val spinner = view.findViewById<MultiSpinner>(R.id.select)
-            view.tag = data?.id
-            spinner.defaultHintText = data?.title
-            spinner.setItems(getDataForMultiSpinner(data?.options), object : MultiSpinnerListener {
-                override fun onItemsSelected(selected: List<Boolean>) {
-                    multiSpinnerListener?.onItemsSelected(selected)
-                    textView.text = ""
-                    changeBgDrawable(spinner, false)
+    private fun createMultiSelectSelect(data: ConfigureDeviceData?, i: Int): View? {
+        if(data?.options?.size ?: 0 > 0){
+            if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
+                val view = inflateView(context, R.layout.form_multi_select)
+                val textView = view.findViewById<TextView>(R.id.tv_error)
+                textView.visibility = View.INVISIBLE
+                val titleTextView = view.findViewById<TextView>(R.id.tv_title)
+                titleTextView.text = data?.title
+                val spinner = view.findViewById<MultiSpinner>(R.id.select)
+                view.tag = data?.id
+                spinner.defaultHintText = data?.title
+                spinner.setItems(getDataForMultiSpinner(data?.options), object : MultiSpinnerListener {
+                    override fun onItemsSelected(selected: List<Boolean>) {
+                        multiSpinnerListener?.onItemsSelected(selected)
+                        textView.text = ""
+                        changeBgDrawable(spinner, false)
+                    }
+                })
+                if (i == 0) {
+                    applyTopParams(view)
+                } else {
+                    applyParams(view)
                 }
-            })
-            if (i == 0) {
-                applyTopParams(view)
+                return view
             } else {
-                applyParams(view)
-            }
-            return view
-        } else {
-            val view = inflateView(context, R.layout.form_rv)
-            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-            val textView = view.findViewById<TextView>(R.id.tv_error)
-            val adapter = MultiSelectAdapter<Options>()
-            adapter.listener = object : MultiSelectListener<Options> {
-                override fun onItemsSelected(item: List<Options>) {
-                    textView.text = ""
-                    changeBgColor(recyclerView, false)
+                val view = inflateView(context, R.layout.form_rv)
+                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+                val textView = view.findViewById<TextView>(R.id.tv_error)
+                val titleTextView = view.findViewById<TextView>(R.id.tv_title)
+                titleTextView.text = data?.title
+                val adapter = MultiSelectAdapter<Options>()
+                adapter.listener = object : MultiSelectListener<Options> {
+                    override fun onItemsSelected(item: Map<Int, Options>) {
+                        textView.text = ""
+                        changeBgColor(recyclerView, false)
+                    }
                 }
-            }
-            adapter.setItems(data?.options)
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = GridLayoutManager(context, 2)
-            if (i == 0) {
-                applyTopParams(view)
-            } else {
-                applyParams(view)
-            }
-            view.tag = data?.id
-            return view
+                adapter.setItems(data?.options)
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = GridLayoutManager(context, 2)
+                if (i == 0) {
+                    applyTopParams(view)
+                } else {
+                    applyParams(view)
+                }
+                view.tag = data?.id
+                return view
 
+            }
+        }else{
+            Timber.e("No options for %s form type with data: %s", data?.type, data)
+            return null
         }
     }
 
@@ -544,7 +570,7 @@ class FormBuilder constructor(val context: Context) {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
             val spinner = view.findViewById<MultiSpinner>(R.id.select)
-            val list = spinner.selectedItems.values.toList()
+            val list = spinner.selectedItems.keys.toList()
             val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
             formSelection?.id = data?.id
             return formSelection
@@ -552,11 +578,16 @@ class FormBuilder constructor(val context: Context) {
         } else {
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-            val list = adapter.selectedItemsPosition
+            val list = getMultiSelectIdList(adapter.selectedItems)
             val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
             formSelection?.id = data?.id
             return formSelection
         }
+    }
+
+    private fun getMultiSelectIdList(items: MutableMap<Int, out SelectModel>): List<Int> {
+        return items.keys.toList()
+
     }
 
 
@@ -712,7 +743,8 @@ class FormBuilder constructor(val context: Context) {
                 Timber.d("Spinner initialization")
                 if (data?.isEmpty() == false) { //there is data
                     Timber.d("Single select: data exists: %s", data.size)
-                    val position = data[0]
+                    val id = data[0]
+                    val position = getSingleSelectPositionFromOptionsId(view, id)
                     view.setSelection(position)
                 } else {
                     Timber.d("Data does not exist, selecting 0")
@@ -731,6 +763,18 @@ class FormBuilder constructor(val context: Context) {
                 Timber.d("Unknown view %s", view?.javaClass?.name)
             }
         }
+    }
+
+    private fun getSingleSelectPositionFromOptionsId(view: Spinner, id: Int): Int {
+        val adapter = view.adapter as FormSelectAdapter
+        for (position in 0 until adapter.count) {
+            val option = adapter.getItem(position)
+            if (option.id == id) {
+                return position
+            }
+        }
+
+        return 0
     }
 }
 

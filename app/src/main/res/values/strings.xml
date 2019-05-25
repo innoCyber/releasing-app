@@ -230,4 +230,6 @@
     <string name="network_state_offline">Offline</string>
     <string name="offline_message">You are currently offline</string>
     <string name="online_message">You are currently connected via %s</string>
+    <string name="ptml">PTML</string>
+    <string name="version_text">v%s</string>
 </resources>

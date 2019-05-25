@@ -30,10 +30,10 @@ internal object FormUtils {
     }
 
 
-    fun getDataForMultiSpinner(list: List<Options>?): LinkedHashMap<String, Boolean> {
-        val linkedHashMap = LinkedHashMap<String, Boolean>()
+    fun getDataForMultiSpinner(list: List<Options>?): LinkedHashMap<Options, Boolean> {
+        val linkedHashMap = LinkedHashMap<Options, Boolean>()
         for (s in list ?: mutableListOf()) {
-            linkedHashMap[s.name] = false
+            linkedHashMap[s] = false
         }
 
         return linkedHashMap

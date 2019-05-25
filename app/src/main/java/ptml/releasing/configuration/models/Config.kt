@@ -210,6 +210,10 @@ data class Options(
 
     override var checked: Boolean = isSelected
 
-    override fun getText() = name
+    override fun text() = name
+
+    override fun id(): Int {
+        return id ?: 0
+    }
 
 }

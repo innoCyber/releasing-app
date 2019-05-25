@@ -44,4 +44,6 @@
     <dimen name="bt_item_address_text_size">12sp</dimen>
     <dimen name="search_ok_btn_size">48dp</dimen>
     <dimen name="operator_name_height">40dp</dimen>
+
+    <dimen name="nav_header_padding">8dp</dimen>
 </resources>

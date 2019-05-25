@@ -308,6 +308,10 @@
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
     </style>
 
+    <style name="Form.SelectTitle" parent="Form.Label">
+        <item name="android:layout_marginTop">0dp</item>
+    </style>
+
 
     <style name="Form.Error">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
@@ -378,5 +382,16 @@
 
     <style name="InputLayoutStyle" parent="Widget.Design.TextInputLayout">
         <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+
+    <style name="NavHeaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:text">@string/ptml</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/nav_header_padding</item>
     </style>
 </resources>

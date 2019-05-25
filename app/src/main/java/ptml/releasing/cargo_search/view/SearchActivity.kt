@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import permissions.dispatcher.*
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
@@ -131,6 +132,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
 
+        binding.tvVersion.text = getString(R.string.version_text, BuildConfig.VERSION_NAME)
         binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
         binding.appBarHome.content.includeSearch.editInput.setImeDoneListener(object : DonePressedListener{
             override fun onDonePressed() {
@@ -155,6 +157,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.includeError.btnReloadLayout.setOnClickListener {
             search()
+        }
+
+        binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
+            it.setBackgroundResource(R.drawable.save_btn_bg_blue)
+            viewModel.verify()
         }
 
         binding.appBarHome.content.includeSearch.imgQrCode.setOnClickListener {
@@ -316,6 +323,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         }
     }
 
+
+
     private fun updateTop(it: Configuration) {
         binding.appBarHome.content.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.appBarHome.content.includeHome.tvOperationStepFooter.text = it.operationStep.value
@@ -372,6 +381,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     override fun onResume() {
         super.onResume()
         viewModel.getSavedConfig()
+        binding.appBarHome.content.includeSearch.btnVerify.setBackgroundResource(R.drawable.save_btn_bg)
     }
 
     override fun initBeforeView() {

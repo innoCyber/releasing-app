@@ -29,8 +29,6 @@ import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
-import ptml.releasing.printer.view.getBluetoothDevicesWithPermissionCheck
-import ptml.releasing.printer.view.onRequestPermissionsResult
 import timber.log.Timber
 import java.util.*
 
@@ -313,18 +311,18 @@ class CargoInfoActivity :
         )
     }
 
-    private fun createForm(it: ConfigureDeviceResponse?) {
+    private fun createForm(deviceResponse: ConfigureDeviceResponse?) {
         var findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*if (BuildConfig.DEBUG) {*/
-        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
-        Timber.w("From assets: %s", findCargoResponse)
+//        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+//        Timber.w("From assets: %s", findCargoResponse)
 //          }
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(it?.data)
+            ?.build(deviceResponse?.data)
 
         formBuilder
             ?.init(findCargoResponse)
