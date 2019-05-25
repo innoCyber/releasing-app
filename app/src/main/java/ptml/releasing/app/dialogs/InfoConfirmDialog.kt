@@ -6,24 +6,25 @@ import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
-import com.yarolegovich.lovelydialog.LovelyStandardDialog
+
 import ptml.releasing.R
+import ptml.releasing.app.views.dialogs.LovelyStandardDialog
 
 class InfoConfirmDialog private constructor(
     context: Context,
     title: String?,
     message: String?,
     buttonText: String?,
-    @DrawableRes topIcon: Int = 0,
     private val listener: InfoListener? = null
-) : LovelyStandardDialog(context, LovelyStandardDialog.ButtonLayout.HORIZONTAL), View.OnClickListener {
+) : LovelyStandardDialog(context, ButtonLayout.VERTICAL),
+    View.OnClickListener {
 
     init {
-        setTopColorRes(R.color.colorAccent)
-        setIcon(if (topIcon == 0) R.drawable.ic_info_white else topIcon)
         setTitle(title ?: context.getString(R.string.info))
         setMessage(message ?: context.getString(R.string.info_msg))
         setPositiveButton(buttonText, this)
+        setNegativeButton(android.R.string.cancel, null)
+        setButtonsColorRes(R.color.colorAccent)
     }
 
     override fun onClick(v: View) {
@@ -43,16 +44,16 @@ class InfoConfirmDialog private constructor(
             title: String?,
             message: String?,
             buttonText: String? = context.getString(android.R.string.ok),
-            @DrawableRes topIcon: Int = 0,
             listener: InfoListener? = null
         ) {
-            val loadingDialog = InfoConfirmDialog(context, title, message, buttonText, topIcon, listener)
+            val loadingDialog =
+                InfoConfirmDialog(context, title, message, buttonText, listener)
             loadingDialog.show()
         }
 
         @JvmStatic
         fun showDialog(
-            context: Context, @StringRes title: Int, @StringRes message: Int, @DrawableRes topIcon: Int = 0,
+            context: Context, @StringRes title: Int, @StringRes message: Int,
             buttonText: String? = context.getString(android.R.string.ok),
             listener: InfoListener? = null
         ) {
@@ -62,7 +63,6 @@ class InfoConfirmDialog private constructor(
                     title = context.getString(title),
                     message = context.getString(message),
                     buttonText = buttonText,
-                    topIcon = topIcon,
                     listener = listener
                 )
             loadingDialog.show()

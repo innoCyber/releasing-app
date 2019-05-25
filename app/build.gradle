@@ -95,9 +95,6 @@ dependencies {
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permission_dispatcher"
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:$permission_dispatcher"
 
-    //dialogs
-    implementation 'com.yarolegovich:lovely-dialog:1.1.0'
-
     //secure shared preferences
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
 

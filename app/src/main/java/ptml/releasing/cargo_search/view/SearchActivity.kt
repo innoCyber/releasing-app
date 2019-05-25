@@ -21,6 +21,7 @@ import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
+import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
@@ -82,11 +83,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-               /* showLoading( Removing loading progress bar as per requirements
-                    binding.appBarHome.content.includeProgress.root,
-                    binding.appBarHome.content.includeProgress.tvMessage,
-                    R.string.loading
-                )*/
+                /* showLoading( Removing loading progress bar as per requirements
+                     binding.appBarHome.content.includeProgress.root,
+                     binding.appBarHome.content.includeProgress.tvMessage,
+                     R.string.loading
+                 )*/
             } else {
                 hideLoading(binding.appBarHome.content.includeProgress.root)
             }
@@ -114,7 +115,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.findCargoResponse.observe(this, Observer {
             //pass it on to the cargo info activity
             Timber.e("GOtten response: %s", it)
-           animateBadge(it)
+            animateBadge(it)
         })
 
         viewModel.scan.observe(this, Observer {
@@ -134,7 +135,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.tvVersion.text = getString(R.string.version_text, BuildConfig.VERSION_NAME)
         binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
-        binding.appBarHome.content.includeSearch.editInput.setImeDoneListener(object : DonePressedListener{
+        binding.appBarHome.content.includeSearch.editInput.setImeDoneListener(object :
+            DonePressedListener {
             override fun onDonePressed() {
                 viewModel.verify()
             }
@@ -224,7 +226,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
 
-    fun startCargoInfoActivity(it: FindCargoResponse?){
+    fun startCargoInfoActivity(it: FindCargoResponse?) {
         val bundle = Bundle()
         bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
         bundle.putString(
@@ -237,7 +239,19 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     private fun showSearchErrorDialog(message: String?) {
-        val dialogFragment = InfoDialog.newInstance(
+
+        InfoConfirmDialog.showDialog(
+            this,
+            getString(R.string.error),
+            message,
+            getString(R.string.continue_uploading_text),
+            object : InfoConfirmDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.continueToUploadCargo()
+                }
+            })
+
+/*        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.error),
             message = message,
             buttonText = getString(android.R.string.cancel),
@@ -245,8 +259,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             neutralButtonText = getString(R.string.continue_uploading_text),
             neutralListener = dialogListener
         )
+
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)*/
         Timber.e("Error occurred during search: msg: %s", message)
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 
@@ -322,7 +337,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             )
         }
     }
-
 
 
     private fun updateTop(it: Configuration) {
