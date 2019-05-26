@@ -16,6 +16,7 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private val _openConfig = MutableLiveData<Unit>()
     private val _openPrinterSettings = MutableLiveData<Unit>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
+    private val _openQuickRemark = MutableLiveData<Boolean>()
     private val _serverUrl = MutableLiveData<String?>()
 
     private val _firstTimeLogin = MutableLiveData<Boolean>()
@@ -26,6 +27,7 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private val _openSearch = MutableLiveData<Boolean>()
 
     val openConfig: LiveData<Unit> = _openConfig
+    val openQuickRemark: LiveData<Boolean> = _openQuickRemark
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openPrinterSettings: LiveData<Unit> = _openPrinterSettings
     val openSearch: LiveData<Boolean> = _openSearch
@@ -45,6 +47,15 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
             val configured = repository.isConfiguredAsync()
             withContext(appCoroutineDispatchers.main) {
                 _openDownloadDamages.postValue(configured)
+            }
+        }
+    }
+
+    fun openQuickRemark() {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val configured = repository.isConfiguredAsync()
+            withContext(appCoroutineDispatchers.main) {
+                _openQuickRemark.postValue(configured)
             }
         }
     }

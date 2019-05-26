@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ptml.releasing.app.views.MaterialRippleLayout
+        android:id="@+id/tv_item_layout"
+        style="@style/RippleLayoutStyle.Damages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ptml.releasing.app.views.SupportVectorDrawableTextView
+            android:id="@+id/tv_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/constraint_default_margin_8dp"
+            android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+            android:drawablePadding="@dimen/constraint_default_margin_8dp"
+            android:ellipsize="marquee"
+            android:gravity="start"
+            android:padding="@dimen/constraint_default_margin_8dp"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </ptml.releasing.app.views.MaterialRippleLayout>
+</layout>

@@ -11,6 +11,7 @@ import ptml.releasing.R
 import ptml.releasing.app.utils.SizeUtils
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import ptml.releasing.configuration.models.Options
+import ptml.releasing.quick_remarks.model.QuickRemark
 
 
 internal object FormUtils {
@@ -32,10 +33,27 @@ internal object FormUtils {
 
     fun getDataForMultiSpinner(list: List<Options>?): LinkedHashMap<Options, Boolean> {
         val linkedHashMap = LinkedHashMap<Options, Boolean>()
-        for (s in list ?: mutableListOf()) {
-            linkedHashMap[s] = false
+        for (index in 0 until (list?.size ?: 0)) {
+            val s = list?.get(index)
+            s?.position = index
+            if (s != null) {
+                linkedHashMap[s] = false
+            }
         }
+        return linkedHashMap
+    }
 
+
+    fun getQuickRemarksDataForMultiSpinner(list: List<QuickRemark>?): LinkedHashMap<QuickRemark, Boolean> {
+        val linkedHashMap = LinkedHashMap<QuickRemark, Boolean>()
+
+        for (index in 0 until (list?.size ?: 0)) {
+            val s = list?.get(index)
+            s?.position = index
+            if (s != null) {
+                linkedHashMap[s] = false
+            }
+        }
         return linkedHashMap
     }
 

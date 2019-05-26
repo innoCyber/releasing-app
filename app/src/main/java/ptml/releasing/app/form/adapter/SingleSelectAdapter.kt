@@ -82,5 +82,6 @@ interface SingleSelectListener<T> where T : SelectModel {
 interface SelectModel {
     fun text(): String
     fun id(): Int
+    fun position(): Int
     var checked: Boolean
 }

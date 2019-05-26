@@ -77,7 +77,7 @@ class FormSubmission constructor(
 
                 }
 
-
+                FormType.QUICK_REMARK,
                 FormType.MULTI_SELECT -> {
                     Timber.d("Getting MULTI_SELECT value")
                     val formSelection = formBuilder?.getMultiSelect(data)

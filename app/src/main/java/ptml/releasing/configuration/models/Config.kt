@@ -207,6 +207,8 @@ data class Options(
         @SerializedName("name") val name: String,
         @SerializedName("is_selected") val isSelected: Boolean
 ) : BaseModel(), SelectModel {
+    var position = 0
+    override fun position() = position
 
     override var checked: Boolean = isSelected
 

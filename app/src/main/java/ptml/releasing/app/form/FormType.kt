@@ -12,6 +12,7 @@ enum class FormType constructor(val type: String) {
     SINGLE_SELECT(Constants.SINGLE_SELECT),
     MULTI_SELECT(Constants.MULTI_SELECT),
     CHECK_BOX(Constants.CHECK_BOX),
+    QUICK_REMARK(Constants.QUICK_REMARKS),
     UNKNOWN(Constants.UNKNOWN);
 
 
@@ -27,6 +28,7 @@ enum class FormType constructor(val type: String) {
                 Constants.SINGLE_SELECT -> SINGLE_SELECT
                 Constants.MULTI_SELECT -> MULTI_SELECT
                 Constants.CHECK_BOX -> CHECK_BOX
+                Constants.QUICK_REMARKS -> QUICK_REMARK
                 else -> UNKNOWN
             }
         }

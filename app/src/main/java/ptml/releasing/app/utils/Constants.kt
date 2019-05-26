@@ -23,6 +23,7 @@ object Constants{
     const val SINGLE_SELECT ="single_select"
     const val MULTI_SELECT = "multi_select"
     const val CHECK_BOX = "checkbox"
+    const val QUICK_REMARKS = "quick_remarks"
     const val UNKNOWN = "unknown"
     const val ITEM_TO_EXPAND = 6
 

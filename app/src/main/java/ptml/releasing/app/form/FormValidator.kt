@@ -72,6 +72,7 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
                 }
 
 
+                FormType.QUICK_REMARK,
                 FormType.MULTI_SELECT -> {
                     Timber.d("Validating multi select")
                     return formBuilder?.validateMultiSelect(data)

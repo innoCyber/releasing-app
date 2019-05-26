@@ -232,4 +232,6 @@
     <string name="online_message">You are currently connected via %s</string>
     <string name="ptml">PTML</string>
     <string name="version_text">v%s</string>
+    <string name="quick_remarks">Quick Remarks</string>
+    <string name="quick_remark_click_message">You clicked %s</string>
 </resources>

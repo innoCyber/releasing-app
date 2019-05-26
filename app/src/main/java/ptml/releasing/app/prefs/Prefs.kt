@@ -5,6 +5,7 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
 interface Prefs {
     fun isFirst(): Boolean
@@ -29,4 +30,7 @@ interface Prefs {
 
     fun saveServerUrl(url:String?)
     fun getServerUrl():String?
+
+    fun saveQuickRemarks(response: QuickRemarkResponse?)
+    fun getQuickRemarks():QuickRemarkResponse?
 }

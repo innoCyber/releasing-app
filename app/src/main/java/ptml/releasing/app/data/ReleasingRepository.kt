@@ -13,6 +13,7 @@ import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -175,6 +176,31 @@ open class ReleasingRepository @Inject constructor(
     override fun getServerUrl(): String? = local.getServerUrl()
 
     override fun saveServerUrl(url: String?) = local.saveServerUrl(url)
+
+
+    override suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse> {
+        return withContext(appCoroutineDispatchers.db) {
+            try {
+                val localResponse = local.getQuickRemarks()
+                localResponse?.toDeferredAsync() as Deferred<QuickRemarkResponse>
+            } catch (e: Exception) {
+                Timber.e(e)
+                downloadQuickRemarkAsync(imei)
+
+            }
+        }
+    }
+
+    override suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse> {
+        return withContext(appCoroutineDispatchers.network) {
+            val remoteResponse = remote.downloadQuickRemarkAsync(imei)
+            withContext(appCoroutineDispatchers.db) {
+                local.saveQuickRemarks(remoteResponse.await())
+            }
+            remoteResponse
+        }
+
+    }
 
 
 }

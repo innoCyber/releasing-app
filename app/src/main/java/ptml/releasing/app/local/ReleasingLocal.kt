@@ -6,6 +6,7 @@ import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import javax.inject.Inject
 
 class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
@@ -37,4 +38,8 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun getServerUrl() = prefs.getServerUrl()
 
     override fun saveServerUrl(url: String?) = prefs.saveServerUrl(url)
+
+    override fun getQuickRemarks() = prefs.getQuickRemarks()
+
+    override fun saveQuickRemarks(response: QuickRemarkResponse?) = prefs.saveQuickRemarks(response)
 }

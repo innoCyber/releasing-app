@@ -74,6 +74,11 @@
         <activity android:name=".printer.view.PrinterSettingsActivity"/>
         <activity android:name=".barcode_scan.BarcodeScanActivity"/>
 
+        <activity
+            android:name=".quick_remarks.view.QuickRemarkActivity"
+            android:parentActivityName=".admin_config.view.AdminConfigActivity"
+            android:label="@string/quick_remarks"/>
+
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67" />

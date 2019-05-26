@@ -221,6 +221,16 @@
       "data_validation": ""
     },
     {
+      "id": 23,
+      "type": "quick_remarks",
+      "order_id": 22,
+      "title": "Quick Response",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
       "id": 18,
       "type": "label",
       "order_id": 17,

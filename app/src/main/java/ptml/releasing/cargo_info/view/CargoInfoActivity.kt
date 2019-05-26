@@ -21,6 +21,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.form.*
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.bt.BluetoothManager
+import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
@@ -29,6 +30,7 @@ import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
+import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 import java.util.*
 
@@ -82,7 +84,11 @@ class CargoInfoActivity :
                     )
                 }
             }
+
+
         }
+
+
 
         override fun onError(message: String) {
             Timber.e("Error: %s", message)
@@ -106,6 +112,11 @@ class CargoInfoActivity :
         override fun onEndLoad() {
 
         }
+    }
+
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    fun getFormConfig() {
+        viewModel.getFormConfig((application as ReleasingApplication).provideImei())
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
@@ -228,7 +239,7 @@ class CargoInfoActivity :
             createForm(it)
         })
 
-        viewModel.getFormConfig()
+        getFormConfig()
 
         viewModel.printerSettings.observe(this, Observer {
             this.settings = it
@@ -262,6 +273,9 @@ class CargoInfoActivity :
             showErrorDialog(it)
         })
     }
+
+
+
 
     private fun showSuccessDialog() {
         val dialogFragment = InfoDialog.newInstance(
@@ -311,7 +325,7 @@ class CargoInfoActivity :
         )
     }
 
-    private fun createForm(deviceResponse: ConfigureDeviceResponse?) {
+    private fun createForm(wrapper: FormDataWrapper?) {
         var findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
@@ -322,7 +336,7 @@ class CargoInfoActivity :
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(deviceResponse?.data)
+            ?.build(wrapper?.configureDeviceData?.data, wrapper?.remarks)
 
         formBuilder
             ?.init(findCargoResponse)

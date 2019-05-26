@@ -11,6 +11,7 @@ import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
 interface Repository {
 
@@ -66,6 +67,9 @@ interface Repository {
     suspend fun uploadData(
         request: FormSubmissionRequest
     ): Deferred<BaseResponse>
+
+    suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>
+    suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>
 
 
 }
