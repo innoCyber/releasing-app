@@ -100,12 +100,12 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
 
 
 
-            TextView txtDamageName = (TextView) convertView.findViewById(R.id.CellCargoDamagesTxtDamage);
-            ImageButton btnUnassign = (ImageButton) convertView.findViewById(R.id.CellCargoDamagesBtnUnassign);
-            final TextView txtDamageNumber = (TextView) convertView.findViewById(R.id.CellCargoDamagesTxtNumberValue);
-            final Button btnDecreaseNumber = (Button)convertView.findViewById(R.id.CellCargoDamagesBtnDecreaseNumber);
-            final Button btnIncreaseNumber = (Button)convertView.findViewById(R.id.CellCargoDamagesBtnIncreaseNumber);
-            final EditText edtRemarks = (EditText) convertView.findViewById(R.id.CellCargoEdtDamageRemarks);
+            TextView txtDamageName = convertView.findViewById(R.id.tv_title);
+            ImageButton btnUnassign = convertView.findViewById(R.id.btn_delete);
+            final TextView txtDamageNumber = convertView.findViewById(R.id.tv_number);
+            final ImageButton btnDecreaseNumber = convertView.findViewById(R.id.btn_remove);
+            final ImageButton btnIncreaseNumber = convertView.findViewById(R.id.btn_add);
+            final EditText edtRemarks = convertView.findViewById(R.id.edit_remarks);
 
             edtRemarks.setText(damages.get(position).getDamageRemarks());
             txtDamageName.setText(damages.get(position).getName());
@@ -240,7 +240,7 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
     private void setupListeners() {
 
 
-        binding.ReleasingDamagesBtnReturn.setOnClickListener(new View.OnClickListener() {
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(0);
@@ -248,7 +248,7 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
             }
         });
 
-        binding.ReleasingDamagesBtnAssign.setOnClickListener(new View.OnClickListener() {
+        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addDamage();
@@ -272,13 +272,8 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
 
     private void refreshDamages() {
         CargoDamagesAdapter adapter = new CargoDamagesAdapter(this, currentDamages);
-        binding.ReleasingDamagesLstDamages.setAdapter(adapter);
-
-        if( binding.ReleasingDamagesLstDamages.getAdapter().getCount()==0) {
-            binding.ReleasingDamagesTxtNoItems.setVisibility(View.VISIBLE);
-        } else {
-            binding.ReleasingDamagesTxtNoItems.setVisibility(View.INVISIBLE);
-        }
+        binding.listView.setAdapter(adapter);
+        binding.listView.setEmptyView(binding.includeEmpty.getRoot());
     }
 
 

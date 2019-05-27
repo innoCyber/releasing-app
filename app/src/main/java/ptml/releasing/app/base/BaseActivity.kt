@@ -447,6 +447,10 @@ abstract class BaseActivity<T, D> :
     }
 
     fun showErrorDialog(message: String?) {
+        var message = message
+        if(message == null || message.isEmpty()){
+            message = getString(R.string.error_occurred)
+        }
         showDialog(getString(R.string.error), message)
     }
 

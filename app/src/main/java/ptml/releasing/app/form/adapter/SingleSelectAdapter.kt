@@ -7,18 +7,18 @@ import ptml.releasing.configuration.models.Options
 import ptml.releasing.databinding.ItemCheckboxBinding
 import timber.log.Timber
 
-class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>() where T : SelectModel {
+class SingleSelectAdapter<T> :
+    BaseSelectAdapter<SingleSelectViewHolder<T>, T>() where T : SelectModel {
     var listener: SingleSelectListener<T>? = null
     var selectedItem: T? = null
     var selectedItemPosition: Int = 0
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleSelectViewHolder<T> {
         return SingleSelectViewHolder(
-                this,
-                ItemCheckboxBinding.inflate(LayoutInflater.from(parent.context), null, false),
-                listener
+            this,
+            ItemCheckboxBinding.inflate(LayoutInflater.from(parent.context), null, false),
+            listener
         )
     }
 
@@ -32,16 +32,20 @@ class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>()
         if (selected != null) {
             Timber.d("Selecting... %s", selected.size)
             if (selected.isNotEmpty()) {
-                items[selected[0]]?.checked = true
+                val item = items[selected[0]]
+                item?.checked = true
+                selectedItem = item
+                listener?.onItemSelected(selectedItem)
             }
         } else {
             Timber.d("selection is null: resetting to 0")
+            selectedItem = null
             for (item in items.values) {
                 item.checked = false
             }
         }
 
-        listener?.onItemSelected(selectedItem)
+
         notifyDataSetChanged()
     }
 
@@ -49,11 +53,11 @@ class SingleSelectAdapter<T> : BaseSelectAdapter<SingleSelectViewHolder<T>, T>()
 }
 
 class SingleSelectViewHolder<T>(
-        val adapter: SingleSelectAdapter<T>,
-        val binding: ItemCheckboxBinding,
-        val listener: SingleSelectListener<T>? = null
+    val adapter: SingleSelectAdapter<T>,
+    val binding: ItemCheckboxBinding,
+    val listener: SingleSelectListener<T>? = null
 ) :
-        RecyclerView.ViewHolder(binding.root) where T : SelectModel {
+    RecyclerView.ViewHolder(binding.root) where T : SelectModel {
 
     fun performBind(item: T?) {
         binding.checkBox.text = item?.text()

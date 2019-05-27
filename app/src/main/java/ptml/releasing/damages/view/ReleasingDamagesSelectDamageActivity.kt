@@ -34,6 +34,7 @@ import ptml.releasing.configuration.view.onRequestPermissionsResult
 import ptml.releasing.damages.model.AssignedDamage
 import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding
+import ptml.releasing.databinding.EmptyLayoutBinding
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
 import timber.log.Timber
@@ -75,10 +76,12 @@ class ReleasingDamagesSelectDamageActivity :
 
             if (convertView == null) {
                 convertView =
-                    LayoutInflater.from(parent.context).inflate(R.layout.cell_cargo_select_damages, parent, false)
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.cell_cargo_select_damages, parent, false)
             }
 
-            val txtDamageName = convertView?.findViewById<View>(R.id.CellCargoDamagesTxtDamage) as TextView
+            val txtDamageName =
+                convertView?.findViewById<View>(R.id.CellCargoDamagesTxtDamage) as TextView
             val btnHigh = convertView.findViewById<View>(R.id.CellCargoDamagesBtnHigh) as Button
             val btnLow = convertView.findViewById<View>(R.id.CellCargoDamagesBtnLow) as Button
 
@@ -106,7 +109,7 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
                     AssignedDamage(
-                        d.id ?:0,
+                        d.id ?: 0,
                         d.description,
                         "",
                         1,
@@ -140,6 +143,9 @@ class ReleasingDamagesSelectDamageActivity :
         showUpEnabled(true)
         adapter = CargoDamagesAdapter(this)
         binding.ReleasingDamagesLstDamages.adapter = adapter
+        binding.includeEmpty.tvMessage.text = getString(R.string.empty_damages_error_message)
+        binding.ReleasingDamagesLstDamages.emptyView = binding.includeEmpty.root
+
         setupListeners()
 
         viewModel.damagesList.observe(this, Observer {
@@ -149,7 +155,11 @@ class ReleasingDamagesSelectDamageActivity :
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.loading)
+                showLoading(
+                    binding.includeProgress.root,
+                    binding.includeProgress.tvMessage,
+                    R.string.loading
+                )
             } else {
                 hideLoading(binding.includeProgress.root)
             }
@@ -170,25 +180,25 @@ class ReleasingDamagesSelectDamageActivity :
         menuInflater.inflate(R.menu.menu_search, menu)
 
 
-            val searchMenuItem = menu?.findItem(R.id.action_search)
+        val searchMenuItem = menu?.findItem(R.id.action_search)
 
-            val searchView = searchMenuItem?.actionView as SearchView
+        val searchView = searchMenuItem?.actionView as SearchView
 
-            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            searchView.queryHint = getString(R.string.search)
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.queryHint = getString(R.string.search)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
 
-                    return false
-                }
+                return false
+            }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    viewModel.filter(newText)
-                    return true
-                }
-            })
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.filter(newText)
+                return true
+            }
+        })
 
 
         return true
@@ -196,7 +206,12 @@ class ReleasingDamagesSelectDamageActivity :
 
     private fun setupListeners() {
 
-        binding.includeBackButton.btnBack.setOnClickListener {
+        binding.btnBack.setOnClickListener {
+            setResult(-1)
+            finish()
+        }
+
+        binding.includeEmpty.btnReload.setOnClickListener {
             setResult(-1)
             finish()
         }
@@ -205,7 +220,10 @@ class ReleasingDamagesSelectDamageActivity :
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getData() {
-        viewModel.getDamages((application as ReleasingApplication).provideImei(), DamagesActivity.typeContainer)
+        viewModel.getDamages(
+            (application as ReleasingApplication).provideImei(),
+            DamagesActivity.typeContainer
+        )
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
@@ -233,7 +251,11 @@ class ReleasingDamagesSelectDamageActivity :
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }

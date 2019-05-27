@@ -8,18 +8,28 @@
         android:layout_height="match_parent"
         android:focusableInTouchMode="true">
 
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7" />
+
+
         <Button
             android:id="@+id/ReleasingDamagesBtnReturn"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/releasing_damages_btn_cancel"
-            android:textSize="18sp"
+            style="@style/Damages.GoBackOther"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l" />
 
         <include
                 android:id="@+id/include_no_operator_btn"
@@ -50,6 +60,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:visibility="gone"
             android:layout_marginTop="8dp"
             android:text="@string/releasing_damages_select_zone_header_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"

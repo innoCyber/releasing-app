@@ -443,23 +443,27 @@ class FormBuilder constructor(val context: Context) {
     }
 
     fun validateSingleSelect(data: ConfigureDeviceData?): Boolean? {
-        val view = rootLayout.findViewWithTag<View>(data?.id)
-        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            return true
-        } else {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-            val adapter = recyclerView.adapter as SingleSelectAdapter<*>
-            if (adapter.selectedItem == null) {
-                val message = context.getString(R.string.select_one_item)
-                listener?.onError(message)
-                val textView = view.findViewById<TextView>(R.id.tv_error)
-                textView.text = message
-                textView.visibility = View.VISIBLE
-                changeBgColor(recyclerView, true)
-                return false
+        if (data?.options?.size ?: 0 > 0) {
+            val view = rootLayout.findViewWithTag<View>(data?.id)
+            if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
+                return true //since it is a spinner, an item is always selected
+            } else {
+                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+                val adapter = recyclerView.adapter as SingleSelectAdapter<*>
+                if (adapter.selectedItem == null) {
+                    val message = context.getString(R.string.select_one_item)
+                    listener?.onError(message)
+                    val textView = view.findViewById<TextView>(R.id.tv_error)
+                    textView.text = message
+                    textView.visibility = View.VISIBLE
+                    changeBgColor(recyclerView, true)
+                    return false
+                }
             }
-            return true
+
         }
+
+        return true
     }
 
 
@@ -553,6 +557,34 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
+    fun validateQuickRemarkSelect(data: ConfigureDeviceData?): Boolean? {
+        if (quickRemarks?.isNotEmpty() == true) {
+            val view = rootLayout.findViewWithTag<View>(data?.id)
+            if (Constants.ITEM_TO_EXPAND < quickRemarks?.size ?: 0) {
+                val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
+                val items = spinner.selectedItems.size
+                if (items <= 0) {
+                    multiSelectError(view)
+                    changeBgDrawable(spinner, true)
+                    return false
+                }
+
+            } else {
+                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+                val adapter = recyclerView.adapter as MultiSelectAdapter<*>
+                val items = adapter.selectedItems.size
+                if (items <= 0) {
+                    multiSelectError(view)
+                    changeBgColor(recyclerView, true)
+                    return false
+                }
+            }
+
+        }
+        return true
+    }
+
+
     /**
      * Creates a Multiselect for the form
      *  Applies the necessary styles
@@ -617,24 +649,26 @@ class FormBuilder constructor(val context: Context) {
     }
 
     fun validateMultiSelect(data: ConfigureDeviceData?): Boolean? {
-        val view = rootLayout.findViewWithTag<View>(data?.id)
-        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
-            val items = spinner.selectedItems.size
-            if (items <= 0) {
-                multiSelectError(view)
-                changeBgDrawable(spinner, true)
-                return false
-            }
+        if (data?.options?.size ?: 0 > 0) {
+            val view = rootLayout.findViewWithTag<View>(data?.id)
+            if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
+                val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
+                val items = spinner.selectedItems.size
+                if (items <= 0) {
+                    multiSelectError(view)
+                    changeBgDrawable(spinner, true)
+                    return false
+                }
 
-        } else {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-            val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-            val items = adapter.selectedItems.size
-            if (items <= 0) {
-                multiSelectError(view)
-                changeBgColor(recyclerView, true)
-                return false
+            } else {
+                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+                val adapter = recyclerView.adapter as MultiSelectAdapter<*>
+                val items = adapter.selectedItems.size
+                if (items <= 0) {
+                    multiSelectError(view)
+                    changeBgColor(recyclerView, true)
+                    return false
+                }
             }
         }
         return true

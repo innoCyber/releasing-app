@@ -59,7 +59,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             setUpOperationStep(it)
         })
         viewModel.terminalList.observe(this, Observer {
-//            setUpTerminal(it)
+            setUpTerminal(it)
         })
 
 

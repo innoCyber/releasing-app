@@ -53,8 +53,8 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             val map = mutableMapOf<Int, QuickRemark>()
             val formConfig = repository.getFormConfigAsync().await()
-            val remarks = repository.getQuickRemarkAsync(imei).await()
-            for (remark in remarks.data) {
+            val remarks = repository.getQuickRemarkAsync(imei)?.await()
+            for (remark in remarks?.data ?: mutableListOf()) {
                 map[remark.id ?: return@launch] = remark
             }
             val wrapper = FormDataWrapper(map, formConfig)

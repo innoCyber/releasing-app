@@ -48,8 +48,6 @@ class MultiSelectAdapter<T> :
             selectedItems.clear()
         }
 
-
-
         listener?.onItemsSelected(selectedItems)
         notifyDataSetChanged()
     }
@@ -68,9 +66,13 @@ class MultiSelectViewHolder<T>(
         binding.checkBox.isChecked = item?.checked ?: false
         binding.root.setOnClickListener {
             if (item != null) {
-                adapter.selectedItems.put(item.id(), item)
                 item.checked = binding.checkBox.isChecked
-                listener?.onItemsSelected(adapter.selectedItems)
+                if(item.checked){
+                    adapter.selectedItems.put(item.id(), item)
+                    listener?.onItemsSelected(adapter.selectedItems)
+                }else{
+                    adapter.selectedItems.remove(item.id())
+                }
             }
         }
     }

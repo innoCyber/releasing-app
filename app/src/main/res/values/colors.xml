@@ -26,4 +26,5 @@
     <color name="colorOther">#3a80ee</color>
 
     <color name="form_textbox_color">#EBEBEB</color>
+    <color name="colorDamageButtonText">#FFFFFF</color>
 </resources>

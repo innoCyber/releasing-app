@@ -22,8 +22,8 @@ interface Repository {
     suspend fun getAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse>
     suspend fun downloadAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse>
 
-    suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse>
-    suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse>
+    suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse>?
+    suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse>?
 
     suspend fun setConfigurationDeviceAsync(
         cargoTypeId: Int?,
@@ -68,8 +68,8 @@ interface Repository {
         request: FormSubmissionRequest
     ): Deferred<BaseResponse>
 
-    suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>
-    suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>
+    suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
+    suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
 
 
 }

@@ -36,9 +36,9 @@ class QuickRemarkViewModel @Inject constructor(
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
-                val response = repository.getQuickRemarkAsync(imei).await()
+                val response = repository.getQuickRemarkAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (response.data.isNotEmpty()) {
+                    if (response?.data?.isNotEmpty() ==true) {
                         responseMutable.postValue(response.data)
                         networkStateMutable.postValue(NetworkState.LOADED)
                     } else {
@@ -65,9 +65,9 @@ class QuickRemarkViewModel @Inject constructor(
             try {
 
 
-                val response = repository.downloadQuickRemarkAsync(imei).await()
+                val response = repository.downloadQuickRemarkAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (response.data.isNotEmpty()) {
+                    if (response?.data?.isNotEmpty() == true) {
                         responseMutable.postValue(response.data)
                         networkStateMutable.postValue(NetworkState.LOADED)
                     } else {
