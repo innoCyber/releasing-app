@@ -65,16 +65,16 @@ class ConfigViewModel @Inject constructor(
     }
 
     fun setConfig(
-        terminal: Terminal,
-        operationStep: OperationStep,
-        cargoType: CargoType,
+        terminal: Terminal?,
+        operationStep: OperationStep?,
+        cargoType: CargoType?,
         checked: Boolean,
         imei: String
     ) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
 //        operationStep.id = 32 //TODO Remove this in production
-        val configuration = Configuration(terminal, operationStep, cargoType, checked)
+        val configuration = Configuration(terminal ?: return, operationStep?: return, cargoType?: return, checked)
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {
                 repository.setSavedConfigAsync(configuration)

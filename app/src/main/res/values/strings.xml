@@ -226,7 +226,7 @@
     <string name="no_operator_logged_in">No operator logged in</string>
 
     <string name="network_state_wifi">Wi-Fi</string>
-    <string name="network_state_mobile">Mobile</string>
+    <string name="network_state_mobile">3G/4G</string>
     <string name="network_state_offline">Offline</string>
     <string name="offline_message">You are currently offline</string>
     <string name="online_message">You are currently connected via %s</string>
