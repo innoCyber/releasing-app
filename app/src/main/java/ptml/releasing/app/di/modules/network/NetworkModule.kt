@@ -21,7 +21,6 @@ const val BASE_URL = "base_url"
 class NetworkModule {
 
     @Provides
-    @ReleasingAppScope
     fun provideRetrofit(
         client: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory,

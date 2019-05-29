@@ -1,0 +1,27 @@
+{
+  "cargo_code": "VEHA5620",
+  "cargo_type": 1,
+  "damages": [],
+  "imei": "861327032935756",
+  "operation_step": 7,
+  "operator": "Hi",
+  "selections": [
+    {
+      "selected_options": [
+        1
+      ],
+      "id": 43
+    }
+  ],
+  "terminal": 1,
+  "values": [
+    {
+      "value": "Hello",
+      "id": 19
+    },
+    {
+      "value": "hello",
+      "id": 25
+    }
+  ]
+}
