@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 1,
+      "type": "textbox",
+      "title": "Surcharge",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "numeric"
+    },
+    {
+      "id": 2,
+      "type": "checkbox",
+      "title": "No start",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 4,
+      "type": "textbox",
+      "title": "Operator Name",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 5,
+      "type": "textbox",
+      "title": "Remark",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 6,
+      "type": "multi_line_textbox",
+      "title": "Remarks",
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 7,
+      "type": "button",
+      "title": "Print Barcode",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "printer"
+    },
+    {
+      "id": 8,
+      "type": "button",
+      "title": "Reset",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "Reset"
+    },
+    {
+      "id": 9,
+      "type": "button",
+      "title": "Confirm",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "Confirm"
+    },
+    {
+      "id": 10,
+      "type": "textbox",
+      "title": "Barcode",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 11,
+      "type": "label",
+      "title": "Description",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 12,
+      "type": "button",
+      "title": "Photo",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "button"
+    }
+  ]
+}

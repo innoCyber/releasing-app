@@ -9,7 +9,6 @@ import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.barcode_scan.BarcodeScanActivity
-import ptml.releasing.home.view.HomeActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.damages.view.*
 import ptml.releasing.printer.view.PrinterSettingsActivity
@@ -29,9 +28,6 @@ abstract class UiModule {
     @ContributesAndroidInjector()
     abstract fun configActivity(): ConfigActivity
 
-
-    @ContributesAndroidInjector()
-    abstract fun homeActivity(): HomeActivity
 
     @ContributesAndroidInjector()
     abstract fun damageActivity(): DamageActivity

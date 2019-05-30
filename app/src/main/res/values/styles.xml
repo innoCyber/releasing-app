@@ -65,8 +65,8 @@
     <style name="ButtonStyle.GoBack">
         <item name="android:gravity">center</item>
         <item name="android:padding">2dp</item>
-        <item name="android:background">@drawable/save_btn_bg</item>
-        <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:background">@drawable/item_bg_transparent</item>
     </style>
 
     <style name="GoBack">
@@ -285,7 +285,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_16dp</item>
         <item name="android:textAppearance">?android:textAppearanceLarge</item>
     </style>
 
@@ -305,6 +305,17 @@
         <item name="android:textColor">@color/colorGray</item>
         <item name="android:textSize">@dimen/form_label_text_size</item>
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+
+    <style name="Form.Error">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:paddingStart">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingLeft">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingRight">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingEnd">@dimen/constraint_default_margin_12dp</item>
     </style>
 
 
@@ -328,7 +339,7 @@
     <style name="Form.MultiSelect" parent="Form.SingleSelect" />
 
     <style name="Form.Check">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
     <style name="Form.Button">
@@ -354,11 +365,17 @@
         <item name="android:text">@string/reset</item>
     </style>
 
+
+
     <style name="DefaultChipSuggestionTextView">
         <item name="chipHorizontalSpacing">6dp</item>
         <item name="chipBackground">@color/chip_material_background</item>
         <item name="chipTextSize">14sp</item>
         <item name="chipHeight">32dp</item>
         <item name="chipVerticalSpacing">4dp</item>
+    </style>
+
+    <style name="InputLayoutStyle" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 </resources>

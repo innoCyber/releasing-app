@@ -33,4 +33,8 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun getOperatorName() = prefs.getOperatorName()
 
     override fun saveOperatorName(name: String?) = prefs.saveOperatorName(name)
+
+    override fun getServerUrl() = prefs.getServerUrl()
+
+    override fun saveServerUrl(url: String?) = prefs.saveServerUrl(url)
 }

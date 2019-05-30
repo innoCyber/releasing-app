@@ -11,6 +11,7 @@ import android.net.Network
 import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -34,11 +35,13 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
-import ptml.releasing.admin_config.view.AdminConfigActivity
+import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
+import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.barcode_scan.BarcodeScanActivity
-import ptml.releasing.cargo_search.view.onRequestPermissionsResult
+import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,7 +62,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
 
-    companion object{
+    companion object {
         const val RC_BARCODE = 112
     }
 
@@ -67,7 +70,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
-                .get(getViewModelClass())
+            .get(getViewModelClass())
 
         initBeforeView()
 
@@ -88,16 +91,95 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         })
 
         viewModel.savedOperatorName.observe(this, Observer {
-            notifyUser(binding.root, getString(it))
+            notifyUser(binding.root, getString(R.string.operator_name_saved_success_msg, it))
         })
 
 
         viewModel.operatorName.observe(this, Observer {
-            initOperator(it)
+            when (this) {
+                /*  is AdminConfigActivity -> {
+                     hideOperator()
+                  }*/
+
+                is SearchActivity -> {
+                    initOperator(it)
+                }
+
+
+                is CargoInfoActivity -> {
+                    initOperator(it)
+                }
+
+                else -> {
+                    hideOperator()
+                }
+            }
+
         })
 
+        viewModel.openEnterDialog.observe(this, Observer {
+            openEnterDialog(it)
+        })
+
+
+        viewModel.openOperatorDialog.observe(this, Observer {
+            openOperatorDialog()
+        })
+
+        viewModel.logOutDialog.observe(this, Observer {
+            showLogOutConfirmDialog()
+        })
+
+        viewModel.logOutOperator.observe(this, Observer {
+            notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
+        })
+
+    }
+
+    private fun showLogOutConfirmDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.confirm_action),
+            message = getString(R.string.log_out_confirm_message),
+            buttonText = getString(R.string.yes),
+            hasNeutralButton = true,
+            neutralButtonText = getString(R.string.no),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.logOutOperator()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun openOperatorDialog() {
+        val dialog = ChooseOperatorInputDialog.newInstance(object : ChooseOperatorInputDialog.ChooseOperatorListener {
+            override fun onScan() {
+                viewModel.openBarCodeScanner()
+            }
+
+            override fun onEnter() {
+                viewModel.openEnterDialog()
+            }
+        })
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
+    }
+
+    private fun openEnterDialog(it: String?) {
+        val dialog = EditTextDialog.newInstance(it, object : EditTextDialog.EditTextDialogListener {
+            override fun onSave(value: String) {
+                viewModel.saveOperatorName(value)
+            }
+        }, getString(R.string.enter_operator_name), getString(R.string.operator_name), false)
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.getOperatorName()
     }
+
 
     @NeedsPermission(android.Manifest.permission.CAMERA)
     fun openBarCodeScanner(requestCode: Int) {
@@ -226,8 +308,6 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
 
-
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupConnectionListener() {
         Timber.d("Setting up connectivity listener")
@@ -254,7 +334,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
 //        observeNetworkChanges(networkSubject)
     }
 
-    fun startNewActivity(name: Class<*>, finish: Boolean = false, data:Bundle? = null){
+    fun startNewActivity(name: Class<*>, finish: Boolean = false, data: Bundle? = null) {
         val intent = Intent(this, name)
         intent.putExtra(Constants.EXTRAS, data)
         startActivity(intent)
@@ -267,15 +347,15 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     private fun showSnackBarError() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(R.string.no_internet),
-                Snackbar.LENGTH_INDEFINITE
+            findViewById(android.R.id.content),
+            getString(R.string.no_internet),
+            Snackbar.LENGTH_INDEFINITE
         )
         val param = snackBar?.view?.layoutParams as FrameLayout.LayoutParams
         val snackBarLayout = snackBar?.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorRed))
         snackBarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+            .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         param.gravity = Gravity.TOP
 
 
@@ -291,15 +371,15 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     private fun showSnackBar() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(R.string.internet_restored),
-                Snackbar.LENGTH_SHORT
+            findViewById(android.R.id.content),
+            getString(R.string.internet_restored),
+            Snackbar.LENGTH_SHORT
         )
         val param = snackBar?.view?.layoutParams as FrameLayout.LayoutParams
         val snackBarLayout = snackBar?.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
         snackBarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+            .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         param.gravity = Gravity.TOP
         snackBar?.view?.layoutParams = param
         if (!firstTime) {
@@ -321,7 +401,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
         val snackBarLayout = snackBar.view as Snackbar.SnackbarLayout
         snackBarLayout.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorAccent))
         (snackBarLayout.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView)
-                .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+            .setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
         /*snackBar.getView().setLayoutParams(param);*/
         snackBar.show()
     }
@@ -330,7 +410,7 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     @Suppress("DEPRECATION")
     fun isOffline(): Boolean {
         val manager = this
-                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         return !(manager.activeNetworkInfo != null && manager.activeNetworkInfo.isConnectedOrConnecting)
     }
@@ -348,8 +428,8 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     fun hideLoading(view: View) {
 
         val slide = AnimationUtils.loadAnimation(
-                this,
-                R.anim.up_down
+            this,
+            R.anim.up_down
         )
         view.startAnimation(slide)
         view.visibility = View.GONE
@@ -360,10 +440,11 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     }
 
     fun showDialog(title: String?, message: String?) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = title,
             message = message,
-            buttonText = getString(android.R.string.ok))
+            buttonText = getString(android.R.string.ok)
+        )
         Timber.e("msg: %s", message)
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
@@ -381,22 +462,26 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected abstract fun getViewModelClass(): Class<T>
 
 
-    protected fun initOperator(operatorName: String?){
-        if(operatorName == null){
-            Timber.d("Operator name is null")
-            findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
-            return
-        }
-
+    protected fun initOperator(operatorName: String?) {
         Timber.d("Passed Operator name is %s", operatorName)
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text = operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
+        changeOperator?.text =
+            if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
         changeOperator?.setOnClickListener {
-            viewModel.openConfiguration()
+            if(TextUtils.isEmpty(operatorName)){
+                viewModel.openOperatorDialog()
+            }else{
+                viewModel.showLogOutConfirmDialog()
+            }
         }
 
+    }
+
+    protected fun hideOperator() {
+        findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
     }
 
 

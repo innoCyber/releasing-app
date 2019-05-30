@@ -179,6 +179,7 @@ class MaterialRippleLayout @JvmOverloads constructor(context: Context, attrs: At
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     fun <T : View> getChildView(): T {
         return childView as T
     }

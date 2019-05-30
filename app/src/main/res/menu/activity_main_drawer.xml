@@ -11,4 +11,10 @@
             android:icon="@drawable/ic_info_white"
             android:title="@string/nav_about"
             android:visible="true"/>
+
+    <item
+            android:id="@+id/nav_scan_operator"
+            android:icon="@drawable/ic_qr_scanner"
+            android:title="@string/scan_operator_badge"
+            android:visible="true"/>
 </menu>

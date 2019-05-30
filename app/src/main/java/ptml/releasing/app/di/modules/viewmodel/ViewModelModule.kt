@@ -11,7 +11,6 @@ import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.download_damages.viewmodel.DamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
-import ptml.releasing.home.viewmodel.HomeViewModel
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.damages.view_model.DummyViewModel
 import ptml.releasing.damages.view_model.SelectDamageViewModel
@@ -38,10 +37,7 @@ abstract class ViewModelModule {
     abstract fun bindConfigViewModel(myViewModel: ConfigViewModel): ViewModel
 
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(HomeViewModel::class)
-    abstract fun bindHomeViewModel(myViewModel: HomeViewModel): ViewModel
+
 
 
     @Binds

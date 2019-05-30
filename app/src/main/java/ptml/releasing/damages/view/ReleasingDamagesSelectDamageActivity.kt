@@ -23,6 +23,9 @@ import ptml.releasing.app.local.ReleasingLocal
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.cargo_info.model.FormDamageSize
+import ptml.releasing.cargo_info.model.LARGE
+import ptml.releasing.cargo_info.model.SMALL
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.OperationStep
@@ -33,6 +36,7 @@ import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
+import timber.log.Timber
 
 
 import javax.inject.Inject
@@ -62,9 +66,10 @@ class ReleasingDamagesSelectDamageActivity :
         }
 
         override fun getItemId(position: Int): Long {
-            return damages[position].id.toLong()
+            return damages[position].id?.toLong() ?: 0
         }
 
+        @Suppress("NAME_SHADOWING")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var convertView = convertView
 
@@ -81,16 +86,17 @@ class ReleasingDamagesSelectDamageActivity :
 
             btnHigh.setOnClickListener {
                 val d = damages[position]
+                Timber.d("Damage: %s", d)
                 DamagesActivity.currentDamages.add(
                     AssignedDamage(
-                        d.id,
+                        d.id ?: 0,
                         d.description,
                         "",
                         1,
                         d.typeContainer,
                         d.position,
                         DamagesActivity.currentDamageZone + DamagesActivity.currentDamagePoint,
-                        1
+                        LARGE
                     )
                 )
                 finish()
@@ -100,14 +106,14 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
                     AssignedDamage(
-                        d.id,
+                        d.id ?:0,
                         d.description,
                         "",
                         1,
                         d.typeContainer,
                         d.position,
                         DamagesActivity.currentDamageZone + DamagesActivity.currentDamagePoint,
-                        0
+                        SMALL
                     )
                 )
                 finish()
@@ -116,7 +122,7 @@ class ReleasingDamagesSelectDamageActivity :
             txtDamageName.setOnClickListener {
                 AlertDialog.Builder(context)
                     .setMessage(damages[position].description)
-                    .setPositiveButton(android.R.string.ok) { dialog, which ->
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
                         // continue with delete
                     }
                     .setIcon(android.R.drawable.ic_dialog_info)

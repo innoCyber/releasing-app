@@ -3,6 +3,7 @@ package ptml.releasing.app.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.AdminConfigResponse
@@ -13,7 +14,7 @@ import ptml.releasing.printer.model.Settings
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
-    Prefs {
+        Prefs {
     companion object {
         const val FIRST = "is_first"
         const val CONFIG = "config"
@@ -23,6 +24,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DEVICE_CONFIG = "device_config"
         const val SETTINGS = "settings"
         const val OPERATOR_NAME = "operator_name"
+        const val SERVER_URL = "server_url"
     }
 
 
@@ -67,7 +69,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
-        /*return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)*/
+//        return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)
         return FormLoader.loadFromAssets(context)
     }
 
@@ -84,10 +86,18 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getOperatorName(): String? {
-        return sharedPreferences.getString(OPERATOR_NAME,  null)
+        return sharedPreferences.getString(OPERATOR_NAME, null)
     }
 
     override fun saveOperatorName(name: String?) {
         sharedPreferences.edit().putString(OPERATOR_NAME, name).apply()
+    }
+
+    override fun saveServerUrl(url: String?) {
+        sharedPreferences.edit().putString(SERVER_URL, url).apply()
+    }
+
+    override fun getServerUrl(): String? {
+        return sharedPreferences.getString(SERVER_URL, BuildConfig.BASE_URL)
     }
 }

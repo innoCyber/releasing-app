@@ -11,11 +11,12 @@ enum class FormType constructor(val type: String) {
     DAMAGES(Constants.DAMAGES),
     SINGLE_SELECT(Constants.SINGLE_SELECT),
     MULTI_SELECT(Constants.MULTI_SELECT),
+    CHECK_BOX(Constants.CHECK_BOX),
     UNKNOWN(Constants.UNKNOWN);
 
 
     companion object{
-        fun fromType(type: String): FormType {
+        fun fromType(type: String?): FormType {
             return when (type) {
                 Constants.LABEL -> LABEL
                 Constants.TEXT_BOX -> TEXTBOX
@@ -25,6 +26,7 @@ enum class FormType constructor(val type: String) {
                 Constants.DAMAGES -> DAMAGES
                 Constants.SINGLE_SELECT -> SINGLE_SELECT
                 Constants.MULTI_SELECT -> MULTI_SELECT
+                Constants.CHECK_BOX -> CHECK_BOX
                 else -> UNKNOWN
             }
         }

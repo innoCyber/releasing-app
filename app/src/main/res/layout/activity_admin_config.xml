@@ -1,83 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+                android:layout_width="match_parent"
 
-            android:layout_height="match_parent">
+                android:layout_height="match_parent">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/tv_config_message_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/include_operator_badge"
-                >
-
-                <TextView
-                    android:id="@+id/tv_config_message"
+                    android:id="@+id/tv_config_message_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorOtherAccentAlpha"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/constraint_default_margin_10dp"
-                    android:text="@string/device_not_configured_message"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="13sp"
+                    android:layout_marginTop="@dimen/constraint_default_margin_8dp"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+            >
+
+                <TextView
+                        android:id="@+id/tv_config_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorOtherAccentAlpha"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/constraint_default_margin_10dp"
+                        android:text="@string/device_not_configured_message"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="13sp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                 <View
-                    android:layout_width="3dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="start"
-                    android:background="@color/colorOtherAccent"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_config_message"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_config_message" />
+                        android:layout_width="3dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="start"
+                        android:background="@color/colorOtherAccent"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_config_message"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tv_config_message"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <include
-                android:id="@+id/include_operator_badge"
-                layout="@layout/include_operator_badge"
-                android:layout_width="match_parent"
-                android:visibility="visible"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/include_no_operator_btn"
+                    layout="@layout/include_no_operator_btn"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge"/>
 
             <include
-                android:id="@+id/include_admin_config"
-                layout="@layout/include_admin_config"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/constraint_default_margin_32dp"
-                android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_config_message_container"
-                app:layout_constraintVertical_bias="0" />
+                    android:id="@+id/include_operator_badge"
+                    layout="@layout/include_operator_badge"
+                    android:layout_width="match_parent"
+                    android:visibility="visible"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_config_message_container"/>
+
+            <include
+                    android:id="@+id/include_admin_config"
+                    layout="@layout/include_admin_config"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                    android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/include_no_operator_btn"
+                    app:layout_constraintVertical_bias="0"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

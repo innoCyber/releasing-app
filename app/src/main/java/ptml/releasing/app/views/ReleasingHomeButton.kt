@@ -95,6 +95,7 @@ open class ReleasingHomeButton : ReleasingButton {
         typedArray?.recycle()
     }
 
+    @Suppress("DEPRECATION")
     override fun initView() {
         removeAllViews()
         //create an ImageView

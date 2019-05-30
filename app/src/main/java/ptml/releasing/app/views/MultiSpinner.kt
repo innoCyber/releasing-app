@@ -31,10 +31,10 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
     private var items: MutableList<String>? = null
     private var selected = mutableListOf<Boolean>()
-    var defaultHintText = "Select Items"
+    var defaultHintText: String? = "Select Items"
     private var spinnerTitle: String? = ""
     private var listener: MultiSpinnerListener? = null
-    private var selectedItems = LinkedHashMap<String, Int>()
+    var selectedItems = LinkedHashMap<String, Int>()
     private val chipsListener = object : ChipListener {
         override fun onItemClose(position: Int, item: String, itemsRemaining: Int) {
             Timber.d("Removed %s", item)
@@ -44,7 +44,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
             if (itemsRemaining <= 0) {
                 val adapter = MultiSpinnerAdapter(context, defaultHintText)
                 setAdapter(adapter)
-            }else{
+            } else {
                 chipAdapter()
             }
             if (selected.size > 0) {
@@ -107,10 +107,10 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         val builder = AlertDialog.Builder(context)
         builder.setTitle(spinnerTitle)
         builder.setMultiChoiceItems(
-            items?.toTypedArray<CharSequence>(), selected.toBooleanArray(), this
+                items?.toTypedArray<CharSequence>(), selected.toBooleanArray(), this
         )
         builder.setPositiveButton(
-            android.R.string.ok
+                android.R.string.ok
         ) { dialog, which -> dialog.cancel() }
         builder.setOnCancelListener(this)
         builder.show()
@@ -144,16 +144,28 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
 
     fun setSelection(selection: List<Int>?) {
-        for (i in selection ?: mutableListOf()) {
-            selected[i] = true
+        if (selection != null) {
+            Timber.d("Selection is non null")
+            for (i in selection) {
+                if (selection.size > i) {
+                    selected[i] = true
+                }
+            }
+        } else {
+            Timber.d("Selection is null")
+            for (i in 0 until selected.size) {
+                selected[i] = false
+            }
         }
+
+        listener?.onItemsSelected(selected)
         onCancel(null)
     }
 
 }
 
-internal class MultiSpinnerAdapter(context: Context, text: String) :
-    ArrayAdapter<String>(context, R.layout.spinner_single, arrayListOf(text)) {
+internal class MultiSpinnerAdapter(context: Context, text: String?) :
+        ArrayAdapter<String>(context, R.layout.spinner_single, arrayListOf(text)) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -164,7 +176,7 @@ internal class MultiSpinnerAdapter(context: Context, text: String) :
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            textView, null, null, drawable, null
+                textView, null, null, drawable, null
         )
 
         textView.text = getItem(position)
@@ -195,11 +207,11 @@ internal class MultiSpinnerAdapter(context: Context, text: String) :
 
 
 internal class ChipsMultiSpinnerAdapter(
-    context: Context,
-    var items: LinkedHashMap<String, Int>,
-    val listener: ChipListener?
+        context: Context,
+        var items: LinkedHashMap<String, Int>,
+        val listener: ChipListener?
 ) :
-    ArrayAdapter<String>(context, R.layout.spinner_single, items.keys.toList()) {
+        ArrayAdapter<String>(context, R.layout.spinner_single, items.keys.toList()) {
 
     companion object {
         const val SPAN_TWO_SIZE = 3
@@ -256,9 +268,9 @@ class ChipAdapter : RecyclerView.Adapter<ChipViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChipViewHolder {
         return ChipViewHolder(
-            this,
-            ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
-            listener
+                this,
+                ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
+                listener
         )
     }
 
@@ -271,11 +283,11 @@ class ChipAdapter : RecyclerView.Adapter<ChipViewHolder>() {
 }
 
 class ChipViewHolder(
-    val adapter: ChipAdapter,
-    val binding: ItemChipBinding,
-    val listener: ChipListener? = null
+        val adapter: ChipAdapter,
+        val binding: ItemChipBinding,
+        val listener: ChipListener? = null
 ) :
-    RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
     fun performBind(item: String) {
         Timber.w("TEXT: %s", item)

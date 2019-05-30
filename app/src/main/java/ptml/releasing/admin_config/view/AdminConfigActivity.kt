@@ -3,19 +3,19 @@ package ptml.releasing.admin_config.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.configuration.view.ConfigActivity
-import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
-import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
@@ -28,7 +28,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         super.onCreate(savedInstanceState)
         viewModel.isConfigured.observe(this, Observer {
             binding.tvConfigMessageContainer.visibility =
-                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+                    if (it) View.GONE else View.VISIBLE //hide or show the not configured message
         })
 
         viewModel.getSavedConfig()
@@ -50,6 +50,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             startActivityForResult(intent, RC)
         })
 
+        viewModel.serverUrl.observe(this, Observer {
+            showServerUrlDialog(it)
+        })
+
+        viewModel.openSearch.observe(this, Observer {
+            onBackPressed()
+        })
+
 
         showUpEnabled(true)
 
@@ -65,8 +73,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openPrinterSetting()
         }
 
-        binding.includeAdminConfig.btnScanOperator.setOnClickListener {
-            viewModel.openBarCodeScanner()
+
+
+        binding.includeAdminConfig.btnSearch.setOnClickListener {
+            viewModel.openSearch()
+        }
+
+        binding.includeAdminConfig.btnServer.setOnClickListener {
+            viewModel.openServer()
         }
 
 
@@ -74,7 +88,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC && resultCode == Activity.RESULT_OK) {
-            startNewActivity(SearchActivity::class.java)
             finish()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -98,16 +111,31 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
              })*/
 
         val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.config_error),
-            message = getString(R.string.config_error_message),
-            buttonText = getString(android.R.string.ok),
-            listener = object : InfoDialog.InfoListener {
-                override fun onConfirm() {
+                title = getString(R.string.config_error),
+                message = getString(R.string.config_error_message),
+                buttonText = getString(android.R.string.ok),
+                listener = object : InfoDialog.InfoListener {
+                    override fun onConfirm() {
 //                    viewModel.openConfiguration()
-                }
-            })
+                    }
+                })
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun showServerUrlDialog(url:String?){
+        val serverUrl = if(TextUtils.isEmpty(url)){
+            BuildConfig.BASE_URL
+        }else{
+            url
+        }
+        val dialog = EditTextDialog.newInstance(serverUrl, object : EditTextDialog.EditTextDialogListener{
+            override fun onSave(value: String) {
+                viewModel.saveServerUrl(value)
+            }
+        })
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
     override fun getViewModelClass() = AdminConfigViewModel::class.java

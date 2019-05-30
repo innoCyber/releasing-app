@@ -4,6 +4,7 @@ import kotlinx.coroutines.Deferred
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.login.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
@@ -24,9 +25,9 @@ interface Repository {
     suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse>
 
     suspend fun setConfigurationDeviceAsync(
-        cargoTypeId: Int,
-        operationStepId: Int,
-        terminal: Int,
+        cargoTypeId: Int?,
+        operationStepId: Int?,
+        terminal: Int?,
         imei: String
     ): Deferred<ConfigureDeviceResponse>
 
@@ -34,9 +35,9 @@ interface Repository {
 
 
     suspend fun findCargo(
-            cargoTypeId: Int,
-            operationStepId: Int,
-            terminal: Int,
+            cargoTypeId: Int?,
+            operationStepId: Int?,
+            terminal: Int?,
             imei: String,
             cargoNumber:String):Deferred<FindCargoResponse>
 
@@ -56,6 +57,19 @@ interface Repository {
 
     fun saveOperatorName(name:String?)
     fun getOperatorName():String?
+
+    fun saveServerUrl(url:String?)
+    fun getServerUrl():String?
+
+
+    suspend fun uploadData(request: FormSubmissionRequest,
+                           cargoTypeId: Int?,
+                           operationStepId: Int?,
+                           terminal: Int?,
+                           operator:String?,
+                           cargoNumber: String?,
+                           cargoId: Int?
+    ): Deferred<BaseResponse>
 
 
 }

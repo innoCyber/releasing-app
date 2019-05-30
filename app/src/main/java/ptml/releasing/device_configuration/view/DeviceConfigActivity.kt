@@ -6,16 +6,15 @@ import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.databinding.ActivityDeviceConfigBinding
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
-import ptml.releasing.home.view.HomeActivity
 import timber.log.Timber
 
 @RuntimePermissions
@@ -27,14 +26,14 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         binding.includeProgress.root.visibility = View.VISIBLE
         initErrorDrawable(binding.includeError.imgError)
         if(!viewModel.checkIfFirst()){
-            startNewActivity(HomeActivity::class.java, true)
+            startNewActivity(SearchActivity::class.java, true)
             return
         }
 
         viewModel.baseLiveData.observe(this, Observer {
             if (true == it?.isSuccess) {
                 hideLoading(binding.includeError.root)
-                startNewActivity(HomeActivity::class.java, true)
+                startNewActivity(SearchActivity::class.java, true)
             } else if (false == it?.isSuccess) {
                 showError()
             }

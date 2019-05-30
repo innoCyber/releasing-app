@@ -2,14 +2,16 @@ package ptml.releasing.app.utils
 
 import android.content.Context
 import android.os.Build
+import android.text.InputType
 import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.core.view.marginBottom
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 
 
 /**
@@ -55,4 +57,15 @@ fun View.updateMargin(start: Int = marginStart,
 fun View.hideSoftInputFromWindow() {
     (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             .hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun EditText.setValidation(validation:String?) {
+    when(validation){
+        Constants.ALPHANUMERIC ->{
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        Constants.NUMERIC ->{
+            inputType = InputType.TYPE_CLASS_NUMBER
+        }
+    }
 }

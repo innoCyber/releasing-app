@@ -1,0 +1,109 @@
+{
+  "success": true,
+  "message": "",
+  "data": [{
+      "id": 1,
+      "type": "label",
+      "title": "Surcharge",
+      "is_required": true,
+      "options": [],
+      "data_validation": "numeric"
+    },
+    {
+      "id": 8,
+      "type": "multi_select",
+      "title": "Remarks",
+      "is_required": true,
+      "options": [{
+        "id": 1,
+        "name": "Everything is fine",
+        "is_selected": false
+      }, {
+        "id": 2,
+        "name": "Some issues need to be fixed"
+      }, {
+        "id": 3,
+        "name": "Resoltion in progress"
+      }],
+      "data_validation": ""
+    },
+    {
+      "id": 7,
+      "type": "printer",
+      "title": "Print Barcode",
+      "is_required": false,
+      "options": [],
+      "data_validation": "printer"
+    },
+    {
+      "id": 6,
+      "type": "multi_line_textbox",
+      "title": "Remarks",
+      "is_required": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 4,
+      "type": "textbox",
+      "title": "Operator Name",
+      "is_required": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 5,
+      "type": "textbox",
+      "title": "Remark",
+      "is_required": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 10,
+      "type": "textbox",
+      "title": "Barcode",
+      "is_required": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 11,
+      "type": "label",
+      "title": "Description",
+      "is_required": false,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 8,
+      "type": "single_select",
+      "title": "Remarks",
+      "is_required": true,
+      "options": [{
+        "id": 1,
+        "name": "Everything is fine",
+        "is_selected": false
+      }, {
+        "id": 2,
+        "name": "Some issues need to be fixed"
+      }, {
+        "id": 3,
+        "name": "Resolution in progress"
+      }, {
+        "id": 4,
+        "name": "Contact admin"
+      }, {
+        "id": 5,
+        "name": "All issues resolved"
+      }, {
+        "id": 6,
+        "name": "Resolution completed"
+      }, {
+        "id": 7,
+        "name": "Contact marketer"
+      }],
+      "data_validation": ""
+    }
+  ]
+}

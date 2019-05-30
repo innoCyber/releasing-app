@@ -1,11 +1,13 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.*
+import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.login.model.User
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
@@ -101,9 +103,9 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun setConfigurationDeviceAsync(
-            cargoTypeId: Int,
-            operationStepId: Int,
-            terminal: Int,
+            cargoTypeId: Int?,
+            operationStepId: Int?,
+            terminal: Int?,
             imei: String
     ): Deferred<ConfigureDeviceResponse> {
         return withContext(appCoroutineDispatchers.network) {
@@ -122,9 +124,9 @@ open class ReleasingRepository @Inject constructor(
     }
 
 
-    override suspend fun findCargo(cargoTypeId: Int,
-                                   operationStepId: Int,
-                                   terminal: Int,
+    override suspend fun findCargo(cargoTypeId: Int?,
+                                   operationStepId: Int?,
+                                   terminal: Int?,
                                    imei: String,
                                    cargoNumber:String
     ) = remote.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
@@ -146,6 +148,14 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
+    override suspend fun uploadData(request: FormSubmissionRequest,
+                                    cargoTypeId: Int?,
+                                    operationStepId: Int?,
+                                    terminal: Int?,
+                                    operator:String?,
+                                    cargoNumber:String?,
+                                    cargoId: Int? ) = remote.uploadData(request, cargoTypeId, operationStepId, terminal, operator, cargoNumber,cargoId)
+
     override fun getSettings() = local.getSettings()
 
     override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
@@ -153,6 +163,12 @@ open class ReleasingRepository @Inject constructor(
     override fun getOperatorName() = local.getOperatorName()
 
     override fun saveOperatorName(name: String?) = local.saveOperatorName(name)
+
+    override fun getServerUrl(): String? = local.getServerUrl()
+
+    override fun saveServerUrl(url: String?)  = local.saveServerUrl(url)
+
+
 
 }
 

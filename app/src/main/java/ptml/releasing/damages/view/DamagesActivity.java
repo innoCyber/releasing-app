@@ -52,6 +52,12 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
         return DummyViewModel.class;
     }
 
+    public static void resetValues() {
+        currentDamages.clear();
+        currentDamageZone = "";
+        currentDamagePoint = "";
+    }
+
     class CargoDamagesAdapter extends BaseAdapter {
 
         Context context;

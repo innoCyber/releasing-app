@@ -1,0 +1,47 @@
+{
+  "cargo_code": "vvv",
+  "cargo_type": 1,
+  "damages": [
+    {
+      "location": "BLEF",
+      "number": 5,
+      "remarks": "hELKO THRT",
+      "size": "Small",
+      "type": 0,
+      "id": 787
+    },
+    {
+      "location": "LCLE",
+      "number": 3,
+      "remarks": "HI",
+      "size": "Large",
+      "type": 0,
+      "id": 792
+    },
+    {
+      "location": "RFRI",
+      "number": 11,
+      "remarks": "HELLO",
+      "size": "Large",
+      "type": 6,
+      "id": 913
+    }
+  ],
+  "operation_step": 32,
+  "selections": [
+    {
+      "selected_options": [
+        0
+      ],
+      "id": 19
+    },
+    {
+      "selected_options": [
+        0
+      ],
+      "id": 21
+    }
+  ],
+  "terminal": 2,
+  "values": []
+}

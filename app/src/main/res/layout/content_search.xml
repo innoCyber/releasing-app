@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+        <variable
+                name="viewModel"
+                type="ptml.releasing.cargo_search.viewmodel.SearchViewModel"/>
+    </data>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+                                           android:layout_height="match_parent"
+                                           android:fillViewport="true"
+                                           app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+               >
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_l"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_r"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9"/>
+
+            <include
+                    android:id="@+id/include_operator_badge"
+                    layout="@layout/include_operator_badge"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_config_message_container"/>
+
+
+            <include
+                    android:id="@+id/include_no_operator_btn"
+                    layout="@layout/include_no_operator_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge"/>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/tv_config_message_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/constraint_default_margin_4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                        android:id="@+id/tv_config_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorOtherAccentAlpha"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/constraint_default_margin_10dp"
+                        android:text="@string/device_not_configured_message"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="13sp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <View
+                        android:layout_width="3dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="start"
+                        android:background="@color/colorOtherAccent"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_config_message"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tv_config_message"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <include
+                    android:id="@+id/include_home"
+                    layout="@layout/include_home_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/include_no_operator_btn"/>
+
+
+            <include
+                    android:id="@+id/include_search"
+                    layout="@layout/include_search"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                    app:layout_constraintStart_toStartOf="@id/guideline_l"
+                    app:layout_constraintTop_toBottomOf="@id/include_home"
+                    app:layout_constraintVertical_bias="0"
+                    app:viewModel="@{viewModel}"/>
+
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                    android:id="@+id/btn_back_layout"
+                    style="@style/RippleLayoutStyle.Configure"
+                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                    android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                    app:layout_constraintStart_toStartOf="@id/guideline_l"
+                    app:layout_constraintTop_toBottomOf="@id/include_search"
+                    app:layout_constraintVertical_bias="0">
+
+                <Button
+                        android:id="@+id/btn_back"
+                        style="@style/ButtonStyle.GoBack"
+                        android:text="@string/admin_settings"/>
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+            <include
+                    android:id="@+id/include_progress"
+                    layout="@layout/progress_bar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+
+            <include
+                    android:id="@+id/include_error"
+                    layout="@layout/error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

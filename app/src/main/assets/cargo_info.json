@@ -7,7 +7,7 @@
       "type": "images",
       "position": 0,
       "title": "Photos",
-      "is_required": false,
+      "is_required": true,
       "is_editable": false,
       "options": [],
       "data_validation": "images"
@@ -17,7 +17,7 @@
       "type": "damages",
       "position": 1,
       "title": "Damages",
-      "is_required": false,
+      "is_required": true,
       "is_editable": false,
       "options": [],
       "data_validation": "images"
@@ -70,7 +70,7 @@
       "is_required": true,
       "is_editable": true,
       "options": [],
-      "data_validation": "alphanumeric"
+      "data_validation": "numeric"
     },
     {
       "id": 8,
@@ -82,6 +82,8 @@
       "options": [],
       "data_validation": ""
     },
+
+
     {
       "id": 9,
       "type": "textbox",
@@ -323,6 +325,16 @@
         }
       ],
       "data_validation": ""
+    },
+    {
+      "id": 22,
+      "type": "checkbox",
+      "position": 21,
+      "title": "Coloured item",
+      "is_required": true,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "true"
     }
   ]
 }

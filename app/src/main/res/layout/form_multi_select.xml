@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ptml.releasing.app.views.MultiSpinner
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ptml.releasing.app.views.MultiSpinner
+        android:id="@+id/select"
         style="@style/Form.MultiSelect"
-        android:entries="@array/sample"/>
+        android:entries="@array/sample" />
+
+    <TextView
+        android:id="@+id/tv_error"
+        style="@style/Form.Error"
+        tools:text="Error" />
+</LinearLayout>

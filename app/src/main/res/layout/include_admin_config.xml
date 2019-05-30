@@ -1,68 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_l"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
 
         <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_l"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05"/>
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_r"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95"/>
+            android:id="@+id/guideline_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
 
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_configuration"
-                style="@style/ButtonStyle.HomeBottom"
-                android:text="@string/device_configuration"
-                app:drawableStartCompat="@drawable/ic_config"
-                app:layout_constraintEnd_toStartOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/btn_configuration"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/device_configuration"
+            app:drawableStartCompat="@drawable/ic_config"
+            app:layout_constraintEnd_toStartOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-        <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_download"
-                style="@style/ButtonStyle.HomeBottom"
-                android:text="@string/download_damages"
-                app:drawableStartCompat="@drawable/ic_download"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/btn_configuration"/>
+
 
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_settings"
-                style="@style/ButtonStyle.HomeBottom"
-                android:text="@string/printer_settings"
-                app:drawableStartCompat="@drawable/ic_settings"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/btn_download"/>
+            android:id="@+id/btn_search"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/cargo_search"
+            app:drawableStartCompat="@drawable/ic_search"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_configuration"/>
+
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_download"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/download_damages"
+            app:drawableStartCompat="@drawable/ic_download"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_search" />
 
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_scan_operator"
-                style="@style/ButtonStyle.HomeBottom"
-                android:text="@string/scan_operator_badge"
-                app:drawableStartCompat="@drawable/ic_qr_scanner"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/btn_settings"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+            android:id="@+id/btn_settings"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/printer_settings"
+            app:drawableStartCompat="@drawable/ic_settings"
+
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_download" />
+
+
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_server"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/change_server_url"
+            app:drawableStartCompat="@drawable/ic_website"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_settings"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

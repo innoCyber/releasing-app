@@ -22,13 +22,24 @@
             app:layout_constraintRight_toRightOf="parent" />
 
         <include
-            android:id="@+id/include_operator_badge"
-            layout="@layout/include_operator_badge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/include_no_operator_btn"
+                layout="@layout/include_no_operator_btn"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/include_operator_badge"/>
+
+        <include
+                android:id="@+id/include_operator_badge"
+                layout="@layout/include_operator_badge"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
 
         <TextView
@@ -45,7 +56,7 @@
             android:textColor="@color/color_highlight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/include_operator_badge" />
+            app:layout_constraintTop_toBottomOf="@id/include_no_operator_btn" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"

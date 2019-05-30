@@ -31,10 +31,11 @@
             app:layout_constraintGuide_percent="0.95" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@id/btn_back_layout"
+            app:layout_constraintBottom_toTopOf="@id/form_bottom"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,13 +58,25 @@
                     app:layout_constraintGuide_percent="0.95" />
 
                 <include
-                    android:id="@+id/include_operator_badge"
-                    layout="@layout/include_operator_badge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        android:id="@+id/include_no_operator_btn"
+                        layout="@layout/include_no_operator_btn"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/include_operator_badge"
+                        />
+
+                <include
+                        android:id="@+id/include_operator_badge"
+                        layout="@layout/include_operator_badge"
+                        android:layout_width="match_parent"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
 
 
                 <include
@@ -74,7 +87,7 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge"/>
+                    app:layout_constraintTop_toBottomOf="@id/include_no_operator_btn" />
 
 
                 <TextView
@@ -98,6 +111,36 @@
                     app:layout_constraintTop_toBottomOf="@id/include_home" />
 
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_badge"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:theme="@style/InputLayoutStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                    app:errorEnabled="true"
+                    app:boxStrokeColor="@color/colorGrayHint"
+                    app:hintTextColor="@color/colorGrayHint"
+                    app:boxStrokeWidth="1dp"
+                    android:visibility="gone"
+                    app:errorTextAppearance="@style/TextLimitError"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                    app:layout_constraintHorizontal_bias="0.2"
+                    app:layout_constraintStart_toStartOf="@id/guideline_l"
+                    app:layout_constraintTop_toBottomOf="@id/tv_number">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_badge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/badge_id_hint"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        tools:text="0034933" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
@@ -106,7 +149,7 @@
                     android:background="@color/colorBlueGray"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/tv_number" />
+                    app:layout_constraintTop_toBottomOf="@id/til_badge" />
 
 
                 <FrameLayout
@@ -124,26 +167,33 @@
         </androidx.core.widget.NestedScrollView>
 
 
-        <ptml.releasing.app.views.MaterialRippleLayout
-            android:id="@+id/btn_back_layout"
-            style="@style/RippleLayoutStyle.Configure"
-            android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-            android:layout_marginBottom="@dimen/constraint_default_margin_32dp"
-            android:visibility="gone"
+        <FrameLayout
+            android:id="@+id/form_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_rr"
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
-            app:layout_constraintTop_toBottomOf="@id/include_search"
-            tools:visibility="visible">
+            app:layout_constraintVertical_bias="0"
+            tools:layout_height="44dp" />
 
-            <ptml.releasing.app.views.SupportVectorDrawablesButton
-                android:id="@+id/btn_back"
-                style="@style/ButtonStyle.GoBack"
-                android:onClick="@{() -> viewModel.goBack()}"
-                android:text="@string/back_to_home"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        <include layout="@layout/progress_bar_layout"
+                 android:id="@+id/include_progress"
+                 android:layout_width="match_parent"
+                 android:visibility="gone"
+                 android:layout_height="match_parent"/>
+
+
+        <include
+                android:id="@+id/include_error"
+                layout="@layout/error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -73,7 +73,7 @@ class ConfigViewModel @Inject constructor(
     ) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
-        operationStep.id = 32 //TODO Remove this
+        operationStep.id = 32 //TODO Remove this in production
         val configuration = Configuration(terminal, operationStep, cargoType, checked)
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {

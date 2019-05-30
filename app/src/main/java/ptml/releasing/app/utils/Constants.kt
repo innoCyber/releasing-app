@@ -22,6 +22,7 @@ object Constants{
     const val DAMAGES = "damages"
     const val SINGLE_SELECT ="single_select"
     const val MULTI_SELECT = "multi_select"
+    const val CHECK_BOX = "checkbox"
     const val UNKNOWN = "unknown"
     const val ITEM_TO_EXPAND = 6
 
@@ -38,5 +39,8 @@ object Constants{
             "B 39 1 30 216 31 134 var_barcode\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
+
+    const val ALPHANUMERIC = "alphanumeric"
+    const val NUMERIC = "numeric"
 
 }
