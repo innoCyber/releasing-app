@@ -25,7 +25,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         super.onCreate(savedInstanceState)
         binding.includeProgress.root.visibility = View.VISIBLE
         initErrorDrawable(binding.includeError.imgError)
-        if(!viewModel.checkIfFirst()){
+        if (!viewModel.checkIfFirst()) {
             startNewActivity(SearchActivity::class.java, true)
             return
         }
@@ -76,12 +76,21 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
     }
 
 
-    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     fun verifyDeviceId() {
         viewModel.verifyDeviceId((application as ReleasingApplication).provideImei())
     }
 
-    @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
+    @OnShowRationale(
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     fun showInitRecognizerRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
@@ -95,12 +104,22 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
-    @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
+    @OnPermissionDenied(
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     fun showDeniedForInitRecognizer() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
     }
 
-    @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
+    @OnNeverAskAgain(
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     fun neverAskForInitRecognizer() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }

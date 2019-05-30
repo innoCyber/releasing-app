@@ -30,7 +30,9 @@ open class ReleasingApplication : DaggerApplication() {
         super.onCreate()
         initLogger()
 //        initializeLeakCanary()
-        initFabric()
+        if(!BuildConfig.DEBUG){
+            initFabric()
+        }
     }
 
     private fun initFabric() {

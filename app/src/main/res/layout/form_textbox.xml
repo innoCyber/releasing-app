@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ptml.releasing.app.views.ReleasingTextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:boxBackgroundColor="@color/form_textbox_color"
     app:errorEnabled="true"
     app:errorTextAppearance="@style/TextLimitError"
     app:hintEnabled="false">
@@ -14,4 +15,4 @@
         android:maxLines="1"
         tools:text="@tools:sample/full_names" />
 
-</com.google.android.material.textfield.TextInputLayout>
+</ptml.releasing.app.views.ReleasingTextInputLayout>
