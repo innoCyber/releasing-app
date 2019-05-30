@@ -161,7 +161,6 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
                 viewModel.openEnterDialog()
             }
         })
-        dialog.isCancelable = false
         dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
@@ -465,15 +464,17 @@ abstract class BaseActivity<T, D> : DaggerAppCompatActivity() where T : BaseView
     protected fun initOperator(operatorName: String?) {
         Timber.d("Passed Operator name is %s", operatorName)
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
+        val operatorIndicator = findViewById<ImageView>(R.id.img_indicator)
+        operatorIndicator.setImageResource(if (TextUtils.isEmpty(operatorName)) R.drawable.operator_circle_red else R.drawable.operator_circle)
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text = operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
         changeOperator?.text =
             if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
         changeOperator?.setOnClickListener {
-            if(TextUtils.isEmpty(operatorName)){
+            if (TextUtils.isEmpty(operatorName)) {
                 viewModel.openOperatorDialog()
-            }else{
+            } else {
                 viewModel.showLogOutConfirmDialog()
             }
         }

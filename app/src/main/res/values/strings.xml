@@ -203,8 +203,8 @@
     <string name="close">Dismiss</string>
     <string name="form_submit_success_title">Success</string>
     <string name="no_operator">No operator</string>
-    <string name="add_operator">Add operator</string>
-    <string name="enter_operator_name">Enter operator name</string>
+    <string name="add_operator">Operator Login</string>
+    <string name="enter_operator_name">Enter Operator\'s Badge Number</string>
     <string name="log_off">Log off</string>
     <string name="operator_log_out_msg">%s has successfully logged out</string>
     <string name="log_out_confirm_message">Are you sure you want to log off?</string>
