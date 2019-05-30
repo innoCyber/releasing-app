@@ -67,65 +67,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
         }
 
         binding.AdminPrinterSettingsBtnChangePrinter.setOnClickListener {
-            getBluetoothDevicesWithPermissionCheck()
-
-/*
-            builderSingle.setAdapter(arrayAdapter) { dialog, which ->
-                val address = arrayAdapter.getItem(which)!!.address
-                val name = arrayAdapter.getItem(which)!!.discoveryDataMap["FRIENDLY_NAME"]
-
-                for (settingsKey in arrayAdapter.getItem(which)!!.discoveryDataMap.keys) {
-                    println("Key: " + settingsKey + " Value: " + arrayAdapter.getItem(which)!!.discoveryDataMap[settingsKey])
-                }
-
-                currentPrinterAddress = address
-                binding.AdminPrinterSettingsEdtPrinterValue.setText(name)
-                dialog.dismiss()
-            }*/
-
-
-            /*Thread(Runnable {
-                Looper.prepare()
-
-                try {
-                    BluetoothDiscoverer.findPrinters(this@PrinterSettingsActivity,
-                        object : DiscoveryHandler {
-                            override fun foundPrinter(discoveredPrinter: DiscoveredPrinter) {
-
-                                runOnUiThread {
-                                    arrayAdapter.add(discoveredPrinter)
-                                    arrayAdapter.notifyDataSetChanged()
-                                }
-                            }
-
-                            override fun discoveryFinished() {
-
-                                runOnUiThread {
-                                    if (arrayAdapter.count == 0)
-                                        builderSingle.setTitle("No printers found.")
-                                    else
-                                        builderSingle.setTitle("Select a printer:")
-                                }
-                            }
-
-                            override fun discoveryError(errorMessage: String) {
-
-                                runOnUiThread {
-                                    printerDialog.dismiss()
-                                    AlertDialog.Builder(this@PrinterSettingsActivity)
-                                        .setMessage(errorMessage)
-                                        .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show()
-                                }
-                            }
-                        }) { true }
-                } catch (ce: ConnectionException) {
-                    ce.printStackTrace()
-                } finally {
-                    Looper.myLooper()?.quit()
-                }
-            }).start()*/
+            handleSelectPrinterClick()
         }
     }
 

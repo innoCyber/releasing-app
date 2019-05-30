@@ -1,5 +1,7 @@
 package ptml.releasing.cargo_info.view
 
+import android.app.Activity
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -20,6 +22,7 @@ import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
@@ -27,12 +30,16 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.printer.view.PrinterSettingsActivity
+import ptml.releasing.printer.view.getBluetoothDevicesWithPermissionCheck
 import ptml.releasing.printer.view.onRequestPermissionsResult
 import timber.log.Timber
 import java.util.*
 
 @RuntimePermissions
-class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
+class CargoInfoActivity :
+    BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
+
 
     companion object {
         const val RESPONSE = "response"
@@ -40,6 +47,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         const val DAMAGES_RC = 1234
     }
 
+    private lateinit var bluetoothManager: BluetoothManager
+    private var settings: Settings? = null
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
@@ -101,7 +110,8 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
     private fun submitForm(formValidator: FormValidator) {
         val formSubmission = FormSubmission(formBuilder, formValidator)
-        val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+        val findCargoResponse =
+            intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         viewModel.submitForm(
             formSubmission,
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY),
@@ -110,17 +120,22 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    fun handlePrint(settings: Settings) {
+    fun handlePrint(settings: Settings?) {
         printerView?.isEnabled = false
         val t = Thread(Runnable {
             try {
                 /*  val db = ReleasingDBAdapter(this@ReleasingActivity)
                   db.open()*/
 
-                val macAddress = settings.currentPrinter
-                val labelCpclData = settings.labelCpclData
+                val macAddress = settings?.currentPrinter
+                val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
+                val findCargoResponse =
+                    intent?.extras?.getBundle(Constants.EXTRAS)
+                        ?.getParcelable<FindCargoResponse>(RESPONSE)
+                val barcode = findCargoResponse?.barcode
+                val labelCpclData =
+                    settings?.labelCpclData?.replace("var_barcode", barcode ?: input ?: "")
                 /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
-
 
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
@@ -176,6 +191,14 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
         binding.tvNumber.text = input
 
+        bluetoothManager = BluetoothManager(this)
+        bluetoothManager.adapterListener = object : BluetoothManager.AdapterListener {
+            override fun onAdapterError() {
+                showErrorDialog(getString(R.string.no_bt_message))
+            }
+        }
+
+
         viewModel.goBack.observe(this, Observer {
             onBackPressed()
         })
@@ -193,12 +216,17 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         viewModel.getFormConfig()
 
         viewModel.printerSettings.observe(this, Observer {
-            handlePrintWithPermissionCheck(it)
+            this.settings = it
+            handleSelectPrinterClick(it)
         })
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.submitting_form)
+                showLoading(
+                    binding.includeProgress.root,
+                    binding.includeProgress.tvMessage,
+                    R.string.submitting_form
+                )
             } else {
                 hideLoading(binding.includeProgress.root)
             }
@@ -238,15 +266,32 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
     override fun onResume() {
         super.onResume()
-        damageView?.findViewById<TextView>(R.id.tv_number)?.text = DamagesActivity.currentDamages.size.toString()
+        damageView?.findViewById<TextView>(R.id.tv_number)?.text =
+            DamagesActivity.currentDamages.size.toString()
         val errorView: View? =
             if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
-        errorView?.visibility = if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+        errorView?.visibility =
+            if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
     }
 
+    private fun handleSelectPrinterClick(settings: Settings?) {
+        if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
+            handlePrintWithPermissionCheck(settings)
+        } else {
+            attemptToTurnBluetoothOn()
+        }
+    }
+
+    private fun attemptToTurnBluetoothOn() {
+        startActivityForResult(
+            Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+            PrinterSettingsActivity.RC_BT
+        )
+    }
 
     private fun createForm(it: ConfigureDeviceResponse?) {
-        var findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+        var findCargoResponse =
+            intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*  if (BuildConfig.DEBUG) {
               findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
@@ -298,17 +343,38 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
 
                     //reset the errors for the buttons
                     val damageErrorView: View? =
-                        if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+                        if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(
+                            R.id.tv_error
+                        ) else null
                     damageErrorView?.visibility =
                         if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
 
                     val printerErrorView: View? =
-                        if (printerView != null) (printerView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+                        if (printerView != null) (printerView?.parent as ViewGroup).findViewById<TextView>(
+                            R.id.tv_error
+                        ) else null
                     printerErrorView?.visibility =
                         if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
 
                 }
             })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun showTurnBlueToothPrompt() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.alert),
+            message = getString(R.string.select_printer_error_message),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    attemptToTurnBluetoothOn()
+                }
+            }, hasNeutralButton = true,
+            neutralButtonText = getString(android.R.string.cancel)
+
+        )
+        dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
@@ -336,11 +402,28 @@ class CargoInfoActivity : BaseActivity<CargoInfoViewModel, ptml.releasing.databi
         notifyUser(binding.root, getString(R.string.location_permission_never_ask))
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PrinterSettingsActivity.RC_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                //populate devices
+                handlePrintWithPermissionCheck(settings)
+            } else {
+                showTurnBlueToothPrompt()
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
     override fun getViewModelClass() = CargoInfoViewModel::class.java
 
