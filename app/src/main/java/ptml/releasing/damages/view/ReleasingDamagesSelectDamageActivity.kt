@@ -205,7 +205,7 @@ class ReleasingDamagesSelectDamageActivity :
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getData() {
-        viewModel.getDamages((application as ReleasingApplication).provideImei())
+        viewModel.getDamages((application as ReleasingApplication).provideImei(), DamagesActivity.typeContainer)
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)

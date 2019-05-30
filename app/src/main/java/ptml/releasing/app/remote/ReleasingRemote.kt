@@ -45,12 +45,6 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
                                    cargoNumber:String
     ) = findCargoService.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
 
-    override suspend fun uploadData(request: FormSubmissionRequest,
-                                    cargoTypeId: Int?,
-                                    operationStepId: Int?,
-                                    terminal: Int?,
-                                    operator:String?,
-                                    cargoNumber:String?,
-                                    cargoId: Int? ) = uploadDataService.uploadData(request, cargoTypeId, operationStepId, terminal, operator, cargoNumber, cargoId)
+    override suspend fun uploadData(request: FormSubmissionRequest) = uploadDataService.uploadData(request)
 }
 

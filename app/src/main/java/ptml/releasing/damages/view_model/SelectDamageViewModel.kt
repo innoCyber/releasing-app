@@ -27,7 +27,7 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
     val damagesList: LiveData<List<Damage>> = _damagesListFiltered
     val networkState: LiveData<NetworkState> = _networkState
 
-    fun getDamages(imei: String) {
+    fun getDamages(imei: String, typeContainer:Int?) {
 
         if (_networkState.value == NetworkState.LOADING) return
         _networkState.postValue(NetworkState.LOADING)
@@ -45,7 +45,7 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
             }
 
             compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-                val list = repository.getDamagesByPosition(imei, position)
+                val list = repository.getDamagesByPosition(imei, position, typeContainer)
                 withContext(appCoroutineDispatchers.main) {
                     _damagesListFiltered.postValue(list)
                     _damagesList.value = list

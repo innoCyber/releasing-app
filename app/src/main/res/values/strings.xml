@@ -9,8 +9,8 @@
     <string name="timed_out_exception">Request timed out while trying to connect. Please ensure you have a strong signal
         and try again.
     </string>
-    <string name="unknown_exception">An unexpected error has occurred. Please check your network connection and try
-        again.
+    <string name="unknown_exception">An unexpected error has occurred. Please check your try
+        again and contact the administrator
     </string>
     <string name="profiles">Profiles</string>
     <string name="configure_device">Configure Device</string>
@@ -69,7 +69,7 @@
     <string name="main">Main</string>
     <string name="operation_step">Operation step</string>
     <string name="home">Home</string>
-    <string name="nav_preferences">Preferences</string>
+    <string name="nav_preferences">Admin Settings</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

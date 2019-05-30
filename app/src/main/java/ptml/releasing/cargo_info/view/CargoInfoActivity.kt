@@ -15,13 +15,11 @@ import com.zebra.sdk.comm.BluetoothConnectionInsecure
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.form.*
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.ErrorHandler
-import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.Status
+import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
@@ -45,6 +43,7 @@ class CargoInfoActivity :
         const val RESPONSE = "response"
         const val QUERY = "query"
         const val DAMAGES_RC = 1234
+
     }
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -76,8 +75,11 @@ class CargoInfoActivity :
 
                 FormType.DAMAGES -> {
                     damageView = view
+                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+                    DamagesActivity.typeContainer = findCargoResponse?.typeContainer ?: 0
+                    val intent = Intent(this@CargoInfoActivity, DamagesActivity::class.java)
                     startActivityForResult(
-                        Intent(this@CargoInfoActivity, DamagesActivity::class.java),
+                        intent,
                         DAMAGES_RC
                     )
                 }
@@ -95,7 +97,7 @@ class CargoInfoActivity :
             formValidator.listener = validatorListener
             if (formValidator.validate()) {
                 Timber.d("Validated")
-                submitForm(formValidator)
+                submitFormWithPermissionCheck(formValidator)
             }
         }
 
@@ -108,14 +110,16 @@ class CargoInfoActivity :
         }
     }
 
-    private fun submitForm(formValidator: FormValidator) {
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+     fun submitForm(formValidator: FormValidator) {
         val formSubmission = FormSubmission(formBuilder, formValidator)
         val findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         viewModel.submitForm(
             formSubmission,
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY),
-            findCargoResponse?.cargoId
+            findCargoResponse?.cargoId,
+            (application as ReleasingApplication).provideImei()
         )
     }
 
@@ -133,10 +137,10 @@ class CargoInfoActivity :
                     intent?.extras?.getBundle(Constants.EXTRAS)
                         ?.getParcelable<FindCargoResponse>(RESPONSE)
                 val barcode = findCargoResponse?.barcode
-                val labelCpclData =
+                var labelCpclData =
                     settings?.labelCpclData?.replace("var_barcode", barcode ?: input ?: "")
                 /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
-
+                Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
 
@@ -149,6 +153,19 @@ class CargoInfoActivity :
                 // This prints the label.
 
                 // Send the data to printer as a byte array.
+                /* labelCpclData = "! 0 200 200 406 1\n" +
+                         "PW 480\n" +
+                         "TONE 0\n" +
+                         "SPEED 4\n" +
+                         "ON-FEED IGNORE\n" +
+                         "NO-PACE\n" +
+                         "BAR-SENSE\n" +
+                         "T 4 0 179 47 PTML\n" +
+                         "BT 7 0 6\n" +
+                         "B 39 1 30 216 31 134 XXXB0005643\n" +
+                         "FORM\n" +
+                         "PRINT"*/
+//                labelCpclData = "Hello World"
                 thePrinterConn.write(labelCpclData?.toByteArray())
 
                 // Make sure the data got to the printer before closing the connection
@@ -275,6 +292,13 @@ class CargoInfoActivity :
     }
 
     private fun handleSelectPrinterClick(settings: Settings?) {
+//        handlePrintWithPermissionCheck(settings)
+        if (bluetoothManager.bluetoothAdapter == null) {
+            showErrorDialog(getString(R.string.no_bt_message))
+            Timber.e("No Bluetooth device")
+            return
+        }
+
         if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
             handlePrintWithPermissionCheck(settings)
         } else {
@@ -293,15 +317,19 @@ class CargoInfoActivity :
         var findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
-        /*  if (BuildConfig.DEBUG) {
-              findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
-              Timber.w("From assets: %s", findCargoResponse)
-          }*/
+        /*if (BuildConfig.DEBUG) {*/
+//        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
+//        Timber.w("From assets: %s", findCargoResponse)
+//          }
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.init(findCargoResponse)
             ?.build(it?.data)
+
+        formBuilder
+            ?.init(findCargoResponse)
+            ?.initializeData()
+
         binding.formContainer.addView(formView)
         binding.formBottom.addView(formBuilder?.getBottomButtons())
     }
@@ -317,6 +345,13 @@ class CargoInfoActivity :
                 ContextCompat.getDrawable(
                     themedContext,
                     R.drawable.ic_car
+                )
+            )
+        } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
+            binding.includeHome.imgCargoType.setImageDrawable(
+                ContextCompat.getDrawable(
+                    themedContext,
+                    R.drawable.ic_cargo
                 )
             )
         } else {
@@ -401,6 +436,31 @@ class CargoInfoActivity :
     fun neverAskForLocation() {
         notifyUser(binding.root, getString(R.string.location_permission_never_ask))
     }
+
+    @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
+    fun showPhoneStateRationale(request: PermissionRequest) {
+        val dialogFragment =  InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnPermissionDenied(android.Manifest.permission.READ_PHONE_STATE)
+    fun showDeniedForPhoneState() {
+        notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
+    }
+
+    @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
+    fun neverAskForPhoneState() {
+        notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

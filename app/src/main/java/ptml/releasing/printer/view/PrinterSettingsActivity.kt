@@ -39,6 +39,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
         bluetoothManager = BluetoothManager(this)
         bluetoothManager.adapterListener = object : BluetoothManager.AdapterListener {
             override fun onAdapterError() {
+                Timber.e("No Bluetooth device")
                 showErrorDialog(getString(R.string.no_bt_message))
             }
         }
@@ -73,6 +74,11 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
 
 
     private fun handleSelectPrinterClick() {
+        if(bluetoothManager.bluetoothAdapter == null){
+            showErrorDialog(getString(R.string.no_bt_message))
+            Timber.e("No Bluetooth device")
+            return
+        }
         if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
             getBluetoothDevicesWithPermissionCheck()
         } else {

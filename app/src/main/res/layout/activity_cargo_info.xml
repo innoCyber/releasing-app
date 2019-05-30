@@ -57,26 +57,34 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.95" />
 
-                <include
-                        android:id="@+id/include_no_operator_btn"
-                        layout="@layout/include_no_operator_btn"
-                        android:layout_width="match_parent"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/include_operator_badge"
-                        />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_t"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.07" />
+
 
                 <include
-                        android:id="@+id/include_operator_badge"
-                        layout="@layout/include_operator_badge"
-                        android:layout_width="match_parent"
-                        android:visibility="visible"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                    android:id="@+id/include_no_operator_btn"
+                    layout="@layout/include_no_operator_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge" />
+
+                <include
+                    android:id="@+id/include_operator_badge"
+                    layout="@layout/include_operator_badge"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/guideline_t"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <include
@@ -87,7 +95,7 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/include_no_operator_btn" />
+                    app:layout_constraintTop_toBottomOf="@id/include_operator_badge" />
 
 
                 <TextView
@@ -105,8 +113,12 @@
                     android:id="@+id/tv_number"
                     style="@style/CargoNumber"
                     android:text="XXXB005643"
+                    android:layout_marginStart="@dimen/constraint_default_margin_8dp"
+                    android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0.2"
+
+                    app:layout_constraintBottom_toTopOf="@+id/divider"
                     app:layout_constraintStart_toEndOf="@id/tv_number_label"
                     app:layout_constraintTop_toBottomOf="@id/include_home" />
 
@@ -114,16 +126,16 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_badge"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:theme="@style/InputLayoutStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-                    app:errorEnabled="true"
-                    app:boxStrokeColor="@color/colorGrayHint"
-                    app:hintTextColor="@color/colorGrayHint"
-                    app:boxStrokeWidth="1dp"
+                    android:theme="@style/InputLayoutStyle"
                     android:visibility="gone"
+                    app:boxStrokeColor="@color/colorGrayHint"
+                    app:boxStrokeWidth="1dp"
+                    app:errorEnabled="true"
                     app:errorTextAppearance="@style/TextLimitError"
+                    app:hintTextColor="@color/colorGrayHint"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0.2"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
@@ -179,20 +191,20 @@
             tools:layout_height="44dp" />
 
 
-
-        <include layout="@layout/progress_bar_layout"
-                 android:id="@+id/include_progress"
-                 android:layout_width="match_parent"
-                 android:visibility="gone"
-                 android:layout_height="match_parent"/>
+        <include
+            android:id="@+id/include_progress"
+            layout="@layout/progress_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
 
         <include
-                android:id="@+id/include_error"
-                layout="@layout/error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+            android:id="@+id/include_error"
+            layout="@layout/error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

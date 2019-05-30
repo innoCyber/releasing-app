@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -19,6 +22,7 @@ import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
@@ -49,8 +53,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.isConfigured.observe(this, Observer {
             binding.appBarHome.content.tvConfigMessageContainer.visibility =
                 if (it) View.GONE else View.VISIBLE //hide or show the not configured message
-            binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE
-            binding.appBarHome.content.includeSearch.root.visibility = if (it) View.VISIBLE else View.GONE
+            binding.appBarHome.content.includeHome.root.visibility =
+                if (it) View.VISIBLE else View.GONE
+            binding.appBarHome.content.includeSearch.root.visibility =
+                if (it) View.VISIBLE else View.GONE
 
 //            binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
         })
@@ -73,11 +79,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(
+               /* showLoading( Removing loading progress bar as per requirements
                     binding.appBarHome.content.includeProgress.root,
                     binding.appBarHome.content.includeProgress.tvMessage,
                     R.string.loading
-                )
+                )*/
             } else {
                 hideLoading(binding.appBarHome.content.includeProgress.root)
             }
@@ -104,15 +110,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.findCargoResponse.observe(this, Observer {
             //pass it on to the cargo info activity
-            val bundle = Bundle()
-            bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
-            bundle.putString(
-                CargoInfoActivity.QUERY,
-                binding.appBarHome.content.includeSearch.editInput.text.toString()
-            )
-            startNewActivity(CargoInfoActivity::class.java, data = bundle)
-            hideLoading(binding.appBarHome.content.includeError.root)
-            hideLoading(binding.appBarHome.content.includeProgress.root)
+            Timber.e("GOtten response: %s", it)
+           animateBadge(it)
         })
 
         viewModel.scan.observe(this, Observer {
@@ -124,7 +123,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             showOperatorErrorDialog()
         })
 
-        binding.appBarHome.content.includeSearch.editInput.addTextChangedListener(object : TextWatcher {
+        binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
+
+        binding.appBarHome.content.includeSearch.editInput.addTextChangedListener(object :
+            TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -146,9 +148,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             viewModel.openBarcodeScan()
         }
 
-        binding.appBarHome.content.btnBack.setOnClickListener {
-            viewModel.openAdmin()
-        }
+        binding.appBarHome.content.btnBack.visibility = View.GONE
 
         setSupportActionBar(binding.appBarHome.toolbar)
         val toggle = ActionBarDrawerToggle(
@@ -161,6 +161,59 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
+
+    }
+
+
+    private fun animateBadge(it: FindCargoResponse?) {
+
+        binding.appBarHome.content.imgOk.visibility = View.VISIBLE
+
+        // Construct and run the parallel animation of the
+        // scale properties (SCALE_X, and SCALE_Y).
+        val anim = ScaleAnimation(
+            3f,
+            1f,
+            3f,
+            1f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f
+        )
+
+        anim.duration = resources.getInteger(android.R.integer.config_longAnimTime).toLong()
+        anim.interpolator = DecelerateInterpolator()
+
+        binding.appBarHome.content.imgOk.startAnimation(anim)
+        anim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                binding.appBarHome.content.imgOk.visibility = View.GONE
+                startCargoInfoActivity(it)
+
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+
+            }
+        })
+    }
+
+
+    fun startCargoInfoActivity(it: FindCargoResponse?){
+        val bundle = Bundle()
+        bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
+        bundle.putString(
+            CargoInfoActivity.QUERY,
+            binding.appBarHome.content.includeSearch.editInput.text.toString()
+        )
+        startNewActivity(CargoInfoActivity::class.java, data = bundle)
+        hideLoading(binding.appBarHome.content.includeError.root)
+        hideLoading(binding.appBarHome.content.includeProgress.root)
     }
 
     private fun showSearchErrorDialog(message: String?) {
@@ -230,7 +283,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
@@ -238,7 +295,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC && resultCode == RESULT_OK) {
-            binding.appBarHome.content.includeSearch.editInput.setText(data?.getStringExtra(Constants.BAR_CODE))
+            binding.appBarHome.content.includeSearch.editInput.setText(
+                data?.getStringExtra(
+                    Constants.BAR_CODE
+                )
+            )
         }
     }
 
@@ -327,6 +388,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             when (item.itemId) {
                 R.id.nav_preferences -> {
                     //TODO handle nav
+                    viewModel.openAdmin()
                 }
 
                 R.id.nav_about -> {

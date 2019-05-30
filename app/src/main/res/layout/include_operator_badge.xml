@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  xmlns:tools="http://schemas.android.com/tools"
-                  android:id="@+id/operator_root"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:background="@color/colorBlack"
-                  android:orientation="horizontal"
-                  android:padding="@dimen/constraint_default_margin_4dp"
-                  android:visibility="gone"
-                  tools:visibility="visible">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/operator_root"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorBlack"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
 
 
         <ImageView
-                android:id="@+id/img_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/constraint_default_margin_10dp"
-                android:layout_marginEnd="@dimen/constraint_default_margin_10dp"
-                android:contentDescription="@string/operator_name"
-                android:padding="@dimen/constraint_default_margin_4dp"
-                app:srcCompat="@drawable/operator_circle"/>
+            android:id="@+id/img_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/constraint_default_margin_10dp"
+            android:layout_marginEnd="@dimen/constraint_default_margin_10dp"
+            android:contentDescription="@string/operator_name"
+            android:padding="@dimen/constraint_default_margin_4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/operator_circle" />
 
         <TextView
-                android:id="@+id/tv_operator_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Paul Akhamiogu"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/colorWhite"
-                tools:text="@tools:sample/full_names"/>
+            android:id="@+id/tv_operator_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/constraint_default_margin_8dp"
+            android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+            android:layout_weight="1"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_change"
+            app:layout_constraintStart_toEndOf="@id/img_indicator"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/full_names" />
 
         <Button
-                android:id="@+id/btn_change"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/constraint_default_margin_4dp"
-                android:gravity="center"
-                android:paddingStart="@dimen/constraint_default_margin_10dp"
-                android:paddingEnd="@dimen/constraint_default_margin_10dp"
-                android:background="@drawable/btn_bg_accent"
-                android:text="@string/add_operator"
-                android:textAllCaps="false"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/colorWhite"/>
+            android:id="@+id/btn_change"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_bg_accent"
+            android:gravity="center"
+            android:paddingStart="@dimen/constraint_default_margin_10dp"
+            android:paddingEnd="@dimen/constraint_default_margin_10dp"
+            android:text="@string/add_operator"
+            android:textAllCaps="false"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

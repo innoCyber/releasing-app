@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:boxBackgroundColor="@color/form_textbox_color"
+    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     app:errorEnabled="true"
+    app:boxStrokeColor="@color/colorBlack"
+    app:hintTextColor="@color/colorBlack"
     app:errorTextAppearance="@style/TextLimitError"
-    app:hintEnabled="false">
+    app:hintEnabled="true">
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit"
         style="@style/Form.TextBox"
         android:maxLines="1"
+        android:textCursorDrawable="@null"
         tools:text="@tools:sample/full_names" />
 
 </ptml.releasing.app.views.ReleasingTextInputLayout>

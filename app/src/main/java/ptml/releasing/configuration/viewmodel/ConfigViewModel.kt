@@ -73,7 +73,7 @@ class ConfigViewModel @Inject constructor(
     ) {
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
-        operationStep.id = 32 //TODO Remove this in production
+//        operationStep.id = 32 //TODO Remove this in production
         val configuration = Configuration(terminal, operationStep, cargoType, checked)
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {
@@ -83,7 +83,7 @@ class ConfigViewModel @Inject constructor(
                     terminal = terminal.id,
                     operationStepId = operationStep.id,
                     imei = imei
-                )
+                ).await()
                 Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)
                 savedSuccess.postValue(true)
@@ -101,6 +101,37 @@ class ConfigViewModel @Inject constructor(
         operationStepList.postValue(getOperationStepForCargo(cargoType))
         terminalList.postValue(getTerminalsCargo(cargoType))
     }
+
+    fun refreshConfiguration(imei: String) {
+        if (networkState.value == NetworkState.LOADING) return
+        networkState.postValue(NetworkState.LOADING)
+
+        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+            try {
+                Timber.d("Refreshing configuration")
+                val response = repository.downloadAdminConfigurationAsync(imei).await()
+
+                withContext(appCoroutineDispatchers.main) {
+                    Timber.d("Configuration gotten: %s", response)
+                    configResponse.postValue(response)
+                    Timber.d("Checking if there is a saved configuration")
+                    withContext(appCoroutineDispatchers.db) {
+                        Timber.d("Refreshing removes the previous configuration")
+                        repository.setConfigured(false)
+                    }
+                    Timber.e("Loading done: %s", response)
+                    networkState.postValue(NetworkState.LOADED)
+                }
+            } catch (e: Throwable) {
+                Timber.e(e)
+                System.out.println("In here: ${e.localizedMessage}")
+                networkState.postValue(NetworkState.error(e))
+            }
+        }
+
+
+    }
+
 
     private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
         val list = mutableListOf<OperationStep>()

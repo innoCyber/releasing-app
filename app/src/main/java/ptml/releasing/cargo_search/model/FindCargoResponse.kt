@@ -7,24 +7,28 @@ import ptml.releasing.app.base.BaseResponse
 
 data class FindCargoResponse(
     @SerializedName("cargo_id") var cargoId: Int,
+    @SerializedName("type_container") val typeContainer: Int,
     @SerializedName("barcode") var barcode: String?,
     @SerializedName("values") val values: List<Value>,
     @SerializedName("options") val options: List<Option>
 ) : BaseResponse(), Parcelable {
+
     constructor(source: Parcel) : this(
         source.readInt(),
+        source.readInt(),
         source.readString(),
-        ArrayList<Value>().apply { source.readList(this, Value::class.java.classLoader) },
-        ArrayList<Option>().apply { source.readList(this, Option::class.java.classLoader) }
+        source.createTypedArrayList(Value.CREATOR),
+        source.createTypedArrayList(Option.CREATOR)
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeInt(cargoId)
+        writeInt(typeContainer)
         writeString(barcode)
-        writeList(values)
-        writeList(options)
+        writeTypedList(values)
+        writeTypedList(options)
     }
 
     companion object {
