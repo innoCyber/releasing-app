@@ -1,0 +1,28 @@
+{
+  "cargo_code": "HELLO",
+  "cargo_type": 1,
+  "damages": [],
+  "imei": "861327032935756",
+  "operation_step": 3,
+  "operator": "Loard",
+  "selections": [
+    {
+      "selected_options": [
+        2,
+        1
+      ],
+      "id": 38
+    }
+  ],
+  "terminal": 1,
+  "values": [
+    {
+      "value": "Hello",
+      "id": 19
+    },
+    {
+      "value": "re",
+      "id": 25
+    }
+  ]
+}

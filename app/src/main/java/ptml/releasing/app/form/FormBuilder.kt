@@ -585,6 +585,31 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
+    fun getQuickRemarkSelect(data: ConfigureDeviceData?): FormSelection? {
+        if (quickRemarks?.isNotEmpty() == true) {
+            val view = rootLayout.findViewWithTag<View>(data?.id)
+
+            if (Constants.ITEM_TO_EXPAND < quickRemarks?.size ?: 0) {
+                val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
+                val list = spinner.selectedItems.keys.toList()
+                val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
+                formSelection?.id = data?.id
+                return formSelection
+
+            } else {
+                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+                val adapter = recyclerView.adapter as MultiSelectAdapter<*>
+                val list = getMultiSelectIdList(adapter.selectedItems)
+                val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
+                formSelection?.id = data?.id
+                return formSelection
+            }
+        }
+
+        return null
+    }
+
+
     /**
      * Creates a Multiselect for the form
      *  Applies the necessary styles
@@ -673,6 +698,7 @@ class FormBuilder constructor(val context: Context) {
         }
         return true
     }
+
 
 
     fun getMultiSelect(data: ConfigureDeviceData?): FormSelection? {

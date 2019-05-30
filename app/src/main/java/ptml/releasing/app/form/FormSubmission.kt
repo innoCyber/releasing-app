@@ -77,10 +77,18 @@ class FormSubmission constructor(
 
                 }
 
-                FormType.QUICK_REMARK,
                 FormType.MULTI_SELECT -> {
                     Timber.d("Getting MULTI_SELECT value")
                     val formSelection = formBuilder?.getMultiSelect(data)
+                    if (formSelection != null) {
+                        _selectionsList.add(formSelection)
+                    }
+                }
+
+
+                FormType.QUICK_REMARK -> {
+                    Timber.d("Getting QUICK_REMARK value")
+                    val formSelection = formBuilder?.getQuickRemarkSelect(data)
                     if (formSelection != null) {
                         _selectionsList.add(formSelection)
                     }
@@ -100,7 +108,7 @@ class FormSubmission constructor(
 
             }
         } catch (e: Exception) { //
-            Timber.e(e, "Could not get the value for the form type  = %s", data?.type)
+            Timber.e(e, "Could not get the value for the form type with exception  = %s", data?.type)
 
         }
     }
