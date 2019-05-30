@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "message": "",
+  "cargo_id": 139442,
+  "values": [
+    {
+      "id": 11,
+      "value": "2014 IVECO VAN"
+    },
+    {
+      "id": 38,
+      "type": "multi_select",
+      "title": "Remarks",
+      "is_required": true,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 1,
+          "name": "No Key",
+          "is_selected": false
+        },
+        {
+          "id": 2,
+          "name": "1 Key"
+        },
+        {
+          "id": 3,
+          "name": "2 Keys"
+        },
+        {
+          "id": 4,
+          "name": "Power Window Button"
+        }
+      ],
+      "data_validation": ""
+    }
+  ],
+  "options": [
+    {}
+  ]
+}

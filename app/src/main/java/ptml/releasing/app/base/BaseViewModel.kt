@@ -21,6 +21,7 @@ open class BaseViewModel @Inject constructor(
     var compositeJob: Job? = null
 
     protected val _openBarCodeScanner = MutableLiveData<Unit>()
+
     protected val _isConfigured = MutableLiveData<Boolean>()
     protected val _operatorName = MutableLiveData<String?>()
     val isConfigured: LiveData<Boolean> = _isConfigured
@@ -36,14 +37,14 @@ open class BaseViewModel @Inject constructor(
     val openEnterDialog = _openEnterDialog
 
 
-    protected val _configuration = MutableLiveData<Configuration>()
     private val _openConfiguration = MutableLiveData<Unit>()
+    protected val _configuration = MutableLiveData<Configuration>()
 
 
     val openConfiguration: LiveData<Unit> = _openConfiguration
 
-    val operatorName: LiveData<String?> = _operatorName
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
+    val operatorName: LiveData<String?> = _operatorName
     val savedConfiguration: LiveData<Configuration> = _configuration
     val savedOperatorName: LiveData<String> = _savedOperatorName
     val logOutOperator: LiveData<String> = _logOutOperator
@@ -93,6 +94,7 @@ open class BaseViewModel @Inject constructor(
     fun openBarCodeScanner() {
         _openBarCodeScanner.postValue(Unit)
     }
+
 
 
     fun saveOperatorName(name: String?) {

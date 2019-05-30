@@ -17,6 +17,7 @@ android {
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
 
         buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+//        buildConfigField("String", "BASE_URL", "\"http://192.168.43.116:3000\"")
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -94,9 +95,6 @@ dependencies {
     //permissions
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permission_dispatcher"
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:$permission_dispatcher"
-
-    //dialogs
-    implementation 'com.yarolegovich:lovely-dialog:1.1.0'
 
     //secure shared preferences
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'

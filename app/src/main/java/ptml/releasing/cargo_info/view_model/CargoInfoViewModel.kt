@@ -12,10 +12,12 @@ import ptml.releasing.app.form.FormSubmission
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.cargo_info.model.FormDamage
+import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
@@ -24,10 +26,11 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
     BaseViewModel(repository, appCoroutineDispatchers) {
 
     private val _goBack = MutableLiveData<Boolean>()
-    private val _formConfig = MutableLiveData<ConfigureDeviceResponse>()
+    private val _formConfig = MutableLiveData<FormDataWrapper>()
+
 
     val goBack: LiveData<Boolean> = _goBack
-    val formConfig: LiveData<ConfigureDeviceResponse> = _formConfig
+    val formConfig: LiveData<FormDataWrapper> = _formConfig
 
 
     private val _printerSettings = MutableLiveData<Settings>()
@@ -46,11 +49,17 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
         _goBack.postValue(true)
     }
 
-    fun getFormConfig() {
+    fun getFormConfig(imei:String) {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val map = mutableMapOf<Int, QuickRemark>()
             val formConfig = repository.getFormConfigAsync().await()
+            val remarks = repository.getQuickRemarkAsync(imei)?.await()
+            for (remark in remarks?.data ?: mutableListOf()) {
+                map[remark.id ?: return@launch] = remark
+            }
+            val wrapper = FormDataWrapper(map, formConfig)
             withContext(appCoroutineDispatchers.main) {
-                _formConfig.postValue(formConfig)
+                _formConfig.postValue(wrapper)
             }
         }
     }
@@ -104,5 +113,12 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
             formDamageList.add(damage.toFormDamage())
         }
         return formDamageList
+    }
+
+    fun getQuickRemarks(imei: String) {
+
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+
+        }
     }
 }

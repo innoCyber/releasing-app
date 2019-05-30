@@ -4,12 +4,12 @@
     <string name="connect_exception">Could not connect to the server. Please check your internet connection and try
         again.
     </string>
-    <string name="unknown_host_exception">Couldn\'t connect to the server. Please check your internet connection
+    <string name="unknown_host_exception">Could not connect to the server. Please check your internet connection
     </string>
     <string name="timed_out_exception">Request timed out while trying to connect. Please ensure you have a strong signal
         and try again.
     </string>
-    <string name="unknown_exception">An unexpected error has occurred. Please check your try
+    <string name="unknown_exception">An unexpected error has occurred. Please check your connection, try
         again and contact the administrator
     </string>
     <string name="profiles">Profiles</string>
@@ -61,7 +61,7 @@
     <string name="getting_configuration">Getting configuration…</string>
     <string name="reload">Reload</string>
     <string name="error_image">Error image</string>
-    <string name="error_occurred">An error occurred, please try again</string>
+    <string name="error_occurred">An error occurred, please try again and contact the administrator</string>
     <string name="exit">Close</string>
     <string name="cargo_search">Cargo Search</string>
     <string name="parking_lot">Parking Slot</string>
@@ -96,7 +96,7 @@
     <string name="device_configuration">Device Configuration</string>
     <string name="cargo_info">Cargo Information</string>
     <string name="reset">Reset</string>
-    <string name="save">Save</string>
+    <string name="save">Confirm</string>
 
     <string name="chip_ellipsis">&#8230;</string>
     <string name="cargo_number_invalid_message">Please enter a valid cargo number</string>
@@ -152,12 +152,12 @@
     <string name="releasing_damages_select_size_header_text">STEP 2: Select damage position</string>
     <string name="releasing_damages_select_damage_header_text">STEP 3: Assign type damage</string>
     <string name="releasing_admin_select_front_header_text">STEP 2: Select damage position</string>
-    <string name="releasing_damages_no_description"/>
+    <string name="releasing_damages_no_description" />
     <string name="releasing_damages_description_continer_side">Immagine del container laterale</string>
     <string name="releasing_admin_description_container_image_front">Immagine frontale o di coda del container</string>
     <string name="releasing_damages_select_damage_title">Select Damage</string>
     <string name="releasing_damages_select_zone_title">Select Zone</string>
-    <string name="releasing_damages_select_position_title">Select Position</string>
+    <string name="releasing_damages_select_position_title">Select damage position</string>
     <string name="releasing_damages_img_description_full_container">Immagine del container totale per la selezione della
         zona
     </string>
@@ -224,4 +224,16 @@
     <string name="no_devices_found">No devices were found \nEnsure the device is within range</string>
     <string name="no_bt_message">No bluetooth functionality on your phone \nPlease contact the administrator</string>
     <string name="no_operator_logged_in">No operator logged in</string>
+
+    <string name="network_state_wifi">Wi-Fi</string>
+    <string name="network_state_mobile">3G/4G</string>
+    <string name="network_state_offline">Offline</string>
+    <string name="offline_message">You are currently offline</string>
+    <string name="online_message">You are currently connected via %s</string>
+    <string name="ptml">PTML</string>
+    <string name="version_text">v%s</string>
+    <string name="quick_remarks">Quick Remarks</string>
+    <string name="quick_remark_click_message">You clicked %s</string>
+    <string name="empty_damages_error_message">No downloaded damages, please contact the administrator</string>
+    <string name="enter_damage_remark_hint">Damage remark</string>
 </resources>

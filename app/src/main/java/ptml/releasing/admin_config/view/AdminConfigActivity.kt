@@ -17,6 +17,7 @@ import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
+import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
@@ -36,6 +37,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         viewModel.openDownloadDamages.observe(this, Observer {
             if (it) {
                 startNewActivity(DamageActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+        })
+
+        viewModel.openQuickRemark.observe(this, Observer {
+            if (it) {
+                startNewActivity(QuickRemarkActivity::class.java)
             } else {
                 showConfigurationErrorDialog()
             }
@@ -81,6 +90,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         binding.includeAdminConfig.btnServer.setOnClickListener {
             viewModel.openServer()
+        }
+
+        binding.includeAdminConfig.btnQuickRemarks.setOnClickListener {
+            viewModel.openQuickRemark()
         }
 
 

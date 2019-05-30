@@ -20,7 +20,6 @@ abstract class FormListener {
 
     }
 
-
     abstract fun onClickSave()
     abstract fun onClickReset()
     abstract fun onClickFormButton(type: FormType, view: View)

@@ -56,7 +56,14 @@ open class ReleasingApplication : DaggerApplication() {
     @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-        return when (BuildConfig.DEBUG) {
+
+        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            telephonyManager.imei
+        } else {
+            telephonyManager.deviceId
+        }
+       /* return when (BuildConfig.DEBUG) {
             true -> "861327032935756"
             else -> {
                 val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -67,7 +74,7 @@ open class ReleasingApplication : DaggerApplication() {
                 }
             }
         }
-
+*/
     }
 
 }

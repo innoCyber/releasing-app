@@ -32,3 +32,4 @@ class DamageViewHolder(val binding: ItemDamageBinding, val listener: DamageListe
 interface DamageListener {
     fun onItemClick(item: Damage?)
 }
+

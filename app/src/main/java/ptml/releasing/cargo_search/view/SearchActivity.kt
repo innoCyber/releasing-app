@@ -15,10 +15,13 @@ import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import permissions.dispatcher.*
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
+import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
+import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
@@ -26,6 +29,7 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
 import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
@@ -79,11 +83,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-               /* showLoading( Removing loading progress bar as per requirements
-                    binding.appBarHome.content.includeProgress.root,
-                    binding.appBarHome.content.includeProgress.tvMessage,
-                    R.string.loading
-                )*/
+                /* showLoading( Removing loading progress bar as per requirements
+                     binding.appBarHome.content.includeProgress.root,
+                     binding.appBarHome.content.includeProgress.tvMessage,
+                     R.string.loading
+                 )*/
             } else {
                 hideLoading(binding.appBarHome.content.includeProgress.root)
             }
@@ -111,7 +115,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.findCargoResponse.observe(this, Observer {
             //pass it on to the cargo info activity
             Timber.e("GOtten response: %s", it)
-           animateBadge(it)
+            animateBadge(it)
         })
 
         viewModel.scan.observe(this, Observer {
@@ -123,7 +127,20 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             showOperatorErrorDialog()
         })
 
+        viewModel.openDeviceConfiguration.observe(this, Observer {
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivityForResult(intent, AdminConfigActivity.RC)
+        })
+
+
+        binding.tvVersion.text = getString(R.string.version_text, BuildConfig.VERSION_NAME)
         binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
+        binding.appBarHome.content.includeSearch.editInput.setImeDoneListener(object :
+            DonePressedListener {
+            override fun onDonePressed() {
+                viewModel.verify()
+            }
+        })
 
         binding.appBarHome.content.includeSearch.editInput.addTextChangedListener(object :
             TextWatcher {
@@ -142,6 +159,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.includeError.btnReloadLayout.setOnClickListener {
             search()
+        }
+
+        binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
+            it.setBackgroundResource(R.drawable.save_btn_bg_blue)
+            viewModel.verify()
         }
 
         binding.appBarHome.content.includeSearch.imgQrCode.setOnClickListener {
@@ -204,7 +226,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
 
-    fun startCargoInfoActivity(it: FindCargoResponse?){
+    fun startCargoInfoActivity(it: FindCargoResponse?) {
         val bundle = Bundle()
         bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
         bundle.putString(
@@ -217,7 +239,19 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     private fun showSearchErrorDialog(message: String?) {
-        val dialogFragment = InfoDialog.newInstance(
+
+        InfoConfirmDialog.showDialog(
+            this,
+            getString(R.string.error),
+            message,
+            getString(R.string.continue_uploading_text),
+            object : InfoConfirmDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.continueToUploadCargo()
+                }
+            })
+
+/*        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.error),
             message = message,
             buttonText = getString(android.R.string.cancel),
@@ -225,8 +259,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             neutralButtonText = getString(R.string.continue_uploading_text),
             neutralListener = dialogListener
         )
+
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)*/
         Timber.e("Error occurred during search: msg: %s", message)
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 
@@ -303,6 +338,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         }
     }
 
+
     private fun updateTop(it: Configuration) {
         binding.appBarHome.content.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.appBarHome.content.includeHome.tvOperationStepFooter.text = it.operationStep.value
@@ -359,6 +395,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     override fun onResume() {
         super.onResume()
         viewModel.getSavedConfig()
+        binding.appBarHome.content.includeSearch.btnVerify.setBackgroundResource(R.drawable.save_btn_bg)
     }
 
     override fun initBeforeView() {
@@ -386,18 +423,19 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     private val navigationListener =
         NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_preferences -> {
-                    //TODO handle nav
+                R.id.nav_admin_settings -> {
                     viewModel.openAdmin()
                 }
 
                 R.id.nav_about -> {
-                    //TODO handle nav
                     showImeiDialog()
                 }
 
                 R.id.nav_scan_operator -> {
                     viewModel.openBarCodeScanner()
+                }
+                R.id.nav_device_configuration -> {
+                    viewModel.openDeviceConfiguration()
                 }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)

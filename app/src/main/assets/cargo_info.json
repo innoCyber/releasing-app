@@ -1,15 +1,15 @@
 {
   "success": true,
   "message": "",
-  "cargo_id":69926,
-  "type_container":1,
+  "cargo_id": 69926,
+  "type_container": 1,
   "data": [
     {
       "id": 1,
       "type": "images",
       "order_id": 0,
       "title": "Photos",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": "images"
@@ -19,7 +19,7 @@
       "type": "damages",
       "order_id": 1,
       "title": "Damages",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": "images"
@@ -39,7 +39,7 @@
       "type": "textbox",
       "title": "Enter Grid",
       "order_id": 4,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "alphanumeric"
@@ -59,7 +59,7 @@
       "type": "textbox",
       "title": "Enter Seal",
       "order_id": 6,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "numeric"
@@ -69,7 +69,7 @@
       "type": "textbox",
       "title": "Badge ID",
       "order_id": 8,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "aplanumeric"
@@ -89,7 +89,7 @@
       "type": "textbox",
       "title": "Enter Operator Name",
       "order_id": 10,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "aplanumeric"
@@ -109,32 +109,32 @@
       "type": "multi_select",
       "title": "Select Remarks",
       "order_id": 12,
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [
         {
-          "id": 1,
+          "id": 14343,
           "name": "Everything is fine",
           "is_selected": false
         },
         {
-          "id": 2,
+          "id": 2343,
           "name": "Some issues need to be fixed"
         },
         {
-          "id": 3,
-          "name": "Resoltion in progress"
+          "id": 3454,
+          "name": "R5esoltion in progress"
         },
         {
-          "id": 4,
+          "id": 4454,
           "name": "Contact admin"
         },
         {
-          "id": 5,
+          "id": 5342,
           "name": "Fraticinidas cantare! "
         },
         {
-          "id": 6,
+          "id": 66454,
           "name": "Pulchritudines mori! "
         }
       ],
@@ -155,7 +155,7 @@
       "type": "multi_line_textbox",
       "title": "Enter More Remarks",
       "order_id": 14,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "alphanumeric"
@@ -175,7 +175,7 @@
       "type": "printer",
       "order_id": 2,
       "title": "Print Barcode",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": "printer"
@@ -189,35 +189,45 @@
       "is_editable": false,
       "options": [
         {
-          "id": 1,
+          "id": 11,
           "name": "Everything ",
           "is_selected": false
         },
         {
-          "id": 2,
+          "id": 22,
           "name": "Some issues"
         },
         {
-          "id": 3,
+          "id": 32,
           "name": "Resoltion in progress"
         },
         {
-          "id": 4,
+          "id": 42,
           "name": "Contact admin"
         },
         {
-          "id": 5,
+          "id": 54,
           "name": "Fraticinidas"
         },
         {
-          "id": 6,
+          "id": 65,
           "name": "Pulchritudines"
         },
         {
-          "id": 7,
+          "id": 72,
           "name": "Ignigenas"
         }
       ],
+      "data_validation": ""
+    },
+    {
+      "id": 23,
+      "type": "quick_remarks",
+      "order_id": 22,
+      "title": "Quick Response",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
       "data_validation": ""
     },
     {
@@ -249,28 +259,28 @@
       "is_editable": false,
       "options": [
         {
-          "id": 1,
+          "id": 132,
           "name": "Red",
           "is_selected": false
         },
         {
-          "id": 2,
+          "id": 223,
           "name": "Blue"
         },
         {
-          "id": 3,
+          "id": 312,
           "name": "Yellow"
         },
         {
-          "id": 4,
+          "id": 4434,
           "name": "Green"
         },
         {
-          "id": 5,
+          "id": 5553,
           "name": "Black "
         },
         {
-          "id": 6,
+          "id": 6454,
           "name": "White"
         }
       ],
@@ -295,32 +305,32 @@
       "is_editable": false,
       "options": [
         {
-          "id": 1,
+          "id": 15454,
           "name": "1m",
           "is_selected": false
         },
         {
-          "id": 2,
+          "id": 24343,
           "name": "2m"
         },
         {
-          "id": 3,
+          "id": 34343,
           "name": "3m"
         },
         {
-          "id": 4,
+          "id": 4343,
           "name": "4m"
         },
         {
-          "id": 5,
+          "id": 5343,
           "name": "5m"
         },
         {
-          "id": 6,
+          "id": 64343,
           "name": "6m"
         },
         {
-          "id": 7,
+          "id": 7888,
           "name": "7m"
         }
       ],

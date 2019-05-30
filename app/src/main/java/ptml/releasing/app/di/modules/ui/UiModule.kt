@@ -12,6 +12,7 @@ import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.damages.view.*
 import ptml.releasing.printer.view.PrinterSettingsActivity
+import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 
 
 @Module
@@ -66,6 +67,10 @@ abstract class UiModule {
 
     @ContributesAndroidInjector()
     abstract fun scan(): BarcodeScanActivity
+
+
+    @ContributesAndroidInjector()
+    abstract fun quickRemarks(): QuickRemarkActivity
 
 
 

@@ -1,66 +1,63 @@
 {
   "success": true,
   "message": "",
-  "data": [
+  "values": [
     {
-      "id": 11,
-      "order_id": 1,
-      "type": "label",
-      "title": "Description",
-      "is_required": false,
-      "is_editable": false,
-      "options": [],
-      "data_validation": "alphanumeric"
-    },
-    {
-      "id": 1,
-      "order_id": 2,
-      "type": "textbox",
-      "title": "Surcharge",
-      "is_required": true,
-      "is_editable": true,
-      "options": [],
-      "data_validation": "numeric"
-    },
-    {
-      "id": 2,
-      "order_id": 3,
-      "type": "checkbox",
-      "title": "No start",
-      "is_required": false,
-      "is_editable": true,
-      "options": [],
-      "data_validation": "alphanumeric"
-    },
-    {
-      "id": 25,
-      "order_id": 6,
-      "type": "textbox",
-      "title": "budge id",
-      "is_required": true,
-      "is_editable": true,
-      "options": [],
-      "data_validation": "alphanumeric"
-    },
-    {
-      "id": 6,
-      "order_id": 7,
-      "type": "multi_line_textbox",
-      "title": "Remarks",
-      "is_required": false,
-      "is_editable": true,
-      "options": [],
-      "data_validation": "alphanumeric"
+      "id": 5,
+      "value": "Ford"
     },
     {
       "id": 7,
-      "order_id": 8,
-      "type": "printer",
-      "title": "Print Barcode",
-      "is_required": false,
-      "is_editable": false,
-      "options": [],
-      "data_validation": "printer"
+      "value": "Lexus"
+    },
+    {
+      "id": 9,
+      "value": "Suzuki"
+    },
+    {
+      "id": 11,
+      "value": "Mercedes-Benz"
+    },
+    {
+      "id": 15,
+      "value": "Ford"
+    }
+  ],
+  "options": [
+    {
+      "id": 13,
+      "selected": [
+        4454,
+        66454
+      ]
+    },
+    {
+      "id": 23,
+      "selected": [
+        5,
+        8,
+        12,
+        22
+      ]
+    },
+    {
+      "id": 17,
+      "selected": [
+        72,
+        37
+      ]
+    },
+    {
+      "id": 19,
+      "selected": [
+        4434
+      ]
+    },
+    {
+      "id": 21,
+      "selected": [
+        64343
+      ]
     }
   ]
 }

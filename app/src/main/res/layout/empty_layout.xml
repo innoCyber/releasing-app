@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardElevation="@dimen/constraint_default_margin_8dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite">
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/img_close_layout"
+                style="@style/RippleLayoutStyle.Close"
+                android:layout_margin="@dimen/constraint_default_margin_16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/error_image"
+                    android:padding="@dimen/constraint_default_margin_8dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_close" />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+            <ImageView
+                android:id="@+id/img_error"
+                android:layout_width="@dimen/constraint_default_margin_64dp"
+                android:layout_height="@dimen/constraint_default_margin_64dp"
+                android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
+                android:contentDescription="@string/error_image"
+                app:layout_constraintBottom_toTopOf="@id/tv_message"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1"
+                app:srcCompat="@drawable/ic_damages"
+                tools:tint="@color/colorRed" />
+
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/constraint_default_margin_8dp"
+                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+                android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Fluctuis sunt gloss de flavum idoleum. Sunt caesiumes locus rusticus, altus decores." />
+
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_reload_layout"
+                style="@style/RippleLayoutStyle.Configure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_message">
+
+                <Button
+                    android:id="@+id/btn_reload"
+                    style="@style/ButtonStyle.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingEnd="@dimen/constraint_default_margin_16dp"
+                    android:paddingRight="@dimen/constraint_default_margin_16dp"
+                    android:text="@string/back"
+                    app:drawableStartCompat="@drawable/ic_arrow_back_white"
+                    tools:ignore="RtlSymmetry" />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

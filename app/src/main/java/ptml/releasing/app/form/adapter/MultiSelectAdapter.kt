@@ -6,17 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.databinding.ItemCheckboxBinding
 import timber.log.Timber
 
-class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() where T : SelectModel {
+class MultiSelectAdapter<T> :
+    BaseSelectAdapter<MultiSelectViewHolder<T>, T>() where T : SelectModel {
 
-    val selectedItems = mutableListOf<T>()
-    val selectedItemsPosition = mutableListOf<Int>()
+    val selectedItems = mutableMapOf<Int, T>()
     var listener: MultiSelectListener<T>? = null
 
-    fun setItems(items:List<T>?){
-        this.items.clear()
-        this.items.addAll(items ?: mutableListOf())
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiSelectViewHolder<T> {
         return MultiSelectViewHolder(
@@ -29,22 +24,28 @@ class MultiSelectAdapter<T> : BaseSelectAdapter<MultiSelectViewHolder<T>, T>() w
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: MultiSelectViewHolder<T>, position: Int) {
-        holder.performBind(items[position])
+        holder.performBind(items.values.toList()[position])
     }
 
     override fun initSelectedItems(selected: List<Int>?) {
         if (selected != null) {
             Timber.d("Selecting... %s", selected.size)
             for (i in selected) {
-                if(items.size > i){
-                    items[i].checked = true
+                val item = items[i]
+                if (item != null) {
+                    item.checked = true
+                    selectedItems[item.id()] = item
+
                 }
+
+
             }
-        }else{
+        } else {
             Timber.d("selection is null: resetting to 0")
-            for (item in items) {
+            for (item in items.values) {
                 item.checked = false
             }
+            selectedItems.clear()
         }
 
         listener?.onItemsSelected(selectedItems)
@@ -59,20 +60,25 @@ class MultiSelectViewHolder<T>(
 ) :
     RecyclerView.ViewHolder(binding.root) where T : SelectModel {
 
-    fun performBind(item: T) {
-        Timber.w("TEXT: %s", item.getText())
-        binding.checkBox.text = item.getText()
-        binding.checkBox.isChecked = item.checked
+    fun performBind(item: T?) {
+        Timber.w("TEXT: %s", item?.text())
+        binding.checkBox.text = item?.text()
+        binding.checkBox.isChecked = item?.checked ?: false
         binding.root.setOnClickListener {
-            adapter.selectedItems.add(item)
-            adapter.selectedItemsPosition.add(adapterPosition)
-            item.checked = binding.checkBox.isChecked
-            listener?.onItemsSelected(adapter.selectedItems)
+            if (item != null) {
+                item.checked = binding.checkBox.isChecked
+                if(item.checked){
+                    adapter.selectedItems.put(item.id(), item)
+                    listener?.onItemsSelected(adapter.selectedItems)
+                }else{
+                    adapter.selectedItems.remove(item.id())
+                }
+            }
         }
     }
 }
 
 interface MultiSelectListener<T> where T : SelectModel {
-    fun onItemsSelected(item: List<T>)
+    fun onItemsSelected(item: Map<Int, T>)
 }
 

@@ -29,7 +29,7 @@ class SearchViewModel @Inject constructor(
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
     private val _errorMessage = MutableLiveData<String>()
-
+    protected val _openDeviceConfiguration = MutableLiveData<Unit>()
 
     val networkState: LiveData<NetworkState> = _networkState
     val openAdMin: LiveData<Unit> = _openAdmin
@@ -39,6 +39,7 @@ class SearchViewModel @Inject constructor(
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
     val errorMessage: LiveData<String> = _errorMessage
+    val openDeviceConfiguration: LiveData<Unit> = _openDeviceConfiguration
 
 
     fun openAdmin() {
@@ -76,7 +77,7 @@ class SearchViewModel @Inject constructor(
                     config?.operationStep?.id ?: 0,
                     config?.terminal?.id ?: 0,
                     imei,
-                    cargoNumber
+                    cargoNumber.trim()
                 )?.await()
                 withContext(appCoroutineDispatchers.main) {
                     if (findCargoResponse?.isSuccess ==  true) {
@@ -111,6 +112,12 @@ class SearchViewModel @Inject constructor(
     fun openBarcodeScan() {
         _scan.postValue(Unit)
     }
+
+
+    fun openDeviceConfiguration() {
+        _openDeviceConfiguration.postValue(Unit)
+    }
+
 
 
 

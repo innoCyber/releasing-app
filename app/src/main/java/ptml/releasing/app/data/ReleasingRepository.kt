@@ -1,18 +1,19 @@
 package ptml.releasing.app.data
 
-import kotlinx.coroutines.*
-import ptml.releasing.app.base.BaseResponse
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.Configuration
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.withContext
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
-import ptml.releasing.login.model.User
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.login.model.User
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -51,7 +52,7 @@ open class ReleasingRepository @Inject constructor(
     }
 
 
-    override suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse> {
+    override suspend fun getDamagesAsync(imei: String): Deferred<DamageResponse>? {
         return withContext(appCoroutineDispatchers.db) {
             try {
                 val localResponse = local.getDamages()
@@ -64,13 +65,18 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse> {
+    override suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse>? {
         return withContext(appCoroutineDispatchers.network) {
-            val remoteResponse = remote.downloadDamagesAsync(imei)
-            withContext(appCoroutineDispatchers.db) {
-                local.saveDamages(remoteResponse.await())
+            try {
+                val remoteResponse = remote.downloadDamagesAsync(imei)
+                withContext(appCoroutineDispatchers.db) {
+                    local.saveDamages(remoteResponse.await())
+                    remoteResponse
+                }
+            }catch (e:Throwable){
+                Timber.e(e)
+                null
             }
-            remoteResponse
         }
 
     }
@@ -142,12 +148,18 @@ open class ReleasingRepository @Inject constructor(
     ): List<Damage> {
         return withContext(appCoroutineDispatchers.db) {
             val filteredList = mutableListOf<Damage>()
-            val damageResponse = getDamagesAsync(imei).await()
-            val list = damageResponse.data
-            for (damage in list) {
+            val damageResponse = getDamagesAsync(imei)?.await()
+            val list = damageResponse?.data
+            for (damage in list ?: mutableListOf()) {
                 Timber.d("Damage: %s", damage)
-                if (damage.position == position && damage.typeContainer == typeContainer) {
-                    filteredList.add(damage)
+                if (typeContainer != null) {
+                    if (damage.position == position && damage.typeContainer == typeContainer) {
+                        filteredList.add(damage)
+                    }
+                } else {
+                    if (damage.position == position) {
+                        filteredList.add(damage)
+                    }
                 }
             }
             Timber.d("Filtered List: %s", filteredList)
@@ -169,6 +181,37 @@ open class ReleasingRepository @Inject constructor(
     override fun getServerUrl(): String? = local.getServerUrl()
 
     override fun saveServerUrl(url: String?) = local.saveServerUrl(url)
+
+
+    override suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>? {
+        return withContext(appCoroutineDispatchers.db) {
+            try {
+                val localResponse = local.getQuickRemarks()
+                localResponse?.toDeferredAsync() as Deferred<QuickRemarkResponse>
+            } catch (e: Exception) {
+                Timber.e(e)
+                downloadQuickRemarkAsync(imei)
+
+            }
+        }
+    }
+
+    override suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>? {
+        return withContext(appCoroutineDispatchers.network) {
+            try {
+                val remoteResponse = remote.downloadQuickRemarkAsync(imei)
+                withContext(appCoroutineDispatchers.db) {
+                    local.saveQuickRemarks(remoteResponse.await())
+                }
+                remoteResponse
+
+            }catch (e:Throwable){
+                Timber.e(e)
+                null
+            }
+        }
+
+    }
 
 
 }

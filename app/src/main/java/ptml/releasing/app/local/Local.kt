@@ -7,6 +7,7 @@ import ptml.releasing.download_damages.model.Damage
 
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
 interface Local {
     fun saveConfig(response: AdminConfigResponse?)
@@ -31,4 +32,7 @@ interface Local {
 
     fun saveServerUrl(url:String?)
     fun getServerUrl():String?
+
+    fun saveQuickRemarks(response: QuickRemarkResponse?)
+    fun getQuickRemarks(): QuickRemarkResponse?
 }

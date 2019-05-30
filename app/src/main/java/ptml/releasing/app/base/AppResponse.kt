@@ -8,7 +8,7 @@ import kotlinx.coroutines.async
 * */
 open class AppResponse{
     /**
-     *Used in tests to wrap this as a @link Deferred
+     *Used  to wrap this as a @link Deferred
      * */
     fun toDeferredAsync() = GlobalScope.async { this@AppResponse }
 }

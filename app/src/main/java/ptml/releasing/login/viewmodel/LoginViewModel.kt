@@ -51,7 +51,6 @@ class LoginViewModel @Inject constructor(
                 val result = repository.loginAsync(user).await()
                 withContext(appCoroutineDispatchers.main) {
                     Timber.d("Response: %s", result)
-                    result.isSuccess = true
                     if (result.isSuccess) {
                         loadNext.postValue(Unit)
                     } else {

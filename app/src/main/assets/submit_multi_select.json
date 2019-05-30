@@ -1,0 +1,49 @@
+{
+  "cargo_code": "DJSDKS",
+  "cargo_type": 3,
+  "damages": [],
+  "imei": "861327032935756",
+  "operation_step": 21,
+  "operator": "Pascal",
+  "selections": [
+    {
+      "selected_options": [
+        14343,
+        66454,
+        4454
+      ],
+      "id": 13
+    },
+    {
+      "selected_options": [
+        32,
+        65,
+        72
+      ],
+      "id": 17
+    },
+    {
+      "selected_options": [
+        223
+      ],
+      "id": 19
+    },
+    {
+      "selected_options": [
+        64343
+      ],
+      "id": 21
+    }
+  ],
+  "terminal": 3,
+  "values": [
+    {
+      "value": "Ford",
+      "id": 11
+    },
+    {
+      "value": "true",
+      "id": 22
+    }
+  ]
+}

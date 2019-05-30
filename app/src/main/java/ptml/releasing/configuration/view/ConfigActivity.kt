@@ -138,9 +138,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun setConfig() {
         viewModel.setConfig(
-            binding.top.selectTerminalSpinner.selectedItem as Terminal,
-            binding.top.selectOperationSpinner.selectedItem as OperationStep,
-            binding.top.selectCargoSpinner.selectedItem as CargoType,
+            binding.top.selectTerminalSpinner.selectedItem as Terminal?,
+            binding.top.selectOperationSpinner.selectedItem as OperationStep?,
+            binding.top.selectCargoSpinner.selectedItem as CargoType?,
             binding.top.cameraSwitch.isChecked, (application as ReleasingApplication).provideImei()
         )
     }

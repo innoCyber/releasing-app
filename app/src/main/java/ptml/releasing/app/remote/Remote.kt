@@ -7,6 +7,7 @@ import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import retrofit2.http.Body
 
 interface Remote {
@@ -14,6 +15,7 @@ interface Remote {
     suspend fun loginAsync(username: String?, password: String?): Deferred<BaseResponse>
     suspend fun setAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse>
     suspend fun downloadDamagesAsync(imei: String): Deferred<DamageResponse>
+    suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>
     suspend fun setConfigurationDeviceAsync(
         cargoTypeId: Int?,
         operationStepId: Int?,

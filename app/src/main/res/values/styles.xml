@@ -35,10 +35,10 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:padding">@dimen/constraint_default_margin_8dp</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/home_btn_text_size</item>
         <item name="android:drawablePadding">@dimen/constraint_default_margin_10dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:gravity">start|center</item>
-        <item name="android:textSize">@dimen/home_btn_text_size</item>
 
     </style>
 
@@ -308,6 +308,10 @@
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
     </style>
 
+    <style name="Form.SelectTitle" parent="Form.Label">
+        <item name="android:layout_marginTop">0dp</item>
+    </style>
+
 
     <style name="Form.Error">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
@@ -321,7 +325,6 @@
 
 
     <style name="Form.TextBox">
-        <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
         <!--<item name="android:background">@drawable/outline_bg</item>-->
     </style>
 
@@ -357,7 +360,7 @@
     <style name="Form.SaveButton" parent="Form.Button">
         <item name="android:background">@drawable/btn_bg_save</item>
         <item name="android:text">@string/save</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="Form.ResetButton" parent="Form.Button">
@@ -365,7 +368,6 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:text">@string/reset</item>
     </style>
-
 
 
     <style name="DefaultChipSuggestionTextView">
@@ -379,4 +381,152 @@
     <style name="InputLayoutStyle" parent="Widget.Design.TextInputLayout">
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
+
+
+    <style name="NavHeaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:text">@string/ptml</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/nav_header_padding</item>
+    </style>
+
+
+    <style name="Damages">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/damages_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_margin</item>
+    </style>
+
+
+    <style name="Damages.Image" />
+
+    <style name="Damages.DeleteImage" parent="Damages.Image">
+        <item name="android:layout_width">@dimen/damages_delete_icon_size</item>
+        <item name="android:layout_height">@dimen/damages_delete_icon_size</item>
+        <item name="android:padding">@dimen/damages_delete_icon_padding</item>
+        <item name="srcCompat">@drawable/ic_delete_black</item>
+        <item name="android:background">@null</item>
+        <item name="android:contentDescription">@string/cell_cargo_dsc_remove_damage_button</item>
+    </style>
+
+    <style name="Damages.Button">
+        <item name="android:layout_marginBottom">@dimen/damages_margin</item>
+        <item name="android:layout_marginStart">@dimen/damages_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_margin</item>
+        <item name="android:background">@drawable/btn_bg</item>
+        <item name="android:padding">@dimen/damages_button_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorDamageButtonText</item>
+        <item name="android:layout_width">@dimen/damages_button_width</item>
+        <item name="android:layout_height">@dimen/damages_button_height</item>
+    </style>
+
+    <style name="Damages.SelectButton" parent="Damages.Button">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_marginBottom">@dimen/damages_margin</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="Damages.AddButton" parent="Damages.Button">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_marginStart">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_button_margin</item>
+        <item name="srcCompat">@drawable/ic_add</item>
+    </style>
+
+    <style name="Damages.SubtractButton" parent="Damages.Button">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_marginStart">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_button_margin</item>
+        <item name="srcCompat">@drawable/ic_remove</item>
+    </style>
+
+    <style name="Damages.RemarkTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxStrokeColor">@color/colorBlack</item>
+        <item name="hintTextColor">@color/colorBlack</item>
+        <item name="hintEnabled">true</item>
+    </style>
+
+    <style name="Damages.RemarkEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:hint">@string/enter_damage_remark_hint</item>
+        <item name="android:inputType">text|textCapSentences</item>
+    </style>
+
+    <style name="Damages.Title">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Damages.ListTitle" parent="Damages.Title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+
+    </style>
+
+
+    <style name="Damages.SelectListTitle" parent="Damages.ListTitle">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+
+    <style name="Damages.NumberLabel">
+        <item name="android:text">@string/cell_cargo_damages_txt_number</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+    <style name="Damages.Number">
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="Damages.GoBack" parent="Damages.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/back</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/btn_bg_reset</item>
+
+    </style>
+
+    <style name="Damages.GoBackOther" parent="Damages.GoBack">
+        <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
+    </style>
+
+
+    <style name="Damages.Add" parent="Damages.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/btn_bg_accent</item>
+    </style>
+
 </resources>

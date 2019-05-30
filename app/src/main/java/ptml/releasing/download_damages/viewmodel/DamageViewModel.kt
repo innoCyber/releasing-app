@@ -35,10 +35,9 @@ class DamageViewModel @Inject constructor(
             try {
 
 
-                val response = repository.getDamagesAsync(imei).await()
-                //TODO insert to Database
+                val response = repository.getDamagesAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (response.data.isNotEmpty()) {
+                    if (response?.data?.isNotEmpty() == true) {
                         responseMutable.postValue(response.data)
                         networkStateMutable.postValue(NetworkState.LOADED)
                     } else {
@@ -65,10 +64,9 @@ class DamageViewModel @Inject constructor(
             try {
 
 
-                val response = repository.downloadDamagesAsync(imei).await()
-                //TODO insert to Database
+                val response = repository.downloadDamagesAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (response.data.isNotEmpty()) {
+                    if (response?.data?.isNotEmpty() == true) {
                         responseMutable.postValue(response.data)
                         networkStateMutable.postValue(NetworkState.LOADED)
                     } else {

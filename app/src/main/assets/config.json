@@ -130,19 +130,35 @@
   "terminal": [
     {
       "id": 1,
+      "cargo_type": 2,
       "value": "Satellite Car Park"
     },
     {
       "id": 2,
+      "cargo_type": 2,
       "value": "Terminal 2"
     },
     {
       "id": 3,
+      "cargo_type": 3,
       "value": "Main"
     },
     {
       "id": 4,
+      "cargo_type": 3,
       "value": "Depot"
+    },
+    {
+      "id": 5,
+      "cargo_type": 1,
+      "value": "Main11"
+    },
+    {
+      "id": 6,
+      "cargo_type": 1,
+      "value": "Depot11"
     }
+
+
   ]
 }

@@ -4,8 +4,8 @@
     <data>
 
         <variable
-                name="viewModel"
-                type="ptml.releasing.cargo_search.viewmodel.SearchViewModel" />
+            name="viewModel"
+            type="ptml.releasing.cargo_search.viewmodel.SearchViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,15 +14,14 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        tools:openDrawer="start">
 
         <include
             android:id="@+id/app_bar_home"
             layout="@layout/app_bar_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:viewModel="@{viewModel}"
-            />
+            app:viewModel="@{viewModel}" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
@@ -32,7 +31,45 @@
             app:headerLayout="@layout/nav_view_header"
             app:itemIconTint="@color/colorBlack"
             app:itemTextColor="@color/colorBlack"
-            app:menu="@menu/activity_main_drawer" />
+            app:menu="@menu/activity_main_drawer">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/version_text"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    app:layout_constraintBottom_toTopOf="@id/img_ptml"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+                <ImageView
+                    android:id="@+id/img_ptml"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/img_bottom"
+                    app:srcCompat="@drawable/ptml_logo" />
+
+                <ImageView
+                    android:id="@+id/img_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/logo_terminal" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

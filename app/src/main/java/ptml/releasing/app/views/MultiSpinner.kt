@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.R
+import ptml.releasing.app.form.adapter.SelectModel
 import ptml.releasing.app.views.flex.FlexDirection
 import ptml.releasing.app.views.flex.FlexWrap
 import ptml.releasing.app.views.flex.FlexboxLayoutManager
@@ -27,19 +28,22 @@ import java.util.*
 import kotlin.collections.LinkedHashMap
 
 
-class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListener {
+class MultiSpinner<T> : AppCompatSpinner, OnMultiChoiceClickListener,
+    OnCancelListener where T : SelectModel {
 
-    private var items: MutableList<String>? = null
+
+    private var items: MutableList<T>? = null
     private var selected = mutableListOf<Boolean>()
     var defaultHintText: String? = "Select Items"
     private var spinnerTitle: String? = ""
     private var listener: MultiSpinnerListener? = null
-    var selectedItems = LinkedHashMap<String, Int>()
-    private val chipsListener = object : ChipListener {
-        override fun onItemClose(position: Int, item: String, itemsRemaining: Int) {
+
+    val selectedItems = mutableMapOf<Int, T>()
+    private val chipsListener = object : ChipListener<T> {
+        override fun onItemClose(item: T, itemsRemaining: Int) {
             Timber.d("Removed %s", item)
-            selected[position] = false
-            selectedItems.remove(item)
+            selected[item.position()] = false
+            selectedItems.remove(item.id())
 
             if (itemsRemaining <= 0) {
                 val adapter = MultiSpinnerAdapter(context, defaultHintText)
@@ -80,10 +84,12 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
 
     override fun onCancel(dialog: DialogInterface?) {
         // refresh text on spinner
+        Timber.d("Showing views")
         selectedItems.clear()
         for (i in items?.indices ?: 0 until 0) {
             if (selected[i]) {
-                selectedItems[items!![i]] = i
+                val item = items!![i]
+                selectedItems[item.id()] = item
             }
         }
 
@@ -100,6 +106,8 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
             listener?.onItemsSelected(selected)
         }
 
+        Timber.d("Hello there items: %s", selectedItems.size)
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -107,10 +115,12 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         val builder = AlertDialog.Builder(context)
         builder.setTitle(spinnerTitle)
         builder.setMultiChoiceItems(
-                items?.toTypedArray<CharSequence>(), selected.toBooleanArray(), this
+            items?.map { it.text() }?.toTypedArray<CharSequence>(),
+            selected.toBooleanArray(),
+            this
         )
         builder.setPositiveButton(
-                android.R.string.ok
+            android.R.string.ok
         ) { dialog, which -> dialog.cancel() }
         builder.setOnCancelListener(this)
         builder.show()
@@ -124,7 +134,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
      * and the value the initial selected state of the key.
      * @param listener A MultiSpinnerListener.
      */
-    fun setItems(items: LinkedHashMap<String, Boolean>, listener: MultiSpinnerListener?) {
+    fun setItems(items: LinkedHashMap<T, Boolean>, listener: MultiSpinnerListener?) {
         this.items = ArrayList(items.keys)
         this.listener = listener
 
@@ -133,6 +143,7 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         for (i in 0 until items.size) {
             selected[i] = values[i]
         }
+
 
         // all text on the spinner
         val adapter = MultiSpinnerAdapter(context, defaultHintText)
@@ -143,18 +154,12 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
     }
 
 
-    fun setSelection(selection: List<Int>?) {
-        if (selection != null) {
-            Timber.d("Selection is non null")
-            for (i in selection) {
-                if (selection.size > i) {
-                    selected[i] = true
-                }
-            }
-        } else {
-            Timber.d("Selection is null")
-            for (i in 0 until selected.size) {
-                selected[i] = false
+    fun setSelection(idList: List<Int>?) {
+        val selection = convertIdToPosition(idList)
+        Timber.d("Initializing multi-select with %s", selection.size)
+        for (i in selection) {
+            if (selected.size > i) {
+                selected[i] = true
             }
         }
 
@@ -162,10 +167,33 @@ class MultiSpinner : AppCompatSpinner, OnMultiChoiceClickListener, OnCancelListe
         onCancel(null)
     }
 
+    private fun convertIdToPosition(idList: List<Int>?): List<Int> {
+        val positionList = mutableListOf<Int>()
+        val itemIdsList = items?.map { it.id() }
+        Timber.d("List of IDs: %s", itemIdsList)
+        for (id in idList ?: mutableListOf()) {
+            val optionPosition = if (itemIdsList?.contains(id) == true) {
+                itemIdsList.indexOf(id)
+            } else {
+                null
+            }
+
+            Timber.d("Position of item: %s", optionPosition)
+
+            if (optionPosition != null) {
+                positionList.add(optionPosition)
+            }
+
+        }
+
+
+        return positionList
+    }
+
 }
 
 internal class MultiSpinnerAdapter(context: Context, text: String?) :
-        ArrayAdapter<String>(context, R.layout.spinner_single, arrayListOf(text)) {
+    ArrayAdapter<String>(context, R.layout.spinner_single, arrayListOf(text)) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -176,7 +204,7 @@ internal class MultiSpinnerAdapter(context: Context, text: String?) :
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, drawable, null
+            textView, null, null, drawable, null
         )
 
         textView.text = getItem(position)
@@ -206,12 +234,12 @@ internal class MultiSpinnerAdapter(context: Context, text: String?) :
 }
 
 
-internal class ChipsMultiSpinnerAdapter(
-        context: Context,
-        var items: LinkedHashMap<String, Int>,
-        val listener: ChipListener?
+internal class ChipsMultiSpinnerAdapter<T>(
+    context: Context,
+    var items: MutableMap<Int, T>,
+    val listener: ChipListener<T>?
 ) :
-        ArrayAdapter<String>(context, R.layout.spinner_single, items.keys.toList()) {
+    ArrayAdapter<T>(context, R.layout.spinner_single, items.values.toList()) where T : SelectModel {
 
     companion object {
         const val SPAN_TWO_SIZE = 3
@@ -221,7 +249,7 @@ internal class ChipsMultiSpinnerAdapter(
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            val rvAdapter = ChipAdapter()
+            val rvAdapter = ChipAdapter<T>()
             rvAdapter.setItems(items)
             rvAdapter.listener = listener
 
@@ -254,44 +282,44 @@ interface MultiSpinnerListener {
     fun onItemsSelected(selected: List<Boolean>)
 }
 
-class ChipAdapter : RecyclerView.Adapter<ChipViewHolder>() {
-    internal var items = LinkedHashMap<String, Int>()
-    internal var itemsList = mutableListOf<String>()
-    var listener: ChipListener? = null
+class ChipAdapter<T> : RecyclerView.Adapter<ChipViewHolder<T>>() where T : SelectModel {
+    internal var items = mutableMapOf<Int, T>()
+    internal var itemsList = mutableListOf<T>()
+    var listener: ChipListener<T>? = null
 
-    fun setItems(items: LinkedHashMap<String, Int>) {
+    fun setItems(items: Map<Int, T>) {
         this.items.clear()
-        this.itemsList.addAll(items.keys)
+        this.itemsList.addAll(items.values)
         this.items.putAll(items)
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChipViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChipViewHolder<T> {
         return ChipViewHolder(
-                this,
-                ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
-                listener
+            this,
+            ItemChipBinding.inflate(LayoutInflater.from(parent.context), null, false),
+            listener
         )
     }
 
     override fun getItemCount() = itemsList.size
 
-    override fun onBindViewHolder(holder: ChipViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChipViewHolder<T>, position: Int) {
         holder.performBind(itemsList[position])
     }
 
 }
 
-class ChipViewHolder(
-        val adapter: ChipAdapter,
-        val binding: ItemChipBinding,
-        val listener: ChipListener? = null
+class ChipViewHolder<T>(
+    val adapter: ChipAdapter<T>,
+    val binding: ItemChipBinding,
+    val listener: ChipListener<T>? = null
 ) :
-        RecyclerView.ViewHolder(binding.root) {
+    RecyclerView.ViewHolder(binding.root) where T : SelectModel {
 
-    fun performBind(item: String) {
+    fun performBind(item: T) {
         Timber.w("TEXT: %s", item)
-        binding.chip.text = item
+        binding.chip.text = item.text()
         binding.chip.isCheckable = false
         binding.chip.isClickable = true
         binding.chip.isChipIconVisible = false
@@ -299,12 +327,17 @@ class ChipViewHolder(
         binding.chip.setOnCloseIconClickListener {
             adapter.itemsList.removeAt(adapterPosition)
             adapter.notifyDataSetChanged()
-            adapter.items[item]?.let { it1 -> listener?.onItemClose(it1, item, adapter.itemsList.size) }
+            adapter.items[item.id()]?.let {
+                listener?.onItemClose(
+                    item,
+                    adapter.itemsList.size
+                )
+            }
         }
     }
 }
 
-interface ChipListener {
-    fun onItemClose(position: Int, item: String, itemsRemaining: Int)
+interface ChipListener<T> where T : SelectModel {
+    fun onItemClose(item: T, itemsRemaining: Int)
 }
 

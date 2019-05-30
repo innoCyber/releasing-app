@@ -18,13 +18,11 @@ import retrofit2.Retrofit
 class MainModule {
 
     @Provides
-    @ReleasingAppScope
     fun provideRepository(remote: Remote, local: Local, appCoroutineDispatchers: AppCoroutineDispatchers): Repository {
         return ReleasingRepository(remote, local, appCoroutineDispatchers)
     }
 
     @Provides
-    @ReleasingAppScope
     fun provideRemote(retrofit: Retrofit): Remote {
         return ReleasingRemote(retrofit)
     }

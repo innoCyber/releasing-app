@@ -9,6 +9,8 @@ import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.download_damages.model.api.DamageApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService
 import ptml.releasing.cargo_search.model.api.FindCargoService
+import ptml.releasing.quick_remarks.model.QuickRemarkResponse
+import ptml.releasing.quick_remarks.model.api.QuickRemarkService
 import retrofit2.Retrofit
 import retrofit2.http.Header
 import javax.inject.Inject
@@ -21,6 +23,7 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
     private val damageService = retrofit.create(DamageApiService::class.java)
     private val findCargoService = retrofit.create(FindCargoService::class.java)
     private val uploadDataService = retrofit.create(UploadDataService::class.java)
+    private val quickRemarkService = retrofit.create(QuickRemarkService::class.java)
 
     override suspend fun loginAsync(username: String?, password: String?) = loginService.loginAsync(username, password)
 
@@ -29,6 +32,8 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
     override suspend fun setAdminConfigurationAsync(imei: String) = adminConfigService.setAdminConfigurationAsync(imei)
 
     override suspend fun downloadDamagesAsync(imei: String) = damageService.downloadDamagesAsync(imei)
+
+    override suspend fun downloadQuickRemarkAsync(imei: String) = quickRemarkService.downloadQuickRemarksAsync(imei)
 
     override suspend fun setConfigurationDeviceAsync(
             cargoTypeId: Int?,

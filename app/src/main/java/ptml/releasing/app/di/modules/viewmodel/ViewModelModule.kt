@@ -15,6 +15,7 @@ import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.damages.view_model.DummyViewModel
 import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
+import ptml.releasing.quick_remarks.viewmodel.QuickRemarkViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -79,4 +80,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DummyViewModel::class)
     abstract fun bindDummyViewModel(viewModel: DummyViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(QuickRemarkViewModel::class)
+    abstract fun bindQuickRemarkViewModel(viewModel: QuickRemarkViewModel): ViewModel
 }

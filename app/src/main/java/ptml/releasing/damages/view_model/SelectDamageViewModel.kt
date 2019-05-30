@@ -44,6 +44,7 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
                 "S"
             }
 
+
             compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
                 val list = repository.getDamagesByPosition(imei, position, typeContainer)
                 withContext(appCoroutineDispatchers.main) {
