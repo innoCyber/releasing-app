@@ -28,6 +28,10 @@ abstract class BaseTest {
         every {
             dispatcher.network
         } returns Dispatchers.Unconfined
+
+        every {
+            dispatcher.db
+        } returns Dispatchers.Unconfined
         every {
             dispatcher.main
         } returns Dispatchers.Unconfined

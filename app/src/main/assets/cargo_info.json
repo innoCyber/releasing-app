@@ -1,0 +1,350 @@
+{
+  "success": true,
+  "message": "",
+  "cargo_id": 69926,
+  "type_container": 1,
+  "data": [
+    {
+      "id": 1,
+      "type": "images",
+      "order_id": 0,
+      "title": "Photos",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "images"
+    },
+    {
+      "id": 2,
+      "type": "damages",
+      "order_id": 1,
+      "title": "Damages",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "images"
+    },
+    {
+      "id": 4,
+      "type": "label",
+      "order_id": 3,
+      "title": "Grid",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 5,
+      "type": "textbox",
+      "title": "Enter Grid",
+      "order_id": 4,
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 6,
+      "type": "label",
+      "order_id": 5,
+      "title": "Seal",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 7,
+      "type": "textbox",
+      "title": "Enter Seal",
+      "order_id": 6,
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "numeric"
+    },
+    {
+      "id": 9,
+      "type": "textbox",
+      "title": "Badge ID",
+      "order_id": 8,
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 10,
+      "type": "label",
+      "title": "Operator Name",
+      "order_id": 9,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 11,
+      "type": "textbox",
+      "title": "Enter Operator Name",
+      "order_id": 10,
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 12,
+      "type": "label",
+      "title": "Remarks",
+      "order_id": 11,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 13,
+      "type": "multi_select",
+      "title": "Select Remarks",
+      "order_id": 12,
+      "is_required": false,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 14343,
+          "name": "Everything is fine",
+          "is_selected": false
+        },
+        {
+          "id": 2343,
+          "name": "Some issues need to be fixed"
+        },
+        {
+          "id": 3454,
+          "name": "R5esoltion in progress"
+        },
+        {
+          "id": 4454,
+          "name": "Contact admin"
+        },
+        {
+          "id": 5342,
+          "name": "Fraticinidas cantare! "
+        },
+        {
+          "id": 66454,
+          "name": "Pulchritudines mori! "
+        }
+      ],
+      "data_validation": ""
+    },
+    {
+      "id": 14,
+      "type": "label",
+      "title": "More Remark",
+      "order_id": 13,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 15,
+      "type": "multi_line_textbox",
+      "title": "Enter More Remarks",
+      "order_id": 14,
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 16,
+      "type": "label",
+      "order_id": 15,
+      "title": "Options",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 3,
+      "type": "printer",
+      "order_id": 2,
+      "title": "Print Barcode",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "printer"
+    },
+    {
+      "id": 17,
+      "type": "multi_select",
+      "title": "Select options",
+      "order_id": 16,
+      "is_required": true,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 11,
+          "name": "Everything ",
+          "is_selected": false
+        },
+        {
+          "id": 22,
+          "name": "Some issues"
+        },
+        {
+          "id": 32,
+          "name": "Resoltion in progress"
+        },
+        {
+          "id": 42,
+          "name": "Contact admin"
+        },
+        {
+          "id": 54,
+          "name": "Fraticinidas"
+        },
+        {
+          "id": 65,
+          "name": "Pulchritudines"
+        },
+        {
+          "id": 72,
+          "name": "Ignigenas"
+        }
+      ],
+      "data_validation": ""
+    },
+    {
+      "id": 23,
+      "type": "quick_remarks",
+      "order_id": 22,
+      "title": "Quick Response",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 18,
+      "type": "label",
+      "order_id": 17,
+      "title": "Color",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 8,
+      "type": "label",
+      "title": "Bar Code",
+      "order_id": 7,
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 19,
+      "type": "single_select",
+      "title": "Select color",
+      "order_id": 18,
+      "is_required": true,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 132,
+          "name": "Red",
+          "is_selected": false
+        },
+        {
+          "id": 223,
+          "name": "Blue"
+        },
+        {
+          "id": 312,
+          "name": "Yellow"
+        },
+        {
+          "id": 4434,
+          "name": "Green"
+        },
+        {
+          "id": 5553,
+          "name": "Black "
+        },
+        {
+          "id": 6454,
+          "name": "White"
+        }
+      ],
+      "data_validation": ""
+    },
+    {
+      "id": 20,
+      "type": "label",
+      "order_id": 19,
+      "title": "Length",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 21,
+      "type": "single_select",
+      "title": "Select length",
+      "order_id": 20,
+      "is_required": true,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 15454,
+          "name": "1m",
+          "is_selected": false
+        },
+        {
+          "id": 24343,
+          "name": "2m"
+        },
+        {
+          "id": 34343,
+          "name": "3m"
+        },
+        {
+          "id": 4343,
+          "name": "4m"
+        },
+        {
+          "id": 5343,
+          "name": "5m"
+        },
+        {
+          "id": 64343,
+          "name": "6m"
+        },
+        {
+          "id": 7888,
+          "name": "7m"
+        }
+      ],
+      "data_validation": ""
+    },
+    {
+      "id": 22,
+      "type": "checkbox",
+      "order_id": 21,
+      "title": "Coloured item",
+      "is_required": true,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "true"
+    }
+  ]
+}

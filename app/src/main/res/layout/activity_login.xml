@@ -26,11 +26,14 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.95"/>
 
+
+
+
             <TextView
                     android:id="@+id/tv_admin_id"
                     style="@style/LabelStyle"
                     android:text="@string/admin_id"
-                    android:layout_marginTop="@dimen/constraint_default_margin_64dp"
+                    android:layout_marginTop="@dimen/constraint_default_margin_32dp"
                     app:layout_constraintEnd_toStartOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
@@ -101,7 +104,7 @@
             <ptml.releasing.app.views.MaterialRippleLayout
                     android:id="@+id/btn_login_layout"
                     style="@style/RippleLayoutStyle.Configure"
-                    app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+                    app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     android:layout_marginTop="@dimen/constraint_default_margin_16dp"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"

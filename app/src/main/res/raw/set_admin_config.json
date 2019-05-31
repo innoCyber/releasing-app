@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 1,
+      "type": "label",
+      "title": "Cargo ID",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 2,
+      "type": "label",
+      "title": "Bar Code",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": ""
+    },
+    {
+      "id": 3,
+      "type": "images",
+      "title": "Photos",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "images"
+    },
+    {
+      "id": 4,
+      "type": "button",
+      "title": "Print Barcode",
+      "is_required": true,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "printer"
+    },
+    {
+      "id": 5,
+      "type": "textbox",
+      "title": "Grid",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 6,
+      "type": "textbox",
+      "title": "Badge ID",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 7,
+      "type": "textbox",
+      "title": "Operator Name",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    },
+    {
+      "id": 8,
+      "type": "multi_select",
+      "title": "Remarks",
+      "is_required": true,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 1,
+          "name": "Everything is fine",
+          "is_selected": false
+        },
+        {
+          "id": 2,
+          "name": "Some issues need to be fixed"
+        },
+        {
+          "id": 3,
+          "name": "Resoltion in progress"
+        },
+        {
+          "id": 4,
+          "name": "Contact admin"
+        }
+      ],
+      "data_validation": ""
+    },
+    {
+      "id": 9,
+      "type": "multi_line_textbox",
+      "title": "More Remarks",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "aplanumeric"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:id="@+id/btn_root"
+                  android:visibility="gone"
+                  tools:visibility="visible"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <Button
+                android:id="@+id/btn_change_operator"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/constraint_default_margin_4dp"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_bg_reset"
+                android:text="@string/scan_operator_badge"
+                android:textAllCaps="false"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/colorWhite"/>
+
+
+        <Button
+                android:id="@+id/btn_enter_operator"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/constraint_default_margin_4dp"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_bg_reset"
+                android:text="@string/enter_operator_name"
+                android:textAllCaps="false"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/colorWhite"/>
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,18 @@
+{
+  "cargo_code": "FDKJFKDJKFJD",
+  "cargo_type": 3,
+  "damages": [],
+  "imei": "861327032935756",
+  "operation_step": 21,
+  "operator": "Pascal",
+  "selections": [
+    {
+      "selected_options": [
+        0
+      ],
+      "id": 38
+    }
+  ],
+  "terminal": 3,
+  "values": []
+}

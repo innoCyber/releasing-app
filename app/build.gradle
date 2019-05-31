@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -15,7 +16,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
 
-        buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000/\"")
+        buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+//        buildConfigField("String", "BASE_URL", "\"http://192.168.43.116:3000\"")
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -41,15 +43,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     //kotlin
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine"
 
     //Android Kotlin extensions
-    implementation "androidx.core:core-ktx:1.0.1"
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     //appcompat
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
@@ -70,10 +73,9 @@ dependencies {
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation"com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutine"
-
+//    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutine"
 
     //dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -82,25 +84,17 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
-
     //timber for logging
     implementation "com.jakewharton.timber:timber:$timberVersion"
-
 
     //leakcanary for detecting memory leaks
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
-
-
     //permissions
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permission_dispatcher"
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:$permission_dispatcher"
-
-
-    //dialogs
-    implementation 'com.yarolegovich:lovely-dialog:1.1.0'
 
     //secure shared preferences
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
@@ -110,13 +104,17 @@ dependencies {
     testImplementation 'android.arch.core:core-testing:1.1.1'
     testImplementation "io.mockk:mockk:$mockkVersion"
 
-
-
     //instrumentation testing
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$testRunner"
     androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
+    implementation files('libs/zebra_android_sdk.jar')
+
+    //barcode scanning
+    implementation 'me.dm7.barcodescanner:zbar:1.8.3'
+
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
 
 }

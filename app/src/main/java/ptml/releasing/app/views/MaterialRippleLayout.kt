@@ -37,6 +37,7 @@ import ptml.releasing.R
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 
+@Suppress("SENSELESS_COMPARISON")
 class MaterialRippleLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : FrameLayout(context, attrs, defStyle) {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -178,6 +179,7 @@ class MaterialRippleLayout @JvmOverloads constructor(context: Context, attrs: At
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     fun <T : View> getChildView(): T {
         return childView as T
     }
@@ -727,7 +729,7 @@ class MaterialRippleLayout @JvmOverloads constructor(context: Context, attrs: At
 
             layout.addView(child, ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT))
 
-            parent?.addView(layout, index, params)
+            parent.addView(layout, index, params)
 
             return layout
         }

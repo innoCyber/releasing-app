@@ -1,19 +1,32 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionMenuTextColor">@color/colorBlack</item>
         <item name="titleTextColor">@color/colorBlack</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
     </style>
 
 
-    <style name="AppTheme.Splash">
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="AppTheme.Toolbar" parent="AppTheme">
+        <!--This line changes the color of text in Toolbar-->
+        <item name="android:textColorPrimary">@color/colorBlack</item>
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="android:textColorSecondary">@color/colorBlack</item>
     </style>
 
     <style name="ButtonStyle">
@@ -22,20 +35,46 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:padding">@dimen/constraint_default_margin_8dp</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/home_btn_text_size</item>
         <item name="android:drawablePadding">@dimen/constraint_default_margin_10dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:gravity">start|center</item>
-        <item name="android:textSize">@dimen/home_btn_text_size</item>
 
     </style>
 
-    <style name="ButtonStyle.Home">
-        <item name="android:background">@drawable/home_btn_bg</item>
+    <style name="ButtonStyle.Error">
+        <item name="android:background">@drawable/round_rect_accent</item>
+    </style>
+
+    <style name="ButtonStyle.HomeBottom">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:background">@drawable/item_bg_transparent</item>
+        <item name="android:elevation" tools:ignore="NewApi">@dimen/constraint_default_margin_16dp
+        </item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:padding">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:drawablePadding">@dimen/constraint_default_margin_24dp</item>
     </style>
 
     <style name="ButtonStyle.Save">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/save_btn_bg</item>
+    </style>
+
+    <style name="ButtonStyle.GoBack">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:background">@drawable/item_bg_transparent</item>
+    </style>
+
+    <style name="GoBack">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="drawableStartCompat">@drawable/ic_arrow_back</item>
     </style>
 
     <style name="ButtonStyle.Delete">
@@ -54,13 +93,48 @@
         <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_8dp</item>
     </style>
 
+    <style name="RippleLayoutStyle.Close">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="RippleLayoutStyle.Search">
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+
+    <style name="RippleLayoutStyle.Damages">
+        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleRoundedCorners">0dp</item>
+    </style>
+
     <style name="RippleLayoutStyle.Configure">
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
     </style>
 
+    <style name="RippleLayoutStyle.BackButton">
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+
+    <style name="RippleLayoutStyle.GoBack">
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
     <style name="RippleLayoutStyle.Configure.Spinner">
-        <item name="mrl_rippleColor">@color/colorAccentAlpha</item>
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
         <item name="mrl_rippleRoundedCorners">0dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.HomeTop">
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
+        <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="RippleLayoutStyle.HomeBottom">
+        <item name="mrl_rippleColor">@color/colorTransparent</item>
+        <item name="mrl_rippleRoundedCorners">@dimen/constraint_default_margin_10dp</item>
     </style>
 
 
@@ -92,6 +166,11 @@
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
 
+    <style name="LabelStyle.Search">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/search_label_text_size</item>
+    </style>
+
 
     <style name="TextLimitStyle" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/colorAccent</item>
@@ -100,6 +179,354 @@
 
     <style name="TextLimitError" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/colorRed</item>
+        <item name="android:background">@color/form_textbox_color</item>
         <item name="android:textSize">9sp</item>
     </style>
+
+    <style name="TextLimitError.Search" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ReleasingButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ReleasingButtonStyle.Home">
+        <item name="android:layout_width">0dp</item>
+        <item name="rb_bg_drawable">@drawable/shadow_bg_home_top</item>
+        <item name="rb_textColor">@color/colorBlack</item>
+        <item name="rb_textSize">16sp</item>
+        <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
+        <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
+    </style>
+
+    <style name="ReleasingButtonStyle.QrCode">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="rb_bg_drawable">@drawable/round_rect_accent</item>
+        <item name="rb_iconPaddingStart">@dimen/constraint_default_margin_16dp</item>
+        <item name="rb_iconPaddingEnd">@dimen/constraint_default_margin_16dp</item>
+        <item name="rb_iconPaddingTop">@dimen/constraint_default_margin_4dp</item>
+        <item name="rb_iconPaddingBottom">@dimen/constraint_default_margin_4dp</item>
+        <item name="rb_icon">@drawable/ic_qr_scanner_white</item>
+
+    </style>
+
+
+    <style name="QrCodeStyle">
+        <item name="android:layout_width">@dimen/qr_code_img_size</item>
+        <item name="android:layout_height">@dimen/qr_code_img_size</item>
+        <item name="android:background">@drawable/round_rect_accent</item>
+        <item name="android:paddingStart">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:paddingLeft">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:paddingEnd">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:paddingRight">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:paddingTop">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:paddingBottom">@dimen/constraint_default_margin_8dp</item>
+        <item name="srcCompat">@drawable/ic_qr_scanner_white</item>
+        <item name="android:contentDescription">@string/qrcode</item>
+
+    </style>
+
+
+    <style name="HomeTopTitleLabelStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+        <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
+        <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
+        <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
+    </style>
+
+
+    <style name="HomeTopTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+
+    <style name="HomeTopTextStyle.Header">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+    <style name="HomeTopTextStyle.Footer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">@dimen/constraint_default_margin_4dp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+
+    <style name="HomeTopImageStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+
+    </style>
+
+    <style name="LabelStyle.FindCargo">
+        <item name="android:textColor">@color/colorGray</item>
+        <item name="android:textSize">@dimen/search_label_text_size</item>
+    </style>
+
+    <style name="CargoNumber">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+    </style>
+
+
+    <style name="Form">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+
+    </style>
+
+
+    <style name="Form.Label">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_24dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/colorGray</item>
+        <item name="android:textSize">@dimen/form_label_text_size</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+    <style name="Form.SelectTitle" parent="Form.Label">
+        <item name="android:layout_marginTop">0dp</item>
+    </style>
+
+
+    <style name="Form.Error">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:paddingStart">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingLeft">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingRight">@dimen/constraint_default_margin_12dp</item>
+        <item name="android:paddingEnd">@dimen/constraint_default_margin_12dp</item>
+    </style>
+
+
+    <style name="Form.TextBox">
+        <!--<item name="android:background">@drawable/outline_bg</item>-->
+    </style>
+
+    <style name="Form.Multiline" parent="Form.TextBox">
+        <item name="android:minLines">4</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+
+    <style name="Form.SingleSelect">
+        <item name="android:background">@drawable/spinner_bg</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+    <style name="Form.MultiSelect" parent="Form.SingleSelect" />
+
+    <style name="Form.Check">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="Form.Button">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginLeft">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginEnd">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginRight">@dimen/constraint_default_margin_8dp</item>
+        <item name="android:layout_marginTop">@dimen/constraint_default_margin_8dp</item>
+    </style>
+
+    <style name="Form.SaveButton" parent="Form.Button">
+        <item name="android:background">@drawable/btn_bg_save</item>
+        <item name="android:text">@string/save</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="Form.ResetButton" parent="Form.Button">
+        <item name="android:background">@drawable/btn_bg_reset</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:text">@string/reset</item>
+    </style>
+
+
+    <style name="DefaultChipSuggestionTextView">
+        <item name="chipHorizontalSpacing">6dp</item>
+        <item name="chipBackground">@color/chip_material_background</item>
+        <item name="chipTextSize">14sp</item>
+        <item name="chipHeight">32dp</item>
+        <item name="chipVerticalSpacing">4dp</item>
+    </style>
+
+    <style name="InputLayoutStyle" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+
+    <style name="NavHeaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:text">@string/ptml</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/nav_header_padding</item>
+    </style>
+
+
+    <style name="Damages">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/damages_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_margin</item>
+    </style>
+
+
+    <style name="Damages.Image" />
+
+    <style name="Damages.DeleteImage" parent="Damages.Image">
+        <item name="android:layout_width">@dimen/damages_delete_icon_size</item>
+        <item name="android:layout_height">@dimen/damages_delete_icon_size</item>
+        <item name="android:padding">@dimen/damages_delete_icon_padding</item>
+        <item name="srcCompat">@drawable/ic_delete_black</item>
+        <item name="android:background">@null</item>
+        <item name="android:contentDescription">@string/cell_cargo_dsc_remove_damage_button</item>
+    </style>
+
+    <style name="Damages.Button">
+        <item name="android:layout_marginBottom">@dimen/damages_margin</item>
+        <item name="android:layout_marginStart">@dimen/damages_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_margin</item>
+        <item name="android:background">@drawable/btn_bg</item>
+        <item name="android:padding">@dimen/damages_button_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorDamageButtonText</item>
+        <item name="android:layout_width">@dimen/damages_button_width</item>
+        <item name="android:layout_height">@dimen/damages_button_height</item>
+    </style>
+
+    <style name="Damages.SelectButton" parent="Damages.Button">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_marginBottom">@dimen/damages_margin</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="Damages.AddButton" parent="Damages.Button">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_marginStart">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_button_margin</item>
+        <item name="srcCompat">@drawable/ic_add</item>
+    </style>
+
+    <style name="Damages.SubtractButton" parent="Damages.Button">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_marginStart">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginEnd">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginLeft">@dimen/damages_button_margin</item>
+        <item name="android:layout_marginRight">@dimen/damages_button_margin</item>
+        <item name="srcCompat">@drawable/ic_remove</item>
+    </style>
+
+    <style name="Damages.RemarkTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxStrokeColor">@color/colorBlack</item>
+        <item name="hintTextColor">@color/colorBlack</item>
+        <item name="hintEnabled">true</item>
+    </style>
+
+    <style name="Damages.RemarkEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:hint">@string/enter_damage_remark_hint</item>
+        <item name="android:inputType">text|textCapSentences</item>
+    </style>
+
+    <style name="Damages.Title">
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Damages.ListTitle" parent="Damages.Title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+
+    </style>
+
+
+    <style name="Damages.SelectListTitle" parent="Damages.ListTitle">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+
+    <style name="Damages.NumberLabel">
+        <item name="android:text">@string/cell_cargo_damages_txt_number</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/damages_margin</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+    <style name="Damages.Number">
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="Damages.GoBack" parent="Damages.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/back</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/btn_bg_reset</item>
+
+    </style>
+
+    <style name="Damages.GoBackOther" parent="Damages.GoBack">
+        <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
+    </style>
+
+
+    <style name="Damages.Add" parent="Damages.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/btn_bg_accent</item>
+    </style>
+
 </resources>

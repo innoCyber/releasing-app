@@ -1,0 +1,31 @@
+{
+  "cargo_code": "LKLKL",
+  "cargo_type": 3,
+  "damages": [],
+  "imei": "861327032935756",
+  "operation_step": 32,
+  "operator": "Wong Kane",
+  "selections": [],
+  "terminal": 1,
+  "values": [
+    {
+      "value": "4545",
+      "id": 1
+    },
+    {
+      "value": "true",
+      "id": 2
+    },
+    {
+      "value": "Pascal",
+      "id": 4
+    },
+    {
+      "value": "Good ",
+      "id": 5
+    }
+  ],
+  "options": [
+
+  ]
+}

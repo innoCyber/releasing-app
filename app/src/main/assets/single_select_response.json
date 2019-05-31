@@ -1,0 +1,118 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 11,
+      "order_id": 1,
+      "type": "label",
+      "title": "Description",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 1,
+      "order_id": 2,
+      "type": "textbox",
+      "title": "Surcharge",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "numeric"
+    },
+    {
+      "id": 2,
+      "order_id": 3,
+      "type": "checkbox",
+      "title": "No start",
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 25,
+      "order_id": 4,
+      "type": "textbox",
+      "title": "Badge id",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 6,
+      "order_id": 5,
+      "type": "multi_line_textbox",
+      "title": "Remarks",
+      "is_required": false,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 7,
+      "order_id": 6,
+      "type": "printer",
+      "title": "Print Barcode",
+      "is_required": false,
+      "is_editable": false,
+      "options": [],
+      "data_validation": "printer"
+    },
+    {
+      "id": 40,
+      "order_id": 7,
+      "type": "single_select",
+      "title": "Discharge Mode",
+      "is_required": false,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 1,
+          "name": "Self Propelled"
+        },
+        {
+          "id": 2,
+          "name": "Towed"
+        },
+        {
+          "id": 3,
+          "name": "Forklifted"
+        }
+      ],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 41,
+      "order_id": 8,
+      "type": "single_select",
+      "title": "Pilferage",
+      "is_required": false,
+      "is_editable": false,
+      "options": [
+        {
+          "id": 1,
+          "name": "Yes"
+        },
+        {
+          "id": 2,
+          "name": "No"
+        }
+      ],
+      "data_validation": "alphanumeric"
+    },
+    {
+      "id": 38,
+      "order_id": 8,
+      "type": "multi_select",
+      "title": "Remarks",
+      "is_required": true,
+      "is_editable": true,
+      "options": [],
+      "data_validation": "alphanumeric"
+    }
+  ]
+}

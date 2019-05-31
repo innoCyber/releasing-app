@@ -39,7 +39,7 @@
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_cargo_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
-            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/tv_select_cargo">
@@ -61,7 +61,7 @@
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_operation_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
-            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/tv_select_operation">
@@ -83,7 +83,7 @@
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_terminal_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
-            app:layout_constraintBottom_toTopOf="@id/btn_configure_layout"
+            app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/tv_select_terminal">

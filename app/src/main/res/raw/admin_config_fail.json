@@ -1,0 +1,40 @@
+{
+  "operation_step": [
+    {
+      "success": false,
+      "description:": "The input data is not valid."
+    }
+  ],
+  "cargo_type": [
+    {
+      "Value": "Vehicle",
+      "Id": "1"
+    },
+    {
+      "Value": "Container",
+      "Id": "2"
+    },
+    {
+      "Value": "General",
+      "Id": "3"
+    }
+  ],
+  "terminal": [
+    {
+      "Value": "Satellite Car Park",
+      "Id": "1"
+    },
+    {
+      "Value": "Terminal 2",
+      "Id": "2"
+    },
+    {
+      "Value": "Main Terminal",
+      "Id": "3"
+    },
+    {
+      "Value": "Depop",
+      "Id": "4"
+    }
+  ]
+}

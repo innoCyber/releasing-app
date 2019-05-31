@@ -1,5 +1,6 @@
 package ptml.releasing.device_configuration.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -13,14 +14,16 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DeviceConfigViewModel @Inject constructor(
-    var repository: Repository,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel() {
+        repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers
+) : BaseViewModel(repository, appCoroutineDispatchers) {
 
 
     private val imeiLiveData = MutableLiveData<String>()
 
+
+
     val baseLiveData = MutableLiveData<BaseResponse>()
+
 
     val networkState = MutableLiveData<NetworkState>()
 
@@ -32,8 +35,11 @@ class DeviceConfigViewModel @Inject constructor(
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
-                val response = repository.verifyDeviceId(imei).await()
+                val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
+                    if(response.isSuccess){
+                        repository.setFirst(false)
+                    }
                     baseLiveData.postValue(response)
                     networkState.postValue(NetworkState.LOADED)
                 }
@@ -45,5 +51,14 @@ class DeviceConfigViewModel @Inject constructor(
         }
 
     }
+
+    fun checkIfFirst():Boolean{
+        return repository.isFirstAsync()
+    }
+
+
+
+
+
 
 }
