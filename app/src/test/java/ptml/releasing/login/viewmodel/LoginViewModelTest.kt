@@ -39,11 +39,11 @@ class LoginViewModelTest : BaseTest() {
         } returns getLoginSuccess().toDeferredAsync() as Deferred<BaseResponse>
 
 
-        assertNull(viewModel.response.value, "DeviceConfigResponse should be null before a successful request")
+        assertNull(viewModel.loadNext.value, "DeviceConfigResponse should be null before a successful request")
 
         viewModel.login(user.username, user.password)
 
-        assertEquals(getLoginSuccess(), viewModel.response.value, "Login is successful")
+        assertEquals(Unit, viewModel.loadNext.value, "Login is successful")
     }
 
     @Test
@@ -61,12 +61,13 @@ class LoginViewModelTest : BaseTest() {
             repository.loginAsync(any())
         } returns getLoginFail().toDeferredAsync() as Deferred<BaseResponse>
 
-        assertNull(viewModel.response.value, "DeviceConfigResponse should be null before a successful request")
+        assertNull(viewModel.errorMessage.value, "Message should be null before a successful request")
+
 
         viewModel.login(user.username, user.password)
 
 
-        assertEquals(getLoginFail(), viewModel.response.value)
+        assertEquals(getLoginFail().message, viewModel.errorMessage.value)
 
     }
 
@@ -85,7 +86,7 @@ class LoginViewModelTest : BaseTest() {
 
         assertEquals(R.string.username_empty, viewModel.usernameValidation.value)
         assertEquals(R.string.password_empty, viewModel.passwordValidation.value)
-        assertNull(viewModel.response.value, "DeviceConfigResponse should be null")
+        assertNull(viewModel.loadNext.value, "DeviceConfigResponse should be null")
 
     }
 

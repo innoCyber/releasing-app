@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -84,8 +85,6 @@ class CargoInfoActivity :
                     )
                 }
             }
-
-
         }
 
 
@@ -325,7 +324,8 @@ class CargoInfoActivity :
         )
     }
 
-    private fun createForm(wrapper: FormDataWrapper?) {
+    @VisibleForTesting
+    public fun createForm(wrapper: FormDataWrapper?) {
         var findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)

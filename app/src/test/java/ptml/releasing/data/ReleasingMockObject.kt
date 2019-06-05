@@ -37,20 +37,20 @@ fun getAdminConfigurationSuccess() =
 
 fun getAdminConfigurationFail() = AdminConfigResponse(null, null, null)
 
-fun isConfiguredSuccess(): Deferred<Boolean> {
-    return GlobalScope.async {
-        true
-    }
+fun isConfiguredSuccess(): Boolean {
+    return true
 }
 
-fun isConfiguredFail(): Deferred<Boolean> {
-    return GlobalScope.async {
-        false
-    }
+fun isConfiguredFail():Boolean {
+    return false
 }
 
 fun getSavedConfig(): Configuration {
     return Configuration(mockTerminal(), mockOperationStep(), mockCargoType(), true)
+}
+
+fun mockConfiguration(): ConfigureDeviceResponse {
+    return ConfigureDeviceResponse(mutableListOf())
 }
 
 fun mockTerminal(): Terminal {
@@ -94,4 +94,8 @@ private fun getDamage(i: Int): Damage {
         Damage("$DAMAGE_DESCRIPTION_PREFIX$i", "${DAMAGE_POSITION_MULTIPLIER * i}", DAMAGE_CONTAINER_MULTIPLIER * i)
     damage.id = i
     return damage
+}
+
+fun provideImei(): String {
+    return ""
 }

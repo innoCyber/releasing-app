@@ -9,6 +9,7 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.base.BaseTest
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.data.*
 import java.io.IOException
 import kotlin.test.assertEquals
@@ -91,7 +92,7 @@ class ConfigViewModelTest : BaseTest() {
 
         coEvery{
             repository.getSavedConfigAsync()
-        }returns getSavedConfig().toDeferredAsync() as Deferred<Configuration>
+        }returns getSavedConfig()
 
         viewModel.getConfig("")
 
@@ -124,12 +125,20 @@ class ConfigViewModelTest : BaseTest() {
             repository.setConfigured(any())
         }returns Unit
 
+        coEvery {
+            repository.setConfigurationDeviceAsync(
+                mockCargoType().id,
+                mockOperationStep().id,
+                mockTerminal().id,
+                provideImei())
+        }returns mockConfiguration().toDeferredAsync() as Deferred<ConfigureDeviceResponse>
+
         viewModel.setConfig(
             mockTerminal(),
             mockOperationStep(),
             mockCargoType(),
             true,
-            (application as ReleasingApplication).provideImei()
+            provideImei()
         )
 
         assertEquals(true, viewModel.savedSuccess.value,
@@ -156,7 +165,7 @@ class ConfigViewModelTest : BaseTest() {
             mockOperationStep(),
             mockCargoType(),
             true,
-            (application as ReleasingApplication).provideImei()
+            provideImei()
         )
 
         assertEquals(
