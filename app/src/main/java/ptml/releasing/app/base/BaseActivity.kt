@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
@@ -466,8 +467,8 @@ abstract class BaseActivity<T, D> :
 
 
     fun initErrorDrawable(imageView: ImageView) {
-        val errorDrawable = ContextCompat.getDrawable(this, R.drawable.ic_error)
-        val mutatedDrawable = errorDrawable?.mutate()
+        val drawable = VectorDrawableCompat.create(resources, R.drawable.ic_error, null)
+        val mutatedDrawable = drawable?.mutate()
         DrawableCompat.setTint(mutatedDrawable!!, ContextCompat.getColor(this, R.color.colorRed))
         imageView.setImageDrawable(mutatedDrawable)
     }

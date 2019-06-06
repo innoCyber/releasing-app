@@ -43,5 +43,6 @@ object Constants{
 
     const val ALPHANUMERIC = "alphanumeric"
     const val NUMERIC = "numeric"
+    const val SHIP_SIDE = "Ship Side"
 
 }

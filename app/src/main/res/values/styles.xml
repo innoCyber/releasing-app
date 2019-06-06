@@ -81,7 +81,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/delete_btn_bg</item>
-        <item name="tv_DrawableStartCompat">@drawable/ic_delete</item>
+        <item name="drawableStartCompat">@drawable/ic_delete</item>
     </style>
 
 
@@ -238,8 +238,8 @@
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
         <item name="android:gravity">center</item>
-        <item name="autoSizeTextType">uniform</item>
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+        <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
         <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
         <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
@@ -433,8 +433,14 @@
     <style name="Damages.SelectButton" parent="Damages.Button">
         <item name="android:layout_marginTop">@dimen/damages_margin</item>
         <item name="android:layout_marginBottom">@dimen/damages_margin</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="autoSizeMinTextSize">@dimen/home_top_label_min_size</item>
+        <item name="autoSizeMaxTextSize">@dimen/home_top_label_max_size</item>
+        <item name="autoSizeStepGranularity">@dimen/home_top_label_step_size</item>
     </style>
 
 
@@ -527,6 +533,12 @@
         <item name="android:padding">2dp</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@drawable/btn_bg_accent</item>
+    </style>
+
+
+    <style name="NavItemTextAppearance">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 </resources>

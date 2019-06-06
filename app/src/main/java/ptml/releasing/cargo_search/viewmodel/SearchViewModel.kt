@@ -9,7 +9,9 @@ import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import timber.log.Timber
 import java.lang.Exception
@@ -28,7 +30,7 @@ class SearchViewModel @Inject constructor(
     private val _cargoNumberValidation = MutableLiveData<Int>()
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
-    private val _errorMessage = MutableLiveData<String>()
+    private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     protected val _openDeviceConfiguration = MutableLiveData<Unit>()
 
     val networkState: LiveData<NetworkState> = _networkState
@@ -38,7 +40,7 @@ class SearchViewModel @Inject constructor(
     val verify: LiveData<Unit> = _verify
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
-    val errorMessage: LiveData<String> = _errorMessage
+    val errorMessage: LiveData<CargoNotFoundResponse> = _errorMessage
     val openDeviceConfiguration: LiveData<Unit> = _openDeviceConfiguration
 
 
@@ -64,7 +66,7 @@ class SearchViewModel @Inject constructor(
             try {
                 //check if there is an operator
                 val operator = repository.getOperatorName()
-                if(operator == null){
+                if (operator == null) {
                     _noOperator.postValue(Unit)
                     _networkState.postValue(NetworkState.LOADED)
                     return@launch
@@ -80,18 +82,16 @@ class SearchViewModel @Inject constructor(
                     cargoNumber.trim()
                 )?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (findCargoResponse?.isSuccess ==  true) {
+                    if (findCargoResponse?.isSuccess == true) {
                         Timber.v("findCargoResponse: %s", findCargoResponse)
                         _findCargoResponse.postValue(findCargoResponse)
                     } else {
                         Timber.e("Find Cargo failed with message =%s", findCargoResponse?.message)
-                        if(findCargoResponse?.message?.isEmpty() == false){
-                            _findCargoHolder.value = findCargoResponse
-                            _errorMessage.postValue(findCargoResponse.message)
-                        }else{
-                            val e = Exception("Response is null")
-                            _networkState.postValue(NetworkState.error(e))
-                        }
+
+                                _findCargoHolder.value = findCargoResponse
+                        val cargoNotFoundResponse = CargoNotFoundResponse(findCargoResponse?.message,
+                            Constants.SHIP_SIDE.toLowerCase() == config?.operationStep?.value?.toLowerCase())
+                        _errorMessage.postValue(cargoNotFoundResponse)
                     }
                     _networkState.postValue(NetworkState.LOADED)
                 }
@@ -102,8 +102,8 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun continueToUploadCargo(){
-        val findCargoResponse  = _findCargoResponse.value
+    fun continueToUploadCargo() {
+        val findCargoResponse = _findCargoResponse.value
         findCargoResponse?.cargoId = 0
         _findCargoResponse.postValue(findCargoResponse)
     }
@@ -117,8 +117,6 @@ class SearchViewModel @Inject constructor(
     fun openDeviceConfiguration() {
         _openDeviceConfiguration.postValue(Unit)
     }
-
-
 
 
 }

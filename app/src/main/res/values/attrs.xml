@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-    <declare-styleable name="SupportVectorDrawableTextView">
-        <attr name="tv_DrawableStartCompat" format="reference"/>
-        <attr name="tv_DrawableEndCompat" format="reference"/>
-        <attr name="tv_DrawableTopCompat" format="reference"/>
-        <attr name="tv_DrawableBottomCompat" format="reference"/>
-    </declare-styleable>
-
-
     <declare-styleable name="MaterialRippleLayout">
         <attr name="mrl_rippleColor" format="color" localization="suggested"/>
         <attr name="mrl_rippleDimension" format="dimension" localization="suggested"/>

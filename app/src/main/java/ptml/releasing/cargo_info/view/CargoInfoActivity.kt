@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -265,7 +266,8 @@ class CargoInfoActivity :
         })
 
         viewModel.submitSuccess.observe(this, Observer {
-            showSuccessDialog()
+            notifyUser(getString(R.string.form_submit_success_msg))
+            finish()
         })
 
         viewModel.errorMessage.observe(this, Observer {
@@ -356,23 +358,26 @@ class CargoInfoActivity :
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_car
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_car,
+                    null
                 )
             )
         } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_cargo
+             VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_cargo,
+                 null
                 )
             )
         } else {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_container
+             VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_container,
+                 null
                 )
             )
         }

@@ -23,6 +23,7 @@ class DamageAdapter(val listener: DamageListener) : RecyclerView.Adapter<DamageV
 class DamageViewHolder(val binding: ItemDamageBinding, val listener: DamageListener) : RecyclerView.ViewHolder(binding.root) {
     fun performBind(item: Damage?) {
         binding.tvItem.text = item?.description
+        binding.tvItem.isSelected = true
         binding.tvItemLayout.setOnClickListener {
             listener.onItemClick(item)
         }

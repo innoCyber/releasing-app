@@ -9,9 +9,9 @@ import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.navigation.NavigationView
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -25,6 +25,7 @@ import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
@@ -35,19 +36,12 @@ import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import java.util.*
 
+
 @RuntimePermissions
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     companion object {
         const val RC = 4343
-    }
-
-    private val dialogListener = object : InfoDialog.NeutralListener {
-        override fun onNeutralClick() {
-            //2. Clicking on this option sets the cargo_id = 0
-            //3. This then follows the same process as all other cargo
-            viewModel.continueToUploadCargo()
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +108,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.findCargoResponse.observe(this, Observer {
             //pass it on to the cargo info activity
-            Timber.e("GOtten response: %s", it)
+            Timber.e("Gotten response: %s", it)
             animateBadge(it)
         })
 
@@ -184,6 +178,13 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
 
+        if (!resources.getBoolean(R.bool.isLarge)) {
+            val width = (resources.displayMetrics.widthPixels * 0.9).toInt()
+            val params = binding.navView.layoutParams
+            params.width = width
+            binding.navView.layoutParams = params
+        }
+
     }
 
 
@@ -238,30 +239,32 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         hideLoading(binding.appBarHome.content.includeProgress.root)
     }
 
-    private fun showSearchErrorDialog(message: String?) {
+    private fun showSearchErrorDialog(response: CargoNotFoundResponse?) {
 
-        InfoConfirmDialog.showDialog(
-            this,
-            getString(R.string.error),
-            message,
-            getString(R.string.continue_uploading_text),
-            object : InfoConfirmDialog.InfoListener {
-                override fun onConfirm() {
-                    viewModel.continueToUploadCargo()
-                }
-            })
+        if (response?.shipSide == true) {
+            InfoConfirmDialog.showDialog(
+                this,
+                getString(R.string.error),
+                if(response.message?.isNotEmpty() == true) response.message else  getString(R.string.error_occurred),
+                getString(R.string.continue_uploading_text),
+                object : InfoConfirmDialog.InfoListener {
+                    override fun onConfirm() {
+                        viewModel.continueToUploadCargo()
+                    }
+                })
 
-/*        val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.error),
-            message = message,
-            buttonText = getString(android.R.string.cancel),
-            hasNeutralButton = true,
-            neutralButtonText = getString(R.string.continue_uploading_text),
-            neutralListener = dialogListener
-        )
+        } else {
 
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)*/
-        Timber.e("Error occurred during search: msg: %s", message)
+            val dialogFragment = InfoDialog.newInstance(
+                title = getString(R.string.error),
+                message = if(response?.message?.isNotEmpty() == true) response.message else  getString(R.string.error_occurred),
+                buttonText = getString(R.string.dismiss)
+            )
+
+            dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+        }
+
+        Timber.e("Error occurred during search: msg: %s", response)
     }
 
 
@@ -346,23 +349,26 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_car
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_car,
+                    null
                 )
             )
         } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_cargo
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_cargo,
+                    null
                 )
             )
         } else {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_container
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_container,
+                    null
                 )
             )
         }

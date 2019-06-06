@@ -16,6 +16,7 @@ import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import ptml.releasing.R
 import ptml.releasing.app.form.adapter.SelectModel
 import ptml.releasing.app.views.flex.FlexDirection
@@ -202,7 +203,8 @@ internal class MultiSpinnerAdapter(context: Context, text: String?) :
             view = inflater.inflate(R.layout.spinner_single, parent, false)
         }
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
-        val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
+        val drawable = VectorDrawableCompat.create(
+            context.resources, R.drawable.ic_arrow_drop_down, null)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
             textView, null, null, drawable, null
         )
