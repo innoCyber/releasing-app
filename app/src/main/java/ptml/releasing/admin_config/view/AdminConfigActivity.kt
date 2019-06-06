@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.MenuItem
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
@@ -13,6 +15,7 @@ import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.download_damages.view.DamageActivity
@@ -29,7 +32,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         super.onCreate(savedInstanceState)
         viewModel.isConfigured.observe(this, Observer {
             binding.tvConfigMessageContainer.visibility =
-                    if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
         })
 
         viewModel.getSavedConfig()
@@ -99,6 +102,11 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     }
 
+    override fun onBackPressed() {
+        startNewActivity(SearchActivity::class.java, true)
+        ActivityCompat.finishAffinity(this)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC && resultCode == Activity.RESULT_OK) {
             finish()
@@ -124,29 +132,30 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
              })*/
 
         val dialogFragment = InfoDialog.newInstance(
-                title = getString(R.string.config_error),
-                message = getString(R.string.config_error_message),
-                buttonText = getString(android.R.string.ok),
-                listener = object : InfoDialog.InfoListener {
-                    override fun onConfirm() {
+            title = getString(R.string.config_error),
+            message = getString(R.string.config_error_message),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
 //                    viewModel.openConfiguration()
-                    }
-                })
+                }
+            })
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
-    private fun showServerUrlDialog(url:String?){
-        val serverUrl = if(TextUtils.isEmpty(url)){
+    private fun showServerUrlDialog(url: String?) {
+        val serverUrl = if (TextUtils.isEmpty(url)) {
             BuildConfig.BASE_URL
-        }else{
+        } else {
             url
         }
-        val dialog = EditTextDialog.newInstance(serverUrl, object : EditTextDialog.EditTextDialogListener{
-            override fun onSave(value: String) {
-                viewModel.saveServerUrl(value)
-            }
-        })
+        val dialog =
+            EditTextDialog.newInstance(serverUrl, object : EditTextDialog.EditTextDialogListener {
+                override fun onSave(value: String) {
+                    viewModel.saveServerUrl(value)
+                }
+            })
         dialog.isCancelable = false
         dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
