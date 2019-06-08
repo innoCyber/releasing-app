@@ -37,9 +37,7 @@ open class ReleasingApplication : DaggerApplication() {
         super.onCreate()
         initLogger()
 //        initializeLeakCanary()
-        if (!BuildConfig.DEBUG) {
-            initFabric()
-        }
+        initFabric()
     }
 
     private fun initFabric() {
@@ -69,22 +67,23 @@ open class ReleasingApplication : DaggerApplication() {
     fun provideImei(): String {
 
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-     /*   return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            telephonyManager.imei
-        } else {
-            telephonyManager.deviceId
-        }*/
-         return when (BuildConfig.DEBUG) {
-             true -> "861327032935756"
-             else -> {
-                 val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                     telephonyManager.imei
-                 } else {
-                     telephonyManager.deviceId
-                 }
-             }
-         }
+        /*   return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+               telephonyManager.imei
+           } else {
+               telephonyManager.deviceId
+           }*/
+        return when (BuildConfig.DEBUG) {
+            true -> "861327032935756"
+            else -> {
+                val telephonyManager =
+                    getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    telephonyManager.imei
+                } else {
+                    telephonyManager.deviceId
+                }
+            }
+        }
     }
 
 }

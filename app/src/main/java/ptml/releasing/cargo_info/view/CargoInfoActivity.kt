@@ -97,12 +97,7 @@ class CargoInfoActivity :
 
         override fun onClickSave() {
             //create a new form validator
-            val formValidator = FormValidator(formBuilder)
-            formValidator.listener = validatorListener
-            if (formValidator.validate()) {
-                Timber.d("Validated")
-                submitFormWithPermissionCheck(formValidator)
-            }
+            validateSaveSubmit()
         }
 
         override fun onClickReset() {
@@ -111,6 +106,15 @@ class CargoInfoActivity :
 
         override fun onEndLoad() {
 
+        }
+    }
+
+    private fun validateSaveSubmit() {
+        val formValidator = FormValidator(formBuilder)
+        formValidator.listener = validatorListener
+        if (formValidator.validate()) {
+            Timber.d("Validated")
+            submitFormWithPermissionCheck(formValidator)
         }
     }
 
@@ -267,12 +271,17 @@ class CargoInfoActivity :
 
         viewModel.submitSuccess.observe(this, Observer {
             notifyUser(getString(R.string.form_submit_success_msg))
+            setResult(Activity.RESULT_OK)
             finish()
         })
 
         viewModel.errorMessage.observe(this, Observer {
             showErrorDialog(it)
         })
+
+        binding.includeError.btnReload.setOnClickListener {
+            validateSaveSubmit()
+        }
     }
 
 

@@ -17,7 +17,6 @@ import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
-import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
@@ -41,7 +40,8 @@ import java.util.*
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     companion object {
-        const val RC = 4343
+        const val RC_CONFIG = 434
+        const val RC_CARGO_INFO = 343
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,7 +123,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.openDeviceConfiguration.observe(this, Observer {
             val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, AdminConfigActivity.RC)
+            startActivityForResult(intent, RC_CONFIG)
         })
 
 
@@ -174,6 +174,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
+
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(navigationListener)
@@ -186,7 +187,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         }
 
     }
-
 
     private fun animateBadge(it: FindCargoResponse?) {
 
@@ -234,7 +234,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             CargoInfoActivity.QUERY,
             binding.appBarHome.content.includeSearch.editInput.text.toString()
         )
-        startNewActivity(CargoInfoActivity::class.java, data = bundle)
+        val intent = Intent(this@SearchActivity, CargoInfoActivity::class.java)
+        intent.putExtra(Constants.EXTRAS, bundle)
+        startActivityForResult(intent, RC_CARGO_INFO)
         hideLoading(binding.appBarHome.content.includeError.root)
         hideLoading(binding.appBarHome.content.includeProgress.root)
     }
@@ -245,7 +247,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             InfoConfirmDialog.showDialog(
                 this,
                 getString(R.string.error),
-                if(response.message?.isNotEmpty() == true) response.message else  getString(R.string.error_occurred),
+                if (response.message?.isNotEmpty() == true) response.message else getString(R.string.error_occurred),
                 getString(R.string.continue_uploading_text),
                 object : InfoConfirmDialog.InfoListener {
                     override fun onConfirm() {
@@ -257,7 +259,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
             val dialogFragment = InfoDialog.newInstance(
                 title = getString(R.string.error),
-                message = if(response?.message?.isNotEmpty() == true) response.message else  getString(R.string.error_occurred),
+                message = if (response?.message?.isNotEmpty() == true) response.message else getString(
+                    R.string.error_occurred
+                ),
                 buttonText = getString(R.string.dismiss)
             )
 
@@ -331,13 +335,16 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC && resultCode == RESULT_OK) {
+        if (requestCode == RC_CONFIG && resultCode == RESULT_OK) {
             binding.appBarHome.content.includeSearch.editInput.setText(
                 data?.getStringExtra(
                     Constants.BAR_CODE
                 )
             )
+        } else if(requestCode == RC_CARGO_INFO && resultCode == RESULT_OK){
+            binding.appBarHome.content.includeSearch.editInput.setText("")
+        }else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

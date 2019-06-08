@@ -25,7 +25,7 @@ import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
     companion object {
-        const val RC = 111
+        const val RC_CONFIG = 11
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         viewModel.openConfig.observe(this, Observer {
             val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, RC)
+            startActivityForResult(intent, RC_CONFIG)
         })
 
         viewModel.serverUrl.observe(this, Observer {
@@ -69,6 +69,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         viewModel.openSearch.observe(this, Observer {
             onBackPressed()
         })
+
 
 
         showUpEnabled(true)
@@ -103,12 +104,23 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     }
 
     override fun onBackPressed() {
-        startNewActivity(SearchActivity::class.java, true)
+        startNewActivity(SearchActivity::class.java)
         ActivityCompat.finishAffinity(this)
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RC_CONFIG && resultCode == Activity.RESULT_OK) {
             finish()
         } else {
             super.onActivityResult(requestCode, resultCode, data)

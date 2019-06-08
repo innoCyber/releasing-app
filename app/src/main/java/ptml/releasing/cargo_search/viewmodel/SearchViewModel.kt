@@ -11,6 +11,7 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import timber.log.Timber
@@ -22,16 +23,16 @@ class SearchViewModel @Inject constructor(
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(repository, appCoroutineDispatchers) {
 
-    private val _openAdmin = MutableLiveData<Unit>()
-    private val _verify = MutableLiveData<Unit>()
-    private val _scan = MutableLiveData<Unit>()
-    private val _noOperator = MutableLiveData<Unit>()
+    private val _openAdmin = SingleLiveEvent<Unit>()
+    private val _verify = SingleLiveEvent<Unit>()
+    private val _scan = SingleLiveEvent<Unit>()
+    private val _noOperator = SingleLiveEvent<Unit>()
     private val _networkState = MutableLiveData<NetworkState>()
     private val _cargoNumberValidation = MutableLiveData<Int>()
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
     private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
-    protected val _openDeviceConfiguration = MutableLiveData<Unit>()
+    protected val _openDeviceConfiguration = SingleLiveEvent<Unit>()
 
     val networkState: LiveData<NetworkState> = _networkState
     val openAdMin: LiveData<Unit> = _openAdmin
@@ -45,30 +46,33 @@ class SearchViewModel @Inject constructor(
 
 
     fun openAdmin() {
-        _openAdmin.postValue(Unit)
+        _openAdmin.value = Unit
+
     }
 
     fun verify() {
-        _verify.postValue(Unit)
+        _verify.value = Unit
     }
 
     fun findCargo(cargoNumber: String?, imei: String) {
         //validate
         if (cargoNumber.isNullOrEmpty()) {
-            _cargoNumberValidation.postValue(R.string.cargo_number_invalid_message)
+            _cargoNumberValidation.value = R.string.cargo_number_invalid_message
             return
         }
 
         if (_networkState.value == NetworkState.LOADING) return
-        _networkState.postValue(NetworkState.LOADING)
+        _networkState.value = NetworkState.LOADING
 
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
                 //check if there is an operator
                 val operator = repository.getOperatorName()
                 if (operator == null) {
-                    _noOperator.postValue(Unit)
-                    _networkState.postValue(NetworkState.LOADED)
+                    withContext(appCoroutineDispatchers.main) {
+                        _noOperator.value = Unit
+                        _networkState.value = NetworkState.LOADED
+                    }
                     return@launch
                 }
 
@@ -84,20 +88,24 @@ class SearchViewModel @Inject constructor(
                 withContext(appCoroutineDispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
                         Timber.v("findCargoResponse: %s", findCargoResponse)
-                        _findCargoResponse.postValue(findCargoResponse)
+                        _findCargoResponse.value = findCargoResponse
                     } else {
                         Timber.e("Find Cargo failed with message =%s", findCargoResponse?.message)
 
-                                _findCargoHolder.value = findCargoResponse
-                        val cargoNotFoundResponse = CargoNotFoundResponse(findCargoResponse?.message,
-                            Constants.SHIP_SIDE.toLowerCase() == config?.operationStep?.value?.toLowerCase())
-                        _errorMessage.postValue(cargoNotFoundResponse)
+                        _findCargoHolder.value = findCargoResponse
+                        val cargoNotFoundResponse = CargoNotFoundResponse(
+                            findCargoResponse?.message,
+                            Constants.SHIP_SIDE.toLowerCase() == config?.operationStep?.value?.toLowerCase()
+                        )
+                        _errorMessage.value = cargoNotFoundResponse
                     }
-                    _networkState.postValue(NetworkState.LOADED)
+                    _networkState.value = NetworkState.LOADED
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                _networkState.postValue(NetworkState.error(e))
+                withContext(appCoroutineDispatchers.main) {
+                    _networkState.value = NetworkState.error(e)
+                }
             }
         }
     }
@@ -105,17 +113,17 @@ class SearchViewModel @Inject constructor(
     fun continueToUploadCargo() {
         val findCargoResponse = _findCargoResponse.value
         findCargoResponse?.cargoId = 0
-        _findCargoResponse.postValue(findCargoResponse)
+        _findCargoResponse.value = findCargoResponse
     }
 
 
     fun openBarcodeScan() {
-        _scan.postValue(Unit)
+        _scan.value = Unit
     }
 
 
     fun openDeviceConfiguration() {
-        _openDeviceConfiguration.postValue(Unit)
+        _openDeviceConfiguration.value = Unit
     }
 
 

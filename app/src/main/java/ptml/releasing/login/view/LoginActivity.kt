@@ -1,5 +1,6 @@
 package ptml.releasing.login.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,12 +13,11 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
+import ptml.releasing.login.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,11 +26,15 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         initErrorDrawable(binding.includeError.imgError)
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
-                .get(LoginViewModel::class.java)
+            .get(LoginViewModel::class.java)
 
         viewModel.networkState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.logining_in)
+                showLoading(
+                    binding.includeProgress.root,
+                    binding.includeProgress.tvMessage,
+                    R.string.logining_in
+                )
             } else {
                 hideLoading(binding.includeProgress.root)
             }
@@ -114,7 +118,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
     override fun getViewModelClass() = LoginViewModel::class.java
 
-    //TODO: Change to view model if you are using data binding in xml
     override fun getBindingVariable() = BR._all
 
     override fun getLayoutResourceId() = R.layout.activity_login
