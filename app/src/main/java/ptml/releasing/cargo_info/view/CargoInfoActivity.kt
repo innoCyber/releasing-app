@@ -279,6 +279,12 @@ class CargoInfoActivity :
             showErrorDialog(it)
         })
 
+        viewModel.noOperator.observe(this, Observer {
+            //show dialog
+            showOperatorErrorDialog()
+        })
+
+
         binding.includeError.btnReload.setOnClickListener {
             validateSaveSubmit()
         }
@@ -286,6 +292,21 @@ class CargoInfoActivity :
 
 
 
+    private fun showOperatorErrorDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.error),
+            message = getString(R.string.no_operator_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.openOperatorDialog()
+                }
+            },
+            hasNeutralButton = true,
+            neutralButtonText = getString(android.R.string.cancel)
+        )
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
 
     private fun showSuccessDialog() {
         val dialogFragment = InfoDialog.newInstance(

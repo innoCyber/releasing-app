@@ -11,6 +11,7 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormSubmission
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
@@ -32,6 +33,9 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
     val goBack: LiveData<Boolean> = _goBack
     val formConfig: LiveData<FormDataWrapper> = _formConfig
 
+
+    private val _noOperator = SingleLiveEvent<Unit>()
+    val noOperator: LiveData<Unit> = _noOperator
 
     private val _printerSettings = MutableLiveData<Settings>()
     val printerSettings: LiveData<Settings> = _printerSettings
@@ -78,10 +82,18 @@ class CargoInfoViewModel @Inject constructor(repository: Repository, appCoroutin
         _networkState.postValue(NetworkState.LOADING)
         CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
+
+                val operator = repository.getOperatorName()
+                if (operator == null) {
+                    withContext(appCoroutineDispatchers.main) {
+                        _noOperator.value = Unit
+                        _networkState.value = NetworkState.LOADED
+                    }
+                    return@launch
+                }
+
                 formSubmission.submit()
                 val configuration = repository.getSavedConfigAsync()
-                val operator = repository.getOperatorName()
-
                 val formSubmissionRequest = FormSubmissionRequest(
                     formSubmission.valuesList,
                     formSubmission.selectionList,

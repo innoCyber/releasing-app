@@ -26,17 +26,17 @@ class SearchViewModel @Inject constructor(
     private val _openAdmin = SingleLiveEvent<Unit>()
     private val _verify = SingleLiveEvent<Unit>()
     private val _scan = SingleLiveEvent<Unit>()
-    private val _noOperator = SingleLiveEvent<Unit>()
     private val _networkState = MutableLiveData<NetworkState>()
     private val _cargoNumberValidation = MutableLiveData<Int>()
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
     private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     protected val _openDeviceConfiguration = SingleLiveEvent<Unit>()
-
     val networkState: LiveData<NetworkState> = _networkState
+
     val openAdMin: LiveData<Unit> = _openAdmin
     val scan: LiveData<Unit> = _scan
+    private val _noOperator = SingleLiveEvent<Unit>()
     val noOperator: LiveData<Unit> = _noOperator
     val verify: LiveData<Unit> = _verify
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
