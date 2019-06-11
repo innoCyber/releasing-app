@@ -1,6 +1,7 @@
 package ptml.releasing.device_configuration.viewmodel
 
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,6 +32,11 @@ class DeviceConfigViewModelTest : BaseTest() {
             repository.verifyDeviceIdAsync(any())
         } returns getVerifyDeviceSuccess().toDeferredAsync() as Deferred<BaseResponse>
 
+        every {
+            repository.setFirst(any())
+        }returns Unit
+
+
         deviceConfigViewModel.verifyDeviceId(IMEI)
 
         assertEquals(
@@ -54,6 +60,9 @@ class DeviceConfigViewModelTest : BaseTest() {
             repository.verifyDeviceIdAsync(any())
         } returns getVerifyDeviceFail().toDeferredAsync() as Deferred<BaseResponse>
 
+        every {
+            repository.setFirst(any())
+        }returns Unit
 
         deviceConfigViewModel.verifyDeviceId("222")
 

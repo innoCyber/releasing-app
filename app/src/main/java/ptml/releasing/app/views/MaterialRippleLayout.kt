@@ -615,7 +615,7 @@ class MaterialRippleLayout @JvmOverloads constructor(context: Context, attrs: At
     }
 
     /*
-     * Builder
+     * BuilderView
      */
 
     class RippleBuilder(private val child: View) {

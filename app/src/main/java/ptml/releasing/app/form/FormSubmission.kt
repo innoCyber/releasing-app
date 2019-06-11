@@ -1,5 +1,7 @@
 package ptml.releasing.app.form
 
+import ptml.releasing.app.form.base.BuilderPresenter
+import ptml.releasing.app.form.base.BuilderView
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.Value
@@ -7,7 +9,8 @@ import ptml.releasing.configuration.models.ConfigureDeviceData
 import timber.log.Timber
 
 class FormSubmission constructor(
-    val formBuilder: FormBuilder?,
+    val formBuilder: BuilderView?,
+    val data: List<ConfigureDeviceData>?,
     private val formValidator: FormValidator?
 ) {
     private val _valuesList = mutableListOf<Value>()
@@ -23,7 +26,7 @@ class FormSubmission constructor(
 
     fun submit() {
         if (formValidator?.validate() == true) {
-            for (form in formBuilder?.data ?: mutableListOf()) {
+            for (form in data ?: mutableListOf()) {
                 submitBasedOnType(form)
             }
         } else {

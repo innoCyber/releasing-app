@@ -14,7 +14,8 @@ interface ConfigApiService {
     ): Deferred<AdminConfigResponse>
 
     @GET("setConfigurationDevice")
-    fun setConfigurationDeviceAsync(
+    fun
+            setConfigurationDeviceAsync(
 //        @Query("cargo_type") cargoTypeId: Int,
         @Query("operation_step") operationStepId: Int?,
 //        @Query("terminal") terminal: Int,
