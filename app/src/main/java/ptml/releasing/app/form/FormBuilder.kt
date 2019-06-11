@@ -22,6 +22,8 @@ import ptml.releasing.app.form.FormUtils.getImageResourceByType
 import ptml.releasing.app.form.FormUtils.getQuickRemarksDataForMultiSpinner
 import ptml.releasing.app.form.FormUtils.inflateView
 import ptml.releasing.app.form.adapter.*
+import ptml.releasing.app.form.base.BuilderPresenter
+import ptml.releasing.app.form.base.BuilderView
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.setValidation
 import ptml.releasing.app.views.MultiSpinner
@@ -36,9 +38,7 @@ import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 import java.util.*
 
-class FormBuilder constructor(val context: Context) {
-    private var values = mutableMapOf<Int?, Value>()
-    private var options = mutableMapOf<Int?, Option>()
+class FormBuilder constructor(val context: Context) : BuilderView {
     private var quickRemarks: Map<Int, QuickRemark>? = null
     internal var data: List<ConfigureDeviceData>? = null
     private val rootLayout = LinearLayout(context)
@@ -47,6 +47,8 @@ class FormBuilder constructor(val context: Context) {
     private var singleSelectListener: SingleSelectListener<Options>? = null
     var error = false
 
+    private val presenter: BuilderPresenter
+
     init {
         rootLayout.orientation = LinearLayout.VERTICAL
         rootLayout.layoutParams =
@@ -54,6 +56,8 @@ class FormBuilder constructor(val context: Context) {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
+
+        presenter = FormBuilderPresenter(this)
     }
 
 
@@ -78,26 +82,15 @@ class FormBuilder constructor(val context: Context) {
      * @param findCargoResponse
      * the object with the pre-filled data, referenced by the form id
      * */
-    fun init(findCargoResponse: FindCargoResponse?): FormBuilder {
-        for (value in findCargoResponse?.values ?: mutableListOf()) {
-            Timber.w("Value: %s", value)
-            this.values[value.id] = value
-        }
-        for (option in findCargoResponse?.options ?: mutableListOf()) {
-            Timber.w("Option: %s", option)
-            this.options[option.id] = option
-        }
-
-        Timber.e("Options Map: %s", options)
-        Timber.e("Values Map: %s", values)
-        return this
+    override fun init(findCargoResponse: FindCargoResponse?): BuilderView {
+        return presenter.init(findCargoResponse)
     }
 
-    fun reset() {
+    override fun reset() {
         initializeData()
     }
 
-    fun getBottomButtons(): View? {
+    override fun getBottomButtons(): View? {
         if (rootLayout.childCount > 0) {
             val bottom = createBottomButtons()
             applyBottomParams(bottom)
@@ -111,9 +104,10 @@ class FormBuilder constructor(val context: Context) {
      * @param configDataList the list of configuration options
      * @return a linear layout of the form
      * */
-    fun build(
+    override fun build(
         configDataList: List<ConfigureDeviceData>?,
-        remarks: Map<Int, QuickRemark>?): LinearLayout {
+        remarks: Map<Int, QuickRemark>?
+    ): LinearLayout {
         //sort the list based on the position
         listener?.onStartLoad()
         Timber.d("Config list: %s", configDataList)
@@ -150,7 +144,7 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    private fun createViewFromConfig(data: ConfigureDeviceData?, i: Int): View? {
+    override fun createViewFromConfig(data: ConfigureDeviceData?, i: Int): View? {
         try {
             when (FormType.fromType(data?.type)) {
                 FormType.LABEL -> {
@@ -159,12 +153,12 @@ class FormBuilder constructor(val context: Context) {
                 }
 
                 FormType.TEXTBOX -> {
-                    initializeDefaultValue(data)
+                    presenter.initializeDefaultValue(data)
                     return createTextBox(data, i)
                 }
 
                 FormType.MULTI_LINE_TEXTBOX -> {
-                    initializeDefaultValue(data)
+                    presenter.initializeDefaultValue(data)
                     return createMultilineTextBox(data, i)
                 }
                 FormType.IMAGES -> {
@@ -183,25 +177,25 @@ class FormBuilder constructor(val context: Context) {
 
 
                 FormType.SINGLE_SELECT -> {
-                    initializeDefaultOption(data)
+                    presenter.initializeDefaultOption(data)
                     return createSingleSelect(data, i)
                 }
 
 
                 FormType.MULTI_SELECT -> {
-                    initializeDefaultOption(data)
+                    presenter.initializeDefaultOption(data)
                     return createMultiSelectSelect(data, i)
                 }
 
                 FormType.QUICK_REMARK -> {
-                    initializeDefaultOption(data)
+                    presenter.initializeDefaultOption(data)
                     return createQuickRemarkSelect(data, i)
                 }
 
 
                 FormType.CHECK_BOX -> {
                     Timber.d("Initializing checkbox: %s", data)
-                    initializeDefaultValue(data)
+                    presenter.initializeDefaultValue(data)
                     return createCheckBox(data, i)
                 }
 
@@ -267,25 +261,24 @@ class FormBuilder constructor(val context: Context) {
         return inputLayout
     }
 
-    internal fun validateTextBox(data: ConfigureDeviceData?): Boolean {
-        val inputLayout = rootLayout.findViewWithTag<TextInputLayout>(data?.id)
-        val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        val empty = editText.text?.isEmpty() ?: true
-        if (empty) {
-            inputLayout.error = context.getString(R.string.required_field_msg)
-        }
-        return !empty
+    override fun validateTextBox(data: ConfigureDeviceData?): Boolean {
+        return presenter.validateTextBox(data)
     }
 
 
-    internal fun getTextBoxValue(data: ConfigureDeviceData?): Value? {
+    override fun showTextBoxError(data: ConfigureDeviceData?) {
+        val inputLayout = rootLayout.findViewWithTag<TextInputLayout>(data?.id)
+        inputLayout.error = context.getString(R.string.required_field_msg)
+    }
+
+    override fun getTextBoxText(data: ConfigureDeviceData?): String {
         val inputLayout = rootLayout.findViewWithTag<TextInputLayout>(data?.id)
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        val text = editText.text.toString()
+        return editText.text.toString()
+    }
 
-        val value = if (text.isNotEmpty()) Value(text) else null
-        value?.id = data?.id
-        return value
+    override fun getTextBoxValue(data: ConfigureDeviceData?): Value? {
+        return presenter.getTextBoxValue(data)
     }
 
 
@@ -358,31 +351,28 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    internal fun validateButton(data: ConfigureDeviceData?): Boolean? {
+    override fun validateButton(data: ConfigureDeviceData?): Boolean? {
+        return presenter.validateButton(data)
+    }
+
+    override fun getButtonNumber(data: ConfigureDeviceData?): String {
         if (data?.type != FormType.PRINTER.type) {
             val view = rootLayout.findViewWithTag<ViewGroup>(data?.id)
             Timber.d("Getting error text view for buttons ")
             val numberView = view.findViewById<TextView>(R.id.tv_number)
-            val text = numberView.text.toString()
-            Timber.d("Error text view for button text: %s", text)
-            val number = try {
-                text.toInt()
-            } catch (e: Throwable) {
-                0
-            }
-            Timber.d("Error text view for button text parsed as number: %s", number)
-            if (number <= 0) { //if it is required, when no items are selected, selected item will be zero or less
-                val message = context.getString(getButtonValidationErrorMessage(data?.type))
-                listener?.onError(message)
-                Timber.d("Error message: %s", message)
-                view.findViewById<TextView>(R.id.tv_error).text = message
-                view.findViewById<TextView>(R.id.tv_error).visibility = View.VISIBLE
-                return false
-            }
-            return true // valid when the selected item is greater than 0,
+            return numberView.text.toString()
         }
-        Timber.e("Printer type")
-        return true
+
+        return "0"
+    }
+
+    override fun showButtonError(data: ConfigureDeviceData?) {
+        val view = rootLayout.findViewWithTag<ViewGroup>(data?.id)
+        val message = context.getString(getButtonValidationErrorMessage(data?.type))
+        listener?.onError(message)
+        Timber.d("Error message: %s", message)
+        view.findViewById<TextView>(R.id.tv_error).text = message
+        view.findViewById<TextView>(R.id.tv_error).visibility = View.VISIBLE
     }
 
 
@@ -442,58 +432,45 @@ class FormBuilder constructor(val context: Context) {
         }
     }
 
-    fun validateSingleSelect(data: ConfigureDeviceData?): Boolean? {
-        if (data?.options?.size ?: 0 > 0) {
-            val view = rootLayout.findViewWithTag<View>(data?.id)
-            if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-                return true //since it is a spinner, an item is always selected
-            } else {
-                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-                val adapter = recyclerView.adapter as SingleSelectAdapter<*>
-                if (adapter.selectedItem == null) {
-                    val message = context.getString(R.string.select_one_item)
-                    listener?.onError(message)
-                    val textView = view.findViewById<TextView>(R.id.tv_error)
-                    textView.text = message
-                    textView.visibility = View.VISIBLE
-                    changeBgColor(recyclerView, true)
-                    return false
-                }
-            }
+    override fun validateSingleSelect(data: ConfigureDeviceData?): Boolean? {
+        return presenter.validateSingleSelect(data)
+    }
 
+    override fun getSingleSelectRVItem(data: ConfigureDeviceData?): Options? {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+        val adapter = recyclerView.adapter as SingleSelectAdapter<*>
+        return adapter.selectedItem as Options
+    }
+
+    override fun getSingleSelectSpinnerItem(data: ConfigureDeviceData?): Options? {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val spinner = view.findViewById<Spinner>(R.id.select)
+        val adapter = spinner.adapter as FormSelectAdapter
+        val selectedPosition = spinner.selectedItemPosition
+        return if (adapter.count > selectedPosition) {
+            spinner.getItemAtPosition(selectedPosition) as Options?
+        } else {
+            null
         }
+    }
 
-        return true
+    override fun showSingleSelectError(data: ConfigureDeviceData?) {
+        if (Constants.ITEM_TO_EXPAND > data?.options?.size ?: 0) {
+            val view = rootLayout.findViewWithTag<View>(data?.id)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+            val message = context.getString(R.string.select_one_item)
+            listener?.onError(message)
+            val textView = view.findViewById<TextView>(R.id.tv_error)
+            textView.text = message
+            textView.visibility = View.VISIBLE
+            changeBgColor(recyclerView, true)
+        } // NO need to show for spinner
     }
 
 
-    fun getSingleSelect(data: ConfigureDeviceData?): FormSelection? {
-        val view = rootLayout.findViewWithTag<View>(data?.id)
-        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val spinner = view.findViewById<Spinner>(R.id.select)
-            val adapter = spinner.adapter as FormSelectAdapter
-            val selectedPosition = spinner.selectedItemPosition
-            val selectedValues = if (adapter.count > selectedPosition) {
-                val option = spinner.getItemAtPosition(selectedPosition) as Options?
-                listOf(option?.id ?: 0)
-            } else {
-                null
-            }
-            val formSelection =
-                if (selectedValues?.isNotEmpty() == true) FormSelection(selectedValues) else null
-
-            formSelection?.id = data?.id
-            return formSelection
-        } else {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-            val adapter = recyclerView.adapter as SingleSelectAdapter<*>
-            val selectedItem = adapter.selectedItem as Options
-            val selectedValues = listOf(selectedItem.id ?: 0)
-            val formSelection =
-                if (selectedValues.isNotEmpty()) FormSelection(selectedValues) else null
-            formSelection?.id = data?.id
-            return formSelection
-        }
+    override fun getSingleSelect(data: ConfigureDeviceData?): FormSelection? {
+        return presenter.getSingleSelect(data)
     }
 
     private fun createQuickRemarkSelect(data: ConfigureDeviceData?, i: Int): View? {
@@ -557,58 +534,35 @@ class FormBuilder constructor(val context: Context) {
     }
 
 
-    fun validateQuickRemarkSelect(data: ConfigureDeviceData?): Boolean? {
-        if (quickRemarks?.isNotEmpty() == true) {
-            val view = rootLayout.findViewWithTag<View>(data?.id)
-            if (Constants.ITEM_TO_EXPAND < quickRemarks?.size ?: 0) {
-                val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
-                val items = spinner.selectedItems.size
-                if (items <= 0) {
-                    multiSelectError(view)
-                    changeBgDrawable(spinner, true)
-                    return false
-                }
+    override fun showMultiSelectError(data: ConfigureDeviceData?) {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val selectView = view.findViewById<View>(R.id.select)
+        multiSelectError(view)
+        changeBgDrawable(selectView, true)
+    }
 
-            } else {
-                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-                val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-                val items = adapter.selectedItems.size
-                if (items <= 0) {
-                    multiSelectError(view)
-                    changeBgColor(recyclerView, true)
-                    return false
-                }
-            }
-
-        }
-        return true
+    override fun validateQuickRemarkSelect(data: ConfigureDeviceData?): Boolean? {
+       return presenter.validateQuickRemarkSelect(data)
     }
 
 
-    fun getQuickRemarkSelect(data: ConfigureDeviceData?): FormSelection? {
-        if (quickRemarks?.isNotEmpty() == true) {
-            val view = rootLayout.findViewWithTag<View>(data?.id)
-
-            if (Constants.ITEM_TO_EXPAND < quickRemarks?.size ?: 0) {
-                val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
-                val list = spinner.selectedItems.keys.toList()
-                val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
-                formSelection?.id = data?.id
-                return formSelection
-
-            } else {
-                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-                val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-                val list = getMultiSelectIdList(adapter.selectedItems)
-                val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
-                formSelection?.id = data?.id
-                return formSelection
-            }
-        }
-
-        return null
+    override fun getQuickRemarkSelect(data: ConfigureDeviceData?): FormSelection? {
+       return presenter.getQuickRemarkSelect(data)
     }
 
+    override fun getMultiSelectRVItems(data: ConfigureDeviceData?): List<Int> {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.select)
+        val adapter = recyclerView.adapter as MultiSelectAdapter<*>
+        return getMultiSelectIdList(adapter.selectedItems)
+    }
+
+
+    override fun getMultiSelectSpinnerItems(data: ConfigureDeviceData?): List<Int> {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
+        return spinner.selectedItems.keys.toList()
+    }
 
     /**
      * Creates a Multiselect for the form
@@ -673,51 +627,12 @@ class FormBuilder constructor(val context: Context) {
         }
     }
 
-    fun validateMultiSelect(data: ConfigureDeviceData?): Boolean? {
-        if (data?.options?.size ?: 0 > 0) {
-            val view = rootLayout.findViewWithTag<View>(data?.id)
-            if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-                val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
-                val items = spinner.selectedItems.size
-                if (items <= 0) {
-                    multiSelectError(view)
-                    changeBgDrawable(spinner, true)
-                    return false
-                }
-
-            } else {
-                val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-                val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-                val items = adapter.selectedItems.size
-                if (items <= 0) {
-                    multiSelectError(view)
-                    changeBgColor(recyclerView, true)
-                    return false
-                }
-            }
-        }
-        return true
+    override fun validateMultiSelect(data: ConfigureDeviceData?): Boolean? {
+        return presenter.validateMultiSelect(data)
     }
 
-
-
-    fun getMultiSelect(data: ConfigureDeviceData?): FormSelection? {
-        val view = rootLayout.findViewWithTag<View>(data?.id)
-        if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val spinner = view.findViewById<MultiSpinner<Options>>(R.id.select)
-            val list = spinner.selectedItems.keys.toList()
-            val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
-            formSelection?.id = data?.id
-            return formSelection
-
-        } else {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.select)
-            val adapter = recyclerView.adapter as MultiSelectAdapter<*>
-            val list = getMultiSelectIdList(adapter.selectedItems)
-            val formSelection = if (list.isNotEmpty()) FormSelection(list) else null
-            formSelection?.id = data?.id
-            return formSelection
-        }
+    override fun getMultiSelect(data: ConfigureDeviceData?): FormSelection? {
+       return presenter.getMultiSelect(data)
     }
 
     private fun getMultiSelectIdList(items: MutableMap<Int, out SelectModel>): List<Int> {
@@ -753,27 +668,29 @@ class FormBuilder constructor(val context: Context) {
         return view
     }
 
-    internal fun validateCheckBox(data: ConfigureDeviceData?): Boolean? {
+    override fun validateCheckBox(data: ConfigureDeviceData?): Boolean? {
+       return presenter.validateCheckBox(data)
+    }
+
+    override fun getCheckBoxCheckedState(data: ConfigureDeviceData?): Boolean {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         val checkBox = view.findViewById<CheckBox>(R.id.check_box)
-        if (!checkBox.isChecked) {
-            val textView = view.findViewById<TextView>(R.id.tv_error)
-            textView.visibility = View.VISIBLE
-            val message = context.getString(R.string.field_required)
-            textView.text = message
-            changeBgColor(checkBox, true)
-            return false
-        }
-        return true
+        return checkBox.isChecked
+    }
+
+    override fun showCheckBoxError(data: ConfigureDeviceData?) {
+        val view = rootLayout.findViewWithTag<View>(data?.id)
+        val checkBox = view.findViewById<CheckBox>(R.id.check_box)
+        val textView = view.findViewById<TextView>(R.id.tv_error)
+        textView.visibility = View.VISIBLE
+        val message = context.getString(R.string.field_required)
+        textView.text = message
+        changeBgColor(checkBox, true)
     }
 
 
-    internal fun getCheckBoxValue(data: ConfigureDeviceData?): Value {
-        val view = rootLayout.findViewWithTag<View>(data?.id)
-        val checkBox = view.findViewById<CheckBox>(R.id.check_box)
-        val value = Value(checkBox.isChecked.toString())
-        value.id = data?.id
-        return value
+    override fun getCheckBoxValue(data: ConfigureDeviceData?): Value {
+       return presenter.getCheckBoxValue(data)
     }
 
 
@@ -806,40 +723,24 @@ class FormBuilder constructor(val context: Context) {
         return view
     }
 
-    fun initializeData() {
-        initializeValues()
-        initializeOptions()
+    override fun initializeData() {
+        presenter.initializeValues()
+        presenter.initializeOptions()
     }
 
-    private fun initializeValues() {
-        for (value in values.values) {
-            val root = rootLayout.findViewWithTag<View>(value.id)
-            bindValuesDataToView(root, value.value)
-        }
+
+    override fun bindOptionsDataToView(option: Option) {
+        Timber.d("Options: %s", option)
+        val view = rootLayout.findViewWithTag<View>(option.id)
+        val select = view?.findViewById<View>(R.id.select)
+        bindOptionsDataToView(select, option.selected)
     }
 
-    private fun initializeOptions() {
-        Timber.d("Options Values: %s", options.values)
-        for (option in options.values) {
-            Timber.d("Options: %s", option)
-            val view = rootLayout.findViewWithTag<View>(option.id)
-            val select = view?.findViewById<View>(R.id.select)
-            bindOptionsDataToView(select, option.selected)
-        }
-    }
 
-    private fun initializeDefaultValue(data: ConfigureDeviceData?) {
-        val value = Value("")
-        value.id = data?.id
-        values[data?.id] = value
+    override fun bindValuesDataToView(value: Value) {
+        val root = rootLayout.findViewWithTag<View>(value.id)
+        bindValuesDataToView(root, value.value)
     }
-
-    private fun initializeDefaultOption(data: ConfigureDeviceData?) {
-        val option = Option(null)
-        option.id = data?.id
-        options[data?.id] = option
-    }
-
 
 
     private fun bindValuesDataToView(view: View?, data: String?) {
@@ -913,5 +814,6 @@ class FormBuilder constructor(val context: Context) {
         return 0
     }
 }
+
 
 
