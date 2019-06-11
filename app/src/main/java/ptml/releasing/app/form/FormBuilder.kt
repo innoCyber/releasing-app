@@ -440,7 +440,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         val view = rootLayout.findViewWithTag<View>(data?.id)
         val recyclerView = view.findViewById<RecyclerView>(R.id.select)
         val adapter = recyclerView.adapter as SingleSelectAdapter<*>
-        return adapter.selectedItem as Options
+        return adapter.selectedItem as Options?
     }
 
     override fun getSingleSelectSpinnerItem(data: ConfigureDeviceData?): Options? {
@@ -456,7 +456,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
     }
 
     override fun showSingleSelectError(data: ConfigureDeviceData?) {
-        if (Constants.ITEM_TO_EXPAND > data?.options?.size ?: 0) {
+        if (Constants.ITEM_TO_EXPAND >= data?.options?.size ?: 0) {
             val view = rootLayout.findViewWithTag<View>(data?.id)
             val recyclerView = view.findViewById<RecyclerView>(R.id.select)
             val message = context.getString(R.string.select_one_item)
@@ -465,7 +465,10 @@ class FormBuilder constructor(val context: Context) : BuilderView {
             textView.text = message
             textView.visibility = View.VISIBLE
             changeBgColor(recyclerView, true)
-        } // NO need to show for spinner
+        }else{
+            // NO need to show for spinner
+            Timber.w("No need to validate a spinner")
+        }
     }
 
 
