@@ -1,5 +1,6 @@
 package ptml.releasing.app.form
 
+import androidx.annotation.VisibleForTesting
 import ptml.releasing.app.form.base.BuilderPresenter
 import ptml.releasing.app.form.base.BuilderView
 import ptml.releasing.app.utils.Constants
@@ -13,11 +14,17 @@ import timber.log.Timber
 
 class FormBuilderPresenter(private val formBuilder: BuilderView) :
     BuilderPresenter {
-    private var values = mutableMapOf<Int?, Value>()
-    private var options = mutableMapOf<Int?, Option>()
-    var quickRemarks: Map<Int, QuickRemark>? = null
-    internal var data: List<ConfigureDeviceData>? = null
 
+    @VisibleForTesting
+    var values = mutableMapOf<Int?, Value>()
+    @VisibleForTesting
+    var options = mutableMapOf<Int?, Option>()
+    @VisibleForTesting
+    var quickRemarks: Map<Int, QuickRemark>? = null
+
+    override fun provideQuickRemarks(quickRemarks: Map<Int, QuickRemark>?) {
+        this.quickRemarks = quickRemarks
+    }
 
     override fun init(findCargoResponse: FindCargoResponse?): BuilderView {
         for (value in findCargoResponse?.values ?: mutableListOf()) {
@@ -83,23 +90,27 @@ class FormBuilderPresenter(private val formBuilder: BuilderView) :
     }
 
     override fun getSingleSelect(data: ConfigureDeviceData?): FormSelection? {
-        val formSelection = if (Constants.ITEM_TO_EXPAND < data?.options?.size ?: 0) {
-            val option = formBuilder.getSingleSelectSpinnerItem(data)
-            val selectedValues = listOf(option?.id ?: 0)
-            if (selectedValues.isNotEmpty())
-                FormSelection(selectedValues)
-            else null
+        if(data?.options?.isNotEmpty() == true){
+            val formSelection = if (Constants.ITEM_TO_EXPAND < data.options.size) {
+                val option = formBuilder.getSingleSelectSpinnerItem(data)
+                val selectedValues = if(option != null )listOf(option.id ?: 0) else listOf()
+                if (selectedValues.isNotEmpty())
+                    FormSelection(selectedValues)
+                else null
 
-        } else {
-            val option = formBuilder.getSingleSelectRVItem(data)
-            val selectedValues = listOf(option?.id ?: 0)
-            if (selectedValues.isNotEmpty())
-                FormSelection(selectedValues)
-            else
-                null
+            } else {
+                val option = formBuilder.getSingleSelectRVItem(data)
+                val selectedValues = if(option != null )listOf(option.id ?: 0) else listOf()
+                if (selectedValues.isNotEmpty())
+                    FormSelection(selectedValues)
+                else
+                    null
+            }
+            formSelection?.id = data.id
+            return formSelection
         }
-        formSelection?.id = data?.id
-        return formSelection
+
+        return null
     }
 
     override fun validateQuickRemarkSelect(data: ConfigureDeviceData?): Boolean? {

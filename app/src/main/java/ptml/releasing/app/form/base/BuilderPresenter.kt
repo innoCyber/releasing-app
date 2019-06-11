@@ -4,9 +4,11 @@ import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.configuration.models.ConfigureDeviceData
+import ptml.releasing.quick_remarks.model.QuickRemark
 
 interface BuilderPresenter{
 
+    fun provideQuickRemarks(quickRemarks: Map<Int, QuickRemark>?)
     fun init(findCargoResponse: FindCargoResponse?): BuilderView
 
     fun validateTextBox(data: ConfigureDeviceData?): Boolean
