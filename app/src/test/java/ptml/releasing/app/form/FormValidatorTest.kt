@@ -5,6 +5,7 @@ import io.mockk.mockk
 
 import org.junit.Test
 import ptml.releasing.app.form.base.BuilderView
+import ptml.releasing.base.BaseTest
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import ptml.releasing.data.configureDeviceData
 import ptml.releasing.data.configureDeviceDataNonRequired
@@ -15,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class FormValidatorTest{
+class FormValidatorTest : BaseTest(){
     val formBuilder : BuilderView  = mockk()
     val listener: FormValidator.ValidatorListener = mockk()
 

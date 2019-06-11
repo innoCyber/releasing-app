@@ -5,7 +5,7 @@ import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import timber.log.Timber
 
-class FormValidator constructor(var builderView: BuilderView?, val data: List<ConfigureDeviceData>?) {
+class FormValidator constructor(val builderView: BuilderView?, val data: List<ConfigureDeviceData>?) {
 
     private var validForm = true
     var listener: ValidatorListener? = null

@@ -7,6 +7,7 @@ import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.base.BaseTest
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.login.model.User
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
@@ -339,6 +340,8 @@ val configureDeviceData: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceData()
 }
 
+
+
 val configureDeviceDataNonRequired: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceDataNonRequired()
 }
@@ -353,7 +356,7 @@ val configureDeviceDataWithInvalidFormType: List<ConfigureDeviceData> by lazy {
 
 
 private fun configureDeviceDataWithInvalidFormType(): MutableList<ConfigureDeviceData> {
-    val list = mutableListOf<ConfigureDeviceData>()
+    val list = configureDeviceData.toMutableList()
     val configureDeviceData = ConfigureDeviceData(
         2,
         Constants.UNKNOWN,
