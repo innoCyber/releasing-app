@@ -9,7 +9,7 @@
       "type": "images",
       "order_id": 0,
       "title": "Photos",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": "images"
@@ -29,7 +29,7 @@
       "type": "label",
       "order_id": 3,
       "title": "Grid",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -59,7 +59,7 @@
       "type": "textbox",
       "title": "Enter Seal",
       "order_id": 6,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "numeric"
@@ -69,7 +69,7 @@
       "type": "textbox",
       "title": "Badge ID",
       "order_id": 8,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "aplanumeric"
@@ -79,7 +79,7 @@
       "type": "label",
       "title": "Operator Name",
       "order_id": 9,
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -89,7 +89,7 @@
       "type": "textbox",
       "title": "Enter Operator Name",
       "order_id": 10,
-      "is_required": true,
+      "is_required": false,
       "is_editable": true,
       "options": [],
       "data_validation": "aplanumeric"
@@ -99,7 +99,7 @@
       "type": "label",
       "title": "Remarks",
       "order_id": 11,
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -145,7 +145,7 @@
       "type": "label",
       "title": "More Remark",
       "order_id": 13,
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -165,7 +165,7 @@
       "type": "label",
       "order_id": 15,
       "title": "Options",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -175,7 +175,7 @@
       "type": "printer",
       "order_id": 2,
       "title": "Print Barcode",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": "printer"
@@ -185,7 +185,7 @@
       "type": "multi_select",
       "title": "Select options",
       "order_id": 16,
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [
         {
@@ -235,7 +235,7 @@
       "type": "label",
       "order_id": 17,
       "title": "Color",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -245,7 +245,7 @@
       "type": "label",
       "title": "Bar Code",
       "order_id": 7,
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""
@@ -291,7 +291,7 @@
       "type": "label",
       "order_id": 19,
       "title": "Length",
-      "is_required": true,
+      "is_required": false,
       "is_editable": false,
       "options": [],
       "data_validation": ""

@@ -211,7 +211,6 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
 
-
     @Test
     fun `validate single select (with options less than 6 and one selected)`() {
         val options =
@@ -339,7 +338,7 @@ class FormBuilderPresenterTest : BaseTest() {
 
         every {
             formBuilder.showMultiSelectError(any())
-        }returns Unit
+        } returns Unit
 
 
         val data = quickRemarkData
@@ -439,7 +438,7 @@ class FormBuilderPresenterTest : BaseTest() {
 
         every {
             formBuilder.showMultiSelectError(any())
-        }returns Unit
+        } returns Unit
 
         val data = provideMultiSelectData()
         val valid = presenter.validateMultiSelect(data)
@@ -513,10 +512,10 @@ class FormBuilderPresenterTest : BaseTest() {
 
 
     @Test
-    fun `validate check box when checked`(){
+    fun `validate check box when checked`() {
         every {
             formBuilder.getCheckBoxCheckedState(any())
-        }returns true
+        } returns true
 
         val result = presenter.validateCheckBox(provideCheckBoxData())
 
@@ -524,15 +523,14 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
     @Test
-    fun `validate checkbox when unchecked`(){
+    fun `validate checkbox when unchecked`() {
         every {
             formBuilder.getCheckBoxCheckedState(any())
-        }returns false
+        } returns false
 
         every {
             formBuilder.showCheckBoxError(any())
-        }returns Unit
-
+        } returns Unit
 
 
         val result = presenter.validateCheckBox(provideCheckBoxData())
@@ -541,13 +539,12 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
 
-
     @Test
-    fun `get check box when checked`(){
+    fun `get check box when checked`() {
         val checked = true
         every {
             formBuilder.getCheckBoxCheckedState(any())
-        }returns checked
+        } returns checked
 
         val data = provideCheckBoxData()
         val expected = Value(checked.toString())
@@ -559,11 +556,11 @@ class FormBuilderPresenterTest : BaseTest() {
 
 
     @Test
-    fun `get checkbox when unchecked`(){
+    fun `get checkbox when unchecked`() {
         val checked = false
         every {
             formBuilder.getCheckBoxCheckedState(any())
-        }returns checked
+        } returns checked
 
         val data = provideCheckBoxData()
         val expected = Value(checked.toString())
@@ -574,9 +571,8 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
 
-
     @Test
-    fun `initialize default value`(){
+    fun `initialize default value`() {
         val data = getTextBoxData()
         val expected = Value("")
         expected.id = data.id
@@ -585,7 +581,7 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
     @Test
-    fun `initialize default option`(){
+    fun `initialize default option`() {
         val data = getSingleDataWithOptions()
         val expected = Option(null)
         expected.id = data.id
@@ -594,19 +590,15 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
     @Test
-    fun `initialize values`(){
+    fun `initialize values`() {
 
     }
 
 
     @Test
-    fun `initialize options`(){
+    fun `initialize options`() {
 
     }
-
-
-
-
 
 
 }

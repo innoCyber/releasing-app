@@ -335,6 +335,33 @@ fun provideCheckBoxData(): ConfigureDeviceData {
 }
 
 
+val configureDeviceData : List<ConfigureDeviceData> by lazy {
+    provideConfigureDeviceData()
+}
+
+val configureDeviceDataNonRequired : List<ConfigureDeviceData> by lazy {
+    provideConfigureDeviceDataNonRequired()
+}
+
+val configureDeviceDataSomeRequired : List<ConfigureDeviceData> by lazy {
+    provideConfigureDeviceDataSomeRequired()
+}
+
+private fun provideConfigureDeviceData(): List<ConfigureDeviceData> {
+    val json = getJson("setConfigDeviceSuccess.json")
+
+    return Gson().fromJson(json, ConfigureDeviceResponse::class.java).data
+}
+
+private fun provideConfigureDeviceDataNonRequired(): List<ConfigureDeviceData> {
+    val json = getJson("setConfigDeviceSuccessNonRequired.json")
+    return Gson().fromJson(json, ConfigureDeviceResponse::class.java).data
+}
+
+private fun provideConfigureDeviceDataSomeRequired(): List<ConfigureDeviceData> {
+    val json = getJson("setConfigDeviceSuccessSomeRequired.json")
+    return Gson().fromJson(json, ConfigureDeviceResponse::class.java).data
+}
 
 private fun getJson(path: String): String {
     val uri = BaseTest::class.java.classLoader?.getResource(path)
