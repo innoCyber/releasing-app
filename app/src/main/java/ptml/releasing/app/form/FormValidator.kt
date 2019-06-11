@@ -17,7 +17,7 @@ class FormValidator constructor(var builderView: BuilderView?, val data: List<Co
         for (form in data ?: mutableListOf()) {
             if (form.required && (form.type != Constants.LABEL)) {
                 Timber.d("Form is required: %s", form.type)
-                isValid = validateBasedOnType(form) ?: false
+                isValid = validateBasedOnType(form) ?: true
                 validationResult(isValid)
             }
         }

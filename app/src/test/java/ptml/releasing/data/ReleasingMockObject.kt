@@ -335,16 +335,38 @@ fun provideCheckBoxData(): ConfigureDeviceData {
 }
 
 
-val configureDeviceData : List<ConfigureDeviceData> by lazy {
+val configureDeviceData: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceData()
 }
 
-val configureDeviceDataNonRequired : List<ConfigureDeviceData> by lazy {
+val configureDeviceDataNonRequired: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceDataNonRequired()
 }
 
-val configureDeviceDataSomeRequired : List<ConfigureDeviceData> by lazy {
+val configureDeviceDataSomeRequired: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceDataSomeRequired()
+}
+
+val configureDeviceDataWithInvalidFormType: List<ConfigureDeviceData> by lazy {
+    configureDeviceDataWithInvalidFormType()
+}
+
+
+private fun configureDeviceDataWithInvalidFormType(): MutableList<ConfigureDeviceData> {
+    val list = mutableListOf<ConfigureDeviceData>()
+    val configureDeviceData = ConfigureDeviceData(
+        2,
+        Constants.UNKNOWN,
+        "",
+        true,
+        false,
+        listOf(),
+        ""
+
+    )
+
+    list.add(configureDeviceData)
+    return list
 }
 
 private fun provideConfigureDeviceData(): List<ConfigureDeviceData> {
