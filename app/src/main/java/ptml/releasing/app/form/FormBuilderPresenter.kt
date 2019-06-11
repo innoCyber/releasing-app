@@ -11,7 +11,7 @@ import ptml.releasing.configuration.models.ConfigureDeviceData
 import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 
-class FormBuilderPresenter(val formBuilder: BuilderView) :
+class FormBuilderPresenter(private val formBuilder: BuilderView) :
     BuilderPresenter {
     private var values = mutableMapOf<Int?, Value>()
     private var options = mutableMapOf<Int?, Option>()
@@ -212,4 +212,6 @@ class FormBuilderPresenter(val formBuilder: BuilderView) :
             formBuilder.bindOptionsDataToView(option)
         }
     }
+
+
 }

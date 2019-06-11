@@ -45,4 +45,8 @@ interface BuilderPresenter{
     fun initializeValues()
 
     fun initializeOptions()
+
+    fun validate(){
+
+    }
 }

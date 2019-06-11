@@ -1,19 +1,20 @@
 package ptml.releasing.app.form
 
+import ptml.releasing.app.form.base.BuilderView
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.ConfigureDeviceData
 import timber.log.Timber
 
-class FormValidator constructor(var formBuilder: FormBuilder?) {
+class FormValidator constructor(var builderView: BuilderView?, val data: List<ConfigureDeviceData>?) {
 
     private var validForm = true
     var listener: ValidatorListener? = null
 
 
-    fun validate(): Boolean {
+     fun validate(): Boolean {
         var isValid: Boolean
         Timber.d("validating form...")
-        for (form in formBuilder?.data ?: mutableListOf()) {
+        for (form in data ?: mutableListOf()) {
             if (form.required && (form.type != Constants.LABEL)) {
                 Timber.d("Form is required: %s", form.type)
                 isValid = validateBasedOnType(form) ?: false
@@ -43,16 +44,16 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
 
                 FormType.TEXTBOX -> {
                     Timber.d("Validating textbox single")
-                    return formBuilder?.validateTextBox(data)
+                    return builderView?.validateTextBox(data)
                 }
 
                 FormType.MULTI_LINE_TEXTBOX -> {
                     Timber.d("Validating multiple single")
-                    return formBuilder?.validateTextBox(data)
+                    return builderView?.validateTextBox(data)
                 }
                 FormType.IMAGES -> {
                     Timber.d("Validating image")
-                    return formBuilder?.validateButton(data)
+                    return builderView?.validateButton(data)
                 }
 
                 FormType.PRINTER -> {
@@ -62,29 +63,29 @@ class FormValidator constructor(var formBuilder: FormBuilder?) {
 
                 FormType.DAMAGES -> {
                     Timber.d("Validating damages")
-                    return formBuilder?.validateButton(data)
+                    return builderView?.validateButton(data)
                 }
 
 
                 FormType.SINGLE_SELECT -> {
                     Timber.d("Validating single select")
-                    return formBuilder?.validateSingleSelect(data)
+                    return builderView?.validateSingleSelect(data)
                 }
 
 
                 FormType.MULTI_SELECT -> {
                     Timber.d("Validating multi select")
-                    return formBuilder?.validateMultiSelect(data)
+                    return builderView?.validateMultiSelect(data)
                 }
 
                 FormType.QUICK_REMARK -> {
                     Timber.d("Validating quick remark")
-                    return formBuilder?.validateQuickRemarkSelect(data)
+                    return builderView?.validateQuickRemarkSelect(data)
                 }
 
                 FormType.CHECK_BOX -> {
                     Timber.d("Validating checkbox")
-                    return formBuilder?.validateCheckBox(data)
+                    return builderView?.validateCheckBox(data)
                 }
 
                 else -> {

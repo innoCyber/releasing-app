@@ -77,7 +77,8 @@ class CargoInfoActivity :
 
                 FormType.DAMAGES -> {
                     damageView = view
-                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)
+                        ?.getParcelable<FindCargoResponse>(RESPONSE)
                     DamagesActivity.typeContainer = findCargoResponse?.typeContainer
                     val intent = Intent(this@CargoInfoActivity, DamagesActivity::class.java)
                     startActivityForResult(
@@ -87,7 +88,6 @@ class CargoInfoActivity :
                 }
             }
         }
-
 
 
         override fun onError(message: String) {
@@ -110,7 +110,7 @@ class CargoInfoActivity :
     }
 
     private fun validateSaveSubmit() {
-        val formValidator = FormValidator(formBuilder)
+        val formValidator = FormValidator(formBuilder, formBuilder?.data)
         formValidator.listener = validatorListener
         if (formValidator.validate()) {
             Timber.d("Validated")
@@ -124,8 +124,8 @@ class CargoInfoActivity :
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-     fun submitForm(formValidator: FormValidator) {
-        val formSubmission = FormSubmission(formBuilder, formValidator)
+    fun submitForm(formValidator: FormValidator) {
+        val formSubmission = FormSubmission(formBuilder, formBuilder?.data, formValidator)
         val findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         viewModel.submitForm(
@@ -291,7 +291,6 @@ class CargoInfoActivity :
     }
 
 
-
     private fun showOperatorErrorDialog() {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.error),
@@ -375,7 +374,7 @@ class CargoInfoActivity :
             ?.initializeData()
 
         binding.formContainer.addView(formView)
-        if(formBuilder?.error == false){
+        if (formBuilder?.error == false) {
             binding.formBottom.addView(formBuilder?.getBottomButtons())
         }
     }
@@ -396,18 +395,18 @@ class CargoInfoActivity :
             )
         } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
             binding.includeHome.imgCargoType.setImageDrawable(
-             VectorDrawableCompat.create(
+                VectorDrawableCompat.create(
                     resources,
                     R.drawable.ic_cargo,
-                 null
+                    null
                 )
             )
         } else {
             binding.includeHome.imgCargoType.setImageDrawable(
-             VectorDrawableCompat.create(
+                VectorDrawableCompat.create(
                     resources,
                     R.drawable.ic_container,
-                 null
+                    null
                 )
             )
         }
@@ -488,7 +487,7 @@ class CargoInfoActivity :
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showPhoneStateRationale(request: PermissionRequest) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
             buttonText = getString(android.R.string.ok),
