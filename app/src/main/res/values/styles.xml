@@ -77,11 +77,10 @@
         <item name="drawableStartCompat">@drawable/ic_arrow_back</item>
     </style>
 
-    <style name="ButtonStyle.Delete">
+    <style name="ButtonStyle.DeviceConfigClose">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/delete_btn_bg</item>
-        <item name="drawableStartCompat">@drawable/ic_delete</item>
     </style>
 
 
