@@ -67,6 +67,7 @@ abstract class BaseActivity<T, D> :
 
     companion object {
         const val RC_BARCODE = 112
+        const val RC_SEARCH = 113
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -239,6 +240,11 @@ abstract class BaseActivity<T, D> :
             //save
             Timber.d("Scanned Operator name: %s", operatorName)
             viewModel.saveOperatorName(operatorName)
+        }else  if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
+            //save
+            val scanned = data?.getStringExtra(Constants.BAR_CODE)
+            Timber.d("Scanned: %s", scanned)
+            viewModel.scanForSearch(scanned)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

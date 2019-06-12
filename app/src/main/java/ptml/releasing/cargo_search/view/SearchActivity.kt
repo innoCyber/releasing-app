@@ -113,7 +113,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         viewModel.scan.observe(this, Observer {
-            openBarCodeScannerWithPermissionCheck(RC_BARCODE)
+            openBarCodeScannerWithPermissionCheck(RC_SEARCH)
         })
 
         viewModel.noOperator.observe(this, Observer {
@@ -126,6 +126,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             startActivityForResult(intent, RC_CONFIG)
         })
 
+
+        viewModel.searchScanned.observe(this, Observer {
+            binding.appBarHome.content.includeSearch.editInput.setText(it)
+        })
 
         binding.tvVersion.text = getString(R.string.version_text, BuildConfig.VERSION_NAME)
         binding.appBarHome.content.includeSearch.editInput.setAllCapInputFilter()
