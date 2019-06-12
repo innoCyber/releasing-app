@@ -35,7 +35,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
                 hideLoading(binding.includeError.root)
                 startNewActivity(SearchActivity::class.java, true)
             } else if (false == it?.isSuccess) {
-                showError()
+                showErrorWithPermissionCheck()
             }
         })
 
@@ -68,11 +68,14 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
 
     }
 
-
-    private fun showError() {
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE)
+     fun showError() {
         binding.includeProgress.root.visibility = View.GONE
         binding.includeError.root.visibility = View.GONE
         binding.includeDeviceConfigError.root.visibility = View.VISIBLE
+        val imei = (application as ReleasingApplication).provideImei()
+        binding.includeDeviceConfigError.tvMessage.text = getString(R.string.verification_error_message, imei)
     }
 
 
