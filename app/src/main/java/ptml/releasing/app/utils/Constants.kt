@@ -28,16 +28,16 @@ object Constants{
     const val ITEM_TO_EXPAND = 6
 
 
-    const val DEFAULT_PRINTER_CODE = "! 0 200 200 406 1\r\n" +
+    const val DEFAULT_PRINTER_CODE = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
-            "TONE 0\r\n" +
+            "TONE 50\r\n" +
             "SPEED 4\r\n" +
             "ON-FEED IGNORE\r\n" +
             "NO-PACE\r\n" +
             "BAR-SENSE\r\n" +
-            "T 4 0 179 47 PTML\r\n" +
+            "T 4 0 179 20 PTML\r\n" +
             "BT 7 0 6\r\n" +
-            "B 39 1 30 216 31 134 var_barcode\r\n" +
+            "B 39 1 30 200 31 70 var_barcode\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
 
