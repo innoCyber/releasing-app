@@ -12,8 +12,8 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
 
         buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
