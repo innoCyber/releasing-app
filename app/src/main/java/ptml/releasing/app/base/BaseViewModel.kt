@@ -10,13 +10,27 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor(
+    protected val updateChecker: RemoteConfigUpdateChecker,
     protected val repository: Repository,
     protected val appCoroutineDispatchers: AppCoroutineDispatchers
 ) : ViewModel() {
+
+    val updateLoadingState = updateChecker.updateCheckState
+
+    private val _showUpdateApp = SingleLiveEvent<Unit>()
+    val showUpdateApp: LiveData<Unit> = _showUpdateApp
+
+    private val _startDamagesUpdate = SingleLiveEvent<Unit>()
+    val startDamagesUpdate: LiveData<Unit> = _startDamagesUpdate
+
+    private val _startQuickRemarksUpdate = SingleLiveEvent<Unit>()
+    val startQuickRemarksUpdate: LiveData<Unit> = _startQuickRemarksUpdate
 
     var compositeJob: Job? = null
 
@@ -84,7 +98,6 @@ open class BaseViewModel @Inject constructor(
 
         } catch (e: Throwable) {
             Timber.e(e)
-            System.out.println("In here: ${e.localizedMessage}")
         }
 
 
@@ -99,7 +112,6 @@ open class BaseViewModel @Inject constructor(
     }
 
 
-
     fun saveOperatorName(name: String?) {
         CoroutineScope(appCoroutineDispatchers.db).launch {
             repository.saveOperatorName(name)
@@ -112,7 +124,7 @@ open class BaseViewModel @Inject constructor(
 
 
     fun scanForSearch(scanned: String?) {
-       _searchScanned.postValue(scanned)
+        _searchScanned.postValue(scanned)
     }
 
 
@@ -129,7 +141,7 @@ open class BaseViewModel @Inject constructor(
 
     fun getOperatorName() {
         CoroutineScope(appCoroutineDispatchers.db).launch {
-            val operator = repository.getOperatorName();
+            val operator = repository.getOperatorName()
             withContext(appCoroutineDispatchers.main) {
                 _operatorName.postValue(operator)
             }
@@ -142,7 +154,7 @@ open class BaseViewModel @Inject constructor(
 
     fun openEnterDialog() {
         CoroutineScope(appCoroutineDispatchers.db).launch {
-            val operator = repository.getOperatorName();
+            val operator = repository.getOperatorName()
             withContext(appCoroutineDispatchers.main) {
                 _openEnterDialog.postValue(operator)
             }
@@ -156,5 +168,36 @@ open class BaseViewModel @Inject constructor(
     open fun handleDeviceConfigured(configured: Boolean) {
         // classes that need to handle this will override
         Timber.d("Configured: %s", configured)
+    }
+
+    fun checkForUpdates() {
+        updateChecker.check()
+    }
+
+    fun shouldUpdateApp() {
+        if (repository.shouldUpdateApp()) {
+            _showUpdateApp.value = Unit
+        }
+    }
+
+    fun resetShouldUpdate() {
+        repository.setShouldUpdateApp(false)
+    }
+
+    fun applyUpdates() {
+        if(updateChecker.shouldUpdateApp()){
+            Timber.d("Set the value to true prefs so the dialog will be shown on the next opened screen")
+            repository.setShouldUpdateApp(true)
+        }
+
+        if(updateChecker.shouldUpdateDamages()){
+            //start intent service to update damages
+            _startDamagesUpdate.value = Unit
+        }
+
+        if(updateChecker.shouldUpdateQuickRemarks()){
+            //start intent service to update quick remarks
+            _startQuickRemarksUpdate.value = Unit
+        }
     }
 }

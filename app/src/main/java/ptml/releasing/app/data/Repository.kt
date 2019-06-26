@@ -71,5 +71,7 @@ interface Repository {
     suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
     suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
 
+    fun setShouldUpdateApp(shouldUpdate:Boolean)
+    fun shouldUpdateApp():Boolean
 
 }

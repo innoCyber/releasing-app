@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ptml.releasing.databinding.DialogChooseOperatorBinding
 
 class ChooseOperatorInputDialog : DialogFragment() {
@@ -20,7 +21,7 @@ class ChooseOperatorInputDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogChooseOperatorBinding.inflate(LayoutInflater.from(context), null, false)
-        val builder = AlertDialog.Builder(context!!)
+        val builder = MaterialAlertDialogBuilder(context!!)
         builder.setView(binding.root)
         builder.setTitle("Make a choice")
 

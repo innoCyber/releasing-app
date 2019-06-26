@@ -42,4 +42,20 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun getQuickRemarks() = prefs.getQuickRemarks()
 
     override fun saveQuickRemarks(response: QuickRemarkResponse?) = prefs.saveQuickRemarks(response)
+
+    override fun setDamagesCurrentVersion(currentVersion: Long) = prefs.setDamagesCurrentVersion(currentVersion)
+
+    override fun getDamagesCurrentVersion(): Long = prefs.getDamagesCurrentVersion()
+
+    override fun setQuickCurrentVersion(currentVersion: Long) = prefs.setQuickCurrentVersion(currentVersion)
+
+    override fun getQuickCurrentVersion(): Long = prefs.getQuickCurrentVersion()
+
+    override fun setAppMinimumVersion(version: Long) = prefs.setAppMinimumVersion(version)
+
+    override fun getAppMinimumVersion(): Long = prefs.getAppMinimumVersion()
+
+    override fun setShouldUpdateApp(shouldUpdate: Boolean) = prefs.setShouldUpdateApp(shouldUpdate)
+
+    override fun shouldUpdateApp(): Boolean  = prefs.shouldUpdateApp()
 }

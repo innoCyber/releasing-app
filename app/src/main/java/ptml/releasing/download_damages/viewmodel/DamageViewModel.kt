@@ -9,14 +9,16 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.download_damages.model.Damage
 import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
 
 class DamageViewModel @Inject constructor(
-        repository: Repository,
-        appCoroutineDispatchers: AppCoroutineDispatchers) : BaseViewModel(repository, appCoroutineDispatchers) {
+    repository: Repository,
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
     private val responseMutable = MutableLiveData<List<Damage>>()

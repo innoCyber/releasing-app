@@ -28,6 +28,11 @@ object Constants{
     const val ITEM_TO_EXPAND = 6
 
 
+    const val DEFAULT_DAMAGES_VERSION = 0L
+    const val DEFAULT_QUICK_REMARKS_VERSION = 0L
+    const val DEFAULT_APP_MINIMUM_VERSION = 1L
+
+
     const val DEFAULT_PRINTER_CODE = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
@@ -44,5 +49,7 @@ object Constants{
     const val ALPHANUMERIC = "alphanumeric"
     const val NUMERIC = "numeric"
     const val SHIP_SIDE = "Ship Side"
-
+    const val PLAY_STORE_URL_BASE = "https://play.google.com/store/apps/details?id="
+    const val MARKET_URI_BASE = "market://details?id="
+    const val PLAY_STORE_PACKAGE_NAME = "com.android.vending"
 }

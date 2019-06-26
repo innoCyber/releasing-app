@@ -8,14 +8,15 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
 
 
 class ConfigViewModel @Inject constructor(
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel(repository, appCoroutineDispatchers) {
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     val configResponse = MutableLiveData<AdminConfigResponse>()
     val operationStepList = MutableLiveData<List<OperationStep>>()

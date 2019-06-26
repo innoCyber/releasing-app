@@ -15,11 +15,12 @@ import java.io.IOException
 import kotlin.test.assertEquals
 
 
+@Suppress("UNCHECKED_CAST")
 class ConfigViewModelTest : BaseTest() {
 
 
     private val repository: ReleasingRepository = mockk()
-    private val viewModel by lazy { ConfigViewModel(repository, dispatcher) }
+    private val viewModel by lazy { ConfigViewModel(repository, dispatcher, updateChecker) }
 
     @Test
     fun `get admin configuration success`() {

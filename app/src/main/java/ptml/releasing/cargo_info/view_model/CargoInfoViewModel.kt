@@ -12,6 +12,7 @@ import ptml.releasing.app.form.FormSubmission
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
@@ -25,9 +26,8 @@ import javax.inject.Inject
 
 class CargoInfoViewModel @Inject constructor(
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers
-) :
-    BaseViewModel(repository, appCoroutineDispatchers) {
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     private val _goBack = MutableLiveData<Boolean>()
     private val _formConfig = MutableLiveData<FormDataWrapper>()
@@ -135,12 +135,5 @@ class CargoInfoViewModel @Inject constructor(
             formDamageList.add(damage.toFormDamage())
         }
         return formDamageList
-    }
-
-    fun getQuickRemarks(imei: String) {
-
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-
-        }
     }
 }

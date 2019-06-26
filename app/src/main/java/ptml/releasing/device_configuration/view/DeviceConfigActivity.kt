@@ -30,13 +30,14 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
             return
         }
 
-        viewModel.baseLiveData.observe(this, Observer {
-            if (true == it?.isSuccess) {
-                hideLoading(binding.includeError.root)
-                startNewActivity(SearchActivity::class.java, true)
-            } else if (false == it?.isSuccess) {
-                showErrorWithPermissionCheck()
-            }
+
+        viewModel.openSearchActivity.observe(this, Observer {
+            hideLoading(binding.includeError.root)
+            startNewActivity(SearchActivity::class.java, true)
+        })
+
+        viewModel.showDeviceError.observe(this, Observer {
+            showErrorWithPermissionCheck()
         })
 
         viewModel.networkState.observe(this, Observer {

@@ -13,9 +13,10 @@ import ptml.releasing.data.DAMAGE_SIZE
 import ptml.releasing.data.IMEI
 import ptml.releasing.data.downloadDamagesSuccess
 
+@Suppress("UNCHECKED_CAST")
 class DamageViewModelTest : BaseTest() {
     private val repository: ReleasingRepository = mockk()
-    private val viewModel by lazy { DamageViewModel(repository, dispatcher) }
+    private val viewModel by lazy { DamageViewModel(repository, dispatcher, updateChecker) }
 
 
     @ExperimentalCoroutinesApi

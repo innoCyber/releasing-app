@@ -16,11 +16,12 @@ import ptml.releasing.data.getUser
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+@Suppress("UNCHECKED_CAST")
 class LoginViewModelTest : BaseTest() {
 
     private val repository: ReleasingRepository = mockk()
     private val user: User = mockk()
-    private val viewModel by lazy { LoginViewModel(repository, dispatcher) }
+    private val viewModel by lazy { LoginViewModel(repository, dispatcher, updateChecker) }
 
 
     @Test

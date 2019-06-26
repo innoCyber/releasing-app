@@ -286,8 +286,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     viewModel.openOperatorDialog()
                 }
             },
-            hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
         )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }

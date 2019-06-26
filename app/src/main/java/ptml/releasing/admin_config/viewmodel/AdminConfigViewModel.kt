@@ -8,10 +8,13 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import javax.inject.Inject
 
-class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers) :
-        BaseViewModel(repository, appCoroutineDispatchers) {
+class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
+                                               updateChecker: RemoteConfigUpdateChecker
+) :
+    BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     private val _openConfig = MutableLiveData<Unit>()
     private val _openPrinterSettings = MutableLiveData<Unit>()

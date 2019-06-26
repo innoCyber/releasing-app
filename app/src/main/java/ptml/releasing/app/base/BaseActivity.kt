@@ -37,6 +37,9 @@ import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.PlayStoreUtils
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -77,6 +80,11 @@ abstract class BaseActivity<T, D> :
         networkListener.networkInfoLive.observe(this, Observer {
             networkStateWrapper = it
             invalidateOptionsMenu()
+            if (it.connected) {
+                handleNetworkConnect()
+            } else {
+                handleNetworkDisconnected()
+            }
         })
         lifecycle.addObserver(networkListener)
 
@@ -145,6 +153,51 @@ abstract class BaseActivity<T, D> :
             notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
         })
 
+        viewModel.showUpdateApp.observe(this, Observer {
+            showUpdateDialog()
+        })
+
+        viewModel.updateLoadingState.observe(this, Observer {
+            Timber.e("$it")
+            if (it != NetworkState.LOADING) {
+                viewModel.applyUpdates()
+            }
+        })
+
+        viewModel.startDamagesUpdate.observe(this, Observer {
+            //start intent service to update
+            Timber.d("Starting intent service to update damages")
+        })
+
+        viewModel.startQuickRemarksUpdate.observe(this, Observer {
+            //start intent service to update
+            Timber.d("Starting intent service to update quick remarks")
+        })
+    }
+
+    private fun showUpdateDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.update_required_title),
+            message = getString(R.string.update_required_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    val playStoreUtils = PlayStoreUtils(this@BaseActivity)
+                    playStoreUtils.openPlayStore()
+                    viewModel.resetShouldUpdate()
+                }
+            })
+        dialogFragment.isCancelable = false
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+
+    protected fun handleNetworkConnect() {
+        viewModel.checkForUpdates()
+    }
+
+    protected fun handleNetworkDisconnected() {
+        //no imple
     }
 
 
@@ -153,8 +206,8 @@ abstract class BaseActivity<T, D> :
             title = getString(R.string.confirm_action),
             message = getString(R.string.log_out_confirm_message),
             buttonText = getString(R.string.yes),
-            hasNeutralButton = true,
-            neutralButtonText = getString(R.string.no),
+            hasNegativeButton = true,
+            negativeButtonText = getString(R.string.no),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     viewModel.logOutOperator()
@@ -190,6 +243,7 @@ abstract class BaseActivity<T, D> :
     override fun onResume() {
         super.onResume()
         viewModel.getOperatorName()
+        viewModel.shouldUpdateApp()
     }
 
 
@@ -240,7 +294,7 @@ abstract class BaseActivity<T, D> :
             //save
             Timber.d("Scanned Operator name: %s", operatorName)
             viewModel.saveOperatorName(operatorName)
-        }else  if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
+        } else if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
             //save
             val scanned = data?.getStringExtra(Constants.BAR_CODE)
             Timber.d("Scanned: %s", scanned)
@@ -453,9 +507,10 @@ abstract class BaseActivity<T, D> :
         view.visibility = View.GONE
     }
 
+    @Suppress("NAME_SHADOWING")
     fun showErrorDialog(message: String?) {
         var message = message
-        if(message == null || message.isEmpty()){
+        if (message == null || message.isEmpty()) {
             message = getString(R.string.error_occurred)
         }
         showDialog(getString(R.string.error), message)

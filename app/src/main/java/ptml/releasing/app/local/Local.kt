@@ -35,4 +35,16 @@ interface Local {
 
     fun saveQuickRemarks(response: QuickRemarkResponse?)
     fun getQuickRemarks(): QuickRemarkResponse?
+
+    fun setDamagesCurrentVersion(currentVersion:Long)
+    fun getDamagesCurrentVersion():Long
+
+    fun setQuickCurrentVersion(currentVersion:Long)
+    fun getQuickCurrentVersion():Long
+
+    fun setAppMinimumVersion(version:Long)
+    fun getAppMinimumVersion():Long
+
+    fun setShouldUpdateApp(shouldUpdate:Boolean)
+    fun shouldUpdateApp():Boolean
 }

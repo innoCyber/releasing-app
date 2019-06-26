@@ -73,7 +73,7 @@ open class ReleasingRepository @Inject constructor(
                     local.saveDamages(remoteResponse.await())
                     remoteResponse
                 }
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 Timber.e(e)
                 null
             }
@@ -205,7 +205,7 @@ open class ReleasingRepository @Inject constructor(
                 }
                 remoteResponse
 
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 Timber.e(e)
                 null
             }
@@ -213,7 +213,9 @@ open class ReleasingRepository @Inject constructor(
 
     }
 
+    override fun setShouldUpdateApp(shouldUpdate: Boolean) = local.setShouldUpdateApp(shouldUpdate)
 
+    override fun shouldUpdateApp(): Boolean = local.shouldUpdateApp()
 }
 
 

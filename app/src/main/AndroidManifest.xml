@@ -1,90 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="ptml.releasing">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="ptml.releasing">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
 
     <application
-        android:name="ptml.releasing.app.ReleasingApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
-        tools:targetApi="n">
+            android:name="ptml.releasing.app.ReleasingApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+            tools:targetApi="n">
 
         <activity
-            android:name="ptml.releasing.device_configuration.view.DeviceConfigActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+                android:name="ptml.releasing.device_configuration.view.DeviceConfigActivity"
+                android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".login.view.LoginActivity"
-            android:label="@string/admin_login"
-            android:parentActivityName=".admin_config.view.AdminConfigActivity" />
+                android:name=".login.view.LoginActivity"
+                android:label="@string/admin_login"
+                android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity
-            android:name="ptml.releasing.configuration.view.ConfigActivity"
-            android:label="@string/configuration"
-            android:parentActivityName=".admin_config.view.AdminConfigActivity" />
+                android:name="ptml.releasing.configuration.view.ConfigActivity"
+                android:label="@string/configuration"
+                android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
 
 
         <activity
-            android:name=".download_damages.view.DamageActivity"
-            android:label="@string/damages"
-            android:parentActivityName=".admin_config.view.AdminConfigActivity" />
+                android:name=".download_damages.view.DamageActivity"
+                android:label="@string/damages"
+                android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity
-            android:name=".cargo_search.view.SearchActivity"
-            android:label="@string/home"
-            android:theme="@style/AppTheme.NoActionBar" />
+                android:name=".cargo_search.view.SearchActivity"
+                android:label="@string/home"
+                android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".admin_config.view.AdminConfigActivity"
-            android:label="@string/admin_configuration"
-            android:parentActivityName=".cargo_search.view.SearchActivity" />
+                android:name=".admin_config.view.AdminConfigActivity"
+                android:label="@string/admin_configuration"
+                android:parentActivityName=".cargo_search.view.SearchActivity"/>
         <activity
-            android:name=".cargo_info.view.CargoInfoActivity"
-            android:label="@string/cargo_info"
-            android:parentActivityName=".cargo_search.view.SearchActivity" />
+                android:name=".cargo_info.view.CargoInfoActivity"
+                android:label="@string/cargo_info"
+                android:parentActivityName=".cargo_search.view.SearchActivity"/>
 
-        <activity android:name=".damages.view.ReleasingDamagesSelectDamageActivity" />
-        <activity android:name=".damages.view.ReleasingDamagesSelectSideActivity" />
-        <activity android:name=".damages.view.ReleasingDamagesSelectFrontActivity" />
-        <activity android:name=".damages.view.ReleasingDamagesSelectZoneActivity" />
-        <activity android:name=".damages.view.DamagesActivity" />
-        <activity android:name=".printer.view.PrinterSettingsActivity" />
-        <activity android:name=".barcode_scan.BarcodeScanActivity" />
+        <activity android:name=".damages.view.ReleasingDamagesSelectDamageActivity"/>
+        <activity android:name=".damages.view.ReleasingDamagesSelectSideActivity"/>
+        <activity android:name=".damages.view.ReleasingDamagesSelectFrontActivity"/>
+        <activity android:name=".damages.view.ReleasingDamagesSelectZoneActivity"/>
+        <activity android:name=".damages.view.DamagesActivity"/>
+        <activity android:name=".printer.view.PrinterSettingsActivity"/>
+        <activity android:name=".barcode_scan.BarcodeScanActivity"/>
 
         <activity
-            android:name=".quick_remarks.view.QuickRemarkActivity"
-            android:label="@string/quick_remarks"
-            android:parentActivityName=".admin_config.view.AdminConfigActivity" />
+                android:name=".quick_remarks.view.QuickRemarkActivity"
+                android:label="@string/quick_remarks"
+                android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67" />
+                android:name="io.fabric.ApiKey"
+                android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67"/>
+        <service android:name=".app.utils.UpdateIntentService"
+                 android:exported="false"/>
     </application>
 
 </manifest>

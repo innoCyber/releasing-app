@@ -9,6 +9,7 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.quick_remarks.model.QuickRemark
 
 import timber.log.Timber
@@ -17,8 +18,8 @@ import javax.inject.Inject
 
 class QuickRemarkViewModel @Inject constructor(
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel(repository, appCoroutineDispatchers) {
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
     private val responseMutable = MutableLiveData<List<QuickRemark>>()
@@ -38,7 +39,7 @@ class QuickRemarkViewModel @Inject constructor(
 
                 val response = repository.getQuickRemarkAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
-                    if (response?.data?.isNotEmpty() ==true) {
+                    if (response?.data?.isNotEmpty() == true) {
                         responseMutable.postValue(response.data)
                         networkStateMutable.postValue(NetworkState.LOADED)
                     } else {

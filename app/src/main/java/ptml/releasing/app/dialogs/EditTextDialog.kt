@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ptml.releasing.R
 import ptml.releasing.app.utils.Validation
 import ptml.releasing.databinding.DialogEdittextBinding
@@ -46,7 +47,7 @@ class EditTextDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogEdittextBinding.inflate(LayoutInflater.from(context), null, false)
-        val builder = AlertDialog.Builder(context!!)
+        val builder = MaterialAlertDialogBuilder(context!!)
         val title = arguments?.getString(EXTRA_TITLE)
         builder.setTitle(if (TextUtils.isEmpty(title)) getString(R.string.change_server_url) else title)
         builder.setView(binding.root)

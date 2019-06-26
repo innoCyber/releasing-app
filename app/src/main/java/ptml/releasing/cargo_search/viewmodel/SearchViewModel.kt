@@ -12,6 +12,7 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import timber.log.Timber
@@ -20,8 +21,8 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel(repository, appCoroutineDispatchers) {
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     private val _openAdmin = SingleLiveEvent<Unit>()
     private val _verify = SingleLiveEvent<Unit>()

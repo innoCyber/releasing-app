@@ -11,6 +11,7 @@ import kotlinx.coroutines.async
 import org.junit.Before
 import org.junit.Rule
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 
 abstract class BaseTest {
 
@@ -19,6 +20,7 @@ abstract class BaseTest {
     val rule = InstantTaskExecutorRule() //ensures that the test is executed synchronously
 
 
+    protected val updateChecker: RemoteConfigUpdateChecker = mockk()
     protected val dispatcher: AppCoroutineDispatchers = mockk()
 
     @ExperimentalCoroutinesApi

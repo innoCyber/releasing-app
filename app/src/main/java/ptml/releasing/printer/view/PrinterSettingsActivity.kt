@@ -300,8 +300,8 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
                 override fun onConfirm() {
                     attemptToTurnBluetoothOn()
                 }
-            }, hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            }, hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
 
         )
         dialogFragment.isCancelable = false

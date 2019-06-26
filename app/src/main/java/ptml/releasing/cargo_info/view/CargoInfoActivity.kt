@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
@@ -28,11 +27,9 @@ import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
-import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
-import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 import java.util.*
 
@@ -150,7 +147,7 @@ class CargoInfoActivity :
                     intent?.extras?.getBundle(Constants.EXTRAS)
                         ?.getParcelable<FindCargoResponse>(RESPONSE)
                 val barcode = findCargoResponse?.barcode
-                var labelCpclData =
+                val labelCpclData =
                     settings?.labelCpclData?.replace("var_barcode", barcode ?: input ?: "")
                 /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
                 Timber.e("Printer code: %s", labelCpclData)
@@ -301,8 +298,8 @@ class CargoInfoActivity :
                     viewModel.openOperatorDialog()
                 }
             },
-            hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
         )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
@@ -356,8 +353,8 @@ class CargoInfoActivity :
     }
 
     @VisibleForTesting
-    public fun createForm(wrapper: FormDataWrapper?) {
-        var findCargoResponse =
+    fun createForm(wrapper: FormDataWrapper?) {
+        val findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*if (BuildConfig.DEBUG) {*/
@@ -418,8 +415,8 @@ class CargoInfoActivity :
             title = getString(R.string.confirm_action),
             message = getString(R.string.proceed_to_reset_msg),
             buttonText = getString(R.string.yes),
-            hasNeutralButton = true,
-            neutralButtonText = getString(R.string.no),
+            hasNegativeButton = true,
+            negativeButtonText = getString(R.string.no),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     formBuilder?.reset()
@@ -453,8 +450,8 @@ class CargoInfoActivity :
                 override fun onConfirm() {
                     attemptToTurnBluetoothOn()
                 }
-            }, hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            }, hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
 
         )
         dialogFragment.isCancelable = false
