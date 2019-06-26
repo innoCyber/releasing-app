@@ -22,27 +22,29 @@ class DeviceConfigViewModel @Inject constructor(
 
 
     private val _networkState = MutableLiveData<NetworkState>()
-    val networkState :LiveData<NetworkState> = _networkState
+    val networkState: LiveData<NetworkState> = _networkState
 
 
     private val _openSearchActivity = SingleLiveEvent<Unit>()
-    val openSearchActivity :LiveData<Unit> = _openSearchActivity
+    val openSearchActivity: LiveData<Unit> = _openSearchActivity
 
     private val _showDeviceError = SingleLiveEvent<Unit>()
     val showDeviceError: LiveData<Unit> = _showDeviceError
 
 
-
-    fun verifyDeviceId(imei: String) {
+    fun
+            verifyDeviceId(imei: String) {
         if (networkState.value == NetworkState.LOADING) return
         _networkState.postValue(NetworkState.LOADING)
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
                 val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
-                    if(response.isSuccess){
+                    if (response.isSuccess) {
+                        _openSearchActivity.postValue(Unit)
+                        repository.setImei(imei)
                         repository.setFirst(false)
-                    }else{
+                    } else {
                         _showDeviceError.postValue(Unit)
                     }
                     _networkState.postValue(NetworkState.LOADED)
@@ -56,15 +58,9 @@ class DeviceConfigViewModel @Inject constructor(
     }
 
 
-
-
-    fun checkIfFirst():Boolean{
+    fun checkIfFirst(): Boolean {
         return repository.isFirstAsync()
     }
-
-
-
-
 
 
 }

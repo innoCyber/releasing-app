@@ -31,7 +31,7 @@ const val MOCK_OPERATION_STEP_CATEGORY_ID = 43
 const val SAVED_CONFIG_ERROR_MESSAGE = "Error occurred❗"
 
 fun getVerifyDeviceSuccess() = BaseResponse("", true)
-fun getVerifyDeviceFail() = BaseResponse(VERIFY_DEVICE_FAILURE_MSG, true)
+fun getVerifyDeviceFail() = BaseResponse(VERIFY_DEVICE_FAILURE_MSG, false)
 fun getVerifyDeviceException() = SocketTimeoutException()
 
 fun getUser() = User("ugo", "123456")
@@ -390,7 +390,7 @@ private fun provideConfigureDeviceDataSomeRequired(): List<ConfigureDeviceData> 
 
 private fun getJson(path: String): String {
     val uri = BaseTest::class.java.classLoader?.getResource(path)
-    val file = File(uri?.path)
+    val file = File(uri?.path ?: return "")
     return String(file.readBytes())
 }
 

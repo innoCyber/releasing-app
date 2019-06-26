@@ -52,12 +52,12 @@ class FormBuilderPresenterTest : BaseTest() {
 
 
         assertEquals(
-            findCargoResponse.values.size, presenter.values.size,
+            findCargoResponse.values?.size, presenter.values.size,
             "Value size is the same "
         )
 
         assertEquals(
-            findCargoResponse.options.size, presenter.options.size,
+            findCargoResponse.options?.size, presenter.options.size,
             "options size is the same"
         )
 

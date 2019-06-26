@@ -42,6 +42,7 @@ import ptml.releasing.app.utils.PlayStoreUtils
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
+import ptml.releasing.app.utils.remoteconfig.UpdateIntentService
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
@@ -167,12 +168,22 @@ abstract class BaseActivity<T, D> :
         viewModel.startDamagesUpdate.observe(this, Observer {
             //start intent service to update
             Timber.d("Starting intent service to update damages")
+            startUpdateDamagesService()
         })
 
         viewModel.startQuickRemarksUpdate.observe(this, Observer {
             //start intent service to update
             Timber.d("Starting intent service to update quick remarks")
+            startUpdateQuickRemarksService()
         })
+    }
+
+    private fun startUpdateQuickRemarksService() {
+        UpdateIntentService.startUpdateQuickRemarks(this)
+    }
+
+    private fun startUpdateDamagesService() {
+        UpdateIntentService.startUpdateDamages(this)
     }
 
     private fun showUpdateDialog() {

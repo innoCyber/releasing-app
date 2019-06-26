@@ -33,6 +33,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val QUICK_REMARKS_CURRENT_VERSION = "quick_remarks_current_version"
         const val DAMAGES_CURRENT_VERSION = "damages_current_version"
         const val UPDATE_APP = "update_app"
+        const val IMEI = "imei"
     }
 
 
@@ -147,5 +148,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun shouldUpdateApp(): Boolean {
         return sharedPreferences.getBoolean(UPDATE_APP, false)
+    }
+
+    override fun setImei(imei: String) {
+        return sharedPreferences.edit().putString(IMEI, imei).apply()
+    }
+
+    override fun getImei(): String? {
+        return sharedPreferences.getString(IMEI, null)
     }
 }

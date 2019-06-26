@@ -1,6 +1,8 @@
 package ptml.releasing.base
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -11,6 +13,8 @@ import kotlinx.coroutines.async
 import org.junit.Before
 import org.junit.Rule
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 
 abstract class BaseTest {
@@ -37,6 +41,10 @@ abstract class BaseTest {
         every {
             dispatcher.main
         } returns Dispatchers.Unconfined
+
+        every {
+            updateChecker.updateCheckState
+        }returns MutableLiveData(NetworkState.LOADING)
     }
 
 }

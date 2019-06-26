@@ -82,7 +82,6 @@ class LoginViewModelTest : BaseTest() {
         } returns null
 
 
-
         viewModel.login(null, null)
 
         assertEquals(R.string.username_empty, viewModel.usernameValidation.value)

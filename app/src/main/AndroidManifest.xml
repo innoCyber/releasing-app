@@ -85,7 +85,7 @@
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67"/>
-        <service android:name=".app.utils.UpdateIntentService"
+        <service android:name=".app.utils.remoteconfig.UpdateIntentService"
                  android:exported="false"/>
     </application>
 
