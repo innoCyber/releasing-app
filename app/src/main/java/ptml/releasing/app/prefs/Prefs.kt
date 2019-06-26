@@ -46,6 +46,9 @@ interface Prefs {
     fun setShouldUpdateApp(shouldUpdate:Boolean)
     fun shouldUpdateApp():Boolean
 
+    fun setMustUpdateApp(shouldUpdate:Boolean)
+    fun mustUpdateApp():Boolean
+
     fun setImei(imei:String)
     fun getImei():String?
 }

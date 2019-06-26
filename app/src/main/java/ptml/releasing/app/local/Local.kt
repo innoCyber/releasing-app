@@ -51,5 +51,8 @@ interface Local {
     fun setImei(imei:String)
     fun getImei():String?
 
+    fun setMustUpdateApp(shouldUpdate:Boolean)
+    fun mustUpdateApp():Boolean
+
 
 }

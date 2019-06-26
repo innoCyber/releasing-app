@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import ptml.releasing.BuildConfig
-import ptml.releasing.R
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.FormLoader
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -16,7 +14,7 @@ import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
-        Prefs {
+    Prefs {
     companion object {
         const val FIRST = "is_first"
         const val CONFIG = "config"
@@ -32,7 +30,8 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val APP_MINIMUM_VERSION = "app_version_minimum"
         const val QUICK_REMARKS_CURRENT_VERSION = "quick_remarks_current_version"
         const val DAMAGES_CURRENT_VERSION = "damages_current_version"
-        const val UPDATE_APP = "update_app"
+        const val SHOULD_UPDATE_APP = "should_update_app"
+        const val MUST_UPDATE_APP = "must_update_app"
         const val IMEI = "imei"
     }
 
@@ -123,7 +122,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDamagesCurrentVersion(): Long {
-       return sharedPreferences.getLong(DAMAGES_CURRENT_VERSION, Constants.DEFAULT_DAMAGES_VERSION)
+        return sharedPreferences.getLong(DAMAGES_CURRENT_VERSION, Constants.DEFAULT_DAMAGES_VERSION)
     }
 
     override fun setQuickCurrentVersion(currentVersion: Long) {
@@ -143,11 +142,11 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun setShouldUpdateApp(shouldUpdate: Boolean) {
-        return sharedPreferences.edit().putBoolean(UPDATE_APP, shouldUpdate).apply()
+        return sharedPreferences.edit().putBoolean(SHOULD_UPDATE_APP, shouldUpdate).apply()
     }
 
     override fun shouldUpdateApp(): Boolean {
-        return sharedPreferences.getBoolean(UPDATE_APP, false)
+        return sharedPreferences.getBoolean(SHOULD_UPDATE_APP, false)
     }
 
     override fun setImei(imei: String) {
@@ -156,5 +155,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun getImei(): String? {
         return sharedPreferences.getString(IMEI, null)
+    }
+
+    override fun mustUpdateApp(): Boolean {
+        return sharedPreferences.getBoolean(MUST_UPDATE_APP, false)
+    }
+
+    override fun setMustUpdateApp(shouldUpdate: Boolean) {
+        return sharedPreferences.edit().putBoolean(MUST_UPDATE_APP, shouldUpdate).apply()
     }
 }

@@ -39,7 +39,6 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.PlayStoreUtils
-import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.app.utils.remoteconfig.UpdateIntentService
@@ -154,9 +153,14 @@ abstract class BaseActivity<T, D> :
             notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
         })
 
-        viewModel.showUpdateApp.observe(this, Observer {
-            showUpdateDialog()
+        viewModel.showMustUpdateApp.observe(this, Observer {
+            showMustUpdateDialog()
         })
+
+        viewModel.showShouldUpdateApp.observe(this, Observer {
+            showShouldUpdateDialog()
+        })
+
 
         viewModel.updateLoadingState.observe(this, Observer {
             Timber.e("$it")
@@ -186,16 +190,37 @@ abstract class BaseActivity<T, D> :
         UpdateIntentService.startUpdateDamages(this)
     }
 
-    private fun showUpdateDialog() {
+    private fun showMustUpdateDialog() {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.update_required_title),
-            message = getString(R.string.update_required_msg),
-            buttonText = getString(android.R.string.ok),
+            message = getString(R.string.must_update_required_msg),
+            buttonText = getString(R.string.update_required_ok),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     val playStoreUtils = PlayStoreUtils(this@BaseActivity)
                     playStoreUtils.openPlayStore()
+                }
+            })
+        dialogFragment.isCancelable = false
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun showShouldUpdateDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.update_required_title),
+            message = getString(R.string.should_update_required_msg),
+            buttonText = getString(R.string.update_required_ok),
+            hasNegativeButton = true,
+            negativeButtonText = getString(R.string.update_required_cancel),
+            negativeListener = object: InfoDialog.NegativeListener{
+                override fun onNeutralClick() {
                     viewModel.resetShouldUpdate()
+                }
+            },
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    val playStoreUtils = PlayStoreUtils(this@BaseActivity)
+                    playStoreUtils.openPlayStore()
                 }
             })
         dialogFragment.isCancelable = false
@@ -254,7 +279,7 @@ abstract class BaseActivity<T, D> :
     override fun onResume() {
         super.onResume()
         viewModel.getOperatorName()
-        viewModel.shouldUpdateApp()
+        viewModel.checkToShowUpdateAppDialog()
     }
 
 

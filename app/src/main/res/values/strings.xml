@@ -238,5 +238,8 @@
     <string name="enter_damage_remark_hint">Damage remark</string>
     <string name="open_playstore_with">Open PlayStore with…</string>
     <string name="update_required_title">New version available</string>
-    <string name="update_required_msg">You will be directed to Play Store update the app to the new version</string>
+    <string name="must_update_required_msg">You will be directed to Play Store update the app to the new version</string>
+    <string name="should_update_required_msg">Please update the app to the new version</string>
+    <string name="update_required_ok">Update</string>
+    <string name="update_required_cancel">No, thanks</string>
 </resources>

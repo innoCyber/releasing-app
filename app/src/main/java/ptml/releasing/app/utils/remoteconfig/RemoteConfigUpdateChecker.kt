@@ -16,25 +16,33 @@ class RemoteConfigUpdateChecker @Inject constructor(
         configManger.fetchAll()
     }
 
+    fun mustUpdateApp(): Boolean {
+        val localAppVersion = BuildConfig.VERSION_CODE.toLong()
+        val remoteAppVersion = configManger.appMinimumVersion
+        return shouldUpdate(localAppVersion, remoteAppVersion)
+
+    }
+
     fun shouldUpdateApp(): Boolean {
         val localAppVersion = BuildConfig.VERSION_CODE.toLong()
-        val remoteAppVersion = configManger.appCurrentVersion
-        return mustUpdate(localAppVersion, remoteAppVersion)
+        val remoteAppMinimumVersion = configManger.appCurrentVersion
+        return shouldUpdate(localAppVersion, remoteAppMinimumVersion)
     }
 
     fun shouldUpdateQuickRemarks(): Boolean {
         val localQuickRemarkVersion = localStore.getQuickCurrentVersion()
         val remoteQuickRemarkVersion = configManger.quickRemarkCurrentVersion
-        return mustUpdate(localQuickRemarkVersion, remoteQuickRemarkVersion)
+        return shouldUpdate(localQuickRemarkVersion, remoteQuickRemarkVersion)
     }
 
     fun shouldUpdateDamages(): Boolean {
         val localDamagesVersion = localStore.getDamagesCurrentVersion()
         val remoteDamagesVersion = configManger.damagesCurrentVersion
-        return mustUpdate(localDamagesVersion, remoteDamagesVersion)
+        return shouldUpdate(localDamagesVersion, remoteDamagesVersion)
     }
 
-    private fun mustUpdate(localVersion: Long, remoteVersion: Long): Boolean {
+    private fun shouldUpdate(localVersion: Long, remoteVersion: Long): Boolean {
         return remoteVersion > localVersion
     }
+
 }

@@ -11,6 +11,7 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.UpdateHelper
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,8 +24,12 @@ open class BaseViewModel @Inject constructor(
 
     val updateLoadingState = updateChecker.updateCheckState
 
-    private val _showUpdateApp = SingleLiveEvent<Unit>()
-    val showUpdateApp: LiveData<Unit> = _showUpdateApp
+    private val _showMustUpdateApp = SingleLiveEvent<Unit>()
+    val showMustUpdateApp: LiveData<Unit> = _showMustUpdateApp
+
+
+    private val _showShouldUpdateApp = SingleLiveEvent<Unit>()
+    val showShouldUpdateApp: LiveData<Unit> = _showShouldUpdateApp
 
     private val _startDamagesUpdate = SingleLiveEvent<Unit>()
     val startDamagesUpdate: LiveData<Unit> = _startDamagesUpdate
@@ -174,28 +179,34 @@ open class BaseViewModel @Inject constructor(
         updateChecker.check()
     }
 
-    fun shouldUpdateApp() {
-        if (repository.shouldUpdateApp()) {
-            _showUpdateApp.value = Unit
+    fun checkToShowUpdateAppDialog() {
+        if (repository.mustUpdateApp()) {
+            _showMustUpdateApp.value = Unit
+            repository.setMustUpdateApp(false)
+        } else if (repository.shouldUpdateApp()) {
+            if (!UpdateHelper.noThanksClicked) {
+                _showShouldUpdateApp.value = Unit
+            }
+            repository.setShouldUpdateApp(false)
         }
     }
 
+
     fun resetShouldUpdate() {
-        repository.setShouldUpdateApp(false)
+        UpdateHelper.noThanksClicked = true
     }
 
     fun applyUpdates() {
-        if(updateChecker.shouldUpdateApp()){
-            Timber.d("Set the value to true prefs so the dialog will be shown on the next opened screen")
-            repository.setShouldUpdateApp(true)
-        }
-
-        if(updateChecker.shouldUpdateDamages()){
+        val mustUpdateApp = updateChecker.mustUpdateApp()
+        val shouldUpdateApp = updateChecker.shouldUpdateApp()
+        repository.setMustUpdateApp(mustUpdateApp)
+        repository.setShouldUpdateApp(shouldUpdateApp)
+        if (updateChecker.shouldUpdateDamages()) {
             //start intent service to update damages
             _startDamagesUpdate.value = Unit
         }
 
-        if(updateChecker.shouldUpdateQuickRemarks()){
+        if (updateChecker.shouldUpdateQuickRemarks()) {
             //start intent service to update quick remarks
             _startQuickRemarksUpdate.value = Unit
         }

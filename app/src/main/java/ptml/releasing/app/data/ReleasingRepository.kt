@@ -224,6 +224,10 @@ open class ReleasingRepository @Inject constructor(
     override fun setDamagesCurrentVersion(currentVersion: Long)  = local.setDamagesCurrentVersion(currentVersion)
 
     override fun setQuickCurrentVersion(currentVersion: Long)  = local.setQuickCurrentVersion(currentVersion)
+
+    override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
+
+    override fun mustUpdateApp(): Boolean = local.mustUpdateApp()
 }
 
 
