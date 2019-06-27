@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
@@ -66,6 +67,7 @@ abstract class BaseActivity<T, D> :
 
     companion object {
         const val RC_BARCODE = 112
+        const val RC_SEARCH = 113
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -238,6 +240,11 @@ abstract class BaseActivity<T, D> :
             //save
             Timber.d("Scanned Operator name: %s", operatorName)
             viewModel.saveOperatorName(operatorName)
+        }else  if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
+            //save
+            val scanned = data?.getStringExtra(Constants.BAR_CODE)
+            Timber.d("Scanned: %s", scanned)
+            viewModel.scanForSearch(scanned)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -466,8 +473,8 @@ abstract class BaseActivity<T, D> :
 
 
     fun initErrorDrawable(imageView: ImageView) {
-        val errorDrawable = ContextCompat.getDrawable(this, R.drawable.ic_error)
-        val mutatedDrawable = errorDrawable?.mutate()
+        val drawable = VectorDrawableCompat.create(resources, R.drawable.ic_error, null)
+        val mutatedDrawable = drawable?.mutate()
         DrawableCompat.setTint(mutatedDrawable!!, ContextCompat.getColor(this, R.color.colorRed))
         imageView.setImageDrawable(mutatedDrawable)
     }

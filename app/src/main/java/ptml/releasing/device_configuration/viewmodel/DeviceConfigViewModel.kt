@@ -18,18 +18,11 @@ class DeviceConfigViewModel @Inject constructor(
 ) : BaseViewModel(repository, appCoroutineDispatchers) {
 
 
-    private val imeiLiveData = MutableLiveData<String>()
-
-
-
     val baseLiveData = MutableLiveData<BaseResponse>()
-
-
     val networkState = MutableLiveData<NetworkState>()
 
 
     fun verifyDeviceId(imei: String) {
-        imeiLiveData.value = imei
         if (networkState.value == NetworkState.LOADING) return
         networkState.postValue(NetworkState.LOADING)
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {

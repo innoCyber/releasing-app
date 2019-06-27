@@ -28,22 +28,26 @@ class NetworkListener(private val context: Context) : LifecycleObserver {
     private val connectivityManager =
         context.applicationContext.getSystemService<ConnectivityManager>()
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun start() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Timber.d("Starting for API >= 21")
             setupConnectionListener()
         } else {
+            Timber.d("Starting for API < 21")
             initializeReceiver()
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun stop() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Timber.d("Stopping for API >= 21")
             val connectivityManager =
                 context.applicationContext.getSystemService<ConnectivityManager>()
             connectivityManager?.unregisterNetworkCallback(networkCallback)
         } else {
+            Timber.d("Stopping for API < 21")
             LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver)
         }
     }
@@ -76,6 +80,7 @@ class NetworkListener(private val context: Context) : LifecycleObserver {
 
     @Suppress("DEPRECATION")
     private fun initializeReceiver() {
+        Timber.d("Initializing connectivity receiver")
         receiver = ConnectivityReceiver()
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter)
@@ -85,6 +90,7 @@ class NetworkListener(private val context: Context) : LifecycleObserver {
     @Suppress("DEPRECATION")
     inner class ConnectivityReceiver() : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("OnReceive")
             if (context != null) {
                 val stateChange = isOffline()
                 Timber.d("Network state changed to: %s", stateChange)

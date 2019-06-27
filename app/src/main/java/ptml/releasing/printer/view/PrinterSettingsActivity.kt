@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
@@ -197,7 +198,10 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
                 //populate devices
                 getBluetoothDevicesWithPermissionCheck()
             } else {
-                showTurnBlueToothPrompt()
+                Handler().postDelayed({
+                    showTurnBlueToothPrompt()
+                }, 500)
+
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import ptml.releasing.R
 import ptml.releasing.configuration.models.BaseConfig
 
@@ -24,7 +25,8 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
             view = inflater.inflate(R.layout.spinner_single, parent, false)
         }
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
-        val drawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down)
+        val drawable =   VectorDrawableCompat.create(
+            context.resources, R.drawable.ic_arrow_drop_down, null)
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, drawable, null)
 

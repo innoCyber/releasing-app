@@ -9,8 +9,8 @@ data class FindCargoResponse(
     @SerializedName("cargo_id") var cargoId: Int,
     @SerializedName("type_container") val typeContainer: Int,
     @SerializedName("barcode") var barcode: String?,
-    @SerializedName("values") val values: List<Value>,
-    @SerializedName("options") val options: List<Option>
+    @SerializedName("values") val values: List<Value>?,
+    @SerializedName("options") val options: List<Option>?
 ) : BaseResponse(), Parcelable {
 
     constructor(source: Parcel) : this(

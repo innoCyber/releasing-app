@@ -8,9 +8,11 @@ import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -75,7 +77,8 @@ class CargoInfoActivity :
 
                 FormType.DAMAGES -> {
                     damageView = view
-                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
+                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)
+                        ?.getParcelable<FindCargoResponse>(RESPONSE)
                     DamagesActivity.typeContainer = findCargoResponse?.typeContainer
                     val intent = Intent(this@CargoInfoActivity, DamagesActivity::class.java)
                     startActivityForResult(
@@ -84,10 +87,7 @@ class CargoInfoActivity :
                     )
                 }
             }
-
-
         }
-
 
 
         override fun onError(message: String) {
@@ -97,12 +97,7 @@ class CargoInfoActivity :
 
         override fun onClickSave() {
             //create a new form validator
-            val formValidator = FormValidator(formBuilder)
-            formValidator.listener = validatorListener
-            if (formValidator.validate()) {
-                Timber.d("Validated")
-                submitFormWithPermissionCheck(formValidator)
-            }
+            validateSaveSubmit()
         }
 
         override fun onClickReset() {
@@ -114,14 +109,23 @@ class CargoInfoActivity :
         }
     }
 
+    private fun validateSaveSubmit() {
+        val formValidator = FormValidator(formBuilder, formBuilder?.data)
+        formValidator.listener = validatorListener
+        if (formValidator.validate()) {
+            Timber.d("Validated")
+            submitFormWithPermissionCheck(formValidator)
+        }
+    }
+
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getFormConfig() {
         viewModel.getFormConfig((application as ReleasingApplication).provideImei())
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-     fun submitForm(formValidator: FormValidator) {
-        val formSubmission = FormSubmission(formBuilder, formValidator)
+    fun submitForm(formValidator: FormValidator) {
+        val formSubmission = FormSubmission(formBuilder, formBuilder?.data, formValidator)
         val findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         viewModel.submitForm(
@@ -266,16 +270,42 @@ class CargoInfoActivity :
         })
 
         viewModel.submitSuccess.observe(this, Observer {
-            showSuccessDialog()
+            notifyUser(getString(R.string.form_submit_success_msg))
+            setResult(Activity.RESULT_OK)
+            finish()
         })
 
         viewModel.errorMessage.observe(this, Observer {
             showErrorDialog(it)
         })
+
+        viewModel.noOperator.observe(this, Observer {
+            //show dialog
+            showOperatorErrorDialog()
+        })
+
+
+        binding.includeError.btnReload.setOnClickListener {
+            validateSaveSubmit()
+        }
     }
 
 
-
+    private fun showOperatorErrorDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.error),
+            message = getString(R.string.no_operator_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    viewModel.openOperatorDialog()
+                }
+            },
+            hasNeutralButton = true,
+            neutralButtonText = getString(android.R.string.cancel)
+        )
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
 
     private fun showSuccessDialog() {
         val dialogFragment = InfoDialog.newInstance(
@@ -325,7 +355,8 @@ class CargoInfoActivity :
         )
     }
 
-    private fun createForm(wrapper: FormDataWrapper?) {
+    @VisibleForTesting
+    public fun createForm(wrapper: FormDataWrapper?) {
         var findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
@@ -343,7 +374,7 @@ class CargoInfoActivity :
             ?.initializeData()
 
         binding.formContainer.addView(formView)
-        if(formBuilder?.error == false){
+        if (formBuilder?.error == false) {
             binding.formBottom.addView(formBuilder?.getBottomButtons())
         }
     }
@@ -356,23 +387,26 @@ class CargoInfoActivity :
 
         if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_car
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_car,
+                    null
                 )
             )
         } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_cargo
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_cargo,
+                    null
                 )
             )
         } else {
             binding.includeHome.imgCargoType.setImageDrawable(
-                ContextCompat.getDrawable(
-                    themedContext,
-                    R.drawable.ic_container
+                VectorDrawableCompat.create(
+                    resources,
+                    R.drawable.ic_container,
+                    null
                 )
             )
         }
@@ -453,7 +487,7 @@ class CargoInfoActivity :
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showPhoneStateRationale(request: PermissionRequest) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
             buttonText = getString(android.R.string.ok),

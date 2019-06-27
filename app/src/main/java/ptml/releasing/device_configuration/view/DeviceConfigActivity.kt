@@ -35,7 +35,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
                 hideLoading(binding.includeError.root)
                 startNewActivity(SearchActivity::class.java, true)
             } else if (false == it?.isSuccess) {
-                showError()
+                showErrorWithPermissionCheck()
             }
         })
 
@@ -68,16 +68,20 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
 
     }
 
-
-    private fun showError() {
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE)
+     fun showError() {
         binding.includeProgress.root.visibility = View.GONE
         binding.includeError.root.visibility = View.GONE
         binding.includeDeviceConfigError.root.visibility = View.VISIBLE
+        val imei = (application as ReleasingApplication).provideImei()
+        binding.includeDeviceConfigError.tvMessage.text = getString(R.string.verification_error_message, imei)
     }
 
 
     @NeedsPermission(
-        android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
@@ -125,7 +129,11 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }

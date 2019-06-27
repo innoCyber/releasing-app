@@ -25,6 +25,7 @@ class QuickRemarkAdapter(val listener: QuickRemarkListener) : RecyclerView.Adapt
 class QuickRemarkViewHolder(val binding: ItemQuickRemarkBinding, val listener: QuickRemarkListener) : RecyclerView.ViewHolder(binding.root) {
     fun performBind(item: QuickRemark?) {
         binding.tvItem.text = item?.name
+        binding.tvItem.isSelected = true
         binding.tvItemLayout.setOnClickListener {
             listener.onItemClick(item)
         }

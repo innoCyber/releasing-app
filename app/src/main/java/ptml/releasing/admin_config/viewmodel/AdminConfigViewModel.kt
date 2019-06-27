@@ -22,8 +22,6 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
     private var first = true
-    val firstTimeLogin: LiveData<Boolean> = _firstTimeLogin
-    val firstTimeFindCargo: LiveData<Boolean> = _firstTimeFindCargo
     private val _openSearch = MutableLiveData<Boolean>()
 
     val openConfig: LiveData<Unit> = _openConfig
@@ -107,5 +105,4 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
             navigateToLoginIfFirstTime()
         }
     }
-
 }

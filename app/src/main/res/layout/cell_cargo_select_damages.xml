@@ -12,17 +12,24 @@
             style="@style/Damages.SelectListTitle"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/CellCargoDamagesBtnLow"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_l"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Damage nameAbaculus assimilants,cas est. Ubi est brevis mineralis?A falsis, historia gratis agripeta.Est velox verpa, cesaris." />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
         <Button
             android:id="@+id/CellCargoDamagesBtnLow"
             style="@style/Damages.SelectButton"
             android:text="@string/cell_cargo_damages_txt_low"
-            app:layout_constraintStart_toEndOf="@id/CellCargoDamagesTxtDamage"
+            app:layout_constraintStart_toEndOf="@id/guideline_l"
             app:layout_constraintEnd_toStartOf="@id/CellCargoDamagesBtnHigh"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

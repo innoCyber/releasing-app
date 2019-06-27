@@ -12,12 +12,12 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
 
         buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
-//        buildConfigField("String", "BASE_URL", "\"http://192.168.43.116:3000\"")
+//        buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -56,6 +56,7 @@ dependencies {
 
     //appcompat
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
+    implementation "androidx.vectordrawable:vectordrawable:1.1.0-beta01"
 
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'
