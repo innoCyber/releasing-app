@@ -15,9 +15,7 @@ android {
         versionCode 3
         versionName "1.0.2"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
-
-//        buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
-        buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
+//
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -25,6 +23,32 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions 'server'
+    productFlavors {
+        dev {
+            dimension 'server'
+        }
+
+        staging {
+            dimension 'server'
+        }
+
+        production {
+            dimension 'server'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        def name = variant.getName()
+        // Specific values
+        if (name.contains("dev")) {
+            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
+        } else if (name.contains("staging")) {
+            buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+        } else if (name.contains("production")) {
+            buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
         }
     }
 
