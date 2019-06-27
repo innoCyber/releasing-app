@@ -28,6 +28,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val QUICK_REMARK = "quick_remark"
 
         const val APP_MINIMUM_VERSION = "app_version_minimum"
+        const val APP_CURRENT_VERSION = "app_current_minimum"
         const val QUICK_REMARKS_CURRENT_VERSION = "quick_remarks_current_version"
         const val DAMAGES_CURRENT_VERSION = "damages_current_version"
         const val SHOULD_UPDATE_APP = "should_update_app"
@@ -163,5 +164,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun setMustUpdateApp(shouldUpdate: Boolean) {
         return sharedPreferences.edit().putBoolean(MUST_UPDATE_APP, shouldUpdate).apply()
+    }
+
+    override fun setAppCurrentVersion(version: Long) {
+        return sharedPreferences.edit().putLong(APP_CURRENT_VERSION, version).apply()
+    }
+
+    override fun getAppCurrentVersion(): Long {
+        return sharedPreferences.getLong(APP_CURRENT_VERSION, Constants.DEFAULT_APP_CURRENT_VERSION)
     }
 }

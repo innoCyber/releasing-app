@@ -45,6 +45,11 @@ interface Local {
     fun setAppMinimumVersion(version:Long)
     fun getAppMinimumVersion():Long
 
+
+    fun setAppCurrentVersion(version:Long)
+    fun getAppCurrentVersion():Long
+
+
     fun setShouldUpdateApp(shouldUpdate:Boolean)
     fun shouldUpdateApp():Boolean
 

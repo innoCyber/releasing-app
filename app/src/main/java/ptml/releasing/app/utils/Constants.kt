@@ -31,6 +31,7 @@ object Constants{
     const val DEFAULT_DAMAGES_VERSION = 0L
     const val DEFAULT_QUICK_REMARKS_VERSION = 0L
     const val DEFAULT_APP_MINIMUM_VERSION = 1L
+    const val DEFAULT_APP_CURRENT_VERSION = 1L
 
 
     const val DEFAULT_PRINTER_CODE = "! 0 200 200 400 1\r\n" +

@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.app.utils.UpdateHelper
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -24,6 +25,12 @@ open class BaseViewModel @Inject constructor(
 
     val updateLoadingState = updateChecker.updateCheckState
 
+    private val _updateQuickRemarkLoadingState = MutableLiveData<NetworkState>()
+    val updateQuickRemarkLoadingState: LiveData<NetworkState> = _updateQuickRemarkLoadingState
+
+    private val _updateDamagesLoadingState = MutableLiveData<NetworkState>()
+    val updateDamagesLoadingState: LiveData<NetworkState> = _updateDamagesLoadingState
+
     private val _showMustUpdateApp = SingleLiveEvent<Unit>()
     val showMustUpdateApp: LiveData<Unit> = _showMustUpdateApp
 
@@ -37,7 +44,7 @@ open class BaseViewModel @Inject constructor(
     private val _startQuickRemarksUpdate = SingleLiveEvent<Unit>()
     val startQuickRemarksUpdate: LiveData<Unit> = _startQuickRemarksUpdate
 
-    var compositeJob: Job? = null
+    var compositeJob: Job = Job()
 
     protected val _openBarCodeScanner = MutableLiveData<Unit>()
     protected val _searchScanned = MutableLiveData<String>()
@@ -73,9 +80,9 @@ open class BaseViewModel @Inject constructor(
 
 
     override fun onCleared() {
-        when (compositeJob?.isCancelled) {
+        when (compositeJob.isCancelled) {
             false -> {
-                compositeJob?.cancel()
+                compositeJob.cancel()
             }
         }
         super.onCleared()
@@ -176,24 +183,34 @@ open class BaseViewModel @Inject constructor(
     }
 
     fun checkForUpdates() {
-        updateChecker.check()
-    }
-
-    fun checkToShowUpdateAppDialog() {
-        if (repository.mustUpdateApp()) {
-            _showMustUpdateApp.value = Unit
-            repository.setMustUpdateApp(false)
-        } else if (repository.shouldUpdateApp()) {
-            if (!UpdateHelper.noThanksClicked) {
-                _showShouldUpdateApp.value = Unit
-            }
-            repository.setShouldUpdateApp(false)
+        if (!repository.isFirst()) {
+            updateChecker.check()
         }
     }
 
+    fun checkToShowUpdateAppDialog() {
+        if (!repository.isFirst() && repository.mustUpdateApp()) {
+            _showMustUpdateApp.value = Unit
+            UpdateHelper.showingDialog = true
 
-    fun resetShouldUpdate() {
+        } else if (!repository.isFirst() && repository.shouldUpdateApp()) {
+            if (!UpdateHelper.noThanksClicked && !UpdateHelper.showingDialog) {
+                _showShouldUpdateApp.value = Unit
+                UpdateHelper.showingDialog = true
+            }
+        }
+    }
+
+    fun checkToResetAppUpdateValues() {
+        repository.checkToResetLocalAppUpdateValues()
+    }
+
+    fun resetRuntimeShouldUpdate() {
         UpdateHelper.noThanksClicked = true
+    }
+
+    fun resetShowingDialog() {
+        UpdateHelper.showingDialog = false
     }
 
     fun applyUpdates() {
@@ -210,5 +227,57 @@ open class BaseViewModel @Inject constructor(
             //start intent service to update quick remarks
             _startQuickRemarksUpdate.value = Unit
         }
+    }
+
+    fun updateQuickRemarks() {
+        if (_updateQuickRemarkLoadingState.value == NetworkState.LOADING) {
+            Timber.d("Already fetching remote config data...")
+            return
+        }
+        _updateQuickRemarkLoadingState.postValue(NetworkState.LOADING)
+        CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
+            try {
+                val imei = repository.getImei()
+                repository.downloadQuickRemarkAsync(imei ?: return@launch)?.await()
+
+                val quickRemarkVersion = updateChecker.remoteConfigManger.quickRemarkCurrentVersion
+                Timber.d("Downloaded quick remark, updating the local quick remark version to $quickRemarkVersion")
+                repository.setQuickCurrentVersion(quickRemarkVersion)
+                _updateQuickRemarkLoadingState.postValue(NetworkState.LOADED)
+            } catch (t: Throwable) {
+                Timber.e(t, "Error occurred while trying to update quick remark")
+                _updateQuickRemarkLoadingState.postValue(NetworkState.error(t))
+            }
+        }
+    }
+
+    fun updateDamages() {
+        if (_updateDamagesLoadingState.value == NetworkState.LOADING) {
+            Timber.d("Already fetching remote config data...")
+            return
+        }
+        _updateDamagesLoadingState.postValue(NetworkState.LOADING)
+        CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
+            try {
+                val imei = repository.getImei()
+                repository.downloadDamagesAsync(imei ?: return@launch)?.await()
+
+                val damagesVersion = updateChecker.remoteConfigManger.damagesCurrentVersion
+                Timber.d("Downloaded damages, updating the local damages version to $damagesVersion")
+                repository.setDamagesCurrentVersion(damagesVersion)
+                _updateDamagesLoadingState.postValue(NetworkState.LOADED)
+            } catch (t: Throwable) {
+                Timber.e(t, "Error occurred while trying to update damages")
+                _updateDamagesLoadingState.postValue(NetworkState.error(t))
+            }
+        }
+    }
+
+    fun updatingDamages(): Boolean {
+        return _updateDamagesLoadingState.value == NetworkState.LOADING
+    }
+
+    fun updatingQuickRemarks(): Boolean {
+        return _updateQuickRemarkLoadingState.value == NetworkState.LOADING
     }
 }

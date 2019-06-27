@@ -1,6 +1,7 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
+import ptml.releasing.BuildConfig
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
@@ -46,7 +47,7 @@ interface Repository {
     fun getSavedConfigAsync(): Configuration
     fun setSavedConfigAsync(configuration: Configuration)
 
-    fun isFirstAsync(): Boolean
+    fun isFirst(): Boolean
     fun setFirst(value: Boolean)
     fun isConfiguredAsync(): Boolean
     fun setConfigured(isConfigured: Boolean)
@@ -84,6 +85,12 @@ interface Repository {
 
     fun setQuickCurrentVersion(currentVersion:Long)
 
+    fun checkToResetLocalAppUpdateValues()
 
+    fun setAppMinimumVersion(version:Long)
+    fun getAppMinimumVersion():Long
+
+    fun setAppCurrentVersion(version:Long)
+    fun getAppCurrentVersion():Long
 
 }

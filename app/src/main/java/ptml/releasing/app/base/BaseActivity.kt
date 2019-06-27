@@ -2,6 +2,7 @@
 
 package ptml.releasing.app.base
 
+import android.app.ProgressDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -67,6 +68,7 @@ abstract class BaseActivity<T, D> :
     @Inject
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
+    private var progressDialog: ProgressDialog? = null
 
     companion object {
         const val RC_BARCODE = 112
@@ -75,6 +77,8 @@ abstract class BaseActivity<T, D> :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        progressDialog = ProgressDialog(this)
 
         val networkListener = NetworkListener(this)
         networkListener.networkInfoLive.observe(this, Observer {
@@ -90,6 +94,8 @@ abstract class BaseActivity<T, D> :
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(getViewModelClass())
+
+        viewModel.checkToResetAppUpdateValues()
 
         initBeforeView()
 
@@ -180,14 +186,40 @@ abstract class BaseActivity<T, D> :
             Timber.d("Starting intent service to update quick remarks")
             startUpdateQuickRemarksService()
         })
+
+        viewModel.updateDamagesLoadingState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                progressDialog?.setTitle(getString(R.string.update_damages_title))
+                progressDialog?.setCancelable(false)
+                progressDialog?.setMessage(getString(R.string.update_damages_message))
+                progressDialog?.show()
+            } else {
+                if (!viewModel.updatingQuickRemarks()) {
+                    progressDialog?.dismiss()
+                }
+            }
+        })
+
+        viewModel.updateQuickRemarkLoadingState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                progressDialog?.setTitle(getString(R.string.update_quick_remarks_title))
+                progressDialog?.setCancelable(false)
+                progressDialog?.setMessage(getString(R.string.update_quick_remarks_message))
+                progressDialog?.show()
+            } else {
+                if (!viewModel.updatingQuickRemarks()) {
+                    progressDialog?.dismiss()
+                }
+            }
+        })
     }
 
     private fun startUpdateQuickRemarksService() {
-        UpdateIntentService.startUpdateQuickRemarks(this)
+        viewModel.updateQuickRemarks()
     }
 
     private fun startUpdateDamagesService() {
-        UpdateIntentService.startUpdateDamages(this)
+        viewModel.updateDamages()
     }
 
     private fun showMustUpdateDialog() {
@@ -212,15 +244,18 @@ abstract class BaseActivity<T, D> :
             buttonText = getString(R.string.update_required_ok),
             hasNegativeButton = true,
             negativeButtonText = getString(R.string.update_required_cancel),
-            negativeListener = object: InfoDialog.NegativeListener{
+            negativeListener = object : InfoDialog.NegativeListener {
                 override fun onNeutralClick() {
-                    viewModel.resetShouldUpdate()
+                    viewModel.resetRuntimeShouldUpdate()
+                    viewModel.resetShowingDialog()
                 }
             },
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     val playStoreUtils = PlayStoreUtils(this@BaseActivity)
                     playStoreUtils.openPlayStore()
+                    viewModel.resetRuntimeShouldUpdate()
+                    viewModel.resetShowingDialog()
                 }
             })
         dialogFragment.isCancelable = false

@@ -2,7 +2,6 @@ package ptml.releasing.device_configuration.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -10,7 +9,6 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.remoteconfig.RemoteConfigManger
 import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
@@ -59,7 +57,7 @@ class DeviceConfigViewModel @Inject constructor(
 
 
     fun checkIfFirst(): Boolean {
-        return repository.isFirstAsync()
+        return repository.isFirst()
     }
 
 

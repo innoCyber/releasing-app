@@ -242,4 +242,8 @@
     <string name="should_update_required_msg">Please update the app to the new version</string>
     <string name="update_required_ok">Update</string>
     <string name="update_required_cancel">No, thanks</string>
+    <string name="update_damages_title">Please wait</string>
+    <string name="update_damages_message">Updating damages in progress</string>
+    <string name="update_quick_remarks_title">Please wait</string>
+    <string name="update_quick_remarks_message">Updating quick remarks in progress</string>
 </resources>

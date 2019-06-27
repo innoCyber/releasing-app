@@ -1,48 +1,51 @@
 package ptml.releasing.app.utils.remoteconfig
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.utils.NetworkState
 import javax.inject.Inject
 
 class RemoteConfigUpdateChecker @Inject constructor(
-    private val configManger: RemoteConfigManger,
-    private val localStore: Local
+    val remoteConfigManger: RemoteConfigManger,
+    private val local: Local
 ) {
-    val updateCheckState:LiveData<NetworkState> = configManger.loadingState
+    val updateCheckState: LiveData<NetworkState> = remoteConfigManger.loadingState
 
-    fun check(){
-        configManger.fetchAll()
+
+    fun check() {
+        remoteConfigManger.fetchAll()
     }
 
     fun mustUpdateApp(): Boolean {
         val localAppVersion = BuildConfig.VERSION_CODE.toLong()
-        val remoteAppVersion = configManger.appMinimumVersion
+        val remoteAppVersion = remoteConfigManger.appMinimumVersion
         return shouldUpdate(localAppVersion, remoteAppVersion)
 
     }
 
     fun shouldUpdateApp(): Boolean {
         val localAppVersion = BuildConfig.VERSION_CODE.toLong()
-        val remoteAppMinimumVersion = configManger.appCurrentVersion
+        val remoteAppMinimumVersion = remoteConfigManger.appCurrentVersion
         return shouldUpdate(localAppVersion, remoteAppMinimumVersion)
     }
 
     fun shouldUpdateQuickRemarks(): Boolean {
-        val localQuickRemarkVersion = localStore.getQuickCurrentVersion()
-        val remoteQuickRemarkVersion = configManger.quickRemarkCurrentVersion
+        val localQuickRemarkVersion = local.getQuickCurrentVersion()
+        val remoteQuickRemarkVersion = remoteConfigManger.quickRemarkCurrentVersion
         return shouldUpdate(localQuickRemarkVersion, remoteQuickRemarkVersion)
     }
 
     fun shouldUpdateDamages(): Boolean {
-        val localDamagesVersion = localStore.getDamagesCurrentVersion()
-        val remoteDamagesVersion = configManger.damagesCurrentVersion
+        val localDamagesVersion = local.getDamagesCurrentVersion()
+        val remoteDamagesVersion = remoteConfigManger.damagesCurrentVersion
         return shouldUpdate(localDamagesVersion, remoteDamagesVersion)
     }
 
     private fun shouldUpdate(localVersion: Long, remoteVersion: Long): Boolean {
         return remoteVersion > localVersion
     }
+
 
 }
