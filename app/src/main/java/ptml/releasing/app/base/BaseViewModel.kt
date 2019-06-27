@@ -229,17 +229,16 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
-    fun updateQuickRemarks() {
+    fun updateQuickRemarks(imei: String) {
         if (_updateQuickRemarkLoadingState.value == NetworkState.LOADING) {
-            Timber.d("Already fetching remote config data...")
+            Timber.d("Already updating quick remarks...")
             return
         }
         _updateQuickRemarkLoadingState.postValue(NetworkState.LOADING)
         CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
             try {
-                val imei = repository.getImei()
-                repository.downloadQuickRemarkAsync(imei ?: return@launch)?.await()
-
+                Timber.d("Updating quick remarks...")
+                repository.downloadQuickRemarkAsync(imei)?.await()
                 val quickRemarkVersion = updateChecker.remoteConfigManger.quickRemarkCurrentVersion
                 Timber.d("Downloaded quick remark, updating the local quick remark version to $quickRemarkVersion")
                 repository.setQuickCurrentVersion(quickRemarkVersion)
@@ -251,16 +250,16 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
-    fun updateDamages() {
+    fun updateDamages(imei: String) {
         if (_updateDamagesLoadingState.value == NetworkState.LOADING) {
-            Timber.d("Already fetching remote config data...")
+            Timber.d("Already updating damages...")
             return
         }
         _updateDamagesLoadingState.postValue(NetworkState.LOADING)
         CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
             try {
-                val imei = repository.getImei()
-                repository.downloadDamagesAsync(imei ?: return@launch)?.await()
+                Timber.d("Updating damages...")
+                repository.downloadDamagesAsync(imei)?.await()
 
                 val damagesVersion = updateChecker.remoteConfigManger.damagesCurrentVersion
                 Timber.d("Downloaded damages, updating the local damages version to $damagesVersion")

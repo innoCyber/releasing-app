@@ -34,15 +34,16 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.PlayStoreUtils
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
-import ptml.releasing.app.utils.remoteconfig.UpdateIntentService
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
@@ -178,13 +179,13 @@ abstract class BaseActivity<T, D> :
         viewModel.startDamagesUpdate.observe(this, Observer {
             //start intent service to update
             Timber.d("Starting intent service to update damages")
-            startUpdateDamagesService()
+            startUpdateDamagesServiceWithPermissionCheck()
         })
 
         viewModel.startQuickRemarksUpdate.observe(this, Observer {
             //start intent service to update
             Timber.d("Starting intent service to update quick remarks")
-            startUpdateQuickRemarksService()
+            startUpdateQuickRemarksServiceWithPermissionCheck()
         })
 
         viewModel.updateDamagesLoadingState.observe(this, Observer {
@@ -197,6 +198,9 @@ abstract class BaseActivity<T, D> :
                 if (!viewModel.updatingQuickRemarks()) {
                     progressDialog?.dismiss()
                 }
+                if (it.status == Status.FAILED) {
+                    notifyUser(getString(R.string.damages_update_failed_msg))
+                }
             }
         })
 
@@ -207,19 +211,61 @@ abstract class BaseActivity<T, D> :
                 progressDialog?.setMessage(getString(R.string.update_quick_remarks_message))
                 progressDialog?.show()
             } else {
-                if (!viewModel.updatingQuickRemarks()) {
+                if (!viewModel.updatingDamages()) {
                     progressDialog?.dismiss()
                 }
+                if (it.status == Status.FAILED) {
+                    notifyUser(getString(R.string.quick_remark_update_failed_msg))
+                }
+
             }
         })
     }
 
-    private fun startUpdateQuickRemarksService() {
-        viewModel.updateQuickRemarks()
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun startUpdateQuickRemarksService() {
+        val imei = (application as ReleasingApplication).provideImei()
+        viewModel.updateQuickRemarks(imei)
     }
 
-    private fun startUpdateDamagesService() {
-        viewModel.updateDamages()
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun startUpdateDamagesService() {
+        val imei = (application as ReleasingApplication).provideImei()
+        viewModel.updateDamages(imei)
+    }
+
+    @OnShowRationale(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun showPhoneStatePermissionRationale(request: PermissionRequest) {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnPermissionDenied(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun showDeniedForPhoneStatePermission() {
+        notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
+    }
+
+    @OnNeverAskAgain(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun neverAskForPhoneStatePermission() {
+        notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 
     private fun showMustUpdateDialog() {
@@ -268,7 +314,7 @@ abstract class BaseActivity<T, D> :
     }
 
     protected fun handleNetworkDisconnected() {
-        //no imple
+        //no implementation
     }
 
 

@@ -13,7 +13,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 3
-        versionName "1.0.2"
+        versionName "1.1.0"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
 //
         vectorDrawables.useSupportLibrary true
@@ -42,13 +42,17 @@ android {
 
     applicationVariants.all { variant ->
         def name = variant.getName()
+        //default values
+        variant.buildConfigField("String", "IMEI", "\"861327032935756\"")
+
         // Specific values
         if (name.contains("dev")) {
             variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
         } else if (name.contains("staging")) {
-            buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
         } else if (name.contains("production")) {
-            buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "IMEI", "\"\"")
         }
     }
 

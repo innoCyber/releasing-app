@@ -96,7 +96,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    fun showInitRecognizerRationale(request: PermissionRequest) {
+    fun showPermissionsRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
@@ -115,7 +115,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    fun showDeniedForInitRecognizer() {
+    fun showDeniedForPermissions() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
     }
 
@@ -125,7 +125,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    fun neverAskForInitRecognizer() {
+    fun neverAskForPermissions() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 

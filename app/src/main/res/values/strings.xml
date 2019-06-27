@@ -246,4 +246,6 @@
     <string name="update_damages_message">Updating damages in progress</string>
     <string name="update_quick_remarks_title">Please wait</string>
     <string name="update_quick_remarks_message">Updating quick remarks in progress</string>
+    <string name="quick_remark_update_failed_msg">Failed to update quick remark</string>
+    <string name="damages_update_failed_msg">Failed to update damages</string>
 </resources>
