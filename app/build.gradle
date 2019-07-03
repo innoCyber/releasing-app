@@ -33,7 +33,6 @@ android {
 
         staging {
             dimension 'server'
-            applicationIdSuffix '.staging'
         }
 
         production {
