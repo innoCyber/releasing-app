@@ -28,10 +28,12 @@ android {
     productFlavors {
         dev {
             dimension 'server'
+            applicationIdSuffix '.dev'
         }
 
         staging {
             dimension 'server'
+            applicationIdSuffix '.staging'
         }
 
         production {
