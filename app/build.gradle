@@ -29,10 +29,12 @@ android {
         dev {
             dimension 'server'
             applicationIdSuffix '.dev'
+            versionCode 1
         }
 
         staging {
             dimension 'server'
+            versionCode 4
         }
 
         production {
