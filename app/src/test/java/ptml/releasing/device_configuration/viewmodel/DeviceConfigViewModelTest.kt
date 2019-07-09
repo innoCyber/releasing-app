@@ -9,9 +9,8 @@ import org.junit.Test
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.base.BaseTest
-import ptml.releasing.data.IMEI
+import ptml.releasing.data.VALID_IMEI
 import ptml.releasing.data.getVerifyDeviceException
 import ptml.releasing.data.getVerifyDeviceFail
 import ptml.releasing.data.getVerifyDeviceSuccess
@@ -42,7 +41,7 @@ class DeviceConfigViewModelTest : BaseTest() {
         }returns Unit
 
 
-        deviceConfigViewModel.verifyDeviceId(IMEI)
+        deviceConfigViewModel.verifyDeviceId(VALID_IMEI)
 
         assertEquals(
             Unit,

@@ -19,8 +19,9 @@ import java.io.File
 import java.net.SocketTimeoutException
 
 const val VALID = true
+const val VALID_IMEI = "00000000"
+const val INVALID_IMEI = ""
 const val INVALID = false
-const val IMEI = ""
 const val VERIFY_DEVICE_FAILURE_MSG = "Device not authorized"
 const val LOGIN_FAILURE_MSG = "User not authorized"
 
