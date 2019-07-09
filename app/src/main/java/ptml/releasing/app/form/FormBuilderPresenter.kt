@@ -22,7 +22,7 @@ class FormBuilderPresenter(private val formBuilder: BuilderView) :
     @VisibleForTesting
     var quickRemarks: Map<Int, QuickRemark>? = null
 
-    override fun provideQuickRemarks(quickRemarks: Map<Int, QuickRemark>?) {
+    override fun initializeQuickRemarks(quickRemarks: Map<Int, QuickRemark>?) {
         this.quickRemarks = quickRemarks
     }
 

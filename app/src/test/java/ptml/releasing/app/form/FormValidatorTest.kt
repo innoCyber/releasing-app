@@ -2,15 +2,14 @@ package ptml.releasing.app.form
 
 import io.mockk.every
 import io.mockk.mockk
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
 import ptml.releasing.app.form.base.BuilderView
 import ptml.releasing.base.BaseTest
 import ptml.releasing.configuration.models.ConfigureDeviceData
-import ptml.releasing.data.configureDeviceData
-import ptml.releasing.data.configureDeviceDataNonRequired
-import ptml.releasing.data.configureDeviceDataSomeRequired
-import ptml.releasing.data.configureDeviceDataWithInvalidFormType
+import ptml.releasing.data.*
 import java.lang.Exception
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -22,23 +21,23 @@ class FormValidatorTest : BaseTest(){
 
 
     @Test
-    fun `validate form with all fields non-required`(){
+    fun `form with all fields non-required is valid on validation`(){
         val data: List<ConfigureDeviceData>  = configureDeviceDataNonRequired
         val formValidator = FormValidator(formBuilder, data)
         formValidator.listener = listener
         val result = formValidator.validate()
-        assertTrue(result, "Form should be valid since no fields are required")
+        assertThat( "Form should be valid since no fields are required", result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate form with all fields required`(){
+    fun `form with filled required fields is valid on validation`(){
         val data: List<ConfigureDeviceData>  = configureDeviceData
         val formValidator = FormValidator(formBuilder, data)
         formValidator.listener = listener
         mockFormBuilderToFillAllFields()
         val result  = formValidator.validate()
-        assertEquals(true, result, "Form validation should be true since  required fields are filled")
+        assertThat("Form validation should be true since  required fields are filled", result, `is`(VALID))
     }
 
     private fun  mockFormBuilderToFillAllFields(){
@@ -51,7 +50,7 @@ class FormValidatorTest : BaseTest(){
     }
 
     @Test
-    fun `validate form with required fields and some fields are not filled`(){
+    fun `form with unfilled required fields is invalid on validation`(){
         val data: List<ConfigureDeviceData>  = configureDeviceDataSomeRequired
         val formValidator = FormValidator(formBuilder, data)
         formValidator.listener = listener
@@ -60,7 +59,7 @@ class FormValidatorTest : BaseTest(){
 
         val result = formValidator.validate()
 
-        assertFalse(result, "Form validation should be false since not all required fields are filled")
+        assertThat("Form validation should be false since not all required fields are filled", result, `is`(INVALID))
     }
 
 
@@ -75,22 +74,22 @@ class FormValidatorTest : BaseTest(){
 
 
     @Test
-    fun `attempt to validate invalid form type`(){
+    fun `validation of invalid form type is ignored`(){
         val data: List<ConfigureDeviceData>  = configureDeviceDataWithInvalidFormType
         val formValidator = FormValidator(formBuilder, data)
         formValidator.listener = listener
         val result = formValidator.validate()
-        assertTrue(result, "Invalid form types are ignored so validation should be true")
+        assertThat("Invalid form types are ignored so validation should be true", result, `is`(VALID))
     }
 
 
     @Test
-    fun `attempt to validate but exception occurs`(){
+    fun `exception during validation is ignored`(){
         val data: List<ConfigureDeviceData>  = configureDeviceData
         val formValidator = FormValidator(formBuilder, data)
         mockFormBuilderToThrowException()
         val result = formValidator.validate()
-        assertTrue(result, "exceptions ignored so validation should be true")
+        assertThat("exceptions ignored so validation should be true", result, `is`(VALID))
     }
 
     private fun  mockFormBuilderToThrowException(){

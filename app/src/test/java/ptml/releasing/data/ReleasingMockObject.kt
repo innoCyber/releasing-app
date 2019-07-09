@@ -6,7 +6,9 @@ import ptml.releasing.configuration.models.*
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.base.BaseTest
+import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.Option
 import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.login.model.User
 import ptml.releasing.download_damages.model.Damage
@@ -16,6 +18,8 @@ import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import java.io.File
 import java.net.SocketTimeoutException
 
+const val VALID = true
+const val INVALID = false
 const val IMEI = ""
 const val VERIFY_DEVICE_FAILURE_MSG = "Device not authorized"
 const val LOGIN_FAILURE_MSG = "User not authorized"
@@ -114,11 +118,19 @@ val findCargoResponse: FindCargoResponse by lazy {
     createFindCargoResponseSuccess()
 }
 
+val emptyValues = mapOf<Int?, Value>()
+
+val emptyOptions = mapOf<Int?, Option>()
+
+
 fun createFindCargoResponseSuccess(): FindCargoResponse {
     val json = getJson("findCargoResponseSucess.json")
     return Gson().fromJson(json, FindCargoResponse::class.java)
 }
 
+val emptyValuesList = listOf<Value>()
+val emptyDamagesList = listOf<Damage>()
+val emptyFormSelection = listOf<FormSelection>()
 
 val quickRemarks: Map<Int, QuickRemark> by lazy {
     createQuickRemarks()
@@ -220,6 +232,8 @@ fun getSingleDataOneOptions(): ConfigureDeviceData {
     )
 }
 
+const val SELECTED_POSITION = 0
+
 val singleSelectOptions by lazy {
     provideSingleSelectOptions()
 }
@@ -308,7 +322,7 @@ val multiSelectItemsList by lazy {
     provideMultiSelectItemsList()
 }
 
-val multiSelectItemsList6 by lazy {
+val multiSelectItemsListAtLeast6 by lazy {
     provideMultiSelectItemsList6()
 }
 
@@ -339,7 +353,6 @@ fun provideCheckBoxData(): ConfigureDeviceData {
 val configureDeviceData: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceData()
 }
-
 
 
 val configureDeviceDataNonRequired: List<ConfigureDeviceData> by lazy {

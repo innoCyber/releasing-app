@@ -2,6 +2,10 @@ package ptml.releasing.app.form
 
 import io.mockk.every
 import io.mockk.mockk
+import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 
 import org.junit.Test
 import ptml.releasing.app.form.base.BuilderView
@@ -11,6 +15,7 @@ import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.data.configureDeviceData
 import ptml.releasing.data.configureDeviceDataWithInvalidFormType
+import ptml.releasing.download_damages.model.Damage
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -20,7 +25,7 @@ class FormSubmissionTest : BaseTest() {
 
 
     @Test
-    fun `attempt to submit an invalid form`() {
+    fun `submitting an invalid form does not create the submission list`() {
         val submission = FormSubmission(
             formBuilder,
             mockk(),
@@ -30,19 +35,18 @@ class FormSubmissionTest : BaseTest() {
             formValidator.validate()
         } returns false
 
-        assertTrue(submission.valuesList.isEmpty(), "No values are added")
-        assertTrue(submission.damagesList.isEmpty(), "No damages are added")
-        assertTrue(submission.selectionList.isEmpty(), "No selections are added")
+        assertThat(submission.valuesList, `is`(emptyList()))
+        assertThat(submission.damagesList, `is`(emptyList()))
+        assertThat(submission.selectionList, `is`(emptyList()))
     }
 
     @Test
-    fun `submit form successfully`() {
+    fun `submit valid form creates the submission list`() {
         val submission = FormSubmission(
             formBuilder,
             configureDeviceData,
             formValidator
         )
-
 
         mockSubmitFormForAllFields()
 
@@ -52,31 +56,30 @@ class FormSubmissionTest : BaseTest() {
 
         submission.submit()
 
-        val valuesSize = configureDeviceData.filter {
+        val expectedValueList = configureDeviceData.filter {
             it.type == Constants.CHECK_BOX || it.type == Constants.MULTI_LINE_TEXTBOX || it.type == Constants.TEXT_BOX
-        }.size
+        }
 
-        val optionsSize = configureDeviceData.filter {
+        val expectedOptionList = configureDeviceData.filter {
             it.type == Constants.SINGLE_SELECT || it.type == Constants.MULTI_SELECT || it.type == Constants.QUICK_REMARKS
-        }.size
+        }
 
-        assertEquals(valuesSize, submission.valuesList.size, "Values list should have the same size")
-        assertEquals(optionsSize, submission.selectionList.size, "Selection list should have the same size")
-        assertTrue(submission.damagesList.isEmpty(), "Damages list should  be empty")
-
+        assertThat(submission.valuesList.size, `is`(expectedValueList.size))
+        assertThat(submission.selectionList.size, `is`(expectedOptionList.size))
+        assertThat(submission.damagesList.size, `is`(emptyList<Damage>().size))
     }
 
-    private fun mockSubmitFormForAllFields(){
-        every {formBuilder.getCheckBoxValue(any()) }returns Value("")
-        every {formBuilder.getTextBoxValue(any()) }returns Value("")
-        every {formBuilder.getSingleSelect(any()) }returns FormSelection(listOf())
-        every {formBuilder.getMultiSelect(any()) }returns FormSelection(listOf())
-        every {formBuilder.getQuickRemarkSelect(any()) }returns FormSelection(listOf())
+    private fun mockSubmitFormForAllFields() {
+        every { formBuilder.getCheckBoxValue(any()) } returns Value("")
+        every { formBuilder.getTextBoxValue(any()) } returns Value("")
+        every { formBuilder.getSingleSelect(any()) } returns FormSelection(listOf())
+        every { formBuilder.getMultiSelect(any()) } returns FormSelection(listOf())
+        every { formBuilder.getQuickRemarkSelect(any()) } returns FormSelection(listOf())
     }
 
 
     @Test
-    fun `attempt to submit form with invalid type`() {
+    fun `submitting form with invalid type ignores the invalid form type and creates submission list`() {
         val submission = FormSubmission(
             formBuilder,
             configureDeviceDataWithInvalidFormType,
@@ -90,22 +93,22 @@ class FormSubmissionTest : BaseTest() {
 
         submission.submit()
 
-        val valuesSize = configureDeviceData.filter {
+        val expectedValueList = configureDeviceData.filter {
             it.type == Constants.CHECK_BOX || it.type == Constants.MULTI_LINE_TEXTBOX || it.type == Constants.TEXT_BOX
-        }.size
+        }
 
-        val optionsSize = configureDeviceData.filter {
+        val expectedOptionList = configureDeviceData.filter {
             it.type == Constants.SINGLE_SELECT || it.type == Constants.MULTI_SELECT || it.type == Constants.QUICK_REMARKS
-        }.size
+        }
 
-        assertEquals(valuesSize, submission.valuesList.size, "Values list should have the same size")
-        assertEquals(optionsSize, submission.selectionList.size, "Selection list should have the same size")
-        assertTrue(submission.damagesList.isEmpty(), "No damages are added")
+        assertThat(submission.valuesList.size, `is`(expectedValueList.size))
+        assertThat(submission.selectionList.size, `is`(expectedOptionList.size))
+        assertThat(submission.damagesList.size, `is`(emptyList<Damage>().size))
 
     }
 
     @Test
-    fun `submit form  fail with exception`() {
+    fun `submitting when exception occurs catches the exception and creates submission list`() {
         val submission = FormSubmission(
             formBuilder,
             configureDeviceData,
@@ -119,26 +122,26 @@ class FormSubmissionTest : BaseTest() {
 
         submission.submit()
 
-        val valuesSize = configureDeviceData.filter {
-             it.type == Constants.MULTI_LINE_TEXTBOX || it.type == Constants.TEXT_BOX
-        }.size
+        val expectedValueList = configureDeviceData.filter {
+            it.type == Constants.MULTI_LINE_TEXTBOX || it.type == Constants.TEXT_BOX
+        }
 
-        val optionsSize = configureDeviceData.filter {
+        val expectedOptionList = configureDeviceData.filter {
             it.type == Constants.MULTI_SELECT
-        }.size
+        }
 
-        assertEquals(valuesSize, submission.valuesList.size, "Values list should have the same size")
-        assertEquals(optionsSize, submission.selectionList.size, "Selection list should have the same size")
-        assertTrue(submission.damagesList.isEmpty(), "No damages are added")
+        assertThat(submission.valuesList.size, `is`(expectedValueList.size))
+        assertThat(submission.selectionList.size, `is`(expectedOptionList.size))
+        assertThat(submission.damagesList.size, `is`(emptyList<Damage>().size))
     }
 
 
-    private fun mockSubmitFormThrowException(){
-        every {formBuilder.getCheckBoxValue(any()) }throws Exception("Error")
-        every {formBuilder.getTextBoxValue(any()) }returns Value("")
-        every {formBuilder.getSingleSelect(any()) }throws Exception("Error")
-        every {formBuilder.getMultiSelect(any()) }returns FormSelection(listOf())
-        every {formBuilder.getQuickRemarkSelect(any()) }throws Exception("Error")
+    private fun mockSubmitFormThrowException() {
+        every { formBuilder.getCheckBoxValue(any()) } throws Exception("Error")
+        every { formBuilder.getTextBoxValue(any()) } returns Value("")
+        every { formBuilder.getSingleSelect(any()) } throws Exception("Error")
+        every { formBuilder.getMultiSelect(any()) } returns FormSelection(listOf())
+        every { formBuilder.getQuickRemarkSelect(any()) } throws Exception("Error")
     }
 
 }
