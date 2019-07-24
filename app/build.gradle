@@ -29,7 +29,7 @@ android {
         dev {
             dimension 'server'
             applicationIdSuffix '.dev'
-            versionCode 1
+            versionCode 4
         }
 
         staging {

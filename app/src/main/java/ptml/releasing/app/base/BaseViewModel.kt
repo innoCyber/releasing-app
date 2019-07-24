@@ -192,7 +192,6 @@ open class BaseViewModel @Inject constructor(
         if (!repository.isFirst() && repository.mustUpdateApp()) {
             _showMustUpdateApp.value = Unit
             UpdateHelper.showingDialog = true
-
         } else if (!repository.isFirst() && repository.shouldUpdateApp()) {
             if (!UpdateHelper.noThanksClicked && !UpdateHelper.showingDialog) {
                 _showShouldUpdateApp.value = Unit

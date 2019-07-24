@@ -30,8 +30,7 @@ class DeviceConfigViewModel @Inject constructor(
     val showDeviceError: LiveData<Unit> = _showDeviceError
 
 
-    fun
-            verifyDeviceId(imei: String) {
+    fun verifyDeviceId(imei: String) {
         if (networkState.value == NetworkState.LOADING) return
         _networkState.postValue(NetworkState.LOADING)
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {

@@ -61,7 +61,6 @@ open class ReleasingRepository @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e)
                 downloadDamagesAsync(imei)
-
             }
         }
     }

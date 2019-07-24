@@ -1,14 +1,14 @@
 package ptml.releasing.app.utils.remoteconfig
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import ptml.releasing.BuildConfig
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.utils.NetworkState
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteConfigUpdateChecker @Inject constructor(
     val remoteConfigManger: RemoteConfigManger,
+    private val versionCodeUtil: VersionCodeUtil,
     private val local: Local
 ) {
     val updateCheckState: LiveData<NetworkState> = remoteConfigManger.loadingState
@@ -19,14 +19,16 @@ class RemoteConfigUpdateChecker @Inject constructor(
     }
 
     fun mustUpdateApp(): Boolean {
-        val localAppVersion = BuildConfig.VERSION_CODE.toLong()
+        val localAppVersion = versionCodeUtil.getCurrentVersionCode()
+        Timber.d("Current Version Code: $localAppVersion")
         val remoteAppVersion = remoteConfigManger.appMinimumVersion
         return shouldUpdate(localAppVersion, remoteAppVersion)
 
     }
 
     fun shouldUpdateApp(): Boolean {
-        val localAppVersion = BuildConfig.VERSION_CODE.toLong()
+        val localAppVersion = versionCodeUtil.getCurrentVersionCode()
+        Timber.d("Current Version Code: $localAppVersion")
         val remoteAppMinimumVersion = remoteConfigManger.appCurrentVersion
         return shouldUpdate(localAppVersion, remoteAppMinimumVersion)
     }
