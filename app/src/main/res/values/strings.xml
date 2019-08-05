@@ -9,7 +9,7 @@
     <string name="timed_out_exception">Request timed out while trying to connect. Please ensure you have a strong signal
         and try again.
     </string>
-    <string name="unknown_exception">An unexpected error has occurred. Please check your connection, try
+    <string name="unknown_exception">An unexpected error has occurred. Try
         again and contact the administrator
     </string>
     <string name="profiles">Profiles</string>
@@ -253,4 +253,5 @@
     </string>
     <string name="cd_cargo_image">Cargo Image</string>
     <string name="upload_image_title">Images for %s</string>
+    <string name="no_images_text">No images\nClick + to add some</string>
 </resources>

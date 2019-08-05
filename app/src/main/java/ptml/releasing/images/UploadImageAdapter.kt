@@ -29,6 +29,11 @@ class UploadImageAdapter (
         notifyDataSetChanged()
     }
 
+    fun remove(file: File) {
+        imagesList.remove(file)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UploadImagesViewHolder {
         return  UploadImagesViewHolder(ItemImageBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             imageLoader, listener)

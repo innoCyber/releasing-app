@@ -16,7 +16,7 @@ class UploadImagesViewHolder(
 
     fun performBind(file: File) {
         imageLoader.loadImageFromFile(file, binding.image)
-        binding.root.setOnClickListener {
+        binding.image.setOnClickListener {
             listener.onItemClick(file)
         }
     }

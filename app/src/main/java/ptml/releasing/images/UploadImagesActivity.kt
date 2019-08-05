@@ -1,32 +1,26 @@
 package ptml.releasing.images
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.FileUtils
+import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.image.ImageDirObserver
 import ptml.releasing.app.utils.image.ImageLoader
 import ptml.releasing.app.views.SpacesItemDecoration
-import ptml.releasing.damages.model.AssignedDamage
 import ptml.releasing.databinding.ActivityUploadImagesBinding
 import timber.log.Timber
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.*
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -34,8 +28,6 @@ Created by kryptkode on 8/5/2019
  */
 class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadImagesBinding>() {
 
-    @Inject
-    lateinit var fileUtils: FileUtils
 
     @Inject
     lateinit var imageLoader: ImageLoader
@@ -49,28 +41,46 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
         }
     }
 
-    private var adapter : UploadImageAdapter? = null
+    private var adapter: UploadImageAdapter? = null
+
+    private var fileObserver: ImageDirObserver? = null
 
     private val fileObserverListener = object : ImageDirObserver.ImageDirListener {
         override fun onCreate(path: String?) {
-
+            fileObserver?.let { observer ->
+                path?.let {
+                    val file = File(observer.getAbsolutePath(it))
+                    viewModel.handleFileAdded(file)
+                }
+            }
         }
 
         override fun onDelete(path: String?) {
+            fileObserver?.let { observer ->
+                path?.let {
+                    val file = File(observer.getAbsolutePath(it))
+                    runOnUiThread {
+                        viewModel.handleFileRemoved(file)
+                    }
+                }
+            }
 
         }
 
     }
 
-    private var fileObserver: ImageDirObserver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cargoCode = getUploadExtra(getDataFromIntent())
-        adapter = UploadImageAdapter(imageLoader, adapterListener)
         initViews()
         initObservers()
         initFileObserver()
+        initInitialData()
+    }
+
+    private fun initInitialData() {
+        viewModel.init(getRootPath())
     }
 
 
@@ -80,8 +90,12 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
     }
 
     private fun initViews() {
-        supportActionBar?.title = getString(R.string.upload_image_title, cargoCode)
+        showUpEnabled(true)
+        setActionBarTitle(getString(R.string.upload_image_title, cargoCode))
+
+        adapter = UploadImageAdapter(imageLoader, adapterListener)
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.setEmptyView(binding.emptyState.emptyView)
         val spanCount = 2
         binding.recyclerView.layoutManager = GridLayoutManager(this, spanCount)
         binding.recyclerView.addItemDecoration(
@@ -91,11 +105,40 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
             )
         )
 
+        binding.emptyState.tvEmpty.setOnClickListener {
+            viewModel.handleOpenCamera()
+        }
+
+
+
     }
 
     private fun initObservers() {
         viewModel.getOpenCameraState().observe(this, Observer {
             openCamera()
+        })
+
+        viewModel.getAddFileState().observe(this, Observer { file ->
+            adapter?.add(file)
+        })
+
+        viewModel.getRemoveFileState().observe(this, Observer { file ->
+            adapter?.remove(file)
+        })
+
+        viewModel.getImageFilesState().observe(this, Observer {
+            adapter?.setImageList(it)
+        })
+
+        viewModel.getLoadingState().observe(this, Observer {
+            binding.swipeRefreshLayout.isRefreshing = it == NetworkState.LOADING
+
+            if (it?.status == Status.FAILED) {
+                val error = ErrorHandler().getErrorMessage(it.throwable)
+                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+            } else {
+                hideLoading(binding.includeError.root)
+            }
         })
     }
 
@@ -105,7 +148,7 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
                 // Create the File where the photo should go
                 val photoFile: File? = try {
                     createImageFile()
-                } catch (ex: IOException) {
+                } catch (ex: Exception) {
                     // Error occurred while creating the File
                     Timber.e(ex)
                     notifyUser(getString(R.string.change_pic_create_file_error))
@@ -127,7 +170,7 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
 
     @Throws(IOException::class)
     fun createImageFile(): File {
-        return fileUtils.createImageFile(cargoCode ?: "").apply {
+        return viewModel.fileUtils.createImageFile(cargoCode ?: "").apply {
             // Save a file: path for use with ACTION_VIEW intents
             mCurrentPhotoPath = absolutePath
         }

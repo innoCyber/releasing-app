@@ -8,5 +8,4 @@ Created by kryptkode on 8/5/2019
  */
 
 @GlideModule
-class ReleasingGlideModule : AppGlideModule() {
-}
+class ReleasingGlideModule : AppGlideModule()
