@@ -1,5 +1,6 @@
 package ptml.releasing.app.di.modules.main
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +13,8 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.image.ImageLoader
+import ptml.releasing.app.utils.image.ImageLoaderImpl
 import retrofit2.Retrofit
 
 @Module()
@@ -42,5 +45,12 @@ class MainModule {
             main = Dispatchers.Main
         )
     }
+
+    @Provides
+    @ReleasingAppScope
+    fun provideImageLoader() : ImageLoader{
+        return ImageLoaderImpl()
+    }
+
 
 }

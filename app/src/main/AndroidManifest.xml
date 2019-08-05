@@ -81,12 +81,24 @@
                 android:name=".quick_remarks.view.QuickRemarkActivity"
                 android:label="@string/quick_remarks"
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
+        <activity android:name=".images.UploadImagesActivity"/>
 
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67"/>
+
         <service android:name=".app.utils.remoteconfig.UpdateIntentService"
                  android:exported="false"/>
+
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="${applicationId}.provider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>

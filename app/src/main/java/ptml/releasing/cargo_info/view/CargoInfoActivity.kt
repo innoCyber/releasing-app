@@ -28,6 +28,7 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
+import ptml.releasing.images.UploadImagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
@@ -50,6 +51,7 @@ class CargoInfoActivity :
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
+    var imagesView: View? = null
 
     var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
@@ -69,7 +71,9 @@ class CargoInfoActivity :
                 }
 
                 FormType.IMAGES -> {
-
+                    imagesView = view
+                    val data = UploadImagesActivity.createUploadExtra(getCargoCode())
+                    startNewActivity(UploadImagesActivity::class.java, data = data)
                 }
 
                 FormType.DAMAGES -> {
@@ -127,7 +131,7 @@ class CargoInfoActivity :
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         viewModel.submitForm(
             formSubmission,
-            intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY),
+            getCargoCode(),
             findCargoResponse?.cargoId,
             (application as ReleasingApplication).provideImei()
         )
@@ -328,6 +332,9 @@ class CargoInfoActivity :
             if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
         errorView?.visibility =
             if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+
+        imagesView?.findViewById<TextView>(R.id.tv_number)?.text =
+            UploadImagesActivity.currentImages.size.toString()
     }
 
     private fun handleSelectPrinterClick(settings: Settings?) {
@@ -504,6 +511,10 @@ class CargoInfoActivity :
     @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
     fun neverAskForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
+    }
+
+    private fun getCargoCode(): String? {
+        return intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
     }
 
 

@@ -248,4 +248,9 @@
     <string name="update_quick_remarks_message">Updating quick remarks in progress</string>
     <string name="quick_remark_update_failed_msg">Failed to update quick remark</string>
     <string name="damages_update_failed_msg">Failed to update damages</string>
+    <string name="change_pic_create_file_error">An error occurred while creating file for image, please try again and
+        contact the admin
+    </string>
+    <string name="cd_cargo_image">Cargo Image</string>
+    <string name="upload_image_title">Images for %s</string>
 </resources>

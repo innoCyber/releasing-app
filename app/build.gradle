@@ -157,6 +157,14 @@ dependencies {
     //firebase remote config
     implementation 'com.google.firebase:firebase-config:18.0.0'
 
+    //IMAGES
+    implementation "com.github.bumptech.glide:glide:${glideVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
+
+    //worker
+    implementation "androidx.work:work-runtime-ktx:$workerVersion"
+    androidTestImplementation "androidx.work:work-testing:$workerVersion"
+
 
 }
 

@@ -12,6 +12,7 @@ import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.damages.view.*
+import ptml.releasing.images.UploadImagesActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 
@@ -75,5 +76,8 @@ abstract class UiModule {
 
     @ContributesAndroidInjector
     abstract fun updateIntentService(): UpdateIntentService
+
+    @ContributesAndroidInjector
+    abstract fun updateImagesActivity() : UploadImagesActivity
 
 }

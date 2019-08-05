@@ -532,6 +532,9 @@ abstract class BaseActivity<T, D> :
         }
     }
 
+    fun getDataFromIntent(): Bundle? {
+        return intent.getBundleExtra(Constants.EXTRAS)
+    }
 
     private fun showSnackBarError() {
         snackBar?.dismiss()
