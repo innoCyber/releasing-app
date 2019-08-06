@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="ptml.releasing.images.UploadImagesViewModel" />
+            type="ptml.releasing.images.ImagesViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -6,23 +6,27 @@ import ptml.releasing.BuildConfig
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.FileUtils
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.login.model.User
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
 open class ReleasingRepository @Inject constructor(
     var remote: Remote,
     var local: Local,
-    var appCoroutineDispatchers: AppCoroutineDispatchers
+    var appCoroutineDispatchers: AppCoroutineDispatchers,
+    private val fileUtils: FileUtils
 ) : Repository {
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
@@ -220,9 +224,11 @@ open class ReleasingRepository @Inject constructor(
 
     override fun getImei(): String? = local.getImei()
 
-    override fun setDamagesCurrentVersion(currentVersion: Long) = local.setDamagesCurrentVersion(currentVersion)
+    override fun setDamagesCurrentVersion(currentVersion: Long) =
+        local.setDamagesCurrentVersion(currentVersion)
 
-    override fun setQuickCurrentVersion(currentVersion: Long) = local.setQuickCurrentVersion(currentVersion)
+    override fun setQuickCurrentVersion(currentVersion: Long) =
+        local.setQuickCurrentVersion(currentVersion)
 
     override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
 
@@ -246,6 +252,37 @@ open class ReleasingRepository @Inject constructor(
             local.setShouldUpdateApp(false)
             local.setAppCurrentVersion(currentVersion)
         }
+    }
+
+    override suspend fun addImage(cargoCode: String, image:Image) {
+        local.addImage(cargoCode, image)
+    }
+
+    override suspend fun removeImage(cargoCode: String, image:Image) {
+        local.removeImage(cargoCode, image)
+    }
+
+    override suspend fun getImages(cargoCode: String): Map<String, Image> {
+        val files = fileUtils.provideImageFiles(File(getRootPath(cargoCode))).map { createImage(it) }.map { (it.name ?: "") to it }.toMap()
+        local.storeImages(cargoCode, files)
+        val localImages = local.getImages(cargoCode)
+        //TODO: Fetch remotely and merge
+        return localImages
+    }
+
+    override suspend fun storeImages(cargoCode: String, imageMap: Map<String, Image>) =
+        local.storeImages(cargoCode, imageMap)
+
+    override fun createImageFile(cargoCode: String): File {
+        return fileUtils.createImageFile(cargoCode)
+    }
+
+    override fun createImage(imageFile: File): Image {
+        return Image(fileUtils.getFileUri(imageFile), fileUtils.getFileName(imageFile))
+    }
+
+    override fun getRootPath(cargoCode: String?): String {
+        return fileUtils.getRootPath(cargoCode)
     }
 }
 

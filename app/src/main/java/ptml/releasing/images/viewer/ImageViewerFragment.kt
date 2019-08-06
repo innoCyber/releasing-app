@@ -1,17 +1,14 @@
-package ptml.releasing.app.utils.image.viewer
+package ptml.releasing.images.viewer
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 
 
 import androidx.fragment.app.Fragment
-
-import java.io.File
 
 import ptml.releasing.R
 import ptml.releasing.app.utils.image.ImageLoader
@@ -43,10 +40,10 @@ class ImageViewerFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_image_view, container, false)
         Timber.e("IMAGE TAG : ${binding.image.tag}")
 
-        val imageFile = getImageFromArgs(arguments)?.file
+        val imageFile = getImageFromArgs(arguments)?.imageUri
 
-        Timber.e("ImageFile: ${imageFile?.path}")
-        imageLoader?.loadImage(imageFile ?: File(""), binding.image)
+        Timber.e("ImageFile: $imageFile")
+        imageLoader?.loadImage(imageFile ?: "", binding.image)
 
 
         binding.image.setOnClickListener {

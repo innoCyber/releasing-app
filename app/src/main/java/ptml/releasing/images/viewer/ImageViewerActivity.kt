@@ -1,4 +1,4 @@
-package ptml.releasing.app.utils.image.viewer
+package ptml.releasing.images.viewer
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,11 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
@@ -22,10 +20,11 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.image.ImageLoader
 import ptml.releasing.app.views.ZoomOutPageTransformer
 import ptml.releasing.databinding.ActivityImageViewerBinding
+import ptml.releasing.images.ImagesViewModel
 import ptml.releasing.images.model.Image
 import javax.inject.Inject
 
-class ImageViewerActivity : BaseActivity<ImageViewerViewModel, ActivityImageViewerBinding>(),
+class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBinding>(),
     ImageViewerFragment.ImageViewListener {
 
     @Inject
@@ -38,7 +37,7 @@ class ImageViewerActivity : BaseActivity<ImageViewerViewModel, ActivityImageView
 
         initViews()
         initObservers()
-        viewModel.init(getRootPathExtra(getDataFromIntent()))
+        viewModel.init(getCargoCodeExtra(getDataFromIntent())?: "")
     }
 
     private fun initObservers() {
@@ -55,6 +54,7 @@ class ImageViewerActivity : BaseActivity<ImageViewerViewModel, ActivityImageView
         val adapter = ImageViewPager(supportFragmentManager, it)
         binding.viewPager.adapter = adapter
         binding.viewPager.setPageTransformer(false, ZoomOutPageTransformer())
+        binding.viewPager.currentItem = getPositionExtra(getDataFromIntent())
 
     }
 
@@ -101,7 +101,7 @@ class ImageViewerActivity : BaseActivity<ImageViewerViewModel, ActivityImageView
 
     override fun getLayoutResourceId() = R.layout.activity_image_viewer
     override fun getBindingVariable() = BR.viewModel
-    override fun getViewModelClass() = ImageViewerViewModel::class.java
+    override fun getViewModelClass() = ImagesViewModel::class.java
 
     internal inner class ImageViewPager(fm: FragmentManager, private val imageList: List<Image>) :
         FragmentStatePagerAdapter(fm) {
@@ -172,10 +172,12 @@ class ImageViewerActivity : BaseActivity<ImageViewerViewModel, ActivityImageView
 
     companion object {
         private const val POSITION_EXTRA = "POSITION_EXTRA"
-        private const val ROOT_PATH_EXTRA = "ROOT_PATH_EXTRA"
-        fun createExtras(rootPath: String, position: Int): Bundle {
+        private const val IMAGE_EXTRA = "IMAGE_EXTRA"
+        private const val CARGO_CODE_EXTRA = "CARGO_CODE_EXTRA"
+        fun createExtras(image:Image,cargoCode:String?, position: Int): Bundle {
             val data = Bundle()
-            data.putString(ROOT_PATH_EXTRA, rootPath)
+            data.putParcelable(IMAGE_EXTRA, image)
+            data.putString(CARGO_CODE_EXTRA, cargoCode)
             data.putInt(POSITION_EXTRA, position)
             return data
         }
@@ -184,8 +186,12 @@ class ImageViewerActivity : BaseActivity<ImageViewerViewModel, ActivityImageView
             return data?.getInt(POSITION_EXTRA) ?: 0
         }
 
-        fun getRootPathExtra(data: Bundle?): String {
-            return data?.getString(ROOT_PATH_EXTRA) ?: ""
+        fun getImageExtra(data: Bundle?): Image? {
+            return data?.getParcelable(IMAGE_EXTRA)
+        }
+
+        fun getCargoCodeExtra(data: Bundle?): String? {
+            return data?.getString(CARGO_CODE_EXTRA)
         }
     }
 }

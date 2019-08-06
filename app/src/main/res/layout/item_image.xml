@@ -1,9 +1,34 @@
-<layout>
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-               android:layout_height="130dp"
-               android:layout_width="match_parent"
-               android:id="@+id/image"
-               android:background="?selectableItemBackground"
-               android:scaleType="centerCrop"
-               android:contentDescription="@string/cd_cargo_image"/>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ptml.releasing.app.views.FiveFourImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/cd_cargo_image"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/medium_check"
+            android:layout_width="@dimen/selection_check_size"
+            android:layout_height="@dimen/selection_check_size"
+            android:layout_margin="@dimen/constraint_default_margin_4dp"
+            android:background="@drawable/circle_background"
+            android:contentDescription="@null"
+            android:padding="@dimen/constraint_default_margin_4dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="@id/image"
+            app:srcCompat="@drawable/ic_check" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

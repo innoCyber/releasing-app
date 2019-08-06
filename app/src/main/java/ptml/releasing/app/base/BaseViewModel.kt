@@ -16,12 +16,13 @@ import ptml.releasing.app.utils.UpdateHelper
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 open class BaseViewModel @Inject constructor(
     protected val updateChecker: RemoteConfigUpdateChecker,
     protected val repository: Repository,
     protected val appCoroutineDispatchers: AppCoroutineDispatchers
-) : ViewModel() {
+) : ViewModel(), CoroutineScope {
 
     val updateLoadingState = updateChecker.updateCheckState
 
@@ -45,6 +46,9 @@ open class BaseViewModel @Inject constructor(
     val startQuickRemarksUpdate: LiveData<Unit> = _startQuickRemarksUpdate
 
     var compositeJob: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = compositeJob + appCoroutineDispatchers.main
 
     protected val _openBarCodeScanner = MutableLiveData<Unit>()
     protected val _searchScanned = MutableLiveData<String>()

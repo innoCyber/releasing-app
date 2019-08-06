@@ -1,6 +1,7 @@
 package ptml.releasing.app.utils
 
 import android.content.Context
+import android.net.Uri
 import ptml.releasing.app.utils.Constants.IMAGE_EXT
 import ptml.releasing.app.utils.Constants.VALID_IMAGE_SIZE_THRESHOLD
 import timber.log.Timber
@@ -53,8 +54,20 @@ class FileUtils @Inject constructor(private val context: Context) {
         return file.extension == IMAGE_EXT && file.isFile && fileSize > VALID_IMAGE_SIZE_THRESHOLD
     }
 
+    fun getFileUri(file: File): String {
+        return Uri.fromFile(file).toString()
+    }
+
     @Throws(SecurityException::class)
     fun deleteFile(file: File) {
         file.delete()
+    }
+
+    fun getFileName(imageFile: File): String {
+        return imageFile.name
+    }
+
+    fun getRootPath(cargoCode: String?): String {
+        return "${context.filesDir}/$cargoCode"
     }
 }

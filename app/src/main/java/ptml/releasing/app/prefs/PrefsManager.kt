@@ -3,12 +3,14 @@ package ptml.releasing.app.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import javax.inject.Inject
@@ -50,7 +52,10 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getConfig(): AdminConfigResponse? {
-        return gson.fromJson(sharedPreferences.getString(CONFIG, null), AdminConfigResponse::class.java)
+        return gson.fromJson(
+            sharedPreferences.getString(CONFIG, null),
+            AdminConfigResponse::class.java
+        )
     }
 
     override fun saveDamages(response: DamageResponse?) {
@@ -62,7 +67,10 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getSavedConfig(): Configuration {
-        return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), Configuration::class.java)
+        return gson.fromJson(
+            sharedPreferences.getString(SAVED_CONFIG, "{}"),
+            Configuration::class.java
+        )
     }
 
     override fun setSavedConfig(configuration: Configuration) {
@@ -78,7 +86,10 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
-        return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)
+        return gson.fromJson(
+            sharedPreferences.getString(DEVICE_CONFIG, "{}"),
+            ConfigureDeviceResponse::class.java
+        )
 //        return FormLoader.loadFromAssets(context)
     }
 
@@ -115,7 +126,10 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getQuickRemarks(): QuickRemarkResponse? {
-        return gson.fromJson(sharedPreferences.getString(QUICK_REMARK, null), QuickRemarkResponse::class.java)
+        return gson.fromJson(
+            sharedPreferences.getString(QUICK_REMARK, null),
+            QuickRemarkResponse::class.java
+        )
     }
 
     override fun setDamagesCurrentVersion(currentVersion: Long) {
@@ -131,7 +145,10 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getQuickCurrentVersion(): Long {
-        return sharedPreferences.getLong(QUICK_REMARKS_CURRENT_VERSION, Constants.DEFAULT_QUICK_REMARKS_VERSION)
+        return sharedPreferences.getLong(
+            QUICK_REMARKS_CURRENT_VERSION,
+            Constants.DEFAULT_QUICK_REMARKS_VERSION
+        )
     }
 
     override fun setAppMinimumVersion(version: Long) {
@@ -172,5 +189,28 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun getAppCurrentVersion(): Long {
         return sharedPreferences.getLong(APP_CURRENT_VERSION, Constants.DEFAULT_APP_CURRENT_VERSION)
+    }
+
+    override fun getImages(cargoCode: String):  Map<String, Image> {
+        return gson.fromJson(
+            sharedPreferences.getString(cargoCode, "[]"),
+           object : TypeToken<Map<String, Image>>(){}.type
+        )
+    }
+
+    override fun storeImages(cargoCode: String, imageMap:  Map<String, Image>) {
+        sharedPreferences.edit().putString(cargoCode, gson.toJson(imageMap)).apply()
+    }
+
+    override fun addImage(cargoCode: String, file: Image) {
+        val images = getImages(cargoCode).toMutableMap()
+        images[file.name ?: return] = file
+        storeImages(cargoCode, images)
+    }
+
+    override fun removeImage(cargoCode: String, file: Image) {
+        val images = getImages(cargoCode).toMutableMap()
+        images.remove(file.name ?: return)
+        storeImages(cargoCode, images)
     }
 }

@@ -16,9 +16,9 @@ class ImageLoaderImpl(context: Context) : ImageLoader{
 
     private val placeHolderDrawable = PlaceHolderDrawable(context)
 
-    override fun loadImage(file: File, imageView: ImageView) {
+    override fun loadImage(imageUri:String?, imageView: ImageView) {
         GlideApp.with(imageView)
-            .load(file)
+            .load(imageUri)
             .placeholder(placeHolderDrawable)
             .error(ColorDrawable(ContextCompat.getColor(imageView.context, R.color.colorGray)))
             .into(imageView)

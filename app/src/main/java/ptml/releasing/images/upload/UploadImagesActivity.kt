@@ -1,4 +1,4 @@
-package ptml.releasing.images
+package ptml.releasing.images.upload
 
 import android.content.Intent
 import android.net.Uri
@@ -15,9 +15,10 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.image.ImageDirObserver
 import ptml.releasing.app.utils.image.ImageLoader
-import ptml.releasing.app.utils.image.viewer.ImageViewerActivity
+import ptml.releasing.images.viewer.ImageViewerActivity
 import ptml.releasing.app.views.SpacesItemDecoration
 import ptml.releasing.databinding.ActivityUploadImagesBinding
+import ptml.releasing.images.ImagesViewModel
 import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
@@ -28,7 +29,7 @@ import javax.inject.Inject
 /**
 Created by kryptkode on 8/5/2019
  */
-class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadImagesBinding>() {
+class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesBinding>() {
 
 
     @Inject
@@ -37,10 +38,11 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
     private var mCurrentPhotoPath: String? = null
     private var cargoCode: String? = null
 
-    private val adapterListener = object : UploadImageAdapter.UploadImageListener {
+    private val adapterListener = object :
+        UploadImageAdapter.UploadImageListener {
         override fun onItemClick(image: Image, position: Int) {
             //TODO: Open image full screen
-            val data = ImageViewerActivity.createExtras(getRootPath(), position)
+            val data = ImageViewerActivity.createExtras(image,cargoCode, position)
             startNewActivity(ImageViewerActivity::class.java, data = data)
         }
     }
@@ -76,7 +78,9 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cargoCode = getUploadExtra(getDataFromIntent())
+        cargoCode = getUploadExtra(
+            getDataFromIntent()
+        )
         initViews()
         initObservers()
         initFileObserver()
@@ -84,7 +88,7 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
     }
 
     private fun initInitialData() {
-        viewModel.init(getRootPath())
+        viewModel.init(cargoCode ?: "")
     }
 
 
@@ -97,7 +101,7 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
         showUpEnabled(true)
         setActionBarTitle(getString(R.string.upload_image_title, cargoCode))
 
-        adapter = UploadImageAdapter(imageLoader, adapterListener)
+        adapter = UploadImageAdapter(this, imageLoader, adapterListener)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setEmptyView(binding.emptyState.emptyView)
         val spanCount = 2
@@ -165,7 +169,9 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
                         it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, CAMERA_REQUEST)
+                    startActivityForResult(takePictureIntent,
+                        CAMERA_REQUEST
+                    )
                 }
             }
         }
@@ -173,14 +179,14 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
 
     @Throws(IOException::class)
     fun createImageFile(): File {
-        return viewModel.fileUtils.createImageFile(cargoCode ?: "").apply {
+        return viewModel.createImageFile(cargoCode ?: "").apply {
             // Save a file: path for use with ACTION_VIEW intents
             mCurrentPhotoPath = absolutePath
         }
     }
 
     fun getRootPath(): String {
-        return "${filesDir.absolutePath}/$cargoCode"
+        return viewModel.getRootPath(cargoCode)
     }
 
 
@@ -193,7 +199,7 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
 
     override fun getLayoutResourceId() = R.layout.activity_upload_images
     override fun getBindingVariable() = BR.viewModel
-    override fun getViewModelClass() = UploadImagesViewModel::class.java
+    override fun getViewModelClass() = ImagesViewModel::class.java
 
 
     companion object {

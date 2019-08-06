@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
 Created by kryptkode on 8/5/2019
  */
-class UploadImagesViewModel @Inject constructor(
+class ImagesViewModel @Inject constructor(
     val fileUtils: FileUtils,
     updateChecker: RemoteConfigUpdateChecker,
     repository: Repository,
@@ -41,28 +41,27 @@ class UploadImagesViewModel @Inject constructor(
     private val loadingState = MutableLiveData<NetworkState>()
     fun getLoadingState(): LiveData<NetworkState> = loadingState
 
+    private var imagesMap = mutableMapOf<String, Image>()
+    private var cargoCode: String? = null
 
-    fun init(rootPath: String) {
-        val rootDir = File(rootPath)
-        loadAllImageFilesInDir(rootDir)
-    }
 
-    private fun loadAllImageFilesInDir(rootDir: File) {
+    fun init(cargoCode: String) {
+        this.cargoCode = cargoCode
         if (loadingState.value != NetworkState.LOADING) {
             loadingState.postValue(NetworkState.LOADING)
-            CoroutineScope(appCoroutineDispatchers.db).launch {
+
+            launch(appCoroutineDispatchers.db) {
                 try {
-                    val list = fileUtils.provideImageFiles(rootDir).map { createImage(it) }
-                    imageFiles.postValue(list)
+                    imagesMap.putAll(repository.getImages(cargoCode))
+                    imageFiles.postValue(imagesMap.values.toList())
                     loadingState.postValue(NetworkState.LOADED)
                 } catch (e: Throwable) {
                     loadingState.postValue(NetworkState.error(e))
                     handleError(e)
                 }
+
             }
         }
-
-
     }
 
     private fun handleError(e: Throwable) {
@@ -74,31 +73,51 @@ class UploadImagesViewModel @Inject constructor(
     }
 
     fun handleFileAdded(file: File) {
-        try {
-            if (fileUtils.isValidImageFile(file)) {
-                addFile.postValue(createImage(file))
-            } else {
-                Timber.d("Added file ${file.absolutePath} is not a valid image")
+        launch(appCoroutineDispatchers.db) {
+            try {
+                cargoCode?.let {
+                    if (fileUtils.isValidImageFile(file)) {
+                        val image = createImage(file)
+                        repository.addImage(it, image)
+                        addFile.postValue(image)
+                    } else {
+                        Timber.d("Added file ${file.absolutePath} is not a valid image")
+                    }
+                }
+            } catch (e: Throwable) {
+                handleError(e)
             }
-        } catch (e: Throwable) {
-            handleError(e)
         }
-
     }
 
     fun handleFileRemoved(file: File) {
-        try {
-            if (fileUtils.isValidImageFile(file)) {
-                removeFile.postValue(createImage(file))
-            } else {
-                Timber.d("Removed file ${file.absolutePath} is not a valid image")
+        launch(appCoroutineDispatchers.db) {
+            try {
+                cargoCode?.let {
+                    if (fileUtils.isValidImageFile(file)) {
+                        val image = createImage(file)
+                        repository.removeImage(it, image)
+                        removeFile.postValue(image)
+
+                    } else {
+                        Timber.d("Removed file ${file.absolutePath} is not a valid image")
+                    }
+                }
+            } catch (e: Throwable) {
+                handleError(e)
             }
-        } catch (e: Throwable) {
-            handleError(e)
         }
     }
 
-    private fun createImage(file: File): Image {
-        return Image(file)
+    fun createImageFile(cargoCode: String): File {
+        return repository.createImageFile(cargoCode)
+    }
+
+    fun getRootPath(cargoCode: String?): String {
+        return repository.getRootPath(cargoCode)
+    }
+
+    private fun createImage(imageFile: File): Image {
+        return repository.createImage(imageFile)
     }
 }

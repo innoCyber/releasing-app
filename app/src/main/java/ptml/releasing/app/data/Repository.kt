@@ -11,8 +11,10 @@ import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
+import java.io.File
 
 interface Repository {
 
@@ -52,7 +54,11 @@ interface Repository {
     fun isConfiguredAsync(): Boolean
     fun setConfigured(isConfigured: Boolean)
 
-    suspend fun getDamagesByPosition(imei: String, position: String, typeContainer:Int?): List<Damage>
+    suspend fun getDamagesByPosition(
+        imei: String,
+        position: String,
+        typeContainer: Int?
+    ): List<Damage>
 
 
     fun saveSettings(settings: Settings?)
@@ -72,25 +78,35 @@ interface Repository {
     suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
     suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
 
-    fun setShouldUpdateApp(shouldUpdate:Boolean)
-    fun shouldUpdateApp():Boolean
+    fun setShouldUpdateApp(shouldUpdate: Boolean)
+    fun shouldUpdateApp(): Boolean
 
-    fun setMustUpdateApp(shouldUpdate:Boolean)
-    fun mustUpdateApp():Boolean
+    fun setMustUpdateApp(shouldUpdate: Boolean)
+    fun mustUpdateApp(): Boolean
 
-    fun setImei(imei:String)
-    fun getImei():String?
+    fun setImei(imei: String)
+    fun getImei(): String?
 
-    fun setDamagesCurrentVersion(currentVersion:Long)
+    fun setDamagesCurrentVersion(currentVersion: Long)
 
-    fun setQuickCurrentVersion(currentVersion:Long)
+    fun setQuickCurrentVersion(currentVersion: Long)
 
     fun checkToResetLocalAppUpdateValues()
 
-    fun setAppMinimumVersion(version:Long)
-    fun getAppMinimumVersion():Long
+    fun setAppMinimumVersion(version: Long)
+    fun getAppMinimumVersion(): Long
 
-    fun setAppCurrentVersion(version:Long)
-    fun getAppCurrentVersion():Long
+    fun setAppCurrentVersion(version: Long)
+    fun getAppCurrentVersion(): Long
+
+    suspend fun storeImages(cargoCode: String, imageMap: Map<String, Image>)
+    suspend fun addImage(cargoCode: String, image: Image)
+    suspend fun removeImage(cargoCode: String, image: Image)
+    suspend fun getImages(cargoCode: String): Map<String, Image>
+
+    fun createImageFile(cargoCode: String): File
+    fun createImage(imageFile: File): Image
+
+    fun getRootPath(cargoCode: String?):String
 
 }

@@ -13,6 +13,7 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.FileUtils
 import ptml.releasing.app.utils.image.ImageLoader
 import ptml.releasing.app.utils.image.ImageLoaderImpl
 import retrofit2.Retrofit
@@ -21,8 +22,8 @@ import retrofit2.Retrofit
 class MainModule {
 
     @Provides
-    fun provideRepository(remote: Remote, local: Local, appCoroutineDispatchers: AppCoroutineDispatchers): Repository {
-        return ReleasingRepository(remote, local, appCoroutineDispatchers)
+    fun provideRepository(remote: Remote, local: Local, appCoroutineDispatchers: AppCoroutineDispatchers, fileUtils: FileUtils): Repository {
+        return ReleasingRepository(remote, local, appCoroutineDispatchers, fileUtils)
     }
 
     @Provides

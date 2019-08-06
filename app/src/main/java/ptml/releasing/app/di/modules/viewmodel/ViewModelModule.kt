@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.di.mapkeys.ViewModelKey
-import ptml.releasing.app.utils.image.viewer.ImageViewerViewModel
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.download_damages.viewmodel.DamageViewModel
@@ -15,7 +14,7 @@ import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.damages.view_model.DummyViewModel
 import ptml.releasing.damages.view_model.SelectDamageViewModel
-import ptml.releasing.images.UploadImagesViewModel
+import ptml.releasing.images.ImagesViewModel
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
 import ptml.releasing.quick_remarks.viewmodel.QuickRemarkViewModel
 
@@ -38,9 +37,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ConfigViewModel::class)
     abstract fun bindConfigViewModel(myViewModel: ConfigViewModel): ViewModel
-
-
-
 
 
     @Binds
@@ -92,13 +88,9 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(UploadImagesViewModel::class)
-    abstract fun bindUploadImagesViewModel(viewModel: UploadImagesViewModel): ViewModel
+    @ViewModelKey(ImagesViewModel::class)
+    abstract fun bindUploadImagesViewModel(viewModel: ImagesViewModel): ViewModel
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(ImageViewerViewModel::class)
-    abstract fun bindImageViewerViewModel(viewModel: ImageViewerViewModel): ViewModel
 
 
 }

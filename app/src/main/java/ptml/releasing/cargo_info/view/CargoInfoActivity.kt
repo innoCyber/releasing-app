@@ -28,7 +28,7 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
-import ptml.releasing.images.UploadImagesActivity
+import ptml.releasing.images.upload.UploadImagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
