@@ -36,7 +36,6 @@ class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBin
 
 
     private var fullScreen = false
-    private var currentPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,30 +51,11 @@ class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBin
     }
 
 
-
     private fun initViewPager(it: List<Image>) {
         val adapter = ImageViewPager(supportFragmentManager, it)
         binding.viewPager.adapter = adapter
         binding.viewPager.setPageTransformer(false, ZoomOutPageTransformer())
         binding.viewPager.currentItem = getPositionExtra(getDataFromIntent())
-        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                currentPosition = position
-            }
-        })
-
     }
 
     private fun initViews() {

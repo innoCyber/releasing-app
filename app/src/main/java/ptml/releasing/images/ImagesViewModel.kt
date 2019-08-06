@@ -3,7 +3,6 @@ package ptml.releasing.images
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
-import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -121,6 +120,10 @@ class ImagesViewModel @Inject constructor(
         return repository.getRootPath(cargoCode)
     }
 
+    fun getRootPathCompressed(cargoCode: String?): String {
+        return repository.getRootPathCompressed(cargoCode)
+    }
+
     private fun createImage(imageFile: File): Image {
         return repository.createImage(imageFile)
     }
@@ -144,6 +147,25 @@ class ImagesViewModel @Inject constructor(
                 }
             }
 
+        }
+    }
+
+    fun compressImageFile(currentPhotoPath: String?, cargoCode: String?) {
+        launch(appCoroutineDispatchers.db) {
+            try {
+                //post temp image
+                val file  = File(currentPhotoPath ?: "")
+                if (fileUtils.isValidImageFile(file)) {
+                    val image = createImage(file)
+                    addFile.postValue(image)
+                } else {
+                    Timber.d("Added file ${file.absolutePath} is not a valid image")
+                }
+
+                repository.compressImageFile(currentPhotoPath, cargoCode)
+            } catch (e: Throwable) {
+                handleError(e)
+            }
         }
     }
 }

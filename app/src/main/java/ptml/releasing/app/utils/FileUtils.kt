@@ -2,6 +2,7 @@ package ptml.releasing.app.utils
 
 import android.content.Context
 import android.net.Uri
+import id.zelory.compressor.Compressor
 import ptml.releasing.app.utils.Constants.IMAGE_EXT
 import ptml.releasing.app.utils.Constants.VALID_IMAGE_SIZE_THRESHOLD
 import timber.log.Timber
@@ -60,7 +61,7 @@ class FileUtils @Inject constructor(private val context: Context) {
 
     @Throws(SecurityException::class)
     fun deleteFile(file: File): Boolean {
-       return file.delete()
+        return file.delete()
     }
 
     fun getFileName(imageFile: File): String {
@@ -68,6 +69,18 @@ class FileUtils @Inject constructor(private val context: Context) {
     }
 
     fun getRootPath(cargoCode: String?): String {
-        return "${context.filesDir}/$cargoCode"
+        val file = provideRootDir(cargoCode ?: "")
+        return file.absolutePath
+    }
+
+    fun getRootPathCompressed(cargoCode: String?): String {
+        val file = provideRootDir("${cargoCode}_compressed")
+        return file.absolutePath
+    }
+
+    fun compressFile(imageFile: File, cargoCode: String?): File? {
+        return Compressor(context)
+            .setDestinationDirectoryPath(getRootPathCompressed(cargoCode))
+            .compressToFile(imageFile)
     }
 }

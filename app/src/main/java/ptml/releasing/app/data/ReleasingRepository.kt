@@ -255,16 +255,18 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override suspend fun addImage(cargoCode: String, image:Image) {
+    override suspend fun addImage(cargoCode: String, image: Image) {
         local.addImage(cargoCode, image)
     }
 
-    override suspend fun removeImage(cargoCode: String, image:Image) {
+    override suspend fun removeImage(cargoCode: String, image: Image) {
         local.removeImage(cargoCode, image)
     }
 
     override suspend fun getImages(cargoCode: String): Map<String, Image> {
-        val files = fileUtils.provideImageFiles(File(getRootPath(cargoCode))).map { createImage(it) }.map { (it.name ?: "") to it }.toMap()
+        val files =
+            fileUtils.provideImageFiles(File(getRootPathCompressed(cargoCode))).map { createImage(it) }
+                .map { (it.name ?: "") to it }.toMap()
         local.storeImages(cargoCode, files)
         val localImages = local.getImages(cargoCode)
         //TODO: Fetch remotely and merge
@@ -286,17 +288,25 @@ open class ReleasingRepository @Inject constructor(
         return fileUtils.getRootPath(cargoCode)
     }
 
+    override fun getRootPathCompressed(cargoCode: String?): String {
+        return fileUtils.getRootPathCompressed(cargoCode)
+    }
+
     override suspend fun delete(
         imageList: List<Image>,
         cargoCode: String?
     ) {
         imageList.forEach {
             val deleted = fileUtils.deleteFile(File(Uri.parse(it.imageUri).path ?: ""))
-            if(deleted){
-                removeImage(cargoCode?: "", it)
+            if (deleted) {
+                removeImage(cargoCode ?: "", it)
                 Timber.d("File deleted successfully, remove locally from prefs")
             }
         }
+    }
+
+    override suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?) {
+        fileUtils.compressFile(File(currentPhotoPath ?: ""), cargoCode)
     }
 }
 

@@ -36,7 +36,7 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
     @Inject
     lateinit var imageLoader: ImageLoader
 
-    private var mCurrentPhotoPath: String? = null
+    private var currentPhotoPath: String? = null
     private var cargoCode: String? = null
 
     private val adapterListener = object :
@@ -111,7 +111,7 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
 
 
     private fun initFileObserver() {
-        fileObserver = ImageDirObserver(getRootPath(), fileObserverListener)
+        fileObserver = ImageDirObserver(getRootPathCompressed(), fileObserverListener)
         lifecycle.addObserver(fileObserver ?: return)
     }
 
@@ -215,7 +215,7 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
     fun createImageFile(): File {
         return viewModel.createImageFile(cargoCode ?: "").apply {
             // Save a file: path for use with ACTION_VIEW intents
-            mCurrentPhotoPath = absolutePath
+            currentPhotoPath = absolutePath
         }
     }
 
@@ -223,11 +223,16 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
         return viewModel.getRootPath(cargoCode)
     }
 
+    fun getRootPathCompressed(): String {
+        return viewModel.getRootPath(cargoCode)
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == CAMERA_REQUEST) {
-            //open cropper
+            //compressImage
+            viewModel.compressImageFile(currentPhotoPath, cargoCode)
         }
     }
 

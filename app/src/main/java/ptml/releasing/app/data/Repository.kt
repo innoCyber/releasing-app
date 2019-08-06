@@ -107,9 +107,12 @@ interface Repository {
     fun createImage(imageFile: File): Image
 
     fun getRootPath(cargoCode: String?):String
+    fun getRootPathCompressed(cargoCode: String?):String
     suspend fun delete(
         imageList: List<Image>,
         cargoCode: String?
     )
+
+   suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?)
 
 }

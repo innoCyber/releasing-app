@@ -30,7 +30,7 @@ class UploadImageAdapter(
 
     private var positions: MutableList<Int>? = null
     private var removeMedia: MutableList<Image>? = null
-    private var imagesList = mutableListOf<Image>()
+    private var imagesMap = mutableMapOf<String?, Image>()
 
     protected var selectedKeys = LinkedHashSet<Int>()
     protected var positionOffset = 0
@@ -88,7 +88,7 @@ class UploadImageAdapter(
     }
 
     private fun getItemKeyPosition(key: Int): Int {
-        return imagesList.indexOfFirst { it.imageUri?.hashCode() == key }
+        return imagesMap.values.toList().indexOfFirst { it.imageUri?.hashCode() == key }
     }
 
 
@@ -106,7 +106,7 @@ class UploadImageAdapter(
 
     fun restoreRecentlyDeletedItems() {
         removeMedia?.forEach {
-            imagesList.add(it)
+            imagesMap.put(it.name, it)
         }
 
         positions?.forEach {
@@ -125,7 +125,10 @@ class UploadImageAdapter(
             removeMedia?.add(it)
         }
 
-        imagesList.removeAll(removeMedia ?: listOf())
+
+        removeMedia?.forEach {
+            imagesMap.remove(it.name)
+        }
         listener.tryDeleteFiles(removeMedia ?: listOf())
         removeSelectedItems(positions ?: mutableListOf())
     }
@@ -133,21 +136,23 @@ class UploadImageAdapter(
     private fun getSelectedItems() = selectedKeys.mapNotNull { getItemWithKey(it) }
 
     private fun getItemWithKey(key: Int): Image? =
-        imagesList.firstOrNull { it.imageUri?.hashCode() == key }
+        imagesMap.values.toList().firstOrNull { it.imageUri?.hashCode() == key }
 
     fun setImageList(list: List<Image>) {
-        imagesList.clear()
-        imagesList.addAll(list)
+        imagesMap.clear()
+        list.forEach {
+            imagesMap.put(it.name, it)
+        }
         notifyDataSetChanged()
     }
 
     fun add(file: Image) {
-        imagesList.add(file)
+        imagesMap.put(file.name, file)
         notifyDataSetChanged()
     }
 
     fun remove(file: Image) {
-        imagesList.remove(file)
+        imagesMap.remove(file.name)
         notifyDataSetChanged()
     }
 
@@ -177,7 +182,7 @@ class UploadImageAdapter(
     }
 
     private fun getItemSelectionKey(pos: Int): Int? {
-        return imagesList[pos].imageUri?.hashCode()
+        return imagesMap.values.toList()[pos].imageUri?.hashCode()
     }
 
     private fun updateTitle() {
@@ -249,11 +254,11 @@ class UploadImageAdapter(
     }
 
     override fun getItemCount(): Int {
-        return imagesList.size
+        return imagesMap.size
     }
 
     override fun onBindViewHolder(holder: UploadImagesViewHolder, position: Int) {
-        holder.performBind(imagesList[position])
+        holder.performBind(imagesMap.values.toList()[position])
     }
 
     interface UploadImageListener {
