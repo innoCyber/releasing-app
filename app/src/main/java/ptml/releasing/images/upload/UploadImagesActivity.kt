@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
@@ -42,8 +43,25 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
         UploadImageAdapter.UploadImageListener {
         override fun onItemClick(image: Image, position: Int) {
             //TODO: Open image full screen
-            val data = ImageViewerActivity.createExtras(image,cargoCode, position)
+            val data = ImageViewerActivity.createExtras(cargoCode, position)
             startNewActivity(ImageViewerActivity::class.java, data = data)
+        }
+
+        override fun tryDeleteFiles(imageList: List<Image>) {
+            viewModel.deleteFiles( imageList, cargoCode)
+        }
+
+        override fun showDeleteConfirm(moreThanOne:Boolean) {
+            val dialogFragment = InfoDialog.newInstance(
+                title = getString(R.string.delete_confirm_title),
+                message = if(moreThanOne) getString(R.string.delete_confirm_msgs) else getString(R.string.delete_confirm_msg),
+                buttonText = getString(android.R.string.ok),
+                listener = object : InfoDialog.InfoListener {
+                    override fun onConfirm() {
+                        adapter?.deleteSelectedFiles()
+                    }
+                })
+            dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
         }
     }
 
@@ -117,6 +135,10 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
             viewModel.handleOpenCamera()
         }
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            initInitialData()
+        }
+
 
     }
 
@@ -142,9 +164,21 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
 
             if (it?.status == Status.FAILED) {
                 val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
+                notifyUser(binding.root, getString(error))
+            }
+        })
+        viewModel.getDeleteNotifyState().observe(this, Observer {
+            binding.swipeRefreshLayout.isRefreshing = it == NetworkState.LOADING
+
+            if (it?.status == Status.FAILED) {
+                notifyUser(binding.root, getString(R.string.delete_fail_message))
+                adapter?.restoreRecentlyDeletedItems()
+            }else{
+                if(it == NetworkState.LOADING){
+                    notifyUser(binding.root, getString(R.string.deleting_message))
+                }else{
+                    notifyUser(binding.root, getString(R.string.delete_success_message))
+                }
             }
         })
     }

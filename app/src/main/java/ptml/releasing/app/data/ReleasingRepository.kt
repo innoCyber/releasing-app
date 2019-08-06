@@ -1,5 +1,6 @@
 package ptml.releasing.app.data
 
+import android.net.Uri
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
 import ptml.releasing.BuildConfig
@@ -283,6 +284,19 @@ open class ReleasingRepository @Inject constructor(
 
     override fun getRootPath(cargoCode: String?): String {
         return fileUtils.getRootPath(cargoCode)
+    }
+
+    override suspend fun delete(
+        imageList: List<Image>,
+        cargoCode: String?
+    ) {
+        imageList.forEach {
+            val deleted = fileUtils.deleteFile(File(Uri.parse(it.imageUri).path ?: ""))
+            if(deleted){
+                removeImage(cargoCode?: "", it)
+                Timber.d("File deleted successfully, remove locally from prefs")
+            }
+        }
     }
 }
 

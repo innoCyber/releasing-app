@@ -1,7 +1,6 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
-import ptml.releasing.BuildConfig
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
@@ -108,5 +107,9 @@ interface Repository {
     fun createImage(imageFile: File): Image
 
     fun getRootPath(cargoCode: String?):String
+    suspend fun delete(
+        imageList: List<Image>,
+        cargoCode: String?
+    )
 
 }

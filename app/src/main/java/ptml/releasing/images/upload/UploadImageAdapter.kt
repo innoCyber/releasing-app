@@ -28,6 +28,8 @@ class UploadImageAdapter(
     private val listener: UploadImageListener
 ) : RecyclerView.Adapter<UploadImageAdapter.UploadImagesViewHolder>() {
 
+    private var positions: MutableList<Int>? = null
+    private var removeMedia: MutableList<Image>? = null
     private var imagesList = mutableListOf<Image>()
 
     protected var selectedKeys = LinkedHashSet<Int>()
@@ -94,7 +96,44 @@ class UploadImageAdapter(
         if (selectedKeys.isEmpty()) {
             return
         }
+
+        if (item?.itemId == R.id.action_delete) {
+            listener.showDeleteConfirm(selectedKeys.size > 1)
+        }
+
+
     }
+
+    fun restoreRecentlyDeletedItems() {
+        removeMedia?.forEach {
+            imagesList.add(it)
+        }
+
+        positions?.forEach {
+            notifyItemInserted(it)
+        }
+    }
+
+    fun deleteSelectedFiles() {
+        if (selectedKeys.isEmpty()) {
+            return
+        }
+        removeMedia = ArrayList(selectedKeys.size)
+        positions = getSelectedItemPositions()
+
+        getSelectedItems().forEach {
+            removeMedia?.add(it)
+        }
+
+        imagesList.removeAll(removeMedia ?: listOf())
+        listener.tryDeleteFiles(removeMedia ?: listOf())
+        removeSelectedItems(positions ?: mutableListOf())
+    }
+
+    private fun getSelectedItems() = selectedKeys.mapNotNull { getItemWithKey(it) }
+
+    private fun getItemWithKey(key: Int): Image? =
+        imagesList.firstOrNull { it.imageUri?.hashCode() == key }
 
     fun setImageList(list: List<Image>) {
         imagesList.clear()
@@ -113,7 +152,7 @@ class UploadImageAdapter(
     }
 
 
-    protected fun toggleItemSelection(select: Boolean, pos: Int, updateTitle: Boolean = true) {
+    private fun toggleItemSelection(select: Boolean, pos: Int, updateTitle: Boolean = true) {
 
         val itemKey = getItemSelectionKey(pos) ?: return
         if ((select && selectedKeys.contains(itemKey)) || (!select && !selectedKeys.contains(itemKey))) {
@@ -166,7 +205,7 @@ class UploadImageAdapter(
         }
     }
 
-    protected fun getSelectedItemPositions(sortDescending: Boolean = true): ArrayList<Int> {
+    private fun getSelectedItemPositions(sortDescending: Boolean = true): ArrayList<Int> {
         val positions = ArrayList<Int>()
         val keys = selectedKeys.toList()
         keys.forEach {
@@ -182,7 +221,7 @@ class UploadImageAdapter(
         return positions
     }
 
-    protected fun selectAll() {
+    private fun selectAll() {
         val cnt = itemCount - positionOffset
         for (i in 0 until cnt) {
             toggleItemSelection(true, i, false)
@@ -191,7 +230,7 @@ class UploadImageAdapter(
         updateTitle()
     }
 
-    protected fun removeSelectedItems(positions: ArrayList<Int>) {
+    private fun removeSelectedItems(positions: MutableList<Int>) {
         positions.forEach {
             notifyItemRemoved(it)
         }
@@ -219,6 +258,8 @@ class UploadImageAdapter(
 
     interface UploadImageListener {
         fun onItemClick(image: Image, position: Int)
+        fun tryDeleteFiles(imageList: List<Image>)
+        fun showDeleteConfirm(moreThanOne: Boolean)
     }
 
     inner class UploadImagesViewHolder(

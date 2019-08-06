@@ -59,8 +59,8 @@ class FileUtils @Inject constructor(private val context: Context) {
     }
 
     @Throws(SecurityException::class)
-    fun deleteFile(file: File) {
-        file.delete()
+    fun deleteFile(file: File): Boolean {
+       return file.delete()
     }
 
     fun getFileName(imageFile: File): String {

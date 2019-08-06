@@ -255,4 +255,10 @@
     <string name="upload_image_title">Images for %s</string>
     <string name="no_images_text">No images\nClick + to add some</string>
     <string name="delete">Delete Image</string>
+    <string name="delete_confirm_title">Confirm delete</string>
+    <string name="delete_confirm_msg">Are you sure you want to delete the item</string>
+    <string name="delete_confirm_msgs">Are you sure you want to delete the items</string>
+    <string name="deleting_message">Deleting…</string>
+    <string name="delete_success_message">Items deleted successfully</string>
+    <string name="delete_fail_message">Error occurred while deleting. Please try again and contact the admin</string>
 </resources>

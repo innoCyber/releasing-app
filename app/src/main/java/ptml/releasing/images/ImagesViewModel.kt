@@ -2,8 +2,8 @@ package ptml.releasing.images
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -41,6 +41,9 @@ class ImagesViewModel @Inject constructor(
     private val loadingState = MutableLiveData<NetworkState>()
     fun getLoadingState(): LiveData<NetworkState> = loadingState
 
+    private val deleteNotify = SingleLiveEvent<NetworkState>()
+    fun getDeleteNotifyState(): LiveData<NetworkState> = deleteNotify
+
     private var imagesMap = mutableMapOf<String, Image>()
     private var cargoCode: String? = null
 
@@ -52,6 +55,7 @@ class ImagesViewModel @Inject constructor(
 
             launch(appCoroutineDispatchers.db) {
                 try {
+                    imagesMap.clear()
                     imagesMap.putAll(repository.getImages(cargoCode))
                     imageFiles.postValue(imagesMap.values.toList())
                     loadingState.postValue(NetworkState.LOADED)
@@ -119,5 +123,27 @@ class ImagesViewModel @Inject constructor(
 
     private fun createImage(imageFile: File): Image {
         return repository.createImage(imageFile)
+    }
+
+    fun deleteFiles(
+        imageList: List<Image>,
+        cargoCode: String?
+    ) {
+        //delete files
+        //remove from prefs
+        //remove from server
+        if (deleteNotify.value != NetworkState.LOADING) {
+            deleteNotify.postValue(NetworkState.LOADING)
+            launch(appCoroutineDispatchers.db) {
+                try {
+                    repository.delete(imageList, cargoCode)
+                    loadingState.postValue(NetworkState.LOADED)
+                } catch (e: Throwable) {
+                    loadingState.postValue(NetworkState.error(e))
+                    handleError(e)
+                }
+            }
+
+        }
     }
 }

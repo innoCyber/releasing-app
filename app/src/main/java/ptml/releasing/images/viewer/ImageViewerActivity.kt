@@ -13,10 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
+import androidx.viewpager.widget.ViewPager
 import ptml.releasing.BR
 
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.image.ImageLoader
 import ptml.releasing.app.views.ZoomOutPageTransformer
 import ptml.releasing.databinding.ActivityImageViewerBinding
@@ -30,31 +34,47 @@ class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBin
     @Inject
     lateinit var imageLoader: ImageLoader
 
+
     private var fullScreen = false
+    private var currentPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initViews()
         initObservers()
-        viewModel.init(getCargoCodeExtra(getDataFromIntent())?: "")
+        viewModel.init(getCargoCodeExtra(getDataFromIntent()) ?: "")
     }
 
     private fun initObservers() {
         viewModel.getImageFilesState().observe(this, Observer {
             initViewPager(it)
         })
-
-        viewModel.getLoadingState().observe(this, Observer {
-
-        })
     }
+
+
 
     private fun initViewPager(it: List<Image>) {
         val adapter = ImageViewPager(supportFragmentManager, it)
         binding.viewPager.adapter = adapter
         binding.viewPager.setPageTransformer(false, ZoomOutPageTransformer())
         binding.viewPager.currentItem = getPositionExtra(getDataFromIntent())
+        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentPosition = position
+            }
+        })
 
     }
 
@@ -82,21 +102,6 @@ class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBin
         } else {
             showSystemUi(true)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_image_viewer, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (super.onOptionsItemSelected(item)) {
-            return true
-        }
-        return if (item.itemId == R.id.action_delete) {
-            //TODO: Handle delete
-            true
-        } else false
     }
 
     override fun getLayoutResourceId() = R.layout.activity_image_viewer
@@ -172,11 +177,9 @@ class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBin
 
     companion object {
         private const val POSITION_EXTRA = "POSITION_EXTRA"
-        private const val IMAGE_EXTRA = "IMAGE_EXTRA"
         private const val CARGO_CODE_EXTRA = "CARGO_CODE_EXTRA"
-        fun createExtras(image:Image,cargoCode:String?, position: Int): Bundle {
+        fun createExtras( cargoCode: String?, position: Int): Bundle {
             val data = Bundle()
-            data.putParcelable(IMAGE_EXTRA, image)
             data.putString(CARGO_CODE_EXTRA, cargoCode)
             data.putInt(POSITION_EXTRA, position)
             return data
@@ -184,10 +187,6 @@ class ImageViewerActivity : BaseActivity<ImagesViewModel, ActivityImageViewerBin
 
         fun getPositionExtra(data: Bundle?): Int {
             return data?.getInt(POSITION_EXTRA) ?: 0
-        }
-
-        fun getImageExtra(data: Bundle?): Image? {
-            return data?.getParcelable(IMAGE_EXTRA)
         }
 
         fun getCargoCodeExtra(data: Bundle?): String? {
