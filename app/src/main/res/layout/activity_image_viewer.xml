@@ -1,0 +1,34 @@
+<layout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlack">
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <ImageView
+            android:id="@+id/top_shadow"
+            android:layout_width="match_parent"
+            android:layout_gravity="top"
+            android:layout_height="@dimen/default_status_action_height"
+            android:contentDescription="@null"
+            android:background="@drawable/gradient_background_flipped"/>
+
+
+        <ImageView
+            android:id="@+id/bottom_shadow"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_height="@dimen/default_navigation_height"
+            android:contentDescription="@null"
+            android:background="@drawable/gradient_background"/>
+
+    </FrameLayout>
+</layout>

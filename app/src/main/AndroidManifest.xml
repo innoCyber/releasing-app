@@ -82,6 +82,7 @@
                 android:label="@string/quick_remarks"
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity android:name=".images.UploadImagesActivity"/>
+        <activity android:name=".app.utils.image.viewer.ImageViewerActivity" />
 
         <meta-data
                 android:name="io.fabric.ApiKey"

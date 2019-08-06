@@ -16,7 +16,7 @@ class ImageLoaderImpl(context: Context) : ImageLoader{
 
     private val placeHolderDrawable = PlaceHolderDrawable(context)
 
-    override fun loadImageFromFile(file: File, imageView: ImageView) {
+    override fun loadImage(file: File, imageView: ImageView) {
         GlideApp.with(imageView)
             .load(file)
             .placeholder(placeHolderDrawable)

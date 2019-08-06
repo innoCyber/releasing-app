@@ -254,4 +254,5 @@
     <string name="cd_cargo_image">Cargo Image</string>
     <string name="upload_image_title">Images for %s</string>
     <string name="no_images_text">No images\nClick + to add some</string>
+    <string name="delete">Delete Image</string>
 </resources>

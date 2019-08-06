@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.di.mapkeys.ViewModelKey
+import ptml.releasing.app.utils.image.viewer.ImageViewerViewModel
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.download_damages.viewmodel.DamageViewModel
@@ -93,4 +94,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UploadImagesViewModel::class)
     abstract fun bindUploadImagesViewModel(viewModel: UploadImagesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ImageViewerViewModel::class)
+    abstract fun bindImageViewerViewModel(viewModel: ImageViewerViewModel): ViewModel
+
+
 }

@@ -443,8 +443,9 @@ abstract class BaseActivity<T, D> :
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
     }
 
-    fun setActionBarTitle(title: String) {
+    fun setActionBarTitle(title: String?) {
         supportActionBar?.title = title
+
     }
 
     fun setHomeUpDrawable(@DrawableRes drawable: Int) {

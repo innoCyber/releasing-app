@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ptml.releasing.app.utils.image.ImageLoader
 import ptml.releasing.databinding.ItemImageBinding
-import java.io.File
+import ptml.releasing.images.model.Image
 
 /**
 Created by kryptkode on 8/5/2019
@@ -16,20 +16,20 @@ class UploadImageAdapter (
     private val listener: UploadImageListener
 )  : RecyclerView.Adapter<UploadImagesViewHolder>() {
 
-    private var imagesList = mutableListOf<File>()
+    private var imagesList = mutableListOf<Image>()
 
-    fun setImageList(list: List<File>) {
+    fun setImageList(list: List<Image>) {
         imagesList.clear()
         imagesList.addAll(list)
         notifyDataSetChanged()
     }
 
-    fun add(file: File) {
+    fun add(file: Image) {
         imagesList.add(file)
         notifyDataSetChanged()
     }
 
-    fun remove(file: File) {
+    fun remove(file: Image) {
         imagesList.remove(file)
         notifyDataSetChanged()
     }
@@ -48,6 +48,6 @@ class UploadImageAdapter (
     }
 
     interface UploadImageListener{
-        fun onItemClick(file: File)
+        fun onItemClick(file: Image, position:Int)
     }
 }

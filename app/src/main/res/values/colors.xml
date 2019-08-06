@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryTint">#46FFFFFF</color>
     <color name="colorPrimaryDark">#B6B3B3</color>
     <color name="colorAccent">#008751</color>
     <color name="colorAccentAlpha">#43008751</color>
@@ -27,4 +28,5 @@
 
     <color name="form_textbox_color">#EBEBEB</color>
     <color name="colorDamageButtonText">#FFFFFF</color>
+    <color name="gradient_grey_start">#CC000000</color>
 </resources>

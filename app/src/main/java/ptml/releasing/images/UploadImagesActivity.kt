@@ -15,8 +15,10 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.image.ImageDirObserver
 import ptml.releasing.app.utils.image.ImageLoader
+import ptml.releasing.app.utils.image.viewer.ImageViewerActivity
 import ptml.releasing.app.views.SpacesItemDecoration
 import ptml.releasing.databinding.ActivityUploadImagesBinding
+import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -36,8 +38,10 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
     private var cargoCode: String? = null
 
     private val adapterListener = object : UploadImageAdapter.UploadImageListener {
-        override fun onItemClick(file: File) {
+        override fun onItemClick(image: Image, position: Int) {
             //TODO: Open image full screen
+            val data = ImageViewerActivity.createExtras(getRootPath(), position)
+            startNewActivity(ImageViewerActivity::class.java, data = data)
         }
     }
 
@@ -108,7 +112,6 @@ class UploadImagesActivity : BaseActivity<UploadImagesViewModel, ActivityUploadI
         binding.emptyState.tvEmpty.setOnClickListener {
             viewModel.handleOpenCamera()
         }
-
 
 
     }
