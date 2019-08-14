@@ -70,6 +70,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -142,6 +146,10 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
 
+    androidTestImplementation "com.google.dagger:dagger:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+
     //zebra sdk
     implementation files('libs/zebra_android_sdk.jar')
 
@@ -167,6 +175,9 @@ dependencies {
 
 
     implementation 'id.zelory:compressor:2.1.0'
+
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
 
 
 }

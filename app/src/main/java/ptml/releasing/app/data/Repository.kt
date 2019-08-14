@@ -1,6 +1,7 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
@@ -114,5 +115,10 @@ interface Repository {
     )
 
    suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?)
+
+    suspend fun uploadImage(
+        imageName: String,
+        file: MultipartBody.Part
+    ):Deferred<BaseResponse>
 
 }

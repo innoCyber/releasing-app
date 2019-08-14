@@ -21,7 +21,6 @@ open class ReleasingApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.builder()
-            .bindNetwork(NetworkModule())
             .bindApplication(this).build()
     }
 

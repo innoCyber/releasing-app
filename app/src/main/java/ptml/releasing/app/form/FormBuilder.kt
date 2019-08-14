@@ -347,6 +347,10 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         } else {
             applyParams(view)
         }
+
+        if (data?.type == FormType.IMAGES.type){
+            listener?.onImageButtonLoaded(view)
+        }
         return view
     }
 

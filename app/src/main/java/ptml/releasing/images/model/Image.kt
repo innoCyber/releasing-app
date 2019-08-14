@@ -1,7 +1,9 @@
 package ptml.releasing.images.model
 
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+import android.webkit.URLUtil
 import com.google.gson.annotations.SerializedName
 import java.io.File
 
@@ -9,12 +11,20 @@ import java.io.File
 Created by kryptkode on 8/5/2019
  */
 
-data class Image constructor(@SerializedName("imageUri") val imageUri: String?, @SerializedName("name") val name: String?) :
-    Parcelable{
+data class Image constructor(
+    @SerializedName("imageUri") var imageUri: String?,
+    @SerializedName("name") var name: String?,
+    @SerializedName("uploaded") var uploaded: Boolean = false
+) :
+    Parcelable {
     constructor(source: Parcel) : this(
-    source.readString(),
-    source.readString()
+        source.readString(),
+        source.readString()
     )
+
+    fun isFile(): Boolean {
+        return URLUtil.isFileUrl(imageUri)
+    }
 
     override fun describeContents() = 0
 

@@ -3,6 +3,7 @@ package ptml.releasing
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
+import ptml.releasing.app.TestApplication
 
 class ReleasingTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
@@ -10,6 +11,6 @@ class ReleasingTestRunner : AndroidJUnitRunner() {
         className: String?,
         context: Context?
     ): Application {
-        return super.newApplication(cl, className, context)
+        return super.newApplication(cl, TestApplication::class.java.name, context)
     }
 }

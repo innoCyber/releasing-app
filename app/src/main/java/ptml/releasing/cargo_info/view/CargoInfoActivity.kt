@@ -43,7 +43,6 @@ class CargoInfoActivity :
         const val RESPONSE = "response"
         const val QUERY = "query"
         const val DAMAGES_RC = 1234
-
     }
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -107,6 +106,11 @@ class CargoInfoActivity :
 
         override fun onEndLoad() {
 
+        }
+
+        override fun onImageButtonLoaded(view: View) {
+            imagesView = view
+            viewModel.getImagesCount(getCargoCode())
         }
     }
 
@@ -285,6 +289,10 @@ class CargoInfoActivity :
             showOperatorErrorDialog()
         })
 
+        viewModel.getImagesCountState().observe(this, Observer {
+            imagesView?.findViewById<TextView>(R.id.tv_number)?.text = it.toString()
+        })
+
 
         binding.includeError.btnReload.setOnClickListener {
             validateSaveSubmit()
@@ -333,8 +341,7 @@ class CargoInfoActivity :
         errorView?.visibility =
             if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
 
-        imagesView?.findViewById<TextView>(R.id.tv_number)?.text =
-            UploadImagesActivity.currentImages.size.toString()
+        viewModel.getImagesCount(getCargoCode())
     }
 
     private fun handleSelectPrinterClick(settings: Settings?) {

@@ -223,8 +223,8 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
         return viewModel.getRootPath(cargoCode)
     }
 
-    fun getRootPathCompressed(): String {
-        return viewModel.getRootPath(cargoCode)
+    private fun getRootPathCompressed(): String {
+        return viewModel.getRootPathCompressed(cargoCode)
     }
 
 

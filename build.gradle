@@ -81,4 +81,5 @@ ext {
 
     glideVersion = "4.9.0"
     workerVersion = "2.1.0"
+    assistedInjectVersion = "0.4.0"
 }

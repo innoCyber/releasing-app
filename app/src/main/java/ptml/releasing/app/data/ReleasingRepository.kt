@@ -3,7 +3,9 @@ package ptml.releasing.app.data
 import android.net.Uri
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import ptml.releasing.BuildConfig
+import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -264,11 +266,13 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun getImages(cargoCode: String): Map<String, Image> {
-        val files =
-            fileUtils.provideImageFiles(File(getRootPathCompressed(cargoCode))).map { createImage(it) }
-                .map { (it.name ?: "") to it }.toMap()
-        local.storeImages(cargoCode, files)
+        /*   val files =
+               fileUtils.provideImageFiles(File(getRootPathCompressed(cargoCode)))
+                   .map { createImage(it) }
+                   .map { (it.name ?: "") to it }.toMap()
+           local.storeImages(cargoCode, files)*/
         val localImages = local.getImages(cargoCode)
+        Timber.d("LOCal Images: $localImages")
         //TODO: Fetch remotely and merge
         return localImages
     }
@@ -306,8 +310,17 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?) {
-        fileUtils.compressFile(File(currentPhotoPath ?: ""), cargoCode)
+        val compressedFile = fileUtils.compressFile(File(currentPhotoPath ?: ""), cargoCode)
+        if (compressedFile != null) {
+            //delete the uncompressed file
+            fileUtils.deleteFile(File(currentPhotoPath ?: return))
+        }
     }
+
+    override suspend fun uploadImage(
+        imageName: String,
+        file: MultipartBody.Part
+    ): Deferred<BaseResponse> = remote.uploadImage(imageName, file)
 }
 
 

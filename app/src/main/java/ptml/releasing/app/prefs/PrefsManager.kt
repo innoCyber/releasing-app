@@ -13,6 +13,7 @@ import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
+import timber.log.Timber
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
@@ -192,6 +193,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getImages(cargoCode: String):  Map<String, Image> {
+        Timber.w("getImages")
         return gson.fromJson(
             sharedPreferences.getString(cargoCode, "[]"),
            object : TypeToken<Map<String, Image>>(){}.type
