@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector
 import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.images.viewer.ImageViewerActivity
 import ptml.releasing.app.utils.remoteconfig.UpdateIntentService
+import ptml.releasing.app.utils.upload.CancelWorkReceiver
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.login.view.LoginActivity
 import ptml.releasing.download_damages.view.DamageActivity
@@ -84,5 +85,8 @@ abstract class UiModule {
 
     @ContributesAndroidInjector
     abstract fun updateImageViewerActivity() : ImageViewerActivity
+
+    @ContributesAndroidInjector
+    abstract fun cancelReceiver() : CancelWorkReceiver
 
 }

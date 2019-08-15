@@ -121,4 +121,7 @@ interface Repository {
         file: MultipartBody.Part
     ):Deferred<BaseResponse>
 
+    fun addWorkerId(cargoCode: String, workerId:String)
+    fun getWorkerId(cargoCode: String): String?
+
 }

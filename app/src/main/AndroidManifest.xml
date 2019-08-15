@@ -107,6 +107,15 @@
             android:authorities="${applicationId}.workmanager-init"
             android:exported="false"
             tools:node="remove"/>
+
+        <receiver android:name=".app.utils.upload.CancelWorkReceiver"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="ptml.releasing.app.utils.ACTION_CANCEL"/>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

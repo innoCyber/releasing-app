@@ -63,4 +63,7 @@ interface Prefs {
 
     fun storeImages(cargoCode: String, imageMap: Map<String, Image>)
     fun getImages(cargoCode: String): Map<String, Image>
+
+    fun addWorkerId(cargoCode: String, workerId:String)
+    fun getWorkerId(cargoCode: String): String?
 }

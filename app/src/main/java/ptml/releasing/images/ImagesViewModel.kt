@@ -151,9 +151,11 @@ class ImagesViewModel @Inject constructor(
     }
 
     fun compressImageFile(currentPhotoPath: String?, cargoCode: String?) {
+
         launch(appCoroutineDispatchers.db) {
             try {
                 //post temp image
+                Timber.d("To compress: $currentPhotoPath")
                 val file  = File(currentPhotoPath ?: "")
                 if (fileUtils.isValidImageFile(file)) {
                     val image = createImage(file)

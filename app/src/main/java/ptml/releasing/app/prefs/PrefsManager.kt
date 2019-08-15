@@ -37,6 +37,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val SHOULD_UPDATE_APP = "should_update_app"
         const val MUST_UPDATE_APP = "must_update_app"
         const val IMEI = "imei"
+        const val WORKER_ID = "_workerId"
     }
 
 
@@ -214,5 +215,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         val images = getImages(cargoCode).toMutableMap()
         images.remove(file.name ?: return)
         storeImages(cargoCode, images)
+    }
+
+    override fun addWorkerId(cargoCode: String, workerId:String) {
+        sharedPreferences.edit().putString("$cargoCode$WORKER_ID", workerId).apply()
+    }
+
+    override fun getWorkerId(cargoCode: String): String? {
+        return sharedPreferences.getString("$cargoCode$WORKER_ID", null)
     }
 }

@@ -84,4 +84,8 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun storeImages(cargoCode: String, imageMap: Map<String, Image>) =
         prefs.storeImages(cargoCode, imageMap)
+
+    override fun addWorkerId(cargoCode: String, workerId: String)  = prefs.addWorkerId(cargoCode, workerId)
+
+    override fun getWorkerId(cargoCode: String): String? = prefs.getWorkerId(cargoCode)
 }

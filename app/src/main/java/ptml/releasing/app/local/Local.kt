@@ -65,4 +65,7 @@ interface Local {
 
     fun addImage(cargoCode: String, file: Image)
     fun removeImage(cargoCode: String, file: Image)
+
+    fun addWorkerId(cargoCode: String, workerId:String)
+    fun getWorkerId(cargoCode: String): String?
 }

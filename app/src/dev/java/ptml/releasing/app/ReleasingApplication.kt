@@ -37,7 +37,7 @@ open class ReleasingApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-        initializeLeakCanary()
+//        initializeLeakCanary()
         initWorkerFactory()
     }
 

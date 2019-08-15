@@ -215,6 +215,7 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
     fun createImageFile(): File {
         return viewModel.createImageFile(cargoCode ?: "").apply {
             // Save a file: path for use with ACTION_VIEW intents
+            Timber.d("Created image file with path: $absolutePath")
             currentPhotoPath = absolutePath
         }
     }

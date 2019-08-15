@@ -21,11 +21,14 @@ class FileUtils @Inject constructor(private val context: Context) {
     @Throws(IOException::class)
     fun createImageFile(fileNamePrefix: String): File {
         // Create an image file name
-        return File.createTempFile(
+        val file = File.createTempFile(
             "${fileNamePrefix}_${createTempName()}_", /* prefix */
             ".$IMAGE_EXT", /* suffix */
             provideRootDir(fileNamePrefix) /* directory */
         )
+
+        Timber.d("Created temp file: ${file.path}")
+        return file
     }
 
     private fun createTempName(): String {
@@ -35,6 +38,7 @@ class FileUtils @Inject constructor(private val context: Context) {
     private fun provideRootDir(fileNamePrefix: String): File {
         val storageDir = File(context.filesDir, fileNamePrefix)
         if (!storageDir.exists()) {
+            Timber.d("Creating directory for $fileNamePrefix")
             storageDir.mkdirs()
         }
         return storageDir
@@ -75,10 +79,14 @@ class FileUtils @Inject constructor(private val context: Context) {
 
     fun getRootPathCompressed(cargoCode: String?): String {
         val file = provideRootDir("${cargoCode}_compressed")
+        if (!file.exists()) {
+            file.mkdirs()
+        }
         return file.absolutePath
     }
 
     fun compressFile(imageFile: File, cargoCode: String?): File? {
+        Timber.d("About to compress file: ${imageFile.absolutePath}")
         return Compressor(context)
             .setDestinationDirectoryPath(getRootPathCompressed(cargoCode))
             .compressToFile(imageFile)

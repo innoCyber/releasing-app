@@ -261,4 +261,14 @@
     <string name="deleting_message">Deleting…</string>
     <string name="delete_success_message">Items deleted successfully</string>
     <string name="delete_fail_message">Error occurred while deleting. Please try again and contact the admin</string>
+    <string name="noti_channel_default">Upload Images</string>
+    <string name="default_file_name">Image file</string>
+    <string name="uploading">Uploading image %s</string>
+    <string name="in_progress">Upload %s in progress</string>
+    <string name="message_upload_success">Upload successful</string>
+    <string name="message_upload_failed">Upload completed</string>
+    <string name="file_upload_successful">The image files for %s have been uploaded successfully</string>
+    <string name="file_upload_failed">%1$d image files of %2$d for %3$s failed to upload. Upload would be retried again in the background</string>
+    <string name="file_upload_failed_msg">An error occurred during upload, failed uploads will be retried. Please contact the admin</string>
+    <string name="cancel_action_text">Cancel</string>
 </resources>
