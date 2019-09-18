@@ -44,29 +44,56 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
         }
     }
 
-    fun getNotification(title: String, body: String, progress: Int): NotificationCompat.Builder {
-        Timber.w("Progress in nogification: $progress")
+    fun getProgressNotification(
+        title: String,
+        body: String,
+        progress: Int
+    ): NotificationCompat.Builder {
+        Timber.w("Progress in notification: $progress")
         val builder: NotificationCompat.Builder =
             NotificationCompat.Builder(
                 applicationContext,
                 UPLOAD_CHANNEL
             )
 
-        builder.setSmallIcon(smallIcon)
         builder.color = ContextCompat.getColor(applicationContext, R.color.colorAccent)
-        builder.setContentTitle(title)
+        builder.setSmallIcon(smallIcon)
+            .setGroup(GROUP_KEY)
+            .setOnlyAlertOnce(true) //This prevents the notification from playing sounds or vibrating for each progress update on >API 27
+            .setContentTitle(title)
+            .setContentText(body)
             .setOngoing(true)
-            //.setContentIntent(resultPendingIntent)
-            .setDefaults(NotificationCompat.DEFAULT_ALL).priority = NotificationCompat.PRIORITY_HIGH
-        builder.setVibrate(longArrayOf(0L))
-        builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-        builder.setProgress(100, progress, false)
-        /*if (progress == 100) {
-            builder.setProgress(0, 0, false)
-//            builder.setContentText(body)
-        }*/
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setProgress(100, progress, false)
         return builder
     }
+
+
+
+
+     fun getSummaryNotification(
+        title: String,
+        body: String
+    ): NotificationCompat.Builder {
+        val builder: NotificationCompat.Builder =
+            NotificationCompat.Builder(
+                applicationContext,
+                UPLOAD_CHANNEL
+            )
+
+        val bigStyle = NotificationCompat.BigTextStyle()
+        bigStyle.setBigContentTitle(title)
+        bigStyle.bigText(body)
+        builder.setSmallIcon(smallIcon)
+        builder.setStyle(bigStyle)
+        builder.setGroup(GROUP_KEY)
+        builder.setOnlyAlertOnce(true)
+        builder.setGroupSummary(true)
+        return builder
+    }
+
+
 
 
     fun getNotification(
@@ -85,12 +112,12 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
         bigStyle.bigText(body)
         builder.setSmallIcon(smallIcon)
         builder.setStyle(bigStyle)
+        builder.setGroup(GROUP_KEY)
         builder.color = ContextCompat.getColor(applicationContext, R.color.colorAccent)
         builder.setContentIntent(resultPendingIntent)
             .setDefaults(NotificationCompat.DEFAULT_ALL).priority = NotificationCompat.PRIORITY_HIGH
-        builder.setVibrate(longArrayOf(0L))
         builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-
+        builder.setOnlyAlertOnce(true)
         return builder
     }
 
@@ -106,10 +133,6 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
 
     /**
      * Get the notification manager.
-     *
-     *
-     * Utility method as this helper works with it a lot.
-     *
      * @return The system service NotificationManager
      */
     private fun getManager(): NotificationManager {
@@ -124,7 +147,9 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
     }
 
     companion object {
-        val UPLOAD_CHANNEL = "default"
-        val NOTIFICATION_ID = 100
+        const val UPLOAD_CHANNEL = "default"
+        const val SUMMARY_NOTIFICATION_ID = 100
+
+        const val GROUP_KEY = "PROGRESS_GROUP_KEY"
     }
 }

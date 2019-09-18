@@ -126,6 +126,7 @@ class CargoInfoViewModel @Inject constructor(
                     if (result.isSuccess) {
                         _submitSuccess.postValue(Unit)
                         //schedule upload images
+
                         val workRequest =
                             ImageUploadWorker.createWorkRequest(cargoCode ?: return@withContext)
                         repository.addWorkerId(cargoCode, workRequest.id.toString())

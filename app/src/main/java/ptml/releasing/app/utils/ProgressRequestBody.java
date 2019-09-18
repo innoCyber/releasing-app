@@ -1,7 +1,6 @@
 package ptml.releasing.app.utils;
 
 
-
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
@@ -13,13 +12,14 @@ import okio.BufferedSink;
 import okio.ForwardingSink;
 import okio.Okio;
 import okio.Sink;
+import timber.log.Timber;
 
-public class CountingRequestBody extends RequestBody {
-
+public class ProgressRequestBody extends RequestBody {
+    private boolean writeToCalled = true; // Temp fix for using interceptors and write to is called twice for unknown reasons
     private final RequestBody delegate;
     private final Listener listener;
 
-    public CountingRequestBody(RequestBody delegate, Listener listener) {
+    public ProgressRequestBody(RequestBody delegate, Listener listener) {
         this.delegate = delegate;
         this.listener = listener;
     }
@@ -41,12 +41,13 @@ public class CountingRequestBody extends RequestBody {
 
     @Override
     public void writeTo(@NonNull BufferedSink sink) throws IOException {
+        Timber.e("WriteTOCalled");
         CountingSink countingSink = new CountingSink(sink);
         BufferedSink bufferedSink = Okio.buffer(countingSink);
-
         delegate.writeTo(bufferedSink);
 
         bufferedSink.flush();
+
     }
 
     final class CountingSink extends ForwardingSink {
@@ -62,6 +63,7 @@ public class CountingRequestBody extends RequestBody {
             super.write(source, byteCount);
             bytesWritten += byteCount;
             listener.onRequestProgress(bytesWritten, contentLength());
+            Timber.e("CountingSink write");
         }
 
     }

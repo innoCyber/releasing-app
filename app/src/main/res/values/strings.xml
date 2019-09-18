@@ -264,11 +264,15 @@
     <string name="noti_channel_default">Upload Images</string>
     <string name="default_file_name">Image file</string>
     <string name="uploading">Uploading image %s</string>
-    <string name="in_progress">Upload %s in progress</string>
+    <string name="in_progress">File upload in progress</string>
     <string name="message_upload_success">Upload successful</string>
     <string name="message_upload_failed">Upload completed</string>
-    <string name="file_upload_successful">The image files for %s have been uploaded successfully</string>
+    <string name="file_upload_successful">%d files uploaded successfully</string>
     <string name="file_upload_failed">%1$d image files of %2$d for %3$s failed to upload. Upload would be retried again in the background</string>
     <string name="file_upload_failed_msg">An error occurred during upload, failed uploads will be retried. Please contact the admin</string>
     <string name="cancel_action_text">Cancel</string>
+    <string name="upload_in_progress">Upload in progress</string>
+    <string name="upload_in_progress_msg">Files are currently uploaded</string>
+    <string name="upload_summary_title">Upload status</string>
+    <string name="upload_summary_body">Expand to view status of uploads</string>
 </resources>

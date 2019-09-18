@@ -35,7 +35,6 @@ class OkhttpClientModule {
         builder.retryOnConnectionFailure(true)
         builder.writeTimeout(Constants.WRITE_TIME_OUT, TimeUnit.SECONDS)
         builder.connectTimeout(Constants.CONNECT_TIME_OUT, TimeUnit.SECONDS)
-
         return builder.build()
     }
 }

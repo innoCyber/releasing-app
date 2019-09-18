@@ -320,7 +320,7 @@ open class ReleasingRepository @Inject constructor(
     override suspend fun uploadImage(
         imageName: String,
         file: MultipartBody.Part
-    ): Deferred<BaseResponse> = remote.uploadImage(imageName, file)
+    ): BaseResponse = remote.uploadImage(imageName, file)
 
     override fun addWorkerId(cargoCode: String, workerId: String) = local.addWorkerId(cargoCode, workerId)
 

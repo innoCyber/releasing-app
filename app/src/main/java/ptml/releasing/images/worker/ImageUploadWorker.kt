@@ -17,16 +17,26 @@ import ptml.releasing.app.di.modules.worker.ChildWorkerFactory
 import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
-import ptml.releasing.app.utils.CountingRequestBody
+import ptml.releasing.app.utils.ProgressRequestBody
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_CARGO_CODE
 import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_ID
+import ptml.releasing.app.utils.CoroutineCallAdapterFactory
 import ptml.releasing.app.utils.upload.NotificationHelper
-import ptml.releasing.app.utils.upload.NotificationHelper.Companion.NOTIFICATION_ID
+
 import ptml.releasing.app.utils.upload.CancelWorkReceiver
+import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
+
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
+import ptml.releasing.images.api.UploadImageService
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 /**
@@ -38,7 +48,7 @@ class ImageUploadWorker @AssistedInject constructor(
     @Assisted private val params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
-    val mNotificationHelper = NotificationHelper(context)
+    val notificationHelper = NotificationHelper(context)
     lateinit var notification: NotificationCompat.Builder
 
     override suspend fun doWork(): Result {
@@ -58,13 +68,13 @@ class ImageUploadWorker @AssistedInject constructor(
                 totalImages = imagesList.size
                 for (i in 0 until totalImages) {
                     val image = imagesList[i]
-                        val status = "${i + 1}/$totalImages"
-                        val response = uploadImageAsync(image, cargoCode, status).await()
-                        val success = response.isSuccess
-                        Timber.d("Success: $success")
-                        successResponse.add(success)
-                        image.uploaded = success
-                        repository.addImage(code, image)
+                    val status = "${i + 1}/$totalImages"
+                    val response = uploadImageAsync(image, cargoCode, status)
+                    val success = response.isSuccess
+                    Timber.d("Success: $success")
+                    successResponse.add(success)
+                    image.uploaded = success
+                    repository.addImage(code, image)
                     result = Result.success()
                 }
 
@@ -84,7 +94,10 @@ class ImageUploadWorker @AssistedInject constructor(
 
 
             if (result == Result.success()) {
-                showSuccessNotification(cargoCode)
+                showSuccessNotification(cargoCode, totalImages)
+            } else if (totalImages <= 0) {
+                //NO images to be uploaded
+                result = Result.success()
             } else {
                 //show the number of failed
                 val numberOfFailed = successResponse.filter { !it }.size
@@ -101,14 +114,15 @@ class ImageUploadWorker @AssistedInject constructor(
         it: Image,
         cargoCode: String,
         status: String
-    ): Deferred<BaseResponse> {
+    ): BaseResponse {
         val body = createMultipartBody(it.imageUri, cargoCode, status)
+
         return repository.uploadImage(it.name ?: "", body)
     }
 
 
     /**
-     * @param filePath
+     * @param imageUri
      * @return multi part body
      */
     private fun createMultipartBody(
@@ -118,6 +132,7 @@ class ImageUploadWorker @AssistedInject constructor(
     ): MultipartBody.Part {
         val fileUri = Uri.parse(imageUri)
         val file = File(fileUri.path ?: "")
+        Timber.d("createMultipartBody")
         return MultipartBody.Part.createFormData(
             "image",
             file.name,
@@ -135,49 +150,66 @@ class ImageUploadWorker @AssistedInject constructor(
             file,
             context.contentResolver.getType(fileUri) ?: ""
         )
-        return CountingRequestBody(requestBody,
-            CountingRequestBody.Listener { bytesWritten, contentLength ->
+
+        Timber.d("createCountingRequestBody")
+        return ProgressRequestBody(requestBody,
+            ProgressRequestBody.Listener { bytesWritten, contentLength ->
                 val progress = 1.0 * bytesWritten / contentLength
-                Timber.w("Progress: $progress")
-                sendProgressBroadcast(progress, file.name, cargoCode, status)
+                Timber.w("Progress: $progress NAME: ${file.name}")
+                showProgressNotification(progress, file.name, cargoCode, status)
             })
     }
 
-    private fun sendProgressBroadcast(
+    private fun showProgressNotification(
         progress: Double,
         name: String,
         cargoCode: String,
         status: String
     ) {
-        notification = mNotificationHelper.getNotification(
+        notification = notificationHelper.getProgressNotification(
             context.getString(R.string.uploading, status),
-            context.getString(R.string.in_progress, name),
+            context.getString(R.string.in_progress),
             (100 * progress).toInt()
         )
-        mNotificationHelper.notify(NOTIFICATION_ID, notification)
+        notificationHelper.notify(cargoCode.hashCode(), notification)
+        notificationHelper.notify(
+            SUMMARY_NOTIFICATION_ID,
+            notificationHelper.getSummaryNotification(
+                context.getString(R.string.upload_in_progress),
+                context.getString(R.string.upload_in_progress_msg)
+            )
+        )
 //        localBroadcastManager.sendBroadcast(progressIntent)
     }
 
     private fun createRequestBodyFromFile(file: File, mimeType: String): RequestBody {
+        Timber.d("createRequestBodyFromFile")
         return RequestBody.create(MediaType.parse(mimeType), file)
     }
 
     /**
      * Send Broadcast to FileProgressReceiver while file upload successful
      */
-    private fun showSuccessNotification(cargoCode: String?) {
+    private fun showSuccessNotification(cargoCode: String?, totalImages: Int) {
         val resultIntent = Intent(context, DeviceConfigActivity::class.java)
         val resultPendingIntent = PendingIntent.getActivity(
             context,
             0 /* Request code */, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        notification = mNotificationHelper.getNotification(
+        notification = notificationHelper.getNotification(
             context.getString(R.string.message_upload_success),
-            context.getString(R.string.file_upload_successful, cargoCode),
+            context.getString(R.string.file_upload_successful, totalImages),
             resultPendingIntent
         )
-        mNotificationHelper.notify(NOTIFICATION_ID, notification)
+        notificationHelper.notify(cargoCode.hashCode(), notification)
+        notificationHelper.notify(
+            SUMMARY_NOTIFICATION_ID,
+            notificationHelper.getSummaryNotification(
+                context.getString(R.string.upload_summary_title),
+                context.getString(R.string.upload_summary_body)
+            )
+        )
     }
 
     private fun showFailureNotification(cargoCode: String?, totalFailed: Int, totalImages: Int) {
@@ -192,7 +224,7 @@ class ImageUploadWorker @AssistedInject constructor(
         val clearIntent = Intent(context, CancelWorkReceiver::class.java)
         clearIntent.action = CancelWorkReceiver.ACTION_CANCEL
 
-        clearIntent.putExtra(UPLOAD_NOTIFICATION_ID, NOTIFICATION_ID)
+        clearIntent.putExtra(UPLOAD_NOTIFICATION_ID, cargoCode.hashCode())
         clearIntent.putExtra(UPLOAD_NOTIFICATION_CARGO_CODE, cargoCode)
 
         val clearPendingIntent = PendingIntent.getBroadcast(
@@ -207,15 +239,24 @@ class ImageUploadWorker @AssistedInject constructor(
             context.getString(R.string.file_upload_failed_msg)
         }
 
-        notification = mNotificationHelper.getNotification(
+        notification = notificationHelper.getNotification(
             context.getString(R.string.message_upload_failed),
             contentText,
             resultPendingIntent
         )
 
-        notification.addAction(android.R.drawable.ic_menu_revert,
-            context.getString(R.string.cancel_action_text), clearPendingIntent);
-        mNotificationHelper.notify(NOTIFICATION_ID, notification)
+        notification.addAction(
+            android.R.drawable.ic_menu_revert,
+            context.getString(R.string.cancel_action_text), clearPendingIntent
+        )
+        notificationHelper.notify(cargoCode.hashCode(), notification)
+        notificationHelper.notify(
+            SUMMARY_NOTIFICATION_ID,
+            notificationHelper.getSummaryNotification(
+                context.getString(R.string.upload_summary_title),
+                context.getString(R.string.upload_summary_body)
+            )
+        )
     }
 
 

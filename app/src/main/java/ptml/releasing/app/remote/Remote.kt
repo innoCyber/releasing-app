@@ -41,5 +41,5 @@ interface Remote {
     suspend fun uploadImage(
         imageName: String,
         file: MultipartBody.Part
-    ):Deferred<BaseResponse>
+    ):BaseResponse
 }
