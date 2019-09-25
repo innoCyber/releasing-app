@@ -53,4 +53,14 @@ object Constants{
     const val PLAY_STORE_URL_BASE = "https://play.google.com/store/apps/details?id="
     const val MARKET_URI_BASE = "market://details?id="
     const val PLAY_STORE_PACKAGE_NAME = "com.android.vending"
+
+
+    const val IMAGE_EXT = "jpg"
+    const val VALID_IMAGE_SIZE_THRESHOLD = 1000L
+
+    const val UPLOAD_NOTIFICATION_ID = "notificationId"
+    const val UPLOAD_NOTIFICATION_PROGRESS = "progress"
+    const val UPLOAD_NOTIFICATION_FILE_NAME = "fileName"
+    const val UPLOAD_NOTIFICATION_STATUS = "status"
+    const val UPLOAD_NOTIFICATION_CARGO_CODE = "cargoCode"
 }
