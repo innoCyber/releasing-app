@@ -248,4 +248,5 @@
     <string name="update_quick_remarks_message">Updating quick remarks in progress</string>
     <string name="quick_remark_update_failed_msg">Failed to update quick remark</string>
     <string name="damages_update_failed_msg">Failed to update damages</string>
+    <string name="downloading_quick_remarks">Downloading quick remarks</string>
 </resources>

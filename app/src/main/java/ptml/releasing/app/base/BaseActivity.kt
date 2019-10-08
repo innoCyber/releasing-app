@@ -615,12 +615,6 @@ abstract class BaseActivity<T, D> :
     }
 
     fun hideLoading(view: View) {
-
-        val slide = AnimationUtils.loadAnimation(
-            this,
-            R.anim.up_down
-        )
-        view.startAnimation(slide)
         view.visibility = View.GONE
     }
 

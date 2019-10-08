@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class me.dm7.barcodescanner.** {
+  *;
+}
+
+-keep class net.sourceforge.zbar.** {
+  *;
+}

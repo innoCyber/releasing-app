@@ -13,9 +13,9 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.databinding.ActivityDamageBinding
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.viewmodel.DamageViewModel
-import ptml.releasing.databinding.ActivityDamageBinding
 import timber.log.Timber
 
 @RuntimePermissions
@@ -38,24 +38,28 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
         binding.recyclerView.addItemDecoration(decorator)
 
 
-        viewModel.networkState.observe(this, Observer {
-            if (NetworkState.LOADING == it) {
-                showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.downloading_damages)
-                Timber.e("Loading...")
-            } else {
-                hideLoading(binding.includeProgress.root)
-            }
-            //disable the fab when data is loading
-            binding.fab.isEnabled = it != NetworkState.LOADING
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
+        viewModel.getNetworkState().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (NetworkState.LOADING == it) {
+                    showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.downloading_damages)
+                    Timber.e("Loading...")
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+
+                //disable the fab when data is loading
+                binding.fab.isEnabled = it != NetworkState.LOADING
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
         })
 
-        viewModel.response.observe(this, Observer {
+        viewModel.getResponse().observe(this, Observer {
             adapter.damageList.clear()
             adapter.damageList.addAll(it)
             adapter.notifyDataSetChanged()

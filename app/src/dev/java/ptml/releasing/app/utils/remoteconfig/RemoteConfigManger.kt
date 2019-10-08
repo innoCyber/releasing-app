@@ -18,7 +18,7 @@ class RemoteConfigManger @Inject constructor() {
     private val defaults: Map<String, Any>
         get() {
             val map = HashMap<String, Any>()
-            map[APP_CURRENT_VERSION] = BuildConfig.VERSION_CODE
+            map[APP_CURRENT_VERSION] = Constants.DEFAULT_APP_CURRENT_VERSION
             map[APP_MINIMUM_VERSION] =
                 Constants.DEFAULT_APP_MINIMUM_VERSION
             map[QUICK_REMARKS_CURRENT_VERSION] =

@@ -5,23 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormSubmission
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
-import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 class CargoInfoViewModel @Inject constructor(
@@ -29,31 +26,29 @@ class CargoInfoViewModel @Inject constructor(
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-    private val _goBack = MutableLiveData<Boolean>()
+    private val _goBack = MutableLiveData<Event<Boolean>>()
+    val goBack: LiveData<Event<Boolean>> = _goBack
+
+    private val _networkState = MutableLiveData<Event<NetworkState>>()
+    val networkState: LiveData<Event<NetworkState>> = _networkState
+
+    private val _errorMessage = MutableLiveData<Event<String?>>()
+    val errorMessage: LiveData<Event<String?>> = _errorMessage
+
+    private val _submitSuccess = MutableLiveData<Event<Unit>>()
+    val submitSuccess: LiveData<Event<Unit>> = _submitSuccess
+
+    private val _noOperator = MutableLiveData<Event<Unit>>()
+    val noOperator: LiveData<Event<Unit>> = _noOperator
+
     private val _formConfig = MutableLiveData<FormDataWrapper>()
-
-
-    val goBack: LiveData<Boolean> = _goBack
     val formConfig: LiveData<FormDataWrapper> = _formConfig
-
-
-    private val _noOperator = SingleLiveEvent<Unit>()
-    val noOperator: LiveData<Unit> = _noOperator
 
     private val _printerSettings = MutableLiveData<Settings>()
     val printerSettings: LiveData<Settings> = _printerSettings
-    private val _networkState = MutableLiveData<NetworkState>()
-    val networkState: LiveData<NetworkState> = _networkState
-
-
-    private val _errorMessage = MutableLiveData<String>()
-    private val _submitSuccess = MutableLiveData<Unit>()
-
-    val errorMessage: LiveData<String> = _errorMessage
-    val submitSuccess: LiveData<Unit> = _submitSuccess
 
     fun goBack() {
-        _goBack.postValue(true)
+        _goBack.postValue(Event(true))
     }
 
     fun getFormConfig(imei: String) {
@@ -87,16 +82,16 @@ class CargoInfoViewModel @Inject constructor(
         cargoId: Int?,
         imei: String?
     ) {
-        if (_networkState.value == NetworkState.LOADING) return
-        _networkState.postValue(NetworkState.LOADING)
+        if (_networkState.value?.peekContent() == NetworkState.LOADING) return
+        _networkState.postValue(Event(NetworkState.LOADING))
         CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
                 val operator = repository.getOperatorName()
                 if (operator == null) {
                     withContext(appCoroutineDispatchers.main) {
-                        _noOperator.value = Unit
-                        _networkState.value = NetworkState.LOADED
+                        _noOperator.value = Event(Unit)
+                        _networkState.value = Event(NetworkState.LOADED)
                     }
                     return@launch
                 }
@@ -114,18 +109,17 @@ class CargoInfoViewModel @Inject constructor(
 
                 withContext(appCoroutineDispatchers.main) {
                     if (result.isSuccess) {
-                        _submitSuccess.postValue(Unit)
+                        _submitSuccess.postValue(Event(Unit))
                     } else {
-                        _errorMessage.postValue(result.message)
+                        _errorMessage.postValue(Event(result.message))
                     }
-                    _networkState.postValue(NetworkState.LOADED)
+                    _networkState.postValue(Event(NetworkState.LOADED))
 
                 }
             } catch (e: Exception) {
                 Timber.e(e)
-                _networkState.postValue(NetworkState.error(e))
+                _networkState.postValue(Event(NetworkState.error(e)))
             }
-
         }
     }
 
