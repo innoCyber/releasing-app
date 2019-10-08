@@ -17,17 +17,12 @@ android {
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation":
-                                     "$projectDir/schemas".toString()]
-            }
-        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -41,7 +36,7 @@ android {
 
         staging {
             dimension 'server'
-            versionCode 4
+            versionCode 6
         }
 
         production {
@@ -76,10 +71,6 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
-    }
-
-    sourceSets {
-        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
     lintOptions {
@@ -174,11 +165,6 @@ dependencies {
 
     //firebase remote config
     implementation 'com.google.firebase:firebase-config:18.0.0'
-
-
-    implementation "androidx.room:room-runtime:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
 
 
 }
