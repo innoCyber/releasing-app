@@ -1,6 +1,5 @@
 package ptml.releasing.login.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,47 +27,59 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         viewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(LoginViewModel::class.java)
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.logining_in
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
+        viewModel.getNetworkState().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.logining_in
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
-            }
         })
 
-        viewModel.loadNext.observe(this, Observer {
-            startNewActivity(AdminConfigActivity::class.java, true)
-        })
-
-        viewModel.errorMessage.observe(this, Observer {
-            showErrorDialog(it)
-        })
-
-
-        viewModel.passwordValidation.observe(this, Observer {
-            if (it != null) {
-                binding.tilPassword.error = getString(it)
-            } else {
-                binding.tilPassword.error = null
+        viewModel.getLoadNext().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(AdminConfigActivity::class.java, true)
             }
         })
 
-        viewModel.usernameValidation.observe(this, Observer {
-            if (it != null) {
-                binding.tilAdminId.error = getString(it)
-            } else {
-                binding.tilAdminId.error = null
+        viewModel.getErrorMessage().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                showErrorDialog(it)
+            }
+        })
+
+
+        viewModel.getPasswordValidation().observe(this, Observer {event->
+            event.getContentIfNotHandled().let {
+                if (it != null) {
+                    binding.tilPassword.error = getString(it)
+                } else {
+                    binding.tilPassword.error = null
+                }
+
+            }
+        })
+
+        viewModel.getUsernameValidation().observe(this, Observer {event->
+            event.getContentIfNotHandled().let {
+                if (it != null) {
+                    binding.tilAdminId.error = getString(it)
+                } else {
+                    binding.tilAdminId.error = null
+                }
+
             }
         })
 

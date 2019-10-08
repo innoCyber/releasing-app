@@ -1,10 +1,10 @@
 package ptml.releasing.app.utils.remoteconfig
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.utils.NetworkState
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteConfigUpdateChecker @Inject constructor(
@@ -34,12 +34,14 @@ class RemoteConfigUpdateChecker @Inject constructor(
     fun shouldUpdateQuickRemarks(): Boolean {
         val localQuickRemarkVersion = local.getQuickCurrentVersion()
         val remoteQuickRemarkVersion = remoteConfigManger.quickRemarkCurrentVersion
+        Timber.d("shouldUpdateQuickRemarks(L-R): $localQuickRemarkVersion - $remoteQuickRemarkVersion")
         return shouldUpdate(localQuickRemarkVersion, remoteQuickRemarkVersion)
     }
 
     fun shouldUpdateDamages(): Boolean {
         val localDamagesVersion = local.getDamagesCurrentVersion()
         val remoteDamagesVersion = remoteConfigManger.damagesCurrentVersion
+        Timber.d("shouldUpdateDamages(L-R): $localDamagesVersion - $remoteDamagesVersion")
         return shouldUpdate(localDamagesVersion, remoteDamagesVersion)
     }
 

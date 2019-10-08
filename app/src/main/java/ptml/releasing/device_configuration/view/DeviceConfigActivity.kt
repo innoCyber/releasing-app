@@ -30,30 +30,32 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
             return
         }
 
-
-        viewModel.openSearchActivity.observe(this, Observer {
+        viewModel.openSearchActivity().observe(this, Observer {
             hideLoading(binding.includeError.root)
             startNewActivity(SearchActivity::class.java, true)
         })
 
-        viewModel.showDeviceError.observe(this, Observer {
+        viewModel.showDeviceError().observe(this, Observer {
             showErrorWithPermissionCheck()
         })
 
-        viewModel.networkState.observe(this, Observer {
-            if (NetworkState.LOADING == it) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.configure_device_message
-                )
-                Timber.e("Loading...")
-            }
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
+        viewModel.getNetworkState().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (NetworkState.LOADING == it) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.configure_device_message
+                    )
+                    Timber.e("Loading...")
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
         })
 

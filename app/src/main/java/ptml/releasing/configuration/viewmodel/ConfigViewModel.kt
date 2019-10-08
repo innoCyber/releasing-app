@@ -1,14 +1,17 @@
 package ptml.releasing.configuration.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import kotlinx.coroutines.*
-import ptml.releasing.configuration.models.*
-import ptml.releasing.app.data.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
+import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.configuration.models.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,24 +21,27 @@ class ConfigViewModel @Inject constructor(
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-    val configResponse = MutableLiveData<AdminConfigResponse>()
-    val operationStepList = MutableLiveData<List<OperationStep>>()
-    val terminalList = MutableLiveData<List<Terminal>>()
-    val networkState = MutableLiveData<NetworkState>()
-    val savedSuccess = MutableLiveData<Boolean>()
-    val configuration = MutableLiveData<Configuration>()
+    private val configResponse = MutableLiveData<AdminConfigResponse>()
+    fun getConfigResponse(): LiveData<AdminConfigResponse> = configResponse
 
+    private val operationStepList = MutableLiveData<List<OperationStep>>()
+    fun getOperationStepList(): LiveData<List<OperationStep>> = operationStepList
 
-    val network = Transformations.map(networkState) {
-        it
-    }
-    val configData = Transformations.map(configResponse) {
-        it
-    }
+    private val terminalList = MutableLiveData<List<Terminal>>()
+    fun getTerminalList(): LiveData<List<Terminal>> = terminalList
+
+    private val networkState = MutableLiveData<Event<NetworkState>>()
+    fun getNetworkState(): LiveData<Event<NetworkState>>  = networkState
+
+    private val savedSuccess = MutableLiveData<Event<Boolean>>()
+    fun getSavedSuccess(): LiveData<Event<Boolean>> = savedSuccess
+
+    private val configuration = MutableLiveData<Configuration>()
+    fun getConfiguration(): LiveData<Configuration> = configuration
 
     fun getConfig(imei: String) {
-        if (networkState.value == NetworkState.LOADING) return
-        networkState.postValue(NetworkState.LOADING)
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
+        networkState.postValue(Event(NetworkState.LOADING))
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
                 Timber.d("Getting configuration")
@@ -53,12 +59,12 @@ class ConfigViewModel @Inject constructor(
                         configuration.postValue(config)
                     }
                     Timber.e("Loading done: %s", response)
-                    networkState.postValue(NetworkState.LOADED)
+                    networkState.postValue(Event(NetworkState.LOADED))
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
                 System.out.println("In here: ${e.localizedMessage}")
-                networkState.postValue(NetworkState.error(e))
+                networkState.postValue(Event(NetworkState.error(e)))
             }
         }
 
@@ -72,10 +78,11 @@ class ConfigViewModel @Inject constructor(
         checked: Boolean,
         imei: String
     ) {
-        if (networkState.value == NetworkState.LOADING) return
-        networkState.postValue(NetworkState.LOADING)
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
+        networkState.postValue(Event(NetworkState.LOADING))
 //        operationStep.id = 32 //TODO Remove this in production
-        val configuration = Configuration(terminal ?: return, operationStep?: return, cargoType?: return, checked)
+        val configuration =
+            Configuration(terminal ?: return, operationStep ?: return, cargoType ?: return, checked)
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             try {
                 repository.setSavedConfigAsync(configuration)
@@ -87,11 +94,11 @@ class ConfigViewModel @Inject constructor(
                 ).await()
                 Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)
-                savedSuccess.postValue(true)
-                networkState.postValue(NetworkState.LOADED)
+                savedSuccess.postValue(Event(true))
+                networkState.postValue(Event(NetworkState.LOADED))
             } catch (e: Throwable) {
                 Timber.e(e)
-                networkState.postValue(NetworkState.error(e))
+                networkState.postValue(Event(NetworkState.error(e)))
             }
 
         }
@@ -104,8 +111,8 @@ class ConfigViewModel @Inject constructor(
     }
 
     fun refreshConfiguration(imei: String) {
-        if (networkState.value == NetworkState.LOADING) return
-        networkState.postValue(NetworkState.LOADING)
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
+        networkState.postValue(Event(NetworkState.LOADING))
 
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
@@ -121,12 +128,12 @@ class ConfigViewModel @Inject constructor(
                         repository.setConfigured(false)
                     }
                     Timber.e("Loading done: %s", response)
-                    networkState.postValue(NetworkState.LOADED)
+                    networkState.postValue(Event(NetworkState.LOADED))
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
                 System.out.println("In here: ${e.localizedMessage}")
-                networkState.postValue(NetworkState.error(e))
+                networkState.postValue(Event(NetworkState.error(e)))
             }
         }
 

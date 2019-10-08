@@ -20,7 +20,10 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.form.*
-import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
@@ -42,7 +45,6 @@ class CargoInfoActivity :
         const val RESPONSE = "response"
         const val QUERY = "query"
         const val DAMAGES_RC = 1234
-
     }
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -225,9 +227,10 @@ class CargoInfoActivity :
             }
         }
 
-
-        viewModel.goBack.observe(this, Observer {
-            onBackPressed()
+        viewModel.goBack.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                onBackPressed()
+            }
         })
 
         viewModel.savedConfiguration.observe(this, Observer {
@@ -247,38 +250,46 @@ class CargoInfoActivity :
             handleSelectPrinterClick(it)
         })
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.submitting_form
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
+        viewModel.networkState.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.submitting_form
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
+        })
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
+        viewModel.submitSuccess.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                notifyUser(getString(R.string.form_submit_success_msg))
+                setResult(Activity.RESULT_OK)
+                finish()
             }
         })
 
-        viewModel.submitSuccess.observe(this, Observer {
-            notifyUser(getString(R.string.form_submit_success_msg))
-            setResult(Activity.RESULT_OK)
-            finish()
+        viewModel.errorMessage.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                showErrorDialog(it)
+            }
         })
 
-        viewModel.errorMessage.observe(this, Observer {
-            showErrorDialog(it)
-        })
-
-        viewModel.noOperator.observe(this, Observer {
+        viewModel.noOperator.observe(this, Observer {event->
             //show dialog
-            showOperatorErrorDialog()
+            event.getContentIfNotHandled().let {
+                showOperatorErrorDialog()
+            }
         })
 
 

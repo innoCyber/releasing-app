@@ -8,12 +8,11 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.quick_remarks.model.QuickRemark
-
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 class QuickRemarkViewModel @Inject constructor(
@@ -22,35 +21,34 @@ class QuickRemarkViewModel @Inject constructor(
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val responseMutable = MutableLiveData<List<QuickRemark>>()
-    private val networkStateMutable = MutableLiveData<NetworkState>()
+    private val response = MutableLiveData<List<QuickRemark>>()
+    fun  getResponse(): LiveData<List<QuickRemark>> = response
 
-    //expose as an immutable live data
-    val response: LiveData<List<QuickRemark>> = responseMutable
-    val networkState: LiveData<NetworkState> = networkStateMutable
+    private val networkState = MutableLiveData<Event<NetworkState>>()
+    fun getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
 
     fun getQuickRemarks(imei: String) {
-        if (networkStateMutable.value == NetworkState.LOADING) return
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkStateMutable.postValue(NetworkState.LOADING)
+        networkState.postValue(Event(NetworkState.LOADING))
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
                 val response = repository.getQuickRemarkAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
-                        responseMutable.postValue(response.data)
-                        networkStateMutable.postValue(NetworkState.LOADED)
+                        this@QuickRemarkViewModel.response.postValue(response.data)
+                        networkState.postValue(Event(NetworkState.LOADED))
                     } else {
-                        networkStateMutable.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                        networkState.postValue(Event(NetworkState.error(Exception("Response received was unexpected"))))
                     }
 
                 }
             } catch (it: Throwable) {
 
                 Timber.e(it, "Error occurred")
-                networkStateMutable.postValue(NetworkState.error(it))
+                networkState.postValue(Event(NetworkState.error(it)))
             }
         }
 
@@ -59,9 +57,9 @@ class QuickRemarkViewModel @Inject constructor(
 
 
     fun downloadQuickRemarksFromServer(imei: String) {
-        if (networkStateMutable.value == NetworkState.LOADING) return
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkStateMutable.postValue(NetworkState.LOADING)
+        networkState.postValue(Event(NetworkState.LOADING))
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
@@ -69,17 +67,17 @@ class QuickRemarkViewModel @Inject constructor(
                 val response = repository.downloadQuickRemarkAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
-                        responseMutable.postValue(response.data)
-                        networkStateMutable.postValue(NetworkState.LOADED)
+                        this@QuickRemarkViewModel.response.postValue(response.data)
+                        networkState.postValue(Event(NetworkState.LOADED))
                     } else {
-                        networkStateMutable.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                        networkState.postValue(Event(NetworkState.error(Exception("Response received was unexpected"))))
                     }
 
                 }
             } catch (it: Throwable) {
 
                 Timber.e(it, "Error occurred")
-                networkStateMutable.postValue(NetworkState.error(it))
+                networkState.postValue(Event(NetworkState.error(it)))
             }
         }
 
