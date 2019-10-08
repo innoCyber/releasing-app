@@ -167,6 +167,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:18.0.0'
 
 
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
