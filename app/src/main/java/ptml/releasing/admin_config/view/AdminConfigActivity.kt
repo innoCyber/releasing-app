@@ -55,12 +55,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                 } else {
                     showConfigurationErrorDialog()
                 }
+
             }
         })
 
         viewModel.openPrinterSettings.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 startNewActivity(PrinterSettingsActivity::class.java)
+
             }
         })
 
@@ -83,11 +85,13 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             }
         })
 
-        viewModel.openErrorLogs.observe(this, Observer {event->
+        viewModel.openErrorLogs.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 startNewActivity(ErrorLogsActivity::class.java)
             }
         })
+
+
 
         showUpEnabled(true)
 
@@ -120,7 +124,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         binding.includeAdminConfig.btnErrorLogs.setOnClickListener {
             viewModel.openErrorLogs()
         }
-
     }
 
     override fun onBackPressed() {
