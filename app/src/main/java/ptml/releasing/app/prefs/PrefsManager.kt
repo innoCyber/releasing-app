@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import ptml.releasing.BuildConfig
-import ptml.releasing.R
-import ptml.releasing.app.utils.FormLoader
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -15,7 +14,7 @@ import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
-        Prefs {
+    Prefs {
     companion object {
         const val FIRST = "is_first"
         const val CONFIG = "config"
@@ -27,6 +26,14 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val OPERATOR_NAME = "operator_name"
         const val SERVER_URL = "server_url"
         const val QUICK_REMARK = "quick_remark"
+
+        const val APP_MINIMUM_VERSION = "app_version_minimum"
+        const val APP_CURRENT_VERSION = "app_current_minimum"
+        const val QUICK_REMARKS_CURRENT_VERSION = "quick_remarks_current_version"
+        const val DAMAGES_CURRENT_VERSION = "damages_current_version"
+        const val SHOULD_UPDATE_APP = "should_update_app"
+        const val MUST_UPDATE_APP = "must_update_app"
+        const val IMEI = "imei"
     }
 
 
@@ -111,4 +118,59 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         return gson.fromJson(sharedPreferences.getString(QUICK_REMARK, null), QuickRemarkResponse::class.java)
     }
 
+    override fun setDamagesCurrentVersion(currentVersion: Long) {
+        sharedPreferences.edit().putLong(DAMAGES_CURRENT_VERSION, currentVersion).apply()
+    }
+
+    override fun getDamagesCurrentVersion(): Long {
+        return sharedPreferences.getLong(DAMAGES_CURRENT_VERSION, Constants.DEFAULT_DAMAGES_VERSION)
+    }
+
+    override fun setQuickCurrentVersion(currentVersion: Long) {
+        sharedPreferences.edit().putLong(QUICK_REMARKS_CURRENT_VERSION, currentVersion).apply()
+    }
+
+    override fun getQuickCurrentVersion(): Long {
+        return sharedPreferences.getLong(QUICK_REMARKS_CURRENT_VERSION, Constants.DEFAULT_QUICK_REMARKS_VERSION)
+    }
+
+    override fun setAppMinimumVersion(version: Long) {
+        sharedPreferences.edit().putLong(APP_MINIMUM_VERSION, version).apply()
+    }
+
+    override fun getAppMinimumVersion(): Long {
+        return sharedPreferences.getLong(APP_MINIMUM_VERSION, Constants.DEFAULT_APP_MINIMUM_VERSION)
+    }
+
+    override fun setShouldUpdateApp(shouldUpdate: Boolean) {
+        return sharedPreferences.edit().putBoolean(SHOULD_UPDATE_APP, shouldUpdate).apply()
+    }
+
+    override fun shouldUpdateApp(): Boolean {
+        return sharedPreferences.getBoolean(SHOULD_UPDATE_APP, false)
+    }
+
+    override fun setImei(imei: String) {
+        return sharedPreferences.edit().putString(IMEI, imei).apply()
+    }
+
+    override fun getImei(): String? {
+        return sharedPreferences.getString(IMEI, null)
+    }
+
+    override fun mustUpdateApp(): Boolean {
+        return sharedPreferences.getBoolean(MUST_UPDATE_APP, false)
+    }
+
+    override fun setMustUpdateApp(shouldUpdate: Boolean) {
+        return sharedPreferences.edit().putBoolean(MUST_UPDATE_APP, shouldUpdate).apply()
+    }
+
+    override fun setAppCurrentVersion(version: Long) {
+        return sharedPreferences.edit().putLong(APP_CURRENT_VERSION, version).apply()
+    }
+
+    override fun getAppCurrentVersion(): Long {
+        return sharedPreferences.getLong(APP_CURRENT_VERSION, Constants.DEFAULT_APP_CURRENT_VERSION)
+    }
 }

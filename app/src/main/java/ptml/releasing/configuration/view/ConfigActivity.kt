@@ -51,49 +51,55 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             }
         }
 
-        viewModel.configData.observe(this, Observer {
+        viewModel.getConfigResponse().observe(this, Observer {
             setUpSpinners(it)
         })
 
-        viewModel.operationStepList.observe(this, Observer {
+        viewModel.getOperationStepList().observe(this, Observer {
             setUpOperationStep(it)
         })
-        viewModel.terminalList.observe(this, Observer {
+        viewModel.getTerminalList().observe(this, Observer {
 //            setUpTerminal(it)
         })
 
 
-        viewModel.network.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.getting_configuration
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
-                binding.top.root.visibility = View.VISIBLE
-                binding.bottom.root.visibility = View.VISIBLE
+        viewModel.getNetworkState().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.getting_configuration
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                    binding.top.root.visibility = View.VISIBLE
+                    binding.bottom.root.visibility = View.VISIBLE
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
-            }
+
         })
 
 
-        viewModel.savedSuccess.observe(this, Observer {
-            if (it) {
-                notifyUser(getString(R.string.config_saved_success))
-                setResult(Activity.RESULT_OK)
-                finish()
+        viewModel.getSavedSuccess().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    notifyUser(getString(R.string.config_saved_success))
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
             }
         })
 
-        viewModel.configuration.observe(this, Observer {
+        viewModel.getConfiguration().observe(this, Observer {
             val terminal = it.terminal
             val operationStep = it.operationStep
             val cargoType = it.cargoType

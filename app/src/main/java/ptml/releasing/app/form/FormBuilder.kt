@@ -113,7 +113,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         Timber.d("Config list: %s", configDataList)
         this.data = configDataList
         quickRemarks = remarks
-        presenter.provideQuickRemarks(quickRemarks)
+        presenter.initializeQuickRemarks(quickRemarks)
 
         val positionComparator =
             Comparator<ConfigureDeviceData> { o1, o2 -> o1.position.compareTo(o2.position) }

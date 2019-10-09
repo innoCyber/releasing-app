@@ -10,48 +10,58 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import timber.log.Timber
-import java.lang.Exception
+import java.util.*
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel(repository, appCoroutineDispatchers) {
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-    private val _openAdmin = SingleLiveEvent<Unit>()
-    private val _verify = SingleLiveEvent<Unit>()
-    private val _scan = SingleLiveEvent<Unit>()
-    private val _networkState = MutableLiveData<NetworkState>()
+    private val _openAdmin = MutableLiveData<Event<Unit>>()
+    val openAdMin: LiveData<Event<Unit>> = _openAdmin
+
+    private val _verify = MutableLiveData<Event<Unit>>()
+    val verify: LiveData<Event<Unit>> = _verify
+
+    private val _scan = MutableLiveData<Event<Unit>>()
+    val scan: LiveData<Event<Unit>> = _scan
+
+    protected val _openDeviceConfiguration = MutableLiveData<Event<Unit>>()
+    val openDeviceConfiguration: LiveData<Event<Unit>> = _openDeviceConfiguration
+
+    private val _noOperator = MutableLiveData<Event<Unit>>()
+    val noOperator: LiveData<Event<Unit>> = _noOperator
+
+    private val _networkState = MutableLiveData<Event<NetworkState>>()
+    val networkState: LiveData<Event<NetworkState>> = _networkState
+
     private val _cargoNumberValidation = MutableLiveData<Int>()
-    private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
-    private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
-    private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
-    protected val _openDeviceConfiguration = SingleLiveEvent<Unit>()
-    val networkState: LiveData<NetworkState> = _networkState
-
-    val openAdMin: LiveData<Unit> = _openAdmin
-    val scan: LiveData<Unit> = _scan
-    private val _noOperator = SingleLiveEvent<Unit>()
-    val noOperator: LiveData<Unit> = _noOperator
-    val verify: LiveData<Unit> = _verify
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
+
+    private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
+
+    private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
+
+    private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     val errorMessage: LiveData<CargoNotFoundResponse> = _errorMessage
-    val openDeviceConfiguration: LiveData<Unit> = _openDeviceConfiguration
+
 
 
     fun openAdmin() {
-        _openAdmin.value = Unit
+        _openAdmin.value = Event(Unit)
 
     }
 
     fun verify() {
-        _verify.value = Unit
+        _verify.value = Event(Unit)
     }
 
     fun findCargo(cargoNumber: String?, imei: String) {
@@ -61,8 +71,8 @@ class SearchViewModel @Inject constructor(
             return
         }
 
-        if (_networkState.value == NetworkState.LOADING) return
-        _networkState.value = NetworkState.LOADING
+        if (_networkState.value?.peekContent() == NetworkState.LOADING) return
+        _networkState.value = Event(NetworkState.LOADING)
 
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
@@ -70,8 +80,8 @@ class SearchViewModel @Inject constructor(
                 val operator = repository.getOperatorName()
                 if (operator == null) {
                     withContext(appCoroutineDispatchers.main) {
-                        _noOperator.value = Unit
-                        _networkState.value = NetworkState.LOADED
+                        _noOperator.value = Event(Unit)
+                        _networkState.value = Event(NetworkState.LOADED)
                     }
                     return@launch
                 }
@@ -95,16 +105,16 @@ class SearchViewModel @Inject constructor(
                         _findCargoHolder.value = findCargoResponse
                         val cargoNotFoundResponse = CargoNotFoundResponse(
                             findCargoResponse?.message,
-                            Constants.SHIP_SIDE.toLowerCase() == config?.operationStep?.value?.toLowerCase()
+                            Constants.SHIP_SIDE.toLowerCase(Locale.US) == config?.operationStep?.value?.toLowerCase(Locale.US)
                         )
                         _errorMessage.value = cargoNotFoundResponse
                     }
-                    _networkState.value = NetworkState.LOADED
+                    _networkState.value = Event(NetworkState.LOADED)
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
                 withContext(appCoroutineDispatchers.main) {
-                    _networkState.value = NetworkState.error(e)
+                    _networkState.value = Event(NetworkState.error(e))
                 }
             }
         }
@@ -118,12 +128,12 @@ class SearchViewModel @Inject constructor(
 
 
     fun openBarcodeScan() {
-        _scan.value = Unit
+        _scan.value = Event(Unit)
     }
 
 
     fun openDeviceConfiguration() {
-        _openDeviceConfiguration.value = Unit
+        _openDeviceConfiguration.value = Event(Unit)
     }
 
 

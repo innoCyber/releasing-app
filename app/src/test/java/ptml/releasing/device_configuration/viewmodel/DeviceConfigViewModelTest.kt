@@ -10,18 +10,18 @@ import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.base.BaseTest
-import ptml.releasing.data.IMEI
+import ptml.releasing.data.VALID_IMEI
 import ptml.releasing.data.getVerifyDeviceException
 import ptml.releasing.data.getVerifyDeviceFail
 import ptml.releasing.data.getVerifyDeviceSuccess
 import kotlin.test.assertEquals
 
+@Suppress("UNCHECKED_CAST")
 class DeviceConfigViewModelTest : BaseTest() {
 
 
     private val repository: ReleasingRepository = mockk()
-
-    private val deviceConfigViewModel by lazy { DeviceConfigViewModel(repository, dispatcher) }
+    private val deviceConfigViewModel by lazy { DeviceConfigViewModel(repository, dispatcher, updateChecker) }
 
 
     @ExperimentalCoroutinesApi
@@ -36,12 +36,16 @@ class DeviceConfigViewModelTest : BaseTest() {
             repository.setFirst(any())
         }returns Unit
 
+        every {
+            repository.setImei(any())
+        }returns Unit
 
-        deviceConfigViewModel.verifyDeviceId(IMEI)
+
+        deviceConfigViewModel.verifyDeviceId(VALID_IMEI)
 
         assertEquals(
-            getVerifyDeviceSuccess(),
-            this.deviceConfigViewModel.baseLiveData.value,
+            Unit,
+            this.deviceConfigViewModel.openSearchActivity.value,
             "Verify the response returns a success"
         )
 
@@ -68,8 +72,8 @@ class DeviceConfigViewModelTest : BaseTest() {
 
 
         assertEquals(
-            getVerifyDeviceFail(),
-            deviceConfigViewModel.baseLiveData.value,
+            Unit,
+            deviceConfigViewModel.showDeviceError.value,
             "The response returns a failure"
         )
 
@@ -93,7 +97,13 @@ class DeviceConfigViewModelTest : BaseTest() {
 
         assertEquals(
             null,
-            deviceConfigViewModel.baseLiveData.value,
+            deviceConfigViewModel.openSearchActivity.value,
+            "The response is null"
+        )
+
+        assertEquals(
+            null,
+            deviceConfigViewModel.showDeviceError.value,
             "The response is null"
         )
 

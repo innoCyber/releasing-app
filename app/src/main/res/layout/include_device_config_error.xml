@@ -10,6 +10,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
             app:layout_constraintBottom_toTopOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/constraint_default_margin_8dp"
             android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+            android:padding="@dimen/constraint_default_margin_8dp"
             android:gravity="center"
             android:text="@string/verification_error_message"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -37,40 +37,50 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         viewModel.getSavedConfig()
 
-        viewModel.openDownloadDamages.observe(this, Observer {
-            if (it) {
-                startNewActivity(DamageActivity::class.java)
-            } else {
-                showConfigurationErrorDialog()
+        viewModel.openDownloadDamages.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    startNewActivity(DamageActivity::class.java)
+                } else {
+                    showConfigurationErrorDialog()
+                }
             }
         })
 
-        viewModel.openQuickRemark.observe(this, Observer {
-            if (it) {
-                startNewActivity(QuickRemarkActivity::class.java)
-            } else {
-                showConfigurationErrorDialog()
+        viewModel.openQuickRemark.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    startNewActivity(QuickRemarkActivity::class.java)
+                } else {
+                    showConfigurationErrorDialog()
+                }
             }
         })
 
-        viewModel.openPrinterSettings.observe(this, Observer {
-            startNewActivity(PrinterSettingsActivity::class.java)
+        viewModel.openPrinterSettings.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(PrinterSettingsActivity::class.java)
+            }
         })
 
-        viewModel.openConfig.observe(this, Observer {
-            val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, RC_CONFIG)
+        viewModel.openConfig.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this, ConfigActivity::class.java)
+                startActivityForResult(intent, RC_CONFIG)
+            }
         })
 
-        viewModel.serverUrl.observe(this, Observer {
-            showServerUrlDialog(it)
+        viewModel.serverUrl.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                showServerUrlDialog(it)
+            }
         })
 
-        viewModel.openSearch.observe(this, Observer {
-            onBackPressed()
+        viewModel.openSearch.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                onBackPressed()
+            }
         })
-
-
 
         showUpEnabled(true)
 

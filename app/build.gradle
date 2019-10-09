@@ -13,18 +13,50 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 2
-        versionName "1.0.1"
+        versionName "1.0"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
-
-        buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
-//        buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions 'server'
+    productFlavors {
+        dev {
+            dimension 'server'
+            applicationIdSuffix '.dev'
+            versionCode 1
+        }
+
+        staging {
+            dimension 'server'
+            versionCode 6
+        }
+
+        production {
+            dimension 'server'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        def name = variant.getName()
+        //default values
+        variant.buildConfigField("String", "IMEI", "\"861327032935756\"")
+
+        // Specific values
+        if (name.contains("dev")) {
+            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
+        } else if (name.contains("staging")) {
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+        } else if (name.contains("production")) {
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "IMEI", "\"\"")
         }
     }
 
@@ -39,6 +71,13 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 
@@ -56,7 +95,7 @@ dependencies {
 
     //appcompat
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
-    implementation "androidx.vectordrawable:vectordrawable:1.1.0-beta01"
+    implementation "androidx.vectordrawable:vectordrawable:$supportLibVersion"
 
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -111,11 +150,23 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$testRunner"
     androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
+
+    //zebra sdk
     implementation files('libs/zebra_android_sdk.jar')
 
     //barcode scanning
     implementation 'me.dm7.barcodescanner:zbar:1.8.3'
 
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
+    //crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    //firebase analytics
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+
+    //firebase remote config
+    implementation 'com.google.firebase:firebase-config:18.0.0'
+
 
 }
+
+apply plugin: 'com.google.gms.google-services'

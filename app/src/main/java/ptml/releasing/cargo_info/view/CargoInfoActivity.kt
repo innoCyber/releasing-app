@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
@@ -21,18 +20,19 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.form.*
-import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
-import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
-import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 import java.util.*
 
@@ -45,7 +45,6 @@ class CargoInfoActivity :
         const val RESPONSE = "response"
         const val QUERY = "query"
         const val DAMAGES_RC = 1234
-
     }
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -150,7 +149,7 @@ class CargoInfoActivity :
                     intent?.extras?.getBundle(Constants.EXTRAS)
                         ?.getParcelable<FindCargoResponse>(RESPONSE)
                 val barcode = findCargoResponse?.barcode
-                var labelCpclData =
+                val labelCpclData =
                     settings?.labelCpclData?.replace("var_barcode", barcode ?: input ?: "")
                 /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
                 Timber.e("Printer code: %s", labelCpclData)
@@ -228,9 +227,10 @@ class CargoInfoActivity :
             }
         }
 
-
-        viewModel.goBack.observe(this, Observer {
-            onBackPressed()
+        viewModel.goBack.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                onBackPressed()
+            }
         })
 
         viewModel.savedConfiguration.observe(this, Observer {
@@ -250,38 +250,46 @@ class CargoInfoActivity :
             handleSelectPrinterClick(it)
         })
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.submitting_form
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
+        viewModel.networkState.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.submitting_form
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
+        })
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
+        viewModel.submitSuccess.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                notifyUser(getString(R.string.form_submit_success_msg))
+                setResult(Activity.RESULT_OK)
+                finish()
             }
         })
 
-        viewModel.submitSuccess.observe(this, Observer {
-            notifyUser(getString(R.string.form_submit_success_msg))
-            setResult(Activity.RESULT_OK)
-            finish()
+        viewModel.errorMessage.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                showErrorDialog(it)
+            }
         })
 
-        viewModel.errorMessage.observe(this, Observer {
-            showErrorDialog(it)
-        })
-
-        viewModel.noOperator.observe(this, Observer {
+        viewModel.noOperator.observe(this, Observer {event->
             //show dialog
-            showOperatorErrorDialog()
+            event.getContentIfNotHandled().let {
+                showOperatorErrorDialog()
+            }
         })
 
 
@@ -301,8 +309,8 @@ class CargoInfoActivity :
                     viewModel.openOperatorDialog()
                 }
             },
-            hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
         )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
@@ -356,8 +364,8 @@ class CargoInfoActivity :
     }
 
     @VisibleForTesting
-    public fun createForm(wrapper: FormDataWrapper?) {
-        var findCargoResponse =
+    fun createForm(wrapper: FormDataWrapper?) {
+        val findCargoResponse =
             intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*if (BuildConfig.DEBUG) {*/
@@ -418,8 +426,8 @@ class CargoInfoActivity :
             title = getString(R.string.confirm_action),
             message = getString(R.string.proceed_to_reset_msg),
             buttonText = getString(R.string.yes),
-            hasNeutralButton = true,
-            neutralButtonText = getString(R.string.no),
+            hasNegativeButton = true,
+            negativeButtonText = getString(R.string.no),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     formBuilder?.reset()
@@ -453,8 +461,8 @@ class CargoInfoActivity :
                 override fun onConfirm() {
                     attemptToTurnBluetoothOn()
                 }
-            }, hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            }, hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
 
         )
         dialogFragment.isCancelable = false

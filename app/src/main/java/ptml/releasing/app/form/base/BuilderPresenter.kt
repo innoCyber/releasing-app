@@ -8,7 +8,7 @@ import ptml.releasing.quick_remarks.model.QuickRemark
 
 interface BuilderPresenter{
 
-    fun provideQuickRemarks(quickRemarks: Map<Int, QuickRemark>?)
+    fun initializeQuickRemarks(quickRemarks: Map<Int, QuickRemark>?)
     fun init(findCargoResponse: FindCargoResponse?): BuilderView
 
     fun validateTextBox(data: ConfigureDeviceData?): Boolean

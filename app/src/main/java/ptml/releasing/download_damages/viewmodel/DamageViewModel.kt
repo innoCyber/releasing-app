@@ -8,29 +8,31 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.download_damages.model.Damage
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 class DamageViewModel @Inject constructor(
-        repository: Repository,
-        appCoroutineDispatchers: AppCoroutineDispatchers) : BaseViewModel(repository, appCoroutineDispatchers) {
+    repository: Repository,
+    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val responseMutable = MutableLiveData<List<Damage>>()
-    private val networkStateMutable = MutableLiveData<NetworkState>()
+    private val response = MutableLiveData<List<Damage>>()
+    fun getResponse(): LiveData<List<Damage>> = response
 
-    //expose as an immutable live data
-    val response: LiveData<List<Damage>> = responseMutable
-    val networkState: LiveData<NetworkState> = networkStateMutable
+    private val networkState = SingleLiveEvent<Event<NetworkState>>()
+    fun  getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
 
     fun getDamages(imei:String) {
-        if (networkStateMutable.value == NetworkState.LOADING) return
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkStateMutable.postValue(NetworkState.LOADING)
+        networkState.postValue(Event(NetworkState.LOADING))
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
@@ -38,17 +40,17 @@ class DamageViewModel @Inject constructor(
                 val response = repository.getDamagesAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
-                        responseMutable.postValue(response.data)
-                        networkStateMutable.postValue(NetworkState.LOADED)
+                        this@DamageViewModel.response.postValue(response.data)
+                        networkState.postValue(Event(NetworkState.LOADED))
                     } else {
-                        networkStateMutable.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                        networkState.postValue(Event(NetworkState.error(Exception("Response received was unexpected"))))
                     }
 
                 }
             } catch (it: Throwable) {
 
                 Timber.e(it, "Error occurred")
-                networkStateMutable.postValue(NetworkState.error(it))
+                networkState.postValue(Event(NetworkState.error(it)))
             }
         }
 
@@ -57,9 +59,9 @@ class DamageViewModel @Inject constructor(
 
 
     fun downloadDamagesFromServer(imei:String) {
-        if (networkStateMutable.value == NetworkState.LOADING) return
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkStateMutable.postValue(NetworkState.LOADING)
+        networkState.postValue(Event(NetworkState.LOADING))
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
@@ -67,17 +69,17 @@ class DamageViewModel @Inject constructor(
                 val response = repository.downloadDamagesAsync(imei)?.await()
                 withContext(appCoroutineDispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
-                        responseMutable.postValue(response.data)
-                        networkStateMutable.postValue(NetworkState.LOADED)
+                        this@DamageViewModel.response.postValue(response.data)
+                        networkState.postValue(Event(NetworkState.LOADED))
                     } else {
-                        networkStateMutable.postValue(NetworkState.error(Exception("Response received was unexpected")))
+                        networkState.postValue(Event(NetworkState.error(Exception("Response received was unexpected"))))
                     }
 
                 }
             } catch (it: Throwable) {
 
                 Timber.e(it, "Error occurred")
-                networkStateMutable.postValue(NetworkState.error(it))
+                networkState.postValue(Event(NetworkState.error(it)))
             }
         }
 

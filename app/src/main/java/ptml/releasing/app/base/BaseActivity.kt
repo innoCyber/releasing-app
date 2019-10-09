@@ -2,6 +2,7 @@
 
 package ptml.releasing.app.base
 
+import android.app.ProgressDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -33,10 +34,14 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.PlayStoreUtils
+import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -64,6 +69,7 @@ abstract class BaseActivity<T, D> :
     @Inject
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
+    private var progressDialog: ProgressDialog? = null
 
     companion object {
         const val RC_BARCODE = 112
@@ -73,15 +79,24 @@ abstract class BaseActivity<T, D> :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        progressDialog = ProgressDialog(this)
+
         val networkListener = NetworkListener(this)
         networkListener.networkInfoLive.observe(this, Observer {
             networkStateWrapper = it
             invalidateOptionsMenu()
+            if (it.connected) {
+                handleNetworkConnect()
+            } else {
+                handleNetworkDisconnected()
+            }
         })
         lifecycle.addObserver(networkListener)
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(getViewModelClass())
+
+        viewModel.checkToResetAppUpdateValues()
 
         initBeforeView()
 
@@ -145,6 +160,161 @@ abstract class BaseActivity<T, D> :
             notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
         })
 
+        viewModel.showMustUpdateApp.observe(this, Observer {
+            showMustUpdateDialog()
+        })
+
+        viewModel.showShouldUpdateApp.observe(this, Observer {
+            showShouldUpdateDialog()
+        })
+
+
+        viewModel.updateLoadingState.observe(this, Observer {
+            Timber.e("$it")
+            if (it != NetworkState.LOADING) {
+                viewModel.applyUpdates()
+            }
+        })
+
+        viewModel.startDamagesUpdate.observe(this, Observer {
+            //start intent service to update
+            Timber.d("Starting intent service to update damages")
+            startUpdateDamagesServiceWithPermissionCheck()
+        })
+
+        viewModel.startQuickRemarksUpdate.observe(this, Observer {
+            //start intent service to update
+            Timber.d("Starting intent service to update quick remarks")
+            startUpdateQuickRemarksServiceWithPermissionCheck()
+        })
+
+        viewModel.updateDamagesLoadingState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                progressDialog?.setTitle(getString(R.string.update_damages_title))
+                progressDialog?.setCancelable(false)
+                progressDialog?.setMessage(getString(R.string.update_damages_message))
+                progressDialog?.show()
+            } else {
+                if (!viewModel.updatingQuickRemarks()) {
+                    progressDialog?.dismiss()
+                }
+                if (it.status == Status.FAILED) {
+                    notifyUser(getString(R.string.damages_update_failed_msg))
+                }
+            }
+        })
+
+        viewModel.updateQuickRemarkLoadingState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                progressDialog?.setTitle(getString(R.string.update_quick_remarks_title))
+                progressDialog?.setCancelable(false)
+                progressDialog?.setMessage(getString(R.string.update_quick_remarks_message))
+                progressDialog?.show()
+            } else {
+                if (!viewModel.updatingDamages()) {
+                    progressDialog?.dismiss()
+                }
+                if (it.status == Status.FAILED) {
+                    notifyUser(getString(R.string.quick_remark_update_failed_msg))
+                }
+
+            }
+        })
+    }
+
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun startUpdateQuickRemarksService() {
+        val imei = (application as ReleasingApplication).provideImei()
+        viewModel.updateQuickRemarks(imei)
+    }
+
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun startUpdateDamagesService() {
+        val imei = (application as ReleasingApplication).provideImei()
+        viewModel.updateDamages(imei)
+    }
+
+    @OnShowRationale(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun showPhoneStatePermissionRationale(request: PermissionRequest) {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.allow_permission),
+            message = getString(R.string.allow_phone_state_permission_msg),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    request.proceed()
+                }
+            })
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    @OnPermissionDenied(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun showDeniedForPhoneStatePermission() {
+        notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
+    }
+
+    @OnNeverAskAgain(
+        android.Manifest.permission.READ_PHONE_STATE
+    )
+    fun neverAskForPhoneStatePermission() {
+        notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
+    }
+
+    private fun showMustUpdateDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.update_required_title),
+            message = getString(R.string.must_update_required_msg),
+            buttonText = getString(R.string.update_required_ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    val playStoreUtils = PlayStoreUtils(this@BaseActivity)
+                    playStoreUtils.openPlayStore()
+                }
+            })
+        dialogFragment.isCancelable = false
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+    private fun showShouldUpdateDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.update_required_title),
+            message = getString(R.string.should_update_required_msg),
+            buttonText = getString(R.string.update_required_ok),
+            hasNegativeButton = true,
+            negativeButtonText = getString(R.string.update_required_cancel),
+            negativeListener = object : InfoDialog.NegativeListener {
+                override fun onNeutralClick() {
+                    viewModel.resetRuntimeShouldUpdate()
+                    viewModel.resetShowingDialog()
+                }
+            },
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    val playStoreUtils = PlayStoreUtils(this@BaseActivity)
+                    playStoreUtils.openPlayStore()
+                    viewModel.resetRuntimeShouldUpdate()
+                    viewModel.resetShowingDialog()
+                }
+            })
+        dialogFragment.isCancelable = false
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
+
+
+    protected fun handleNetworkConnect() {
+        viewModel.checkForUpdates()
+    }
+
+    protected fun handleNetworkDisconnected() {
+        //no implementation
     }
 
 
@@ -153,8 +323,8 @@ abstract class BaseActivity<T, D> :
             title = getString(R.string.confirm_action),
             message = getString(R.string.log_out_confirm_message),
             buttonText = getString(R.string.yes),
-            hasNeutralButton = true,
-            neutralButtonText = getString(R.string.no),
+            hasNegativeButton = true,
+            negativeButtonText = getString(R.string.no),
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     viewModel.logOutOperator()
@@ -190,6 +360,7 @@ abstract class BaseActivity<T, D> :
     override fun onResume() {
         super.onResume()
         viewModel.getOperatorName()
+        viewModel.checkToShowUpdateAppDialog()
     }
 
 
@@ -240,7 +411,7 @@ abstract class BaseActivity<T, D> :
             //save
             Timber.d("Scanned Operator name: %s", operatorName)
             viewModel.saveOperatorName(operatorName)
-        }else  if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
+        } else if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
             //save
             val scanned = data?.getStringExtra(Constants.BAR_CODE)
             Timber.d("Scanned: %s", scanned)
@@ -444,18 +615,13 @@ abstract class BaseActivity<T, D> :
     }
 
     fun hideLoading(view: View) {
-
-        val slide = AnimationUtils.loadAnimation(
-            this,
-            R.anim.up_down
-        )
-        view.startAnimation(slide)
         view.visibility = View.GONE
     }
 
+    @Suppress("NAME_SHADOWING")
     fun showErrorDialog(message: String?) {
         var message = message
-        if(message == null || message.isEmpty()){
+        if (message == null || message.isEmpty()) {
             message = getString(R.string.error_occurred)
         }
         showDialog(getString(R.string.error), message)

@@ -7,8 +7,6 @@ import android.telephony.TelephonyManager
 import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.squareup.leakcanary.LeakCanary
-
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import io.fabric.sdk.android.Fabric
@@ -20,7 +18,6 @@ import timber.log.Timber
 
 
 open class ReleasingApplication : DaggerApplication() {
-
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.builder()
@@ -36,7 +33,6 @@ open class ReleasingApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-//        initializeLeakCanary()
         initFabric()
     }
 
@@ -55,25 +51,11 @@ open class ReleasingApplication : DaggerApplication() {
     }
 
 
-    private fun initializeLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-        LeakCanary.install(this)
-    }
-
     @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-
-        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-           return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-               telephonyManager.imei
-           } else {
-               telephonyManager.deviceId
-           }
-      /*  return when (BuildConfig.DEBUG) {
-            true -> "861327032935756"
+          return when (BuildConfig.DEBUG) {
+            true -> BuildConfig.IMEI
             else -> {
                 val telephonyManager =
                     getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -83,7 +65,7 @@ open class ReleasingApplication : DaggerApplication() {
                     telephonyManager.deviceId
                 }
             }
-        }*/
+        }
     }
 
 }

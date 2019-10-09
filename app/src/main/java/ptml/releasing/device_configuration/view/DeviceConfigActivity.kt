@@ -30,29 +30,32 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
             return
         }
 
-        viewModel.baseLiveData.observe(this, Observer {
-            if (true == it?.isSuccess) {
-                hideLoading(binding.includeError.root)
-                startNewActivity(SearchActivity::class.java, true)
-            } else if (false == it?.isSuccess) {
-                showErrorWithPermissionCheck()
-            }
+        viewModel.openSearchActivity().observe(this, Observer {
+            hideLoading(binding.includeError.root)
+            startNewActivity(SearchActivity::class.java, true)
         })
 
-        viewModel.networkState.observe(this, Observer {
-            if (NetworkState.LOADING == it) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.configure_device_message
-                )
-                Timber.e("Loading...")
-            }
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
+        viewModel.showDeviceError().observe(this, Observer {
+            showErrorWithPermissionCheck()
+        })
+
+        viewModel.getNetworkState().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (NetworkState.LOADING == it) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.configure_device_message
+                    )
+                    Timber.e("Loading...")
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
         })
 
@@ -95,7 +98,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    fun showInitRecognizerRationale(request: PermissionRequest) {
+    fun showPermissionsRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
@@ -114,7 +117,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    fun showDeniedForInitRecognizer() {
+    fun showDeniedForPermissions() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
     }
 
@@ -124,7 +127,7 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    fun neverAskForInitRecognizer() {
+    fun neverAskForPermissions() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 

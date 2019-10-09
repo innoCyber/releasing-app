@@ -2,6 +2,7 @@ package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
+import ptml.releasing.BuildConfig
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -73,7 +74,7 @@ open class ReleasingRepository @Inject constructor(
                     local.saveDamages(remoteResponse.await())
                     remoteResponse
                 }
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 Timber.e(e)
                 null
             }
@@ -91,7 +92,7 @@ open class ReleasingRepository @Inject constructor(
         local.setSavedConfig(configuration)
     }
 
-    override fun isFirstAsync(): Boolean {
+    override fun isFirst(): Boolean {
         return local.isFirst()
     }
 
@@ -205,15 +206,48 @@ open class ReleasingRepository @Inject constructor(
                 }
                 remoteResponse
 
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 Timber.e(e)
                 null
             }
         }
-
     }
 
+    override fun setShouldUpdateApp(shouldUpdate: Boolean) = local.setShouldUpdateApp(shouldUpdate)
 
+    override fun shouldUpdateApp(): Boolean = local.shouldUpdateApp()
+
+    override fun setImei(imei: String) = local.setImei(imei)
+
+    override fun getImei(): String? = local.getImei()
+
+    override fun setDamagesCurrentVersion(currentVersion: Long) = local.setDamagesCurrentVersion(currentVersion)
+
+    override fun setQuickCurrentVersion(currentVersion: Long) = local.setQuickCurrentVersion(currentVersion)
+
+    override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
+
+    override fun mustUpdateApp(): Boolean = local.mustUpdateApp()
+
+    override fun setAppCurrentVersion(version: Long) = local.setAppCurrentVersion(version)
+
+    override fun getAppCurrentVersion(): Long = local.getAppCurrentVersion()
+
+    override fun setAppMinimumVersion(version: Long) = local.setAppMinimumVersion(version)
+
+    override fun getAppMinimumVersion(): Long = local.getAppMinimumVersion()
+
+    override fun checkToResetLocalAppUpdateValues() {
+        val currentVersion = BuildConfig.VERSION_CODE.toLong()
+        if (currentVersion > local.getAppMinimumVersion()) {
+            local.setMustUpdateApp(false)
+            local.setAppMinimumVersion(currentVersion)
+        }
+        if (currentVersion > local.getAppCurrentVersion()) {
+            local.setShouldUpdateApp(false)
+            local.setAppCurrentVersion(currentVersion)
+        }
+    }
 }
 
 

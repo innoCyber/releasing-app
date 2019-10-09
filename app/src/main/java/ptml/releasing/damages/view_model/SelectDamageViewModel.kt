@@ -9,28 +9,31 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.download_damages.model.Damage
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
-class SelectDamageViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers) :
-    BaseViewModel(repository, appCoroutineDispatchers) {
+class SelectDamageViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
+                                                updateChecker: RemoteConfigUpdateChecker
+) :
+    BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     private val _damagesListFiltered = MutableLiveData<List<Damage>>()
     private val _damagesList = MutableLiveData<List<Damage>>()
-    private val _networkState = MutableLiveData<NetworkState>()
+    private val _networkState = MutableLiveData<Event<NetworkState>>()
 
 
     val damagesList: LiveData<List<Damage>> = _damagesListFiltered
-    val networkState: LiveData<NetworkState> = _networkState
+    val networkState: LiveData<Event<NetworkState>> = _networkState
 
     fun getDamages(imei: String, typeContainer:Int?) {
 
-        if (_networkState.value == NetworkState.LOADING) return
-        _networkState.postValue(NetworkState.LOADING)
+        if (_networkState.value?.peekContent() == NetworkState.LOADING) return
+        _networkState.postValue(Event(NetworkState.LOADING))
 
         try {
 
@@ -50,12 +53,12 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
                 withContext(appCoroutineDispatchers.main) {
                     _damagesListFiltered.postValue(list)
                     _damagesList.value = list
-                    _networkState.postValue(NetworkState.LOADED)
+                    _networkState.postValue(Event(NetworkState.LOADED))
                 }
             }
         } catch (e: Throwable) {
             Timber.e(e)
-            _networkState.postValue(NetworkState.error(e))
+            _networkState.postValue(Event(NetworkState.error(e)))
         }
     }
 

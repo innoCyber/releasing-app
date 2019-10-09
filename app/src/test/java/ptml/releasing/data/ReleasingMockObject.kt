@@ -6,7 +6,9 @@ import ptml.releasing.configuration.models.*
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.base.BaseTest
+import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.Option
 import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.login.model.User
 import ptml.releasing.download_damages.model.Damage
@@ -16,7 +18,10 @@ import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import java.io.File
 import java.net.SocketTimeoutException
 
-const val IMEI = ""
+const val VALID = true
+const val VALID_IMEI = "00000000"
+const val INVALID_IMEI = ""
+const val INVALID = false
 const val VERIFY_DEVICE_FAILURE_MSG = "Device not authorized"
 const val LOGIN_FAILURE_MSG = "User not authorized"
 
@@ -31,7 +36,7 @@ const val MOCK_OPERATION_STEP_CATEGORY_ID = 43
 const val SAVED_CONFIG_ERROR_MESSAGE = "Error occurred❗"
 
 fun getVerifyDeviceSuccess() = BaseResponse("", true)
-fun getVerifyDeviceFail() = BaseResponse(VERIFY_DEVICE_FAILURE_MSG, true)
+fun getVerifyDeviceFail() = BaseResponse(VERIFY_DEVICE_FAILURE_MSG, false)
 fun getVerifyDeviceException() = SocketTimeoutException()
 
 fun getUser() = User("ugo", "123456")
@@ -114,11 +119,19 @@ val findCargoResponse: FindCargoResponse by lazy {
     createFindCargoResponseSuccess()
 }
 
+val emptyValues = mapOf<Int?, Value>()
+
+val emptyOptions = mapOf<Int?, Option>()
+
+
 fun createFindCargoResponseSuccess(): FindCargoResponse {
     val json = getJson("findCargoResponseSucess.json")
     return Gson().fromJson(json, FindCargoResponse::class.java)
 }
 
+val emptyValuesList = listOf<Value>()
+val emptyDamagesList = listOf<Damage>()
+val emptyFormSelection = listOf<FormSelection>()
 
 val quickRemarks: Map<Int, QuickRemark> by lazy {
     createQuickRemarks()
@@ -220,6 +233,8 @@ fun getSingleDataOneOptions(): ConfigureDeviceData {
     )
 }
 
+const val SELECTED_POSITION = 0
+
 val singleSelectOptions by lazy {
     provideSingleSelectOptions()
 }
@@ -308,7 +323,7 @@ val multiSelectItemsList by lazy {
     provideMultiSelectItemsList()
 }
 
-val multiSelectItemsList6 by lazy {
+val multiSelectItemsListAtLeast6 by lazy {
     provideMultiSelectItemsList6()
 }
 
@@ -339,7 +354,6 @@ fun provideCheckBoxData(): ConfigureDeviceData {
 val configureDeviceData: List<ConfigureDeviceData> by lazy {
     provideConfigureDeviceData()
 }
-
 
 
 val configureDeviceDataNonRequired: List<ConfigureDeviceData> by lazy {
@@ -390,7 +404,7 @@ private fun provideConfigureDeviceDataSomeRequired(): List<ConfigureDeviceData> 
 
 private fun getJson(path: String): String {
     val uri = BaseTest::class.java.classLoader?.getResource(path)
-    val file = File(uri?.path)
+    val file = File(uri?.path ?: return "")
     return String(file.readBytes())
 }
 

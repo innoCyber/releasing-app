@@ -2,6 +2,8 @@ package ptml.releasing.app.form
 
 import io.mockk.every
 import io.mockk.mockk
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import ptml.releasing.app.form.base.BuilderView
 import ptml.releasing.base.BaseTest
@@ -9,7 +11,8 @@ import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.Option
 import ptml.releasing.cargo_search.model.Value
 import ptml.releasing.data.*
-import kotlin.test.assertEquals
+import kotlin.test.assertNull
+
 
 class FormBuilderPresenterTest : BaseTest() {
 
@@ -20,53 +23,78 @@ class FormBuilderPresenterTest : BaseTest() {
     }
 
     @Test
-    fun setQuickRemarks() {
-
-        assertEquals(
-            null, presenter.quickRemarks,
-            "Quick remarks are null before calling provideQuickRemarks"
+    fun `should initialize quick remarks when provided with non-null value`() {
+        assertNull(
+            presenter.quickRemarks,
+            "Quick remarks should be null before initialization"
         )
 
-        presenter.provideQuickRemarks(quickRemarks)
+        presenter.initializeQuickRemarks(quickRemarks)
 
-        assertEquals(
-            quickRemarks.size, presenter.quickRemarks?.size,
-            "Quick remarks have been set"
-        )
-
+        assertThat(presenter.quickRemarks, `is`(quickRemarks))
     }
 
     @Test
-    fun initializeValuesAndOptions() {
-        assertEquals(
-            0, presenter.values.size,
-            "No values  before calling init"
+    fun `should not initialize quick remarks when provided with null value`() {
+        assertNull(
+            presenter.quickRemarks,
+            "Quick remarks should be null before initialization"
         )
 
-        assertEquals(
-            0, presenter.options.size,
-            "No options  before calling init"
+        presenter.initializeQuickRemarks(null)
+
+        assertNull(
+            presenter.quickRemarks,
+            "Quick remarks should be null after initialization with null value"
         )
+    }
+
+
+    @Test
+    fun `should populate values when provided with non-null value`() {
+
+        assertThat(presenter.values, `is`(emptyValues))
 
         presenter.init(findCargoResponse)
 
+        val expectedValues = findCargoResponse.values?.associateBy ({it.id}, {it})
+        assertThat(presenter.values, `is`(expectedValues))
+    }
 
-        assertEquals(
-            findCargoResponse.values.size, presenter.values.size,
-            "Value size is the same "
-        )
+    @Test
+    fun `should not populate values when provided with null value`() {
 
-        assertEquals(
-            findCargoResponse.options.size, presenter.options.size,
-            "options size is the same"
-        )
+        assertThat(presenter.values, `is`(emptyValues))
 
+        presenter.init(null)
+
+        assertThat(presenter.values, `is`(emptyValues))
+    }
+
+    @Test
+    fun `should not populate options when provided with null value`() {
+        assertThat(presenter.options, `is`(emptyOptions))
+
+        presenter.init(null)
+
+        assertThat(presenter.options, `is`(emptyOptions))
     }
 
 
     @Test
-    fun `validate textbox (there is text in the textbox)`() {
+    fun `should populate options when provided with non-null value`() {
 
+        assertThat(presenter.options, `is`(emptyOptions))
+
+        presenter.init(findCargoResponse)
+
+        val expectedOptions = findCargoResponse.options?.associateBy ({it.id}, {it})
+        assertThat(presenter.options, `is`(expectedOptions))
+    }
+
+
+    @Test
+    fun `textbox input is valid when there is text`() {
         every {
             formBuilder.getTextBoxText(any())
         } returns TEXT_BOX_TITLE
@@ -77,15 +105,13 @@ class FormBuilderPresenterTest : BaseTest() {
 
         val data = getTextBoxData()
 
-        val valid = presenter.validateTextBox(data)
-
-        assertEquals(true, valid, "Textbox has some text")
+        val result = presenter.validateTextBox(data)
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate textbox (there is no text in the textbox)`() {
-
+    fun `textbox input is invalid when there is no text)`() {
         every {
             formBuilder.getTextBoxText(any())
         } returns ""
@@ -96,14 +122,13 @@ class FormBuilderPresenterTest : BaseTest() {
 
         val data = getTextBoxData()
 
-        val valid = presenter.validateTextBox(data)
-
-        assertEquals(false, valid, "Textbox has some text")
+        val result = presenter.validateTextBox(data)
+        assertThat(result, `is`(INVALID))
     }
 
 
     @Test
-    fun `get textbox value`() {
+    fun `textbox should return value with its text context`() {
         every {
             formBuilder.getTextBoxText(any())
         } returns TEXT_BOX_TITLE
@@ -112,17 +137,12 @@ class FormBuilderPresenterTest : BaseTest() {
         val expectedValue = Value(TEXT_BOX_TITLE)
         expectedValue.id = data.id
 
-        val value = presenter.getTextBoxValue(data)
-
-        assertEquals(
-            expectedValue,
-            value,
-            "Textbox value matches"
-        )
+        val result = presenter.getTextBoxValue(data)
+        assertThat(result, `is`(expectedValue))
     }
 
     @Test
-    fun `validate button (with at least one number)`() {
+    fun `button data is valid when the button text is greater than 0`() {
         every {
             formBuilder.getButtonNumber(any())
         } returns BUTTON_NUMBER.toString()
@@ -132,14 +152,14 @@ class FormBuilderPresenterTest : BaseTest() {
         } returns Unit
 
         val data = buttonData()
-        val valid = presenter.validateButton(data)
+        val result = presenter.validateButton(data)
 
-        assertEquals(true, valid)
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate button (with at 0 number)`() {
+    fun `button data is invalid when the button text is 0`() {
         every {
             formBuilder.getButtonNumber(any())
         } returns 0.toString()
@@ -149,93 +169,80 @@ class FormBuilderPresenterTest : BaseTest() {
         } returns Unit
 
         val data = buttonData()
-        val valid = presenter.validateButton(data)
+        val result = presenter.validateButton(data)
 
-        assertEquals(false, valid)
+        assertThat(result, `is`(INVALID))
     }
 
     @Test
-    fun `validate button (with at a non-number)`() {
+    fun `button data is invalid when the button text is not a number`() {
         every {
             formBuilder.getButtonNumber(any())
-        } returns "hello"
+        } returns Double.NaN.toString()
 
         every {
             formBuilder.showButtonError(any())
         } returns Unit
 
         val data = buttonData()
-        val valid = presenter.validateButton(data)
 
-        assertEquals(false, valid)
+        val result = presenter.validateButton(data)
+        assertThat(result, `is`(INVALID))
     }
 
 
     @Test
-    fun `validate single select (with no options)`() {
-        val options =
-            if (singleSelectOptions.isNotEmpty()) singleSelectOptions[0] else optionsSample
+    fun `single select data is ignored when there are no options on validation`() {
         every {
             formBuilder.getSingleSelectRVItem(any())
-        } returns options
+        } returns singleSelectOptions[SELECTED_POSITION]
 
         every {
             formBuilder.showSingleSelectError(any())
         } returns Unit
 
         val data = getSingleDataNoOptions()
-        val valid = presenter.validateSingleSelect(data)
-        assertEquals(true, valid, "With no options, single select validation is true")
+        val result = presenter.validateSingleSelect(data)
+
+        assertThat(result, `is`(VALID))
     }
 
     @Test
-    fun `validate single select (with options more than 6)`() {
-        val options =
-            if (singleSelectOptions.isNotEmpty()) singleSelectOptions[0] else optionsSample
+    fun `single select data is valid when the options are more than 6`() {
         every {
             formBuilder.getSingleSelectRVItem(any())
-        } returns options
+        } returns singleSelectOptions[SELECTED_POSITION]
 
         every {
             formBuilder.showSingleSelectError(any())
         } returns Unit
 
         val data = getSingleDataWithOptions()
-        val valid = presenter.validateSingleSelect(data)
-        assertEquals(
-            true,
-            valid,
-            "With options more than 6, a spinner is shown so, single select validation is true"
-        )
+        val result = presenter.validateSingleSelect(data)
 
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate single select (with options less than 6 and one selected)`() {
-        val options =
-            if (singleSelectOptions.isNotEmpty()) singleSelectOptions[0] else optionsSample
+    fun `single select data is valid when the options are less than 6 and one item is selected`() {
         every {
             formBuilder.getSingleSelectRVItem(any())
-        } returns options //one selected
+        } returns singleSelectOptions[SELECTED_POSITION] //one selected
 
         every {
             formBuilder.showSingleSelectError(any())
         } returns Unit
 
         val data = getSingleDataOneOptions()
-        val valid = presenter.validateSingleSelect(data)
-        assertEquals(
-            true,
-            valid,
-            "With options less than 6, a recycler view is shown, with one selected, single select validation is true"
-        )
+        val result = presenter.validateSingleSelect(data)
 
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate single select (with options less than 6 and none selected)`() {
+    fun `single select data is invalid when the options are less than 6 and no items are selected`() {
         every {
             formBuilder.getSingleSelectRVItem(any())
         } returns null //none selected
@@ -245,27 +252,24 @@ class FormBuilderPresenterTest : BaseTest() {
         } returns Unit
 
         val data = getSingleDataOneOptions()
-        val valid = presenter.validateSingleSelect(data)
-        assertEquals(
-            false,
-            valid,
-            "With options less than 6, a recycler view is shown, with none selected, single select validation is false"
-        )
+        val result = presenter.validateSingleSelect(data)
+
+        assertThat(result, `is`(INVALID))
     }
 
 
     @Test
-    fun `get single select (with no options)`() {
+    fun `single select selection is null when it has no items`() {
         val data = getSingleDataNoOptions()
         val result = presenter.getSingleSelect(data)
-        assertEquals(null, result, "Form selection is null since the data has no options")
+
+        assertNull(result, "Form selection is null when the data has no options")
     }
 
 
     @Test
-    fun `get single select (with options less than 6)`() {
-        val options =
-            if (singleSelectOptions.isNotEmpty()) singleSelectOptions[0] else optionsSample
+    fun `single select selection is non-null with items less than 6 and one item selected`() {
+        val options = singleSelectOptions[SELECTED_POSITION]
         every {
             formBuilder.getSingleSelectRVItem(any())
         } returns options
@@ -274,25 +278,25 @@ class FormBuilderPresenterTest : BaseTest() {
         val expectedSelection = FormSelection(selectedOptions)
         val data = getSingleDataOneOptions()
         val result = presenter.getSingleSelect(data)
-        assertEquals(expectedSelection, result, "Form selection matches")
+
+        assertThat(result, `is`(expectedSelection))
     }
 
     @Test
-    fun `get single select (with options less than 6 and no selected option)`() {
+    fun `single select selection is null with items less than 6 and no selected item`() {
         every {
             formBuilder.getSingleSelectRVItem(any())
-        } returns null
+        } returns null //none selected
 
         val data = getSingleDataOneOptions()
         val result = presenter.getSingleSelect(data)
-        assertEquals(null, result, "Form selection matches")
+
+        assertNull(result)
     }
 
     @Test
-    fun `get single select (with options more than 6)`() {
-
-        val options =
-            if (singleSelectOptions.isNotEmpty()) singleSelectOptions[0] else optionsSample
+    fun `single select selection is non-null with items more than 6 and one item selected`() {
+        val options = singleSelectOptions[SELECTED_POSITION]
         every {
             formBuilder.getSingleSelectSpinnerItem(any())
         } returns options //one selected
@@ -302,38 +306,55 @@ class FormBuilderPresenterTest : BaseTest() {
         val expectedSelection = FormSelection(selectedOptions)
         val data = getSingleDataWithOptions()
         val result = presenter.getSingleSelect(data)
-        assertEquals(expectedSelection, result, "Form selection matches")
+
+        assertThat(result, `is`(expectedSelection))
     }
 
     @Test
-    fun `get single select (with options more than 6 and no selected option)`() {
-
+    fun `single select selection is null with items more than 6 and no selected items`() {
         every {
             formBuilder.getSingleSelectSpinnerItem(any())
-        } returns null //one selected
-
+        } returns null //none selected
 
         val data = getSingleDataWithOptions()
         val result = presenter.getSingleSelect(data)
-        assertEquals(null, result, "Form selection matches")
+
+        assertNull(result)
     }
 
     @Test
-    fun `validate quick remarks when items are empty`() {
+    fun `quick remarks are ignored when they are empty on validation`() {
         val data = quickRemarkData
-        val valid = presenter.validateQuickRemarkSelect(data)
-        assertEquals(true, valid)
+        val result = presenter.validateQuickRemarkSelect(data)
+
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate quick remarks with no items`() {
-        every {
-            formBuilder.getMultiSelectSpinnerItems(any())
-        } returns listOf()
+    fun `quick remarks with at most 6 items are invalid when no items are selected on validation`() {
 
         every {
             formBuilder.getMultiSelectRVItems(any())
+        } returns listOf()
+
+        every {
+            formBuilder.showMultiSelectError(any())
+        } returns Unit
+
+
+        val data = quickRemarkData
+        presenter.quickRemarks = quickRemarks // set quick remarks
+        val result = presenter.validateQuickRemarkSelect(data)
+
+        assertThat( result, `is`(INVALID))
+    }
+
+    @Test
+    fun `quick remarks with options more than 6 are invalid when no items are selected on validation`() {
+
+        every {
+            formBuilder.getMultiSelectSpinnerItems(any())
         } returns listOf()
 
         every {
@@ -343,28 +364,13 @@ class FormBuilderPresenterTest : BaseTest() {
 
         val data = quickRemarkData
         presenter.quickRemarks = quickRemarks6 // set quick remarks
-        val valid = presenter.validateQuickRemarkSelect(data)
+        val result = presenter.validateQuickRemarkSelect(data)
 
-        assertEquals(false, valid, "Validation is false when no items are selected")
+        assertThat(result, `is`(INVALID))
     }
 
     @Test
-    fun `validate quick remarks with items more than 6`() {
-        every {
-            formBuilder.getMultiSelectSpinnerItems(any())
-        } returns multiSelectItemsList6
-
-
-        val data = quickRemarkData
-        presenter.quickRemarks = quickRemarks6  // set quick remarks to more than 6 items
-        val valid = presenter.validateQuickRemarkSelect(data)
-
-        assertEquals(true, valid, "Validation is true since items are selected")
-    }
-
-
-    @Test
-    fun `validate quick remarks with items less than 6`() {
+    fun `quick remarks with items less than 6 is valid when some items are selected`() {
 
         every {
             formBuilder.getMultiSelectRVItems(any())
@@ -373,37 +379,51 @@ class FormBuilderPresenterTest : BaseTest() {
 
         val data = quickRemarkData
         presenter.quickRemarks = quickRemarks // set quick remarks  to less than 6 items
-        val valid = presenter.validateQuickRemarkSelect(data)
-        assertEquals(true, valid, "Validation is true since items are selected")
+        val result = presenter.validateQuickRemarkSelect(data)
+
+        assertThat(result, `is`(VALID))
     }
 
-
     @Test
-    fun `get quick remarks with no items`() {
-        val data = quickRemarkData
-        val valid = presenter.getQuickRemarkSelect(data)
-        assertEquals(null, valid, "Since no quick remark, null is returned")
-    }
-
-
-    @Test
-    fun `get quick remarks with items more than 6`() {
+    fun `quick remarks with items more than 6 is valid when some items are selected`() {
         every {
             formBuilder.getMultiSelectSpinnerItems(any())
-        } returns multiSelectItemsList6
+        } returns multiSelectItemsListAtLeast6
+
+        val data = quickRemarkData
+        presenter.quickRemarks = quickRemarks6  // set quick remarks to more than 6 items
+        val result = presenter.validateQuickRemarkSelect(data)
+
+        assertThat(result, `is`(VALID))
+    }
+
+
+    @Test
+    fun `getting quick remarks data return null when the quick remark data is null`() {
+        val data = quickRemarkData
+        val result = presenter.getQuickRemarkSelect(data)
+        assertNull(result, "Since no quick remark, null data should be returned")
+    }
+
+
+    @Test
+    fun `getting quick remarks selection with items more than 6  and some items selected, returns the selection`() {
+        every {
+            formBuilder.getMultiSelectSpinnerItems(any())
+        } returns multiSelectItemsListAtLeast6
 
 
         val data = quickRemarkData
         presenter.quickRemarks = quickRemarks6  // set quick remarks to more than 6 items
-        val expected = FormSelection(multiSelectItemsList6)
-        val actual = presenter.getQuickRemarkSelect(data)
+        val expected = FormSelection(multiSelectItemsListAtLeast6)
+        val result = presenter.getQuickRemarkSelect(data)
 
-        assertEquals(expected, actual, "Form selection matches")
+        assertThat(result, `is`(expected))
     }
 
 
     @Test
-    fun `get quick remarks with items less than 6`() {
+    fun `getting quick remarks selection with items less than 6 and some items selected, returns the selection`() {
         every {
             formBuilder.getMultiSelectRVItems(any())
         } returns multiSelectItemsList
@@ -412,22 +432,23 @@ class FormBuilderPresenterTest : BaseTest() {
         val data = quickRemarkData
         presenter.quickRemarks = quickRemarks  // set quick remarks to more than 6 items
         val expected = FormSelection(multiSelectItemsList)
-        val actual = presenter.getQuickRemarkSelect(data)
+        val result = presenter.getQuickRemarkSelect(data)
 
-        assertEquals(expected, actual, "Form selection matches")
+        assertThat(result, `is`(expected))
     }
 
 
     @Test
-    fun `validate multiselect when options empty`() {
+    fun `multiselect is ignored when they are empty on validation`() {
         val data = provideMultiSelectDataNoOption()
-        val valid = presenter.validateMultiSelect(data)
-        assertEquals(true, valid)
+        val result = presenter.validateMultiSelect(data)
+
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate multiselect with no items`() {
+    fun `multiselect is invalid when no items are selected on validation`() {
         every {
             formBuilder.getMultiSelectSpinnerItems(any())
         } returns listOf()
@@ -441,63 +462,63 @@ class FormBuilderPresenterTest : BaseTest() {
         } returns Unit
 
         val data = provideMultiSelectData()
-        val valid = presenter.validateMultiSelect(data)
+        val result = presenter.validateMultiSelect(data)
 
-        assertEquals(false, valid, "Validation is false when no items are selected")
+        assertThat(result, `is`(INVALID))
     }
 
     @Test
-    fun `validate multiselect with items more than 6`() {
+    fun `multiselect with items less than 6 is valid when some items are selected`() {
         every {
             formBuilder.getMultiSelectSpinnerItems(any())
-        } returns multiSelectItemsList6
+        } returns multiSelectItemsListAtLeast6
 
         val data = provideMultiSelectData()
-        val valid = presenter.validateMultiSelect(data)
+        val result = presenter.validateMultiSelect(data)
 
-        assertEquals(true, valid, "Validation is true since items are selected")
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `validate multiselect with items less than 6`() {
-
+    fun `multiselect with items more than 6 is valid when some items are selected`() {
         every {
             formBuilder.getMultiSelectRVItems(any())
         } returns multiSelectItemsList
 
 
         val data = provideMultiSelectDataWithOneOption()
-        val valid = presenter.validateMultiSelect(data)
-        assertEquals(true, valid, "Validation is true since items are selected")
+        val result = presenter.validateMultiSelect(data)
+
+        assertThat(result, `is`(VALID))
     }
 
 
     @Test
-    fun `get multiselect with no items`() {
+    fun `getting multiselect data return null when the multiselect data is null`() {
         val data = provideMultiSelectDataNoOption()
-        val valid = presenter.getMultiSelect(data)
-        assertEquals(null, valid, "Since no quick remark, null is returned")
+        val result = presenter.getMultiSelect(data)
+
+        assertNull(result, "Since no quick remark, null is returned")
     }
 
 
     @Test
-    fun `get multiselect with items more than 6`() {
+    fun `getting multiselect selection with items more than 6  and some items selected, returns the selection`() {
         every {
             formBuilder.getMultiSelectSpinnerItems(any())
-        } returns multiSelectItemsList6
-
+        } returns multiSelectItemsListAtLeast6
 
         val data = provideMultiSelectData()
-        val expected = FormSelection(multiSelectItemsList6)
-        val actual = presenter.getMultiSelect(data)
+        val expected = FormSelection(multiSelectItemsListAtLeast6)
+        val result = presenter.getMultiSelect(data)
 
-        assertEquals(expected, actual, "Form selection matches")
+        assertThat(result, `is`(expected))
     }
 
 
     @Test
-    fun `get multiselect with items less than 6`() {
+    fun `getting multiselect with items less than 6 and some items selected, returns the selection`() {
         every {
             formBuilder.getMultiSelectRVItems(any())
         } returns multiSelectItemsList
@@ -505,25 +526,25 @@ class FormBuilderPresenterTest : BaseTest() {
 
         val data = provideMultiSelectDataWithOneOption()
         val expected = FormSelection(multiSelectItemsList)
-        val actual = presenter.getMultiSelect(data)
+        val result = presenter.getMultiSelect(data)
 
-        assertEquals(expected, actual, "Form selection matches")
+        assertThat(result, `is`(expected))
     }
 
 
     @Test
-    fun `validate check box when checked`() {
+    fun `a required check box is valid when checked on validation`() {
         every {
             formBuilder.getCheckBoxCheckedState(any())
         } returns true
 
         val result = presenter.validateCheckBox(provideCheckBoxData())
 
-        assertEquals(true, result, "Result should be true, checkbox is checked")
+        assertThat(result, `is`(VALID))
     }
 
     @Test
-    fun `validate checkbox when unchecked`() {
+    fun `a required checkbox is invalid when unchecked on validation`() {
         every {
             formBuilder.getCheckBoxCheckedState(any())
         } returns false
@@ -535,12 +556,12 @@ class FormBuilderPresenterTest : BaseTest() {
 
         val result = presenter.validateCheckBox(provideCheckBoxData())
 
-        assertEquals(false, result, "Result should be true, checkbox is checked")
+        assertThat(result, `is`(INVALID))
     }
 
 
     @Test
-    fun `get check box when checked`() {
+    fun `getting check box when checked return value with the state of the checkbox`() {
         val checked = true
         every {
             formBuilder.getCheckBoxCheckedState(any())
@@ -551,12 +572,12 @@ class FormBuilderPresenterTest : BaseTest() {
         expected.id = data.id
         val result = presenter.getCheckBoxValue(data)
 
-        assertEquals(expected, result, "Result should match $expected")
+        assertThat(result, `is`(expected))
     }
 
 
     @Test
-    fun `get checkbox when unchecked`() {
+    fun `getting checkbox when unchecked return value with the state of the checkbox`() {
         val checked = false
         every {
             formBuilder.getCheckBoxCheckedState(any())
@@ -567,37 +588,28 @@ class FormBuilderPresenterTest : BaseTest() {
         expected.id = data.id
         val result = presenter.getCheckBoxValue(data)
 
-        assertEquals(expected, result, "Result should match $expected")
+        assertThat(result, `is`(expected))
     }
 
 
     @Test
-    fun `initialize default value`() {
+    fun `default value are initialized`() {
         val data = getTextBoxData()
         val expected = Value("")
         expected.id = data.id
         presenter.initializeDefaultValue(data)
-        assertEquals(expected, presenter.values[data.id], "The values should be equal")
+
+        assertThat(presenter.values[data.id], `is`(expected))
     }
 
     @Test
-    fun `initialize default option`() {
+    fun `default option are initialized`() {
         val data = getSingleDataWithOptions()
         val expected = Option(null)
         expected.id = data.id
         presenter.initializeDefaultOption(data)
-        assertEquals(expected, presenter.options[data.id], "The options should be equal")
-    }
 
-    @Test
-    fun `initialize values`() {
-
-    }
-
-
-    @Test
-    fun `initialize options`() {
-
+        assertThat(presenter.options[data.id], `is`(expected))
     }
 
 

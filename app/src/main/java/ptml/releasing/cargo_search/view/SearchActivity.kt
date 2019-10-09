@@ -60,41 +60,37 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
 
-        viewModel.openAdMin.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
+        viewModel.openAdMin.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(LoginActivity::class.java)
+            }
         })
 
         viewModel.savedConfiguration.observe(this, Observer {
             updateTop(it)
         })
 
-        viewModel.verify.observe(this, Observer {
-            search()
+        viewModel.verify.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                search()
+            }
         })
 
         viewModel.getSavedConfig()
 
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                /* showLoading( Removing loading progress bar as per requirements
-                     binding.appBarHome.content.includeProgress.root,
-                     binding.appBarHome.content.includeProgress.tvMessage,
-                     R.string.loading
-                 )*/
-            } else {
-                hideLoading(binding.appBarHome.content.includeProgress.root)
-            }
-
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(
-                    binding.appBarHome.content.includeError.root,
-                    binding.appBarHome.content.includeError.tvMessage,
-                    error
-                )
-            } else {
-                hideLoading(binding.appBarHome.content.includeError.root)
+        viewModel.networkState.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(
+                        binding.appBarHome.content.includeError.root,
+                        binding.appBarHome.content.includeError.tvMessage,
+                        error
+                    )
+                } else {
+                    hideLoading(binding.appBarHome.content.includeError.root)
+                }
             }
         })
 
@@ -112,18 +108,24 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             animateBadge(it)
         })
 
-        viewModel.scan.observe(this, Observer {
-            openBarCodeScannerWithPermissionCheck(RC_SEARCH)
+        viewModel.scan.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                openBarCodeScannerWithPermissionCheck(RC_SEARCH)
+            }
         })
 
-        viewModel.noOperator.observe(this, Observer {
-            //show dialog
-            showOperatorErrorDialog()
+        viewModel.noOperator.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                //show dialog
+                showOperatorErrorDialog()
+            }
         })
 
-        viewModel.openDeviceConfiguration.observe(this, Observer {
-            val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, RC_CONFIG)
+        viewModel.openDeviceConfiguration.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this, ConfigActivity::class.java)
+                startActivityForResult(intent, RC_CONFIG)
+            }
         })
 
 
@@ -286,8 +288,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     viewModel.openOperatorDialog()
                 }
             },
-            hasNeutralButton = true,
-            neutralButtonText = getString(android.R.string.cancel)
+            hasNegativeButton = true,
+            negativeButtonText = getString(android.R.string.cancel)
         )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
@@ -345,9 +347,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     Constants.BAR_CODE
                 )
             )
-        } else if(requestCode == RC_CARGO_INFO && resultCode == RESULT_OK){
+        } else if (requestCode == RC_CARGO_INFO && resultCode == RESULT_OK) {
             binding.appBarHome.content.includeSearch.editInput.setText("")
-        }else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -417,9 +419,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun initBeforeView() {
         super.initBeforeView()
-        if (viewModel.isConfigured()) {
-//            startNewActivity(SearchActivity::class.java)
-        } else {
+        if (!viewModel.isConfigured()) {
             startNewActivity(LoginActivity::class.java)
         }
     }

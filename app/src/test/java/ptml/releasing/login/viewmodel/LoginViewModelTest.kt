@@ -4,6 +4,8 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Deferred
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseResponse
@@ -16,15 +18,16 @@ import ptml.releasing.data.getUser
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+@Suppress("UNCHECKED_CAST")
 class LoginViewModelTest : BaseTest() {
 
     private val repository: ReleasingRepository = mockk()
     private val user: User = mockk()
-    private val viewModel by lazy { LoginViewModel(repository, dispatcher) }
+    private val viewModel by lazy { LoginViewModel(repository, dispatcher, updateChecker) }
 
 
     @Test
-    fun `successful login`() {
+    fun `login with registered credentials is successful`() {
         every {
             user.username
         } returns getUser().username
@@ -43,11 +46,11 @@ class LoginViewModelTest : BaseTest() {
 
         viewModel.login(user.username, user.password)
 
-        assertEquals(Unit, viewModel.loadNext.value, "Login is successful")
+        assertThat(viewModel.loadNext.value, `is`(Unit))
     }
 
     @Test
-    fun `unsuccessful login`() {
+    fun `login with unregistered credentials is unsuccessful`() {
         every {
             user.username
         } returns getUser().username
@@ -67,12 +70,12 @@ class LoginViewModelTest : BaseTest() {
         viewModel.login(user.username, user.password)
 
 
-        assertEquals(getLoginFail().message, viewModel.errorMessage.value)
+        assertThat(viewModel.errorMessage.value, `is`(getLoginFail().message))
 
     }
 
     @Test
-    fun `login with  validation error`() {
+    fun `login fails with input fields validation error`() {
         every {
             user.username
         } returns null
@@ -81,13 +84,11 @@ class LoginViewModelTest : BaseTest() {
         } returns null
 
 
-
         viewModel.login(null, null)
 
-        assertEquals(R.string.username_empty, viewModel.usernameValidation.value)
-        assertEquals(R.string.password_empty, viewModel.passwordValidation.value)
+        assertThat(viewModel.usernameValidation.value, `is`(R.string.username_empty))
+        assertThat(viewModel.passwordValidation.value, `is`(R.string.password_empty))
         assertNull(viewModel.loadNext.value, "DeviceConfigResponse should be null")
-
     }
 
 
