@@ -46,8 +46,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1"
-                app:srcCompat="@drawable/ic_error_red"
-                tools:tint="@color/colorRed" />
+                app:srcCompat="@drawable/ic_error_red" />
 
             <TextView
                 android:id="@+id/tv_message"

@@ -6,14 +6,15 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.di.mapkeys.ViewModelKey
-import ptml.releasing.configuration.viewmodel.ConfigViewModel
-import ptml.releasing.login.viewmodel.LoginViewModel
-import ptml.releasing.download_damages.viewmodel.DamageViewModel
-import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
+import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.damages.view_model.DummyViewModel
 import ptml.releasing.damages.view_model.SelectDamageViewModel
+import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
+import ptml.releasing.download_damages.viewmodel.DamageViewModel
+import ptml.releasing.internet_error_logs.view_model.ErrorLogsViewModel
+import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
 import ptml.releasing.quick_remarks.viewmodel.QuickRemarkViewModel
 
@@ -86,4 +87,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(QuickRemarkViewModel::class)
     abstract fun bindQuickRemarkViewModel(viewModel: QuickRemarkViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ErrorLogsViewModel::class)
+    abstract fun bindErrorLogsViewModel(viewModel: ErrorLogsViewModel): ViewModel
 }

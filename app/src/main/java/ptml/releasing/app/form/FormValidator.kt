@@ -94,7 +94,7 @@ class FormValidator constructor(val builderView: BuilderView?, val data: List<Co
                 }
 
             }
-        } catch (e: Exception) { //return an error view
+        } catch (e: Exception) { //return an url view
             Timber.e(e, "Could not validate form for %s", data?.type)
             return null
         }
