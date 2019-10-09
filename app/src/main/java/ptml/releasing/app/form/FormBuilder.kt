@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ptml.releasing.R
 import ptml.releasing.app.form.FormUtils.applyBottomParams
-import ptml.releasing.app.form.FormUtils.applyParams
 import ptml.releasing.app.form.FormUtils.applyLabelParams
+import ptml.releasing.app.form.FormUtils.applyParams
 import ptml.releasing.app.form.FormUtils.applyTopParams
 import ptml.releasing.app.form.FormUtils.changeBgColor
 import ptml.releasing.app.form.FormUtils.changeBgDrawable
@@ -133,7 +133,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
             }
         }
 
-        if (rootLayout.childCount <= 0) { //show an error view if no view had been added
+        if (rootLayout.childCount <= 0) { //show an url view if no view had been added
             error = true
             rootLayout.addView(createErrorView())
         }
@@ -204,7 +204,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
                     return null
                 }
             }
-        } catch (e: Exception) { //return an error view
+        } catch (e: Exception) { //return an url view
             Timber.e(e, "Could not create form for %s", data?.type)
             return null
         }
@@ -358,7 +358,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
     override fun getButtonNumber(data: ConfigureDeviceData?): String {
         if (data?.type != FormType.PRINTER.type) {
             val view = rootLayout.findViewWithTag<ViewGroup>(data?.id)
-            Timber.d("Getting error text view for buttons ")
+            Timber.d("Getting url text view for buttons ")
             val numberView = view.findViewById<TextView>(R.id.tv_number)
             return numberView.text.toString()
         }

@@ -17,6 +17,13 @@ android {
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -69,6 +76,10 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
 
@@ -133,7 +144,10 @@ dependencies {
     // unit testing
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation "androidx.test:core:${coreTestVersion}"
     testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "org.robolectric:robolectric:${robolectricVersion}"
+    testImplementation "com.google.truth:truth:${truthVersion}"
 
     //instrumentation testing
     androidTestImplementation "androidx.test:runner:$runnerVersion"
@@ -161,6 +175,10 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
+
+    implementation "androidx.paging:paging-runtime:$pagingVersion"
+
+    debugImplementation "com.amitshekhar.android:debug-db:1.0.6"
 
 
 }

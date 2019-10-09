@@ -3,14 +3,14 @@ package ptml.releasing.app.di.modules.main
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Dispatchers
-import ptml.releasing.app.local.Local
-import ptml.releasing.app.local.ReleasingLocal
-import ptml.releasing.app.remote.ReleasingRemote
-import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.di.scopes.ReleasingAppScope
+import ptml.releasing.app.local.Local
+import ptml.releasing.app.local.ReleasingLocal
 import ptml.releasing.app.prefs.Prefs
+import ptml.releasing.app.remote.ReleasingRemote
+import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import retrofit2.Retrofit
 
@@ -42,5 +42,7 @@ class MainModule {
             main = Dispatchers.Main
         )
     }
+
+
 
 }

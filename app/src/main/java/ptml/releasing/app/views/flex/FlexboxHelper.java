@@ -17,24 +17,23 @@
 package ptml.releasing.app.views.flex;
 
 
-
-import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
-import static ptml.releasing.app.views.flex.FlexContainer.NOT_SET;
-import static ptml.releasing.app.views.flex.FlexItem.FLEX_BASIS_PERCENT_DEFAULT;
-
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.view.MarginLayoutParamsCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.view.MarginLayoutParamsCompat;
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+import static ptml.releasing.app.views.flex.FlexContainer.NOT_SET;
+import static ptml.releasing.app.views.flex.FlexItem.FLEX_BASIS_PERCENT_DEFAULT;
 
 /**
  * Offers various calculations for Flexbox to use the common logic between the classes such as
@@ -1502,7 +1501,7 @@ class FlexboxHelper {
                                 FlexLine dummySpaceFlexLine = new FlexLine();
                                 if (i == flexLines.size() - 2) {
                                     // The last dummy space block in the flex container.
-                                    // Adjust the cross size by the accumulated error.
+                                    // Adjust the cross size by the accumulated url.
                                     dummySpaceFlexLine.mCrossSize = Math
                                             .round(spaceBetweenFlexLine + accumulatedError);
                                     accumulatedError = 0;

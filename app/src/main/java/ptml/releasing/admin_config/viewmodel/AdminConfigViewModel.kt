@@ -13,13 +13,13 @@ import javax.inject.Inject
 
 class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
                                                updateChecker: RemoteConfigUpdateChecker
-) :
-    BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     private val _openConfig = MutableLiveData<Unit>()
     private val _openPrinterSettings = MutableLiveData<Unit>()
     private val _openDownloadDamages = MutableLiveData<Boolean>()
     private val _openQuickRemark = MutableLiveData<Boolean>()
+    private val _openErrorLogs = MutableLiveData<Unit>()
     private val _serverUrl = MutableLiveData<String?>()
 
     private val _firstTimeLogin = MutableLiveData<Boolean>()
@@ -32,6 +32,7 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     val openDownloadDamages: LiveData<Boolean> = _openDownloadDamages
     val openPrinterSettings: LiveData<Unit> = _openPrinterSettings
     val openSearch: LiveData<Boolean> = _openSearch
+    val openErrorLogs: LiveData<Unit> = _openErrorLogs
     val serverUrl:LiveData<String?> = _serverUrl
 
 
@@ -99,7 +100,6 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         }
     }
 
-
     override fun handleDeviceConfigured(configured: Boolean) {
         super.handleDeviceConfigured(configured)
         if (configured) {
@@ -107,5 +107,9 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         } else {
             navigateToLoginIfFirstTime()
         }
+    }
+
+    fun openErrorLogs() {
+        _openErrorLogs.postValue(Unit)
     }
 }
