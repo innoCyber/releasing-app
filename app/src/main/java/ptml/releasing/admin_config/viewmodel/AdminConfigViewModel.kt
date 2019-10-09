@@ -23,6 +23,7 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private val _openQuickRemark = MutableLiveData<Event<Boolean>>()
     private val _serverUrl = MutableLiveData<Event<String?>>()
     private val _openSearch = MutableLiveData<Event<Boolean>>()
+    private val _openErrorLogs = MutableLiveData<Event<Unit>>()
 
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
@@ -34,6 +35,7 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     val openPrinterSettings: LiveData<Event<Unit>> = _openPrinterSettings
     val openSearch: LiveData<Event<Boolean>> = _openSearch
     val serverUrl:LiveData<Event<String?>> = _serverUrl
+    val openErrorLogs: LiveData<Event<Unit>> = _openErrorLogs
 
 
     fun openConfig() {
@@ -108,5 +110,9 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         } else {
             navigateToLoginIfFirstTime()
         }
+    }
+
+    fun openErrorLogs() {
+        _openErrorLogs.postValue(Event(Unit))
     }
 }
