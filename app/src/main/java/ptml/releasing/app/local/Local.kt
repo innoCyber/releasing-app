@@ -3,8 +3,6 @@ package ptml.releasing.app.local
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.download_damages.model.Damage
-
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
@@ -51,6 +49,9 @@ interface Local {
 
     fun setMustUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
+
+    fun isInternetErrorLoggingEnabled():Boolean
+    fun setInternetErrorLoggingEnabled(enabled:Boolean)
 
 
 }

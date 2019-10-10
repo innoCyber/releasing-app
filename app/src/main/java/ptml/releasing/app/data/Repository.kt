@@ -1,16 +1,15 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
-import ptml.releasing.BuildConfig
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
-import ptml.releasing.login.model.User
-import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.login.model.User
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
@@ -86,4 +85,7 @@ interface Repository {
 
     fun setAppMinimumVersion(version:Long)
     fun getAppMinimumVersion():Long
+
+    fun isInternetErrorLoggingEnabled():Boolean
+    fun setInternetErrorLoggingEnabled(enabled:Boolean)
 }

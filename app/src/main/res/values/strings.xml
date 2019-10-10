@@ -252,5 +252,9 @@
     <string name="view_logs">View Logs</string>
     <string name="activity_error_logs_title">Error Logs</string>
     <string name="no_error_logs">No error logs yet!</string>
+    <string name="disable_logs">Disable Internet Error Logs</string>
+    <string name="enable_logs">Enable Internet Error Logs</string>
+    <string name="disable_logs_confirm_message">Are you sure you want to disable internet error logging?</string>
+    <string name="enable_logs_confirm_message">Are you sure you want to enable internet error logging?</string>
 
 </resources>

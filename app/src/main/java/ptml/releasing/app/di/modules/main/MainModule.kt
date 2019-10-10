@@ -18,7 +18,11 @@ import retrofit2.Retrofit
 class MainModule {
 
     @Provides
-    fun provideRepository(remote: Remote, local: Local, appCoroutineDispatchers: AppCoroutineDispatchers): Repository {
+    fun provideRepository(
+        remote: Remote,
+        local: Local,
+        appCoroutineDispatchers: AppCoroutineDispatchers
+    ): Repository {
         return ReleasingRepository(remote, local, appCoroutineDispatchers)
     }
 
@@ -42,7 +46,6 @@ class MainModule {
             main = Dispatchers.Main
         )
     }
-
 
 
 }
