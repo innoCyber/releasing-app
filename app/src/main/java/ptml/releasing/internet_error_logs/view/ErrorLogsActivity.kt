@@ -19,14 +19,20 @@ class ErrorLogsActivity : BaseActivity<ErrorLogsViewModel, ActivityErrorLogsBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
-
+        initErrorDrawable(binding.includeEmpty.imgError)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(8))
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.setEmptyView(binding.includeEmpty.root)
+        binding.includeEmpty.tvMessage.text = getString(R.string.no_error_logs)
 
         viewModel.errorLogs.observe(this, Observer {
             adapter.submitList(it)
         })
+
+        binding.includeEmpty.btnReloadLayout.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun getLayoutResourceId() = R.layout.activity_error_logs

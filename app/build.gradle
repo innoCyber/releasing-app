@@ -7,12 +7,20 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        Release {
+            storeFile file('G:\\Android\\GrayStatic\\ReleasingNew\\keystore.jks')
+            storePassword 'grimaldi'
+            keyAlias = 'grimaldi'
+            keyPassword 'grimaldi'
+        }
+    }
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 4
+        versionCode 3
         versionName "1.1.0"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
@@ -39,6 +47,7 @@ android {
             dimension 'server'
             applicationIdSuffix '.dev'
             versionCode 1
+            signingConfig signingConfigs.Release
         }
 
         staging {
@@ -48,6 +57,7 @@ android {
 
         production {
             dimension 'server'
+            signingConfig signingConfigs.Release
         }
     }
 
