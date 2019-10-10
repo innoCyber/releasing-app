@@ -4,7 +4,6 @@ package ptml.releasing.app.base
 
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
@@ -38,10 +37,7 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.PlayStoreUtils
-import ptml.releasing.app.utils.Status
+import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -52,8 +48,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @RuntimePermissions
-abstract class BaseActivity<T, D> :
-    DaggerAppCompatActivity() where T : BaseViewModel, D : ViewDataBinding {
+abstract class BaseActivity<V, D> :
+    DaggerAppCompatActivity() where V : BaseViewModel, D : ViewDataBinding {
     private val networkSubject = MutableLiveData<Boolean>()
     private lateinit var receiver: BroadcastReceiver
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
@@ -64,10 +60,13 @@ abstract class BaseActivity<T, D> :
 
 
     protected lateinit var binding: D
-    protected lateinit var viewModel: T
+    protected lateinit var viewModel: V
 
     @Inject
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var networkUtils: NetworkUtils
 
     private var progressDialog: ProgressDialog? = null
 
@@ -427,6 +426,7 @@ abstract class BaseActivity<T, D> :
 
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, getLayoutResourceId())
+        binding.lifecycleOwner = this
         binding.setVariable(getBindingVariable(), viewModel)
         binding.executePendingBindings()
     }
@@ -598,10 +598,7 @@ abstract class BaseActivity<T, D> :
 
     @Suppress("DEPRECATION")
     fun isOffline(): Boolean {
-        val manager = this
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        return !(manager.activeNetworkInfo != null && manager.activeNetworkInfo.isConnectedOrConnecting)
+        return networkUtils.isOffline()
     }
 
 
@@ -647,7 +644,7 @@ abstract class BaseActivity<T, D> :
 //    abstract fun observeNetworkChanges(connectivityObservable: Observable<Boolean>)
 
 
-    protected abstract fun getViewModelClass(): Class<T>
+    protected abstract fun getViewModelClass(): Class<V>
 
 
     protected fun initOperator(operatorName: String?) {

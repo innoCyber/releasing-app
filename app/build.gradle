@@ -12,11 +12,18 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 2
-        versionName "1.0"
+        versionCode 4
+        versionName "1.1.0"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -72,12 +79,15 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
         abortOnError false
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
 
@@ -142,7 +152,10 @@ dependencies {
     // unit testing
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation "androidx.test:core:${coreTestVersion}"
     testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "org.robolectric:robolectric:${robolectricVersion}"
+    testImplementation "com.google.truth:truth:${truthVersion}"
 
     //instrumentation testing
     androidTestImplementation "androidx.test:runner:$runnerVersion"
@@ -166,6 +179,14 @@ dependencies {
     //firebase remote config
     implementation 'com.google.firebase:firebase-config:18.0.0'
 
+
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    implementation "androidx.paging:paging-runtime:$pagingVersion"
+
+    debugImplementation "com.amitshekhar.android:debug-db:1.0.6"
 
 }
 

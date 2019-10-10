@@ -19,6 +19,7 @@ import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.download_damages.view.DamageActivity
+import ptml.releasing.internet_error_logs.view.ErrorLogsActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 
@@ -54,12 +55,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                 } else {
                     showConfigurationErrorDialog()
                 }
+
             }
         })
 
         viewModel.openPrinterSettings.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 startNewActivity(PrinterSettingsActivity::class.java)
+
             }
         })
 
@@ -81,6 +84,14 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                 onBackPressed()
             }
         })
+
+        viewModel.openErrorLogs.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(ErrorLogsActivity::class.java)
+            }
+        })
+
+
 
         showUpEnabled(true)
 
@@ -110,7 +121,9 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openQuickRemark()
         }
 
-
+        binding.includeAdminConfig.btnErrorLogs.setOnClickListener {
+            viewModel.openErrorLogs()
+        }
     }
 
     override fun onBackPressed() {

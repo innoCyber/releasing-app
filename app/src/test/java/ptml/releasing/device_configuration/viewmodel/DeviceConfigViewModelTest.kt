@@ -110,7 +110,7 @@ class DeviceConfigViewModelTest : BaseTest() {
         assertEquals(
             NetworkState.error(getVerifyDeviceException()).throwable?.message,
             deviceConfigViewModel.networkState.value?.throwable?.message,
-            "The error is caught"
+            "The url is caught"
         )
 
     }
