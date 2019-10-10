@@ -240,6 +240,10 @@ open class ReleasingRepository @Inject constructor(
             local.setAppVersion(currentVersion)
         }
     }
+
+    override fun isInternetErrorLoggingEnabled() = local.isInternetErrorLoggingEnabled()
+
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = local.setInternetErrorLoggingEnabled(enabled)
 }
 
 

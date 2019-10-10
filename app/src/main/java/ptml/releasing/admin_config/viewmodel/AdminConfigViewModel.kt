@@ -12,8 +12,9 @@ import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import javax.inject.Inject
 
-class AdminConfigViewModel @Inject constructor(repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
-                                               updateChecker: RemoteConfigUpdateChecker
+class AdminConfigViewModel @Inject constructor(
+    repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
+    updateChecker: RemoteConfigUpdateChecker
 ) :
     BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
@@ -24,19 +25,34 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
     private val _serverUrl = MutableLiveData<Event<String?>>()
     private val _openSearch = MutableLiveData<Event<Boolean>>()
     private val _openErrorLogs = MutableLiveData<Event<Unit>>()
+    private val _openConfirmShowLogs = MutableLiveData<Event<Boolean?>>()
 
+    private val _internetErrorEnabled = MutableLiveData<Boolean>()
     private val _firstTimeLogin = MutableLiveData<Boolean>()
     private val _firstTimeFindCargo = MutableLiveData<Boolean>()
     private var first = true
 
+    val internetErrorEnabled: LiveData<Boolean> = _internetErrorEnabled
+    val openConfirmShowLogs: LiveData<Event<Boolean?>> = _openConfirmShowLogs
     val openConfig: LiveData<Event<Unit>> = _openConfig
     val openQuickRemark: LiveData<Event<Boolean>> = _openQuickRemark
     val openDownloadDamages: LiveData<Event<Boolean>> = _openDownloadDamages
     val openPrinterSettings: LiveData<Event<Unit>> = _openPrinterSettings
     val openSearch: LiveData<Event<Boolean>> = _openSearch
-    val serverUrl:LiveData<Event<String?>> = _serverUrl
+    val serverUrl: LiveData<Event<String?>> = _serverUrl
     val openErrorLogs: LiveData<Event<Unit>> = _openErrorLogs
 
+
+    init {
+        fetchInternetErrorState()
+    }
+
+    private fun fetchInternetErrorState() {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val enabled = repository.isInternetErrorLoggingEnabled()
+            _internetErrorEnabled.postValue(enabled)
+        }
+    }
 
     fun openConfig() {
         _openConfig.postValue(Event(Unit))
@@ -87,17 +103,17 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
         }
     }
 
-    fun openServer(){
+    fun openServer() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             val serverUrl = repository.getServerUrl()
-            withContext(appCoroutineDispatchers.main){
+            withContext(appCoroutineDispatchers.main) {
                 _serverUrl.postValue(Event(serverUrl))
             }
         }
     }
 
-    fun saveServerUrl(url:String?){
-        compositeJob  = CoroutineScope(appCoroutineDispatchers.db).launch {
+    fun saveServerUrl(url: String?) {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             repository.saveServerUrl(url)
         }
     }
@@ -114,5 +130,18 @@ class AdminConfigViewModel @Inject constructor(repository: Repository, appCorout
 
     fun openErrorLogs() {
         _openErrorLogs.postValue(Event(Unit))
+    }
+
+    fun handleToggleEnableLogs() {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val enabled = !repository.isInternetErrorLoggingEnabled()
+            repository.setInternetErrorLoggingEnabled(enabled)
+            _internetErrorEnabled.postValue(enabled)
+        }
+    }
+
+    fun handleAskToToggleEnableLogs() {
+        val enabled = internetErrorEnabled.value
+        _openConfirmShowLogs.postValue(Event(enabled))
     }
 }
