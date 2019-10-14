@@ -40,16 +40,11 @@ interface Prefs {
     fun setQuickCurrentVersion(currentVersion:Long)
     fun getQuickCurrentVersion():Long
 
-    fun setAppMinimumVersion(version:Long)
-    fun getAppMinimumVersion():Long
+    fun setAppVersion(version:Long)
+    fun getAppVersion():Long
 
-    fun setAppCurrentVersion(version:Long)
-    fun getAppCurrentVersion():Long
 
-    fun setShouldUpdateApp(shouldUpdate:Boolean)
-    fun shouldUpdateApp():Boolean
-
-    fun setMustUpdateApp(shouldUpdate:Boolean)
+    fun setUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
 
     fun setImei(imei:String)

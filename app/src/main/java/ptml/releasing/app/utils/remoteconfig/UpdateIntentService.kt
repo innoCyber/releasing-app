@@ -71,7 +71,7 @@ class UpdateIntentService : DaggerIntentService(UpdateIntentService::class.java.
                 val imei = repository.getImei()
                 repository.downloadQuickRemarkAsync(imei ?: return@launch)?.await()
 
-                val quickRemarkVersion = remoteConfigManger.quickRemarkCurrentVersion
+                val quickRemarkVersion = remoteConfigManger.quickRemarkVersion
                 Timber.d("Downloaded quick remark, updating the local quick remark version to $quickRemarkVersion")
                 repository.setQuickCurrentVersion(quickRemarkVersion)
             } catch (t: Throwable) {
@@ -86,7 +86,7 @@ class UpdateIntentService : DaggerIntentService(UpdateIntentService::class.java.
                 val imei = repository.getImei()
                 repository.downloadDamagesAsync(imei ?: return@launch)?.await()
 
-                val damagesVersion = remoteConfigManger.damagesCurrentVersion
+                val damagesVersion = remoteConfigManger.damagesVersion
                 Timber.d("Downloaded damages, updating the local damages version to $damagesVersion")
                 repository.setDamagesCurrentVersion(damagesVersion)
             } catch (t: Throwable) {

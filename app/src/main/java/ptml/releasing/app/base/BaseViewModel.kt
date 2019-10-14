@@ -31,12 +31,9 @@ open class BaseViewModel @Inject constructor(
     private val _updateDamagesLoadingState = MutableLiveData<NetworkState>()
     val updateDamagesLoadingState: LiveData<NetworkState> = _updateDamagesLoadingState
 
-    private val _showMustUpdateApp = SingleLiveEvent<Unit>()
-    val showMustUpdateApp: LiveData<Unit> = _showMustUpdateApp
+    private val _showUpdateApp = SingleLiveEvent<Unit>()
+    val showUpdateApp: LiveData<Unit> = _showUpdateApp
 
-
-    private val _showShouldUpdateApp = SingleLiveEvent<Unit>()
-    val showShouldUpdateApp: LiveData<Unit> = _showShouldUpdateApp
 
     private val _startDamagesUpdate = SingleLiveEvent<Unit>()
     val startDamagesUpdate: LiveData<Unit> = _startDamagesUpdate
@@ -190,14 +187,8 @@ open class BaseViewModel @Inject constructor(
 
     fun checkToShowUpdateAppDialog() {
         if (!repository.isFirst() && repository.mustUpdateApp()) {
-            _showMustUpdateApp.value = Unit
+            _showUpdateApp.value = Unit
             UpdateHelper.showingDialog = true
-
-        } else if (!repository.isFirst() && repository.shouldUpdateApp()) {
-            if (!UpdateHelper.noThanksClicked && !UpdateHelper.showingDialog) {
-                _showShouldUpdateApp.value = Unit
-                UpdateHelper.showingDialog = true
-            }
         }
     }
 
@@ -215,9 +206,7 @@ open class BaseViewModel @Inject constructor(
 
     fun applyUpdates() {
         val mustUpdateApp = updateChecker.mustUpdateApp()
-        val shouldUpdateApp = updateChecker.shouldUpdateApp()
         repository.setMustUpdateApp(mustUpdateApp)
-        repository.setShouldUpdateApp(shouldUpdateApp)
         if (updateChecker.shouldUpdateDamages()) {
             //start intent service to update damages
             _startDamagesUpdate.value = Unit
@@ -239,7 +228,7 @@ open class BaseViewModel @Inject constructor(
             try {
                 Timber.d("Updating quick remarks...")
                 repository.downloadQuickRemarkAsync(imei)?.await()
-                val quickRemarkVersion = updateChecker.remoteConfigManger.quickRemarkCurrentVersion
+                val quickRemarkVersion = updateChecker.remoteConfigManger.quickRemarkVersion
                 Timber.d("Downloaded quick remark, updating the local quick remark version to $quickRemarkVersion")
                 repository.setQuickCurrentVersion(quickRemarkVersion)
                 _updateQuickRemarkLoadingState.postValue(NetworkState.LOADED)
@@ -261,7 +250,7 @@ open class BaseViewModel @Inject constructor(
                 Timber.d("Updating damages...")
                 repository.downloadDamagesAsync(imei)?.await()
 
-                val damagesVersion = updateChecker.remoteConfigManger.damagesCurrentVersion
+                val damagesVersion = updateChecker.remoteConfigManger.damagesVersion
                 Timber.d("Downloaded damages, updating the local damages version to $damagesVersion")
                 repository.setDamagesCurrentVersion(damagesVersion)
                 _updateDamagesLoadingState.postValue(NetworkState.LOADED)

@@ -159,12 +159,8 @@ abstract class BaseActivity<V, D> :
             notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
         })
 
-        viewModel.showMustUpdateApp.observe(this, Observer {
+        viewModel.showUpdateApp.observe(this, Observer {
             showMustUpdateDialog()
-        })
-
-        viewModel.showShouldUpdateApp.observe(this, Observer {
-            showShouldUpdateDialog()
         })
 
 

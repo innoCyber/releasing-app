@@ -13,34 +13,27 @@ class RemoteConfigUpdateChecker @Inject constructor(
 ) {
     val updateCheckState: LiveData<NetworkState> = remoteConfigManger.loadingState
 
-
     fun check() {
         remoteConfigManger.fetchAll()
     }
 
     fun mustUpdateApp(): Boolean {
         val localAppVersion = BuildConfig.VERSION_CODE.toLong()
-        val remoteAppVersion = remoteConfigManger.appMinimumVersion
+        val remoteAppVersion = remoteConfigManger.appVersion
         return shouldUpdate(localAppVersion, remoteAppVersion)
 
     }
 
-    fun shouldUpdateApp(): Boolean {
-        val localAppVersion = BuildConfig.VERSION_CODE.toLong()
-        val remoteAppMinimumVersion = remoteConfigManger.appCurrentVersion
-        return shouldUpdate(localAppVersion, remoteAppMinimumVersion)
-    }
-
     fun shouldUpdateQuickRemarks(): Boolean {
-        val localQuickRemarkVersion = local.getQuickCurrentVersion()
-        val remoteQuickRemarkVersion = remoteConfigManger.quickRemarkCurrentVersion
+        val localQuickRemarkVersion = local.getQuickRemarksVersion()
+        val remoteQuickRemarkVersion = remoteConfigManger.quickRemarkVersion
         Timber.d("shouldUpdateQuickRemarks(L-R): $localQuickRemarkVersion - $remoteQuickRemarkVersion")
         return shouldUpdate(localQuickRemarkVersion, remoteQuickRemarkVersion)
     }
 
     fun shouldUpdateDamages(): Boolean {
-        val localDamagesVersion = local.getDamagesCurrentVersion()
-        val remoteDamagesVersion = remoteConfigManger.damagesCurrentVersion
+        val localDamagesVersion = local.getDamagesVersion()
+        val remoteDamagesVersion = remoteConfigManger.damagesVersion
         Timber.d("shouldUpdateDamages(L-R): $localDamagesVersion - $remoteDamagesVersion")
         return shouldUpdate(localDamagesVersion, remoteDamagesVersion)
     }

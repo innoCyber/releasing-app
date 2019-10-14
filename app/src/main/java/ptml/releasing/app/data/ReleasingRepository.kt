@@ -213,9 +213,7 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override fun setShouldUpdateApp(shouldUpdate: Boolean) = local.setShouldUpdateApp(shouldUpdate)
 
-    override fun shouldUpdateApp(): Boolean = local.shouldUpdateApp()
 
     override fun setImei(imei: String) = local.setImei(imei)
 
@@ -229,23 +227,17 @@ open class ReleasingRepository @Inject constructor(
 
     override fun mustUpdateApp(): Boolean = local.mustUpdateApp()
 
-    override fun setAppCurrentVersion(version: Long) = local.setAppCurrentVersion(version)
 
-    override fun getAppCurrentVersion(): Long = local.getAppCurrentVersion()
 
-    override fun setAppMinimumVersion(version: Long) = local.setAppMinimumVersion(version)
+    override fun setAppMinimumVersion(version: Long) = local.setAppVersion(version)
 
-    override fun getAppMinimumVersion(): Long = local.getAppMinimumVersion()
+    override fun getAppMinimumVersion(): Long = local.getAppVersion()
 
     override fun checkToResetLocalAppUpdateValues() {
         val currentVersion = BuildConfig.VERSION_CODE.toLong()
-        if (currentVersion > local.getAppMinimumVersion()) {
+        if (currentVersion > local.getAppVersion()) {
             local.setMustUpdateApp(false)
-            local.setAppMinimumVersion(currentVersion)
-        }
-        if (currentVersion > local.getAppCurrentVersion()) {
-            local.setShouldUpdateApp(false)
-            local.setAppCurrentVersion(currentVersion)
+            local.setAppVersion(currentVersion)
         }
     }
 }
