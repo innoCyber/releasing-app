@@ -52,6 +52,7 @@ android {
 
         staging {
             dimension 'server'
+            applicationIdSuffix '.staging'
             versionCode 6
         }
 
