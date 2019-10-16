@@ -10,6 +10,11 @@ import ptml.releasing.databinding.ItemErrorLogBinding
 import ptml.releasing.databinding.ItemErrorLogHeaderBinding
 import ptml.releasing.internet_error_logs.model.ErrorLog
 import javax.inject.Inject
+import android.text.style.URLSpan
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+
 
 class ErrorLogsAdapter @Inject constructor(private val dateTimeUtils: DateTimeUtils) :
     PagedListAdapter<ErrorLog, RecyclerView.ViewHolder>(ErrorLog.diffUtil) {
@@ -58,8 +63,23 @@ class ErrorLogsAdapter @Inject constructor(private val dateTimeUtils: DateTimeUt
         fun performBind(item: ErrorLog) {
             binding.dateTextView.text = dateTimeUtils.formatDate(item.date)
             binding.descriptionTextView.text = item.description
-            binding.urlTextView.text = item.url
             binding.errorTextView.text = item.error
+            applyUrlSpan(item.url)
+        }
+
+        private fun applyUrlSpan(url:String){
+            val urlSpan = URLSpan(url)
+            val ssBuilder = SpannableStringBuilder(url)
+            ssBuilder.setSpan(
+                urlSpan,
+                0,
+                url.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            binding.urlTextView.text = ssBuilder
+            binding.urlTextView.movementMethod = LinkMovementMethod.getInstance()
         }
     }
+
+
 }
