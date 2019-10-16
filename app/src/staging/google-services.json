@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "167974772724",
+    "firebase_url": "https://releasing-app-staging.firebaseio.com",
+    "project_id": "releasing-app-staging",
+    "storage_bucket": "releasing-app-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167974772724:android:2f621f159ed9d5b9",
+        "android_client_info": {
+          "package_name": "ptml.releasing.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167974772724-dsqv41aprrsb2smdahmu1p4qi822sf65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ptml.releasing.staging",
+            "certificate_hash": "6fd414c62bb2c84fefa8da01ca06b3a445d9b533"
+          }
+        },
+        {
+          "client_id": "167974772724-88djnaufuimc7org9om2i3hqflk52rbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBg5vn2_4QWbOgVC1z_QqW2zqo8HR9I3j4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167974772724-88djnaufuimc7org9om2i3hqflk52rbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

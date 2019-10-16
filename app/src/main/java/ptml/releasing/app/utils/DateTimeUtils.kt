@@ -9,7 +9,7 @@ import javax.inject.Inject
 class DateTimeUtils @Inject constructor(private val context: Context) {
 
     fun formatDate(date: Date?): String? {
-        val sdf = SimpleDateFormat("dd-MM-yyyy 'at' h:mm a", Locale.getDefault())
+        val sdf = SimpleDateFormat("d MMM yyyy h:mm a", Locale.getDefault())
         return sdf.format(date)
     }
 

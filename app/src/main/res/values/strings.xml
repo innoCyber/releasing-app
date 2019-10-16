@@ -248,10 +248,9 @@
     <string name="update_quick_remarks_message">Updating quick remarks in progress</string>
     <string name="quick_remark_update_failed_msg">Failed to update quick remark</string>
     <string name="damages_update_failed_msg">Failed to update damages</string>
-    <string name="view_logs">View Logs</string>
-    <string name="activity_error_logs_title">Error Logs</string>
     <string name="downloading_quick_remarks">Downloading quick remarks</string>
     <string name="view_logs">View Logs</string>
     <string name="activity_error_logs_title">Error Logs</string>
+    <string name="no_error_logs">No error logs yet!</string>
 
 </resources>

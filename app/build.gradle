@@ -7,6 +7,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        Release {
+            storeFile file('G:\\Android\\GrayStatic\\ReleasingNew\\keystore.jks')
+            storePassword 'grimaldi'
+            keyAlias = 'grimaldi'
+            keyPassword 'grimaldi'
+        }
+    }
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "ptml.releasing"
@@ -39,15 +47,18 @@ android {
             dimension 'server'
             applicationIdSuffix '.dev'
             versionCode 1
+            signingConfig signingConfigs.Release
         }
 
         staging {
             dimension 'server'
+            applicationIdSuffix '.staging'
             versionCode 6
         }
 
         production {
             dimension 'server'
+            signingConfig signingConfigs.Release
         }
     }
 

@@ -46,7 +46,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        initErrorDrawable(binding.appBarHome.content.includeError.imgError)
         viewModel.getSavedConfig()
         viewModel.isConfigured.observe(this, Observer {
             binding.appBarHome.content.tvConfigMessageContainer.visibility =

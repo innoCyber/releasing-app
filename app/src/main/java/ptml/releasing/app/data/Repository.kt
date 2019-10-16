@@ -72,9 +72,6 @@ interface Repository {
     suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
     suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
 
-    fun setShouldUpdateApp(shouldUpdate:Boolean)
-    fun shouldUpdateApp():Boolean
-
     fun setMustUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
 
@@ -89,8 +86,4 @@ interface Repository {
 
     fun setAppMinimumVersion(version:Long)
     fun getAppMinimumVersion():Long
-
-    fun setAppCurrentVersion(version:Long)
-    fun getAppCurrentVersion():Long
-
 }

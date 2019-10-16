@@ -45,29 +45,25 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun setDamagesCurrentVersion(currentVersion: Long) = prefs.setDamagesCurrentVersion(currentVersion)
 
-    override fun getDamagesCurrentVersion(): Long = prefs.getDamagesCurrentVersion()
+    override fun getDamagesVersion(): Long = prefs.getDamagesCurrentVersion()
 
     override fun setQuickCurrentVersion(currentVersion: Long) = prefs.setQuickCurrentVersion(currentVersion)
 
-    override fun getQuickCurrentVersion(): Long = prefs.getQuickCurrentVersion()
+    override fun getQuickRemarksVersion(): Long = prefs.getQuickCurrentVersion()
 
-    override fun setAppMinimumVersion(version: Long) = prefs.setAppMinimumVersion(version)
+    override fun setAppVersion(version: Long) = prefs.setAppVersion(version)
 
-    override fun getAppMinimumVersion(): Long = prefs.getAppMinimumVersion()
+    override fun getAppVersion(): Long = prefs.getAppVersion()
 
-    override fun setShouldUpdateApp(shouldUpdate: Boolean) = prefs.setShouldUpdateApp(shouldUpdate)
-
-    override fun shouldUpdateApp(): Boolean  = prefs.shouldUpdateApp()
 
     override fun setImei(imei: String) = prefs.setImei(imei)
 
     override fun getImei(): String? = prefs.getImei()
 
-    override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setMustUpdateApp(shouldUpdate)
+    override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setUpdateApp(shouldUpdate)
 
     override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()
 
-    override fun setAppCurrentVersion(version: Long) = prefs.setAppCurrentVersion(version)
 
-    override fun getAppCurrentVersion(): Long = prefs.getAppCurrentVersion()
+
 }
