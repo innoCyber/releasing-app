@@ -6,4 +6,5 @@ import androidx.paging.PagedList
 interface ErrorCache {
     fun getErrors(): LiveData<PagedList<ErrorLog>>
     suspend fun logError(log: ErrorLog)
+    suspend fun getAllLogs(): List<ErrorLog>
 }

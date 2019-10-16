@@ -13,6 +13,11 @@ class DateTimeUtils @Inject constructor(private val context: Context) {
         return sdf.format(date)
     }
 
+    fun formatExportDate(date: Date): String {
+        val sdf = SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", Locale.getDefault())
+        return sdf.format(date)
+    }
+
     fun toTimeStampRelative(date: Date): CharSequence? {
         return DateUtils.getRelativeTimeSpanString(date.time, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS)
     }
