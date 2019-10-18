@@ -32,6 +32,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES_VERSION = "damages_current_version"
         const val MUST_UPDATE_APP = "must_update_app"
         const val IMEI = "imei"
+        const val INTERNET_ERROR_LOGGING_ENABLED = "internet_error_logging_enabled"
     }
 
 
@@ -154,5 +155,14 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun setUpdateApp(shouldUpdate: Boolean) {
         return sharedPreferences.edit().putBoolean(MUST_UPDATE_APP, shouldUpdate).apply()
+    }
+
+
+    override fun isInternetErrorLoggingEnabled(): Boolean {
+        return sharedPreferences.getBoolean(INTERNET_ERROR_LOGGING_ENABLED, true)
+    }
+
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) {
+        return sharedPreferences.edit().putBoolean(INTERNET_ERROR_LOGGING_ENABLED, enabled).apply()
     }
 }

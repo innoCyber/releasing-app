@@ -31,6 +31,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showUpEnabled(true)
+
         viewModel.isConfigured.observe(this, Observer {
             binding.tvConfigMessageContainer.visibility =
                 if (it) View.GONE else View.VISIBLE //hide or show the not configured message
@@ -91,9 +93,25 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             }
         })
 
+        viewModel.internetErrorEnabled.observe(this, Observer {
+            binding.includeAdminConfig.btnEnableLogs.text = getString(if(it) R.string.disable_logs else R.string.enable_logs)
+        })
 
-
-        showUpEnabled(true)
+        viewModel.openConfirmShowLogs.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                val dialogFragment = InfoDialog.newInstance(
+                    title = getString(R.string.confirm_action),
+                    message = getString(if(it) R.string.disable_logs_confirm_message else R.string.enable_logs_confirm_message),
+                    buttonText = getString(android.R.string.ok),
+                    listener = object : InfoDialog.InfoListener {
+                        override fun onConfirm() {
+                    viewModel.handleToggleEnableLogs()
+                        }
+                    })
+                dialogFragment.isCancelable = false
+                dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+            }
+        })
 
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
             viewModel.openConfig()
@@ -123,6 +141,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         binding.includeAdminConfig.btnErrorLogs.setOnClickListener {
             viewModel.openErrorLogs()
+        }
+
+        binding.includeAdminConfig.btnEnableLogs.setOnClickListener {
+            viewModel.handleAskToToggleEnableLogs()
         }
     }
 

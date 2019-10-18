@@ -1,8 +1,8 @@
 package ptml.releasing.app.local
 
+import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
-import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
@@ -65,5 +65,7 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()
 
 
+    override fun isInternetErrorLoggingEnabled() = prefs.isInternetErrorLoggingEnabled()
 
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = prefs.setInternetErrorLoggingEnabled(enabled)
 }
