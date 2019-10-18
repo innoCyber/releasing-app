@@ -540,4 +540,9 @@
         <item name="android:singleLine">true</item>
     </style>
 
+
+    <style name="ExportLogsButton" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="backgroundTint">?colorAccent</item>
+        <item name="icon">@drawable/ic_add</item>
+    </style>
 </resources>

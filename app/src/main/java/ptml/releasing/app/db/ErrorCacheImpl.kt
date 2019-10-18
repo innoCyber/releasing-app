@@ -1,6 +1,7 @@
 package ptml.releasing.app.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import ptml.releasing.app.db.mapper.InternetErrorLogMapper
@@ -38,6 +39,11 @@ class ErrorCacheImpl @Inject constructor(
         internetErrorLogDao.insert(mapper.mapToCached(log))
     }
 
+    override suspend fun getAllLogs():List<ErrorLog> {
+        return internetErrorLogDao.getAllLogsByDate().map {
+            mapper.mapFromCached(it)
+        }
+    }
 
     companion object {
         private const val PAGE_SIZE = 10

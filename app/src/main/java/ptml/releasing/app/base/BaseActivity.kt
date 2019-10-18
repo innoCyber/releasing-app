@@ -419,7 +419,6 @@ abstract class BaseActivity<V, D> :
 
     }
 
-
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, getLayoutResourceId())
         binding.lifecycleOwner = this

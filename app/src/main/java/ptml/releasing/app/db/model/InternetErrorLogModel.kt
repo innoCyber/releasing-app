@@ -38,5 +38,7 @@ data class InternetErrorLogModel(
                 "        FROM   $TABLE_NAME " +
                 "        GROUP  BY SUBSTR($COLUMN_DATE, 0, 9)) " +
                 "ORDER  BY sort DESC "
+
+        const val GET_ALL_LOGS = "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_DATE"
     }
 }
