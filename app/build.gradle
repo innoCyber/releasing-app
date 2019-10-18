@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 
 android {
     signingConfigs {
-        Release {
+        Releasing {
             storeFile file('G:\\Android\\GrayStatic\\ReleasingNew\\keystore.jks')
             storePassword 'grimaldi'
             keyAlias = 'grimaldi'
@@ -46,19 +46,22 @@ android {
         dev {
             dimension 'server'
             applicationIdSuffix '.dev'
+            versionNameSuffix "-dev-" + getDate()
             versionCode 1
-            signingConfig signingConfigs.Release
+            signingConfig signingConfigs.Releasing
         }
 
         staging {
             dimension 'server'
             applicationIdSuffix '.staging'
+            versionNameSuffix "-staging-" + "-b" + getDate()
             versionCode 6
+            signingConfig signingConfigs.Releasing
         }
 
         production {
             dimension 'server'
-            signingConfig signingConfigs.Release
+            signingConfig signingConfigs.Releasing
         }
     }
 
@@ -69,7 +72,7 @@ android {
 
         // Specific values
         if (name.contains("dev")) {
-            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
+            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.88.165:3000\"")
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
         } else if (name.contains("production")) {
@@ -199,6 +202,12 @@ dependencies {
 
     debugImplementation "com.amitshekhar.android:debug-db:1.0.6"
 
+}
+
+static def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
 }
 
 apply plugin: 'com.google.gms.google-services'
