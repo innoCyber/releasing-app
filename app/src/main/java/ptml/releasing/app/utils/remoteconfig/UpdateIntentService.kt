@@ -18,7 +18,7 @@ class UpdateIntentService : DaggerIntentService(UpdateIntentService::class.java.
     @Inject
     lateinit var appCoroutineDispatchers: AppCoroutineDispatchers
     @Inject
-    lateinit var remoteConfigManger: RemoteConfigManger
+    lateinit var remoteConfigManger: RemoteConfigManager
 
 
     private val job = Job()

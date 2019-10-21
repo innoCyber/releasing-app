@@ -12,7 +12,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class RemoteConfigManger @Inject constructor() {
+class RemoteConfigManager @Inject constructor() {
     private val remoteConfig = FirebaseRemoteConfig.getInstance()
 
     private val defaults: Map<String, Any>
