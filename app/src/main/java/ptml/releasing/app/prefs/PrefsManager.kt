@@ -159,7 +159,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
 
     override fun isInternetErrorLoggingEnabled(): Boolean {
-        return sharedPreferences.getBoolean(INTERNET_ERROR_LOGGING_ENABLED, true)
+        return sharedPreferences.getBoolean(INTERNET_ERROR_LOGGING_ENABLED, false)
     }
 
     override fun setInternetErrorLoggingEnabled(enabled: Boolean) {
