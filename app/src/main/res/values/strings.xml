@@ -256,5 +256,10 @@
     <string name="enable_logs">Enable Internet Error Logs</string>
     <string name="disable_logs_confirm_message">Are you sure you want to disable internet error logging?</string>
     <string name="enable_logs_confirm_message">Are you sure you want to enable internet error logging?</string>
+    <string name="export_logs_text">Export Logs</string>
+    <string name="logs_exported_success_msg">Logs exported successfully at %s</string>
+    <string name="share_with">Share with…</string>
+    <string name="logs_exported_error_msg">Error occurred while exporting logs: %s</string>
+    <string name="logs_exporting_msg">Exporting logs…</string>
 
 </resources>

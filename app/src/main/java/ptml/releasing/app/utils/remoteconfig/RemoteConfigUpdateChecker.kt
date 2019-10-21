@@ -8,7 +8,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteConfigUpdateChecker @Inject constructor(
-    val remoteConfigManger: RemoteConfigManger,
+    val remoteConfigManger: RemoteConfigManager,
     private val local: Local
 ) {
     val updateCheckState: LiveData<NetworkState> = remoteConfigManger.loadingState
