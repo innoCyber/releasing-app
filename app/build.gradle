@@ -20,8 +20,8 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 4
-        versionName "1.1.0"
+        versionCode 6
+        versionName "1.2.1"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
@@ -74,9 +74,9 @@ android {
         if (name.contains("dev")) {
             variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
         } else if (name.contains("staging")) {
-            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
-        } else if (name.contains("production")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+        } else if (name.contains("production")) {
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
             variant.buildConfigField("String", "IMEI", "\"\"")
         }
     }
