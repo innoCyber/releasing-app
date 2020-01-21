@@ -14,9 +14,9 @@ import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.hideSoftInputFromWindow
-import ptml.releasing.databinding.ActivityLoginBinding
+import ptml.releasing.databinding.ActivityAdminLoginBinding
 
-class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
+class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,5 +131,5 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
     override fun getBindingVariable() = BR._all
 
-    override fun getLayoutResourceId() = R.layout.activity_login
+    override fun getLayoutResourceId() = R.layout.activity_admin_login
 }
