@@ -111,7 +111,7 @@ class LoginViewModel @Inject constructor(
     private fun loginUser() {
         viewModelScope.launch {
             try {
-//                setLoggedInUseCase.execute(SetLoggedInUseCase.Params(true))
+                setLoggedInUseCase.execute(SetLoggedInUseCase.Params(true))
                 loginDataState.postValue(DataState.Success(Unit))
                 navigateToNextScreen()
             } catch (e: Exception) {
