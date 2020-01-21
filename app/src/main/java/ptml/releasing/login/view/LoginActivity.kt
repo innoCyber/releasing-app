@@ -66,7 +66,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
         viewModel.getGoToReset().observe(this) {
             it?.getContentIfNotHandled()?.let {
-                //                navigator.goToReset(this@LoginActivity)
+                navigator.goToReset(this@LoginActivity)
             }
         }
     }

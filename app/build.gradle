@@ -72,7 +72,7 @@ android {
 
         // Specific values
         if (name.contains("dev")) {
-            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.27.37:1448\"")
+            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.29.115:1448\"")
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
         } else if (name.contains("production")) {

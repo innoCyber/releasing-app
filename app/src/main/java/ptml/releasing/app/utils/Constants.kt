@@ -55,4 +55,5 @@ object Constants{
 
     const val INVALID_ID = -1
     const val DEBUG = "debug"
+    const val PASSWORD_LENGTH = 6
 }

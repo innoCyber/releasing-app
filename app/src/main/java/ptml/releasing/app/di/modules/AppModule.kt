@@ -18,8 +18,20 @@ import ptml.releasing.app.di.modules.viewmodel.ViewModelFactoryModule
 import ptml.releasing.app.di.modules.viewmodel.ViewModelModule
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.login.model.LoginModule
+import ptml.releasing.resetpassword.model.ResetPasswordModule
 
-@Module(includes = [NetworkModule::class, LocalModule::class, ViewModelFactoryModule::class, ViewModelModule::class, UiModule::class, MainModule::class, LoginModule::class])
+@Module(
+    includes = [
+        NetworkModule::class,
+        LocalModule::class,
+        ViewModelFactoryModule::class,
+        ViewModelModule::class,
+        UiModule::class,
+        MainModule::class,
+        LoginModule::class,
+        ResetPasswordModule::class
+    ]
+)
 abstract class AppModule {
 
     @Binds

@@ -4,6 +4,7 @@ import android.content.Intent
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.login.view.LoginActivity
+import ptml.releasing.resetpassword.view.ResetPasswordActivity
 import javax.inject.Inject
 
 /**
@@ -19,6 +20,10 @@ class Navigator @Inject constructor() {
     fun goToLogin(baseActivity: BaseActivity<*, *>) {
         baseActivity.startActivity(Intent(baseActivity, LoginActivity::class.java))
         baseActivity.finish()
+    }
+
+    fun goToReset(baseActivity: BaseActivity<*, *>) {
+        baseActivity.startActivity(Intent(baseActivity, ResetPasswordActivity::class.java))
     }
 
 }

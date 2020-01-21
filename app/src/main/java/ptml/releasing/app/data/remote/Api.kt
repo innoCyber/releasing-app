@@ -1,8 +1,11 @@
 package ptml.releasing.app.data.remote
 
 
+import ptml.releasing.app.data.remote.request.ResetPasswordRequest
 import ptml.releasing.app.data.remote.result._Result
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 /**
@@ -17,5 +20,8 @@ interface Api {
         @Query("password") password: String,
         @Query("imei") imei: String?
     ): _Result<Unit>
+
+    @POST(Endpoints.RESET_PASSWORD)
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): _Result<Unit>
 
 }

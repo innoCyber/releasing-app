@@ -274,4 +274,8 @@
     <string name="password_no_match_message">The passwords do not match</string>
     <string name="login_loading_message">Please wait…</string>
 
+    <string name="forgot_new_password_hint">New password</string>
+    <string name="forgot_confirm_password_hint">Confirm password</string>
+    <string name="password_reset_success">Your password was reset successfully</string>
+
 </resources>

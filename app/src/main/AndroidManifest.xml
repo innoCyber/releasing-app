@@ -86,6 +86,9 @@
         <activity
             android:name=".login.view.LoginActivity"
             android:theme="@style/AppTheme.UserAuth" />
+        <activity
+            android:name=".resetpassword.view.ResetPasswordActivity"
+            android:theme="@style/AppTheme.UserAuth" />
 
         <meta-data
                 android:name="io.fabric.ApiKey"

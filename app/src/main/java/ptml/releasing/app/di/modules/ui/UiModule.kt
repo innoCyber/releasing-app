@@ -15,6 +15,7 @@ import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.internet_error_logs.view.ErrorLogsActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
+import ptml.releasing.resetpassword.view.ResetPasswordActivity
 
 
 @Module
@@ -82,5 +83,9 @@ abstract class UiModule {
 
     @ContributesAndroidInjector
     abstract fun normalLoginActivity(): ptml.releasing.login.view.LoginActivity
+
+
+    @ContributesAndroidInjector
+    abstract fun resetPasswordActivity(): ResetPasswordActivity
 
 }
