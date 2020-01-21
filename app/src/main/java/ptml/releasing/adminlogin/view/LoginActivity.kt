@@ -1,4 +1,4 @@
-package ptml.releasing.login.view
+package ptml.releasing.adminlogin.view
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModelProviders
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_config.view.AdminConfigActivity
+import ptml.releasing.adminlogin.viewmodel.LoginViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityLoginBinding
-import ptml.releasing.login.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 

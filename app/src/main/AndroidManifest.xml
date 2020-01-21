@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".login.view.LoginActivity"
+            android:name=".adminlogin.view.LoginActivity"
                 android:label="@string/admin_login"
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity

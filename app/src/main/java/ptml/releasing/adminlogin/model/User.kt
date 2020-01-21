@@ -1,4 +1,4 @@
-package ptml.releasing.login.model
+package ptml.releasing.adminlogin.model
 
 import com.google.gson.annotations.SerializedName
 

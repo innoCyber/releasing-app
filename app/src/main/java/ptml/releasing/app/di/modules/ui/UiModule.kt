@@ -3,6 +3,7 @@ package ptml.releasing.app.di.modules.ui
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import ptml.releasing.admin_config.view.AdminConfigActivity
+import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.utils.remoteconfig.UpdateIntentService
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
@@ -12,7 +13,6 @@ import ptml.releasing.damages.view.*
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.internet_error_logs.view.ErrorLogsActivity
-import ptml.releasing.login.view.LoginActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 

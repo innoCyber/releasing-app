@@ -17,6 +17,7 @@ import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
+import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
@@ -31,7 +32,6 @@ import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
-import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import java.util.*
 

@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
+import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
 import ptml.releasing.app.dialogs.EditTextDialog
@@ -43,7 +44,6 @@ import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
-import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import javax.inject.Inject
 
