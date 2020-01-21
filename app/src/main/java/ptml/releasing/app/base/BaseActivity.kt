@@ -2,6 +2,7 @@
 
 package ptml.releasing.app.base
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
 import android.content.Intent
@@ -70,6 +71,15 @@ abstract class BaseActivity<V, D> :
 
     private var progressDialog: ProgressDialog? = null
 
+    var imei: String? = null
+
+    @Inject
+    lateinit var imeiHelper: ImeiHelper
+
+    @Inject
+    lateinit var navigator: Navigator
+
+
     companion object {
         const val RC_BARCODE = 112
         const val RC_SEARCH = 113
@@ -77,7 +87,6 @@ abstract class BaseActivity<V, D> :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         progressDialog = ProgressDialog(this)
 
         val networkListener = NetworkListener(this)
@@ -215,6 +224,8 @@ abstract class BaseActivity<V, D> :
 
             }
         })
+
+        getIMEIWithPermissionCheck()
     }
 
     @NeedsPermission(
@@ -358,6 +369,18 @@ abstract class BaseActivity<V, D> :
         viewModel.checkToShowUpdateAppDialog()
     }
 
+
+    @SuppressLint("MissingPermission")
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    fun getIMEI() {
+        imei = imeiHelper.getImei()
+        viewModel.imei = imei
+        onImeiGotten(imei)
+    }
+
+    open fun onImeiGotten(imei: String?) {
+
+    }
 
     @NeedsPermission(android.Manifest.permission.CAMERA)
     fun openBarCodeScanner(requestCode: Int) {

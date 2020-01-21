@@ -80,4 +80,7 @@ abstract class UiModule {
     @ContributesAndroidInjector
     abstract fun errorLogsActivity(): ErrorLogsActivity
 
+    @ContributesAndroidInjector
+    abstract fun normalLoginActivity(): ptml.releasing.login.view.LoginActivity
+
 }

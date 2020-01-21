@@ -14,8 +14,10 @@ import ptml.releasing.app.db.mapper.InternetErrorLogMapper
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.prefs.PrefsManager
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Constants.PREFS
 import ptml.releasing.internet_error_logs.model.ErrorCache
+import javax.inject.Named
 
 @Module
 class LocalModule {
@@ -46,6 +48,13 @@ class LocalModule {
     @Provides
     fun provideErrorCache(mapper: InternetErrorLogMapper, db: ReleasingDb): ErrorCache{
         return ErrorCacheImpl(mapper, db)
+    }
+
+    @ReleasingAppScope
+    @Provides
+    @Named(Constants.DEBUG)
+    fun provideDebug(): Boolean {
+        return BuildConfig.DEBUG
     }
 
 }

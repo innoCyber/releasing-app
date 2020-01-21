@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ptml.releasing.login.viewmodel.LoginViewModel" />
+
+        <import type="ptml.releasing.app.data.domain.state.DataState" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
+
+            <ImageView
+                android:id="@+id/img_app_icon"
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:layout_marginTop="@dimen/app_icon_margin_top"
+                android:contentDescription="@string/app_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_launcher" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/badge_id_input"
+                style="@style/Widget.Driver.TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_first_text_input_margin_top"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:hint="@string/login_badge_id_hint"
+                app:errorText="@{viewModel.badgeIdErrorState}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/img_app_icon">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/badge_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:text="@={viewModel.badgeId}"
+                    app:hideKeyboardOnInputDone="@{true}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_input"
+                style="@style/Widget.Driver.TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:hint="@string/login_password_hint"
+                app:errorText="@{viewModel.passwordErrorState}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/badge_id_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:text="@={viewModel.password}"
+                    app:hideKeyboardOnInputDone="@{true}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/operator_input"
+                style="@style/Widget.Driver.DropDown"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:hint="@string/select_operator_hint"
+                app:errorText="@{viewModel.operationTypeErrorState}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/password_input">
+
+                <AutoCompleteTextView
+                    android:id="@+id/operator_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:imeOptions="actionDone"
+                    android:text="@={viewModel.selectedOperationType}"
+                    app:data="@{viewModel.operationTypeList}"
+                    tools:ignore="Deprecated,LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/terminal_input"
+                style="@style/Widget.Driver.DropDown"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:hint="@string/select_terminal_hint"
+                app:errorText="@{viewModel.terminalErrorState}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/operator_input">
+
+                <AutoCompleteTextView
+                    android:id="@+id/terminal_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:imeOptions="actionDone"
+                    android:text="@={viewModel.selectedTerminal}"
+                    app:data="@{viewModel.terminalList}"
+                    tools:ignore="Deprecated,LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/btn_reset"
+                style="@style/Widget.Driver.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:enabled="@{!viewModel.loading}"
+                android:onClick="@{()->viewModel.handleReset()}"
+                android:text="@string/reset_password"
+                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                app:layout_constraintEnd_toStartOf="@id/btn_login"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/terminal_input" />
+
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/Widget.Driver.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:enabled="@{!viewModel.loading}"
+                android:onClick="@{()-> viewModel.handleLogin()}"
+                android:text="@string/login"
+                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toEndOf="@id/btn_reset"
+                app:layout_constraintTop_toBottomOf="@id/terminal_input" />
+
+            <include
+                android:id="@+id/progress_bar"
+                layout="@layout/progress_bar_layout"
+                android:visibility="gone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

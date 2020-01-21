@@ -83,6 +83,10 @@
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity android:name=".internet_error_logs.view.ErrorLogsActivity"
                 android:label="@string/activity_error_logs_title"/>
+        <activity
+            android:name=".login.view.LoginActivity"
+            android:theme="@style/AppTheme.UserAuth" />
+
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67"/>

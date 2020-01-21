@@ -59,4 +59,21 @@
     <dimen name="damages_button_height">40dp</dimen>
     <dimen name="damages_button_padding">8dp</dimen>
     <dimen name="nav_version_padding">8dp</dimen>
+
+
+    <!--TEXT SIZES-->
+    <dimen name="text_size_h1">22sp</dimen>
+    <dimen name="text_size_h2">20sp</dimen>
+    <dimen name="text_size_h3">18sp</dimen>
+
+    <!--LOGIN-->
+    <dimen name="app_icon_width">64dp</dimen>
+    <dimen name="app_icon_height">64dp</dimen>
+    <dimen name="app_icon_margin_top">48dp</dimen>
+    <dimen name="login_first_text_input_margin_top">48dp</dimen>
+    <dimen name="login_text_input_margin">8dp</dimen>
+    <dimen name="drop_down_menu_item_padding">16dp</dimen>
+
+    <dimen name="progress_elevation">8dp</dimen>
+    <dimen name="progress_margin">8dp</dimen>
 </resources>

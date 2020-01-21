@@ -39,9 +39,6 @@ abstract class ViewModelModule {
     abstract fun bindConfigViewModel(myViewModel: ConfigViewModel): ViewModel
 
 
-
-
-
     @Binds
     @IntoMap
     @ViewModelKey(DamageViewModel::class)
@@ -52,7 +49,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     abstract fun bindSearchViewModel(myViewModel: SearchViewModel): ViewModel
-
 
 
     @Binds
@@ -92,4 +88,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ErrorLogsViewModel::class)
     abstract fun bindErrorLogsViewModel(viewModel: ErrorLogsViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ptml.releasing.login.viewmodel.LoginViewModel::class)
+    abstract fun bindLoginModelViewModel(viewModel: ptml.releasing.login.viewmodel.LoginViewModel): ViewModel
 }

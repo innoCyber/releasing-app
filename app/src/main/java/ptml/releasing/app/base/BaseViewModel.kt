@@ -7,13 +7,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.app.utils.UpdateHelper
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.configuration.models.Configuration
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,6 +22,8 @@ open class BaseViewModel @Inject constructor(
     protected val repository: Repository,
     protected val appCoroutineDispatchers: AppCoroutineDispatchers
 ) : ViewModel() {
+
+    var imei: String? = null
 
     val updateLoadingState = updateChecker.updateCheckState
 
