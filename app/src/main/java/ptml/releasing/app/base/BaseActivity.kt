@@ -40,6 +40,7 @@ import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -87,6 +88,7 @@ abstract class BaseActivity<V, D> :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         progressDialog = ProgressDialog(this)
 
         val networkListener = NetworkListener(this)
@@ -226,6 +228,7 @@ abstract class BaseActivity<V, D> :
         })
 
         getIMEIWithPermissionCheck()
+        hideKeyBoardOnTouchOfNonEditableViews()
     }
 
     @NeedsPermission(

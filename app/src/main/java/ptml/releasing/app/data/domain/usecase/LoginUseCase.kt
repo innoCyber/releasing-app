@@ -1,8 +1,6 @@
 package ptml.releasing.app.data.domain.usecase
 
 import ptml.releasing.app.data.domain.model.ApiResult
-import ptml.releasing.app.data.domain.model.login.OperationStep
-import ptml.releasing.app.data.domain.model.login.Terminal
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import javax.inject.Inject
 
@@ -19,17 +17,13 @@ class LoginUseCase @Inject constructor(private val loginRepository: LoginReposit
         return loginRepository.authenticate(
             params.badgeId,
             params.password,
-            params.imei,
-            params.operationType,
-            params.terminal
+            params.imei
         )
     }
 
     data class Params(
         val badgeId: String,
         val password: String,
-        val imei: String,
-        val operationType: OperationStep,
-        val terminal: Terminal
+        val imei: String
     )
 }

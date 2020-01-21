@@ -3,7 +3,6 @@ package ptml.releasing.app.data.local
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import ptml.releasing.BuildConfig
-import ptml.releasing.app.data.domain.model.login.AdminOptionsEntity
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import javax.inject.Inject
 
@@ -31,14 +30,6 @@ open class PreferencesManagerImpl @Inject constructor(
 
     override fun setLoggedIn(value: Boolean) {
         return setBooleanPreference(prefLoggedIn, value)
-    }
-
-    override fun getAdminOptions(): AdminOptionsEntity {
-        return gson.fromJson(getStringPreference(prefAdminOptions), AdminOptionsEntity::class.java)
-    }
-
-    override fun setAdminOptions(entity: AdminOptionsEntity) {
-        return setStringPreference(prefAdminOptions, gson.toJson(entity))
     }
 
     override fun getIMEI(): String {

@@ -262,19 +262,16 @@
     <string name="logs_exported_error_msg">Error occurred while exporting logs: %s</string>
     <string name="logs_exporting_msg">Exporting logs…</string>
 
+
+    <!--USER LOGIN-->
     <string name="login_badge_id_hint">Badge ID</string>
     <string name="login_password_hint">Password</string>
-    <string name="select_operator_hint">Select Operation Type</string>
-    <string name="select_terminal_hint">Select Terminal</string>
     <string name="reset_password">Reset Password</string>
 
     <string name="badge_id_required_message">A badge ID is required</string>
     <string name="password_required_message">Password is required</string>
     <string name="password_too_short_message">Your password should be at least 6 characters</string>
     <string name="password_no_match_message">The passwords do not match</string>
-    <string name="terminal_required_message">Please select a terminal</string>
-    <string name="operation_type_required_message">Please select an operation type</string>
-    <string name="no_value_from_server">No value received from server, contact the admin</string>
     <string name="login_loading_message">Please wait…</string>
 
 </resources>

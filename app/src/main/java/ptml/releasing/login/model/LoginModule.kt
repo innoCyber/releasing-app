@@ -3,7 +3,6 @@ package ptml.releasing.login.model
 import dagger.Binds
 import dagger.Module
 import ptml.releasing.app.data.domain.repository.LoginRepository
-import ptml.releasing.driver.login.model.LoginLocalDataSource
 
 /**
  * Created by kryptkode on 1/21/2020.

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -98,59 +97,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/operator_input"
-                style="@style/Widget.Driver.DropDown"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_text_input_margin"
-                android:layout_marginEnd="@dimen/login_text_input_margin"
-                android:hint="@string/select_operator_hint"
-                app:errorText="@{viewModel.operationTypeErrorState}"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/password_input">
-
-                <AutoCompleteTextView
-                    android:id="@+id/operator_select"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:imeOptions="actionDone"
-                    android:text="@={viewModel.selectedOperationType}"
-                    app:data="@{viewModel.operationTypeList}"
-                    tools:ignore="Deprecated,LabelFor" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/terminal_input"
-                style="@style/Widget.Driver.DropDown"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_text_input_margin"
-                android:layout_marginEnd="@dimen/login_text_input_margin"
-                android:hint="@string/select_terminal_hint"
-                app:errorText="@{viewModel.terminalErrorState}"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/operator_input">
-
-                <AutoCompleteTextView
-                    android:id="@+id/terminal_select"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:imeOptions="actionDone"
-                    android:text="@={viewModel.selectedTerminal}"
-                    app:data="@{viewModel.terminalList}"
-                    tools:ignore="Deprecated,LabelFor" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
 
             <Button
                 android:id="@+id/btn_reset"
@@ -158,7 +104,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_btn_margin_top"
                 android:layout_marginEnd="@dimen/login_text_input_margin"
                 android:enabled="@{!viewModel.loading}"
                 android:onClick="@{()->viewModel.handleReset()}"
@@ -166,7 +112,7 @@
                 app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
                 app:layout_constraintEnd_toStartOf="@id/btn_login"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/terminal_input" />
+                app:layout_constraintTop_toBottomOf="@id/password_input" />
 
 
             <Button
@@ -175,7 +121,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_btn_margin_top"
                 android:layout_marginEnd="@dimen/login_text_input_margin"
                 android:enabled="@{!viewModel.loading}"
                 android:onClick="@{()-> viewModel.handleLogin()}"
@@ -183,7 +129,7 @@
                 app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toEndOf="@id/btn_reset"
-                app:layout_constraintTop_toBottomOf="@id/terminal_input" />
+                app:layout_constraintTop_toBottomOf="@id/password_input" />
 
             <include
                 android:id="@+id/progress_bar"

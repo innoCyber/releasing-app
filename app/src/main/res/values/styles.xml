@@ -20,7 +20,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.UserAuth" parent="AppTheme.NoActionBar">
+    <style name="AppTheme.UserAuth" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -619,14 +619,6 @@
 
     <style name="Widget.Driver.TextInputLayout.Normal.FindCargo">
         <item name="boxBackgroundColor">@color/colorOnSearchBg</item>
-    </style>
-
-    <style name="Widget.Driver.DropDown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-        <item name="hintTextAppearance">@style/TextAppearance.Driver.TextInputLayout.HintText</item>
-        <item name="hintTextColor">?colorOnSurface</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="boxStrokeColor">?colorAccent</item>
-        <item name="endIconTint">@color/drop_down_icon_tint</item>
     </style>
 
     <style name="Widget.Driver.Button" parent="Widget.MaterialComponents.Button">

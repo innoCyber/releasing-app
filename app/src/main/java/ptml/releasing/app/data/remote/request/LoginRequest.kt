@@ -9,7 +9,5 @@ import com.google.gson.annotations.SerializedName
 data class LoginRequest(
     @SerializedName("badge_id") val badgeId: String,
     @SerializedName("password") val password: String,
-    @SerializedName("imei") val imei: String?,
-    @SerializedName("operation_type") val operationType: Int,
-    @SerializedName("terminal") val terminal: Int
+    @SerializedName("imei") val imei: String?
 )

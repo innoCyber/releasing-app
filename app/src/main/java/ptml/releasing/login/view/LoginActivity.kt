@@ -26,6 +26,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         super.onCreate(savedInstanceState)
         checkIfLoggedIn()
         binding.viewModel = viewModel
+        setupObservers()
     }
 
     private fun checkIfLoggedIn() {
@@ -70,9 +71,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         }
     }
 
-    override fun onImeiGotten(imei: String?) {
-        viewModel.fetchAdminOptions(imei ?: "")
-    }
 
     override fun getBindingVariable(): Int {
         return BR.viewModel

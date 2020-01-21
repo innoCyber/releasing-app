@@ -72,6 +72,7 @@
     <dimen name="app_icon_margin_top">48dp</dimen>
     <dimen name="login_first_text_input_margin_top">48dp</dimen>
     <dimen name="login_text_input_margin">8dp</dimen>
+    <dimen name="login_btn_margin_top">20dp</dimen>
     <dimen name="drop_down_menu_item_padding">16dp</dimen>
 
     <dimen name="progress_elevation">8dp</dimen>

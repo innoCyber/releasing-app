@@ -1,10 +1,8 @@
-package ptml.releasing.driver.login.model
+package ptml.releasing.login.model
 
 
-import ptml.releasing.app.data.domain.model.login.AdminOptionsEntity
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.local.LocalDataManager
-import ptml.releasing.login.model.LoginDataSource
 import javax.inject.Inject
 
 /**
@@ -20,14 +18,6 @@ class LoginLocalDataSource @Inject constructor(private val localDataManager: Loc
 
     override suspend fun setLoginData(loginEntity: LoginEntity) {
         return localDataManager.setLoginData(loginEntity)
-    }
-
-    override suspend fun getAdminOptions(): AdminOptionsEntity {
-        return localDataManager.getAdminOptions()
-    }
-
-    override suspend fun setAdminOptions(entity: AdminOptionsEntity) {
-        return localDataManager.setAdminOptions(entity)
     }
 
     override suspend fun setLoggedIn(value: Boolean) {

@@ -1,6 +1,5 @@
 package ptml.releasing.app.data.local
 
-import ptml.releasing.app.data.domain.model.login.AdminOptionsEntity
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 
 /**
@@ -17,9 +16,6 @@ interface LocalDataManager {
 
     fun resetPreferences(): Boolean
     fun removePreference(key: String)
-
-    fun setAdminOptions(entity: AdminOptionsEntity)
-    fun getAdminOptions(): AdminOptionsEntity
 
 
     fun setIMEI(imei: String)
