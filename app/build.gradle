@@ -20,8 +20,8 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 6
-        versionName "1.2.1"
+        versionCode 8
+        versionName "1.2.3"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true

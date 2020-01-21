@@ -193,7 +193,7 @@
     <string name="errors_present_in_form">Some error(s) are present in the form</string>
     <string name="confirm_action">Confirm Action</string>
     <string name="proceed_to_reset_msg">Are you sure you want to proceed to reset the form?</string>
-    <string name="yes">Yes</string>
+    <string name="yes">Yes</string>f
     <string name="no">No</string>
     <string name="admin_settings">Admin Settings</string>
     <string name="badge_id_hint">Badge ID</string>

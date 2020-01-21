@@ -110,7 +110,6 @@
                     android:text="XXXB005643"
                     app:layout_constraintBottom_toTopOf="@+id/divider"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
-
                     app:layout_constraintHorizontal_bias="0.2"
                     app:layout_constraintStart_toEndOf="@id/tv_number_label"
                     app:layout_constraintTop_toBottomOf="@id/include_home" />

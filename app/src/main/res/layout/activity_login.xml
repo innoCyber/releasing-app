@@ -32,7 +32,7 @@
             <TextView
                     android:id="@+id/tv_admin_id"
                     style="@style/LabelStyle"
-                    android:text="@string/admin_id"
+                    android:text=   "@string/admin_id"
                     android:layout_marginTop="@dimen/constraint_default_margin_32dp"
                     app:layout_constraintEnd_toStartOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0"
