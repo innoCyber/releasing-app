@@ -3,15 +3,14 @@ package ptml.releasing.app.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ptml.releasing.app.data.Repository
-import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.SingleLiveEvent
-import ptml.releasing.app.utils.UpdateHelper
+import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
+import ptml.releasing.app.data.domain.usecase.LogOutUseCase
+import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.Configuration
 import timber.log.Timber
@@ -24,6 +23,15 @@ open class BaseViewModel @Inject constructor(
 ) : ViewModel() {
 
     var imei: String? = null
+
+    @Inject
+    lateinit var getLoginUseCase: GetLoginUseCase
+
+    @Inject
+    lateinit var logOutUseCase: LogOutUseCase
+
+    protected val goToLogin = MutableLiveData<Event<Unit>>()
+    fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
 
     val updateLoadingState = updateChecker.updateCheckState
 
@@ -49,18 +57,15 @@ open class BaseViewModel @Inject constructor(
     protected val _searchScanned = MutableLiveData<String>()
 
     protected val _isConfigured = MutableLiveData<Boolean>()
-    protected val _operatorName = MutableLiveData<String?>()
+    protected val _operatorName = MutableLiveData<String>()
+
     val isConfigured: LiveData<Boolean> = _isConfigured
     private val _savedOperatorName = MutableLiveData<String>()
     private val _logOutOperator = MutableLiveData<String>()
-    private val _openOperatorDialog = MutableLiveData<Unit>()
+
     private val _logOutDialog = MutableLiveData<Unit>()
-    val openOperatorDialog: LiveData<Unit> = _openOperatorDialog
+
     val logOutDialog: LiveData<Unit> = _logOutDialog
-
-
-    private val _openEnterDialog = MutableLiveData<String>()
-    val openEnterDialog = _openEnterDialog
 
 
     private val _openConfiguration = MutableLiveData<Unit>()
@@ -72,10 +77,8 @@ open class BaseViewModel @Inject constructor(
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val searchScanned: LiveData<String> = _searchScanned
 
-    val operatorName: LiveData<String?> = _operatorName
+    val operatorName: LiveData<String> = _operatorName
     val savedConfiguration: LiveData<Configuration> = _configuration
-    val savedOperatorName: LiveData<String> = _savedOperatorName
-    val logOutOperator: LiveData<String> = _logOutOperator
 
 
     override fun onCleared() {
@@ -123,16 +126,6 @@ open class BaseViewModel @Inject constructor(
     }
 
 
-    fun saveOperatorName(name: String?) {
-        CoroutineScope(appCoroutineDispatchers.db).launch {
-            repository.saveOperatorName(name)
-            withContext(appCoroutineDispatchers.main) {
-                _savedOperatorName.postValue(name)
-                _operatorName.postValue(name)
-            }
-        }
-    }
-
 
     fun scanForSearch(scanned: String?) {
         _searchScanned.postValue(scanned)
@@ -140,37 +133,19 @@ open class BaseViewModel @Inject constructor(
 
 
     fun logOutOperator() {
-        CoroutineScope(appCoroutineDispatchers.db).launch {
-            val oldOperator = repository.getOperatorName()
-            repository.saveOperatorName(null)
-            withContext(appCoroutineDispatchers.main) {
-                _logOutOperator.postValue(oldOperator)
-                _operatorName.postValue(null)
-            }
+        viewModelScope.launch {
+            logOutUseCase.execute()
+            goToLogin.postValue(Event(Unit))
         }
     }
 
     fun getOperatorName() {
-        CoroutineScope(appCoroutineDispatchers.db).launch {
-            val operator = repository.getOperatorName()
-            withContext(appCoroutineDispatchers.main) {
-                _operatorName.postValue(operator)
-            }
+        viewModelScope.launch {
+            val loginInfo = getLoginUseCase.execute()
+            _operatorName.postValue(loginInfo.badgeId)
         }
     }
 
-    fun openOperatorDialog() {
-        _openOperatorDialog.postValue(Unit)
-    }
-
-    fun openEnterDialog() {
-        CoroutineScope(appCoroutineDispatchers.db).launch {
-            val operator = repository.getOperatorName()
-            withContext(appCoroutineDispatchers.main) {
-                _openEnterDialog.postValue(operator)
-            }
-        }
-    }
 
     fun showLogOutConfirmDialog() {
         _logOutDialog.postValue(Unit)

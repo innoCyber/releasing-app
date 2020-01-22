@@ -11,8 +11,6 @@ abstract class BasePreferencesManager(protected val sharedPreferences: SharedPre
 
     protected val prefLoginData = "prefLoginData"
     protected val prefLoggedIn = "prefLoggedIn"
-    protected val prefAdminOptions = "prefAdminOptions"
-    protected val prefFormData = "prefFormData"
     protected val prefImei = "prefImei"
     protected val prefBaseServerUrl = "server_url"
     protected val defaultStringValue = "{}"

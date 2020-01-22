@@ -24,6 +24,10 @@ open class PreferencesManagerImpl @Inject constructor(
         return setStringPreference(prefLoginData, gson.toJson(entity))
     }
 
+    override fun clearLoginData() {
+        removePreference(prefLoginData)
+    }
+
     override fun loggedIn(): Boolean {
         return getBooleanPreference(prefLoggedIn)
     }

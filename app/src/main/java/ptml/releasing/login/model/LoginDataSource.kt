@@ -19,6 +19,6 @@ interface LoginDataSource {
         suspend fun getLoggedIn(): Boolean
         suspend fun getLoginData(): LoginEntity
         suspend fun setLoginData(loginEntity: LoginEntity)
-        suspend fun logOut(): Boolean
+        suspend fun logOutUser(): Boolean
     }
 }

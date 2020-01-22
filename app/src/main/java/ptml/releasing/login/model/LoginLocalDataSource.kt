@@ -28,7 +28,9 @@ class LoginLocalDataSource @Inject constructor(private val localDataManager: Loc
         return localDataManager.loggedIn()
     }
 
-    override suspend fun logOut(): Boolean {
-        return localDataManager.resetPreferences()
+    override suspend fun logOutUser(): Boolean {
+        localDataManager.setLoggedIn(false)
+        localDataManager.clearLoginData()
+        return true
     }
 }

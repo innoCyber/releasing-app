@@ -36,8 +36,6 @@ import permissions.dispatcher.*
 import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.ReleasingApplication
-import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
-import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
@@ -126,10 +124,6 @@ abstract class BaseActivity<V, D> :
             startNewActivity(LoginActivity::class.java)
         })
 
-        viewModel.savedOperatorName.observe(this, Observer {
-            notifyUser(binding.root, getString(R.string.operator_name_saved_success_msg, it))
-        })
-
 
         viewModel.operatorName.observe(this, Observer {
             when (this) {
@@ -153,21 +147,14 @@ abstract class BaseActivity<V, D> :
 
         })
 
-        viewModel.openEnterDialog.observe(this, Observer {
-            openEnterDialog(it)
-        })
-
-
-        viewModel.openOperatorDialog.observe(this, Observer {
-            openOperatorDialog()
-        })
-
         viewModel.logOutDialog.observe(this, Observer {
             showLogOutConfirmDialog()
         })
 
-        viewModel.logOutOperator.observe(this, Observer {
-            notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
+        viewModel.getGoToLogin().observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                navigator.goToLogin(this)
+            }
         })
 
         viewModel.showUpdateApp.observe(this, Observer {
@@ -342,29 +329,6 @@ abstract class BaseActivity<V, D> :
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
-    private fun openOperatorDialog() {
-        val dialog = ChooseOperatorInputDialog.newInstance(object :
-            ChooseOperatorInputDialog.ChooseOperatorListener {
-            override fun onScan() {
-                viewModel.openBarCodeScanner()
-            }
-
-            override fun onEnter() {
-                viewModel.openEnterDialog()
-            }
-        })
-        dialog.show(supportFragmentManager, dialog.javaClass.name)
-    }
-
-    private fun openEnterDialog(it: String?) {
-        val dialog = EditTextDialog.newInstance(it, object : EditTextDialog.EditTextDialogListener {
-            override fun onSave(value: String) {
-                viewModel.saveOperatorName(value)
-            }
-        }, getString(R.string.enter_operator_name), getString(R.string.operator_name), false)
-        dialog.isCancelable = false
-        dialog.show(supportFragmentManager, dialog.javaClass.name)
-    }
 
     override fun onResume() {
         super.onResume()
@@ -427,12 +391,7 @@ abstract class BaseActivity<V, D> :
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_BARCODE && resultCode == RESULT_OK) {
-            val operatorName = data?.getStringExtra(Constants.BAR_CODE)
-            //save
-            Timber.d("Scanned Operator name: %s", operatorName)
-            viewModel.saveOperatorName(operatorName)
-        } else if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
+        if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
             //save
             val scanned = data?.getStringExtra(Constants.BAR_CODE)
             Timber.d("Scanned: %s", scanned)
@@ -668,23 +627,18 @@ abstract class BaseActivity<V, D> :
     protected abstract fun getViewModelClass(): Class<V>
 
 
-    protected fun initOperator(operatorName: String?) {
+    protected fun initOperator(operatorName: String) {
         Timber.d("Passed Operator name is %s", operatorName)
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
         val operatorIndicator = findViewById<ImageView>(R.id.img_indicator)
-        operatorIndicator.setImageResource(if (TextUtils.isEmpty(operatorName)) R.drawable.operator_circle_red else R.drawable.operator_circle)
+        operatorIndicator.setImageResource(R.drawable.operator_circle)
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text =
             if (TextUtils.isEmpty(operatorName)) getString(R.string.no_operator_logged_in) else operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
-        changeOperator?.text =
-            if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
+        changeOperator?.text = getString(R.string.log_off)
         changeOperator?.setOnClickListener {
-            if (TextUtils.isEmpty(operatorName)) {
-                viewModel.openOperatorDialog()
-            } else {
-                viewModel.showLogOutConfirmDialog()
-            }
+            viewModel.showLogOutConfirmDialog()
         }
 
     }

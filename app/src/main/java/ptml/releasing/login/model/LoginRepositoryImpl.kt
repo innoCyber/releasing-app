@@ -61,7 +61,7 @@ class LoginRepositoryImpl @Inject constructor(
 
     override suspend fun logOut(): Boolean {
         return withContext(dispatchers.db) {
-            local.logOut()
+            local.logOutUser()
         }
     }
 

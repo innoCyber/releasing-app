@@ -19,7 +19,7 @@ class Navigator @Inject constructor() {
 
     fun goToLogin(baseActivity: BaseActivity<*, *>) {
         baseActivity.startActivity(Intent(baseActivity, LoginActivity::class.java))
-        baseActivity.finish()
+        baseActivity.finishAffinity()
     }
 
     fun goToReset(baseActivity: BaseActivity<*, *>) {

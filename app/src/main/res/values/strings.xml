@@ -223,7 +223,7 @@
     <string name="search_complete">Search complete</string>
     <string name="no_devices_found">No devices were found \nEnsure the device is within range</string>
     <string name="no_bt_message">No bluetooth functionality on your phone \nPlease contact the administrator</string>
-    <string name="no_operator_logged_in">No operator logged in</string>
+    <string name="no_operator_logged_in">No badge ID</string>
 
     <string name="network_state_wifi">Wi-Fi</string>
     <string name="network_state_mobile">3G/4G</string>

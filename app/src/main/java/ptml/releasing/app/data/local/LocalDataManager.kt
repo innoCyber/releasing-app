@@ -10,6 +10,7 @@ interface LocalDataManager {
 
     fun setLoginData(entity: LoginEntity)
     fun getLoginData(): LoginEntity
+    fun clearLoginData()
 
     fun loggedIn(): Boolean
     fun setLoggedIn(value: Boolean)
