@@ -60,8 +60,6 @@ open class BaseViewModel @Inject constructor(
     protected val _operatorName = MutableLiveData<String>()
 
     val isConfigured: LiveData<Boolean> = _isConfigured
-    private val _savedOperatorName = MutableLiveData<String>()
-    private val _logOutOperator = MutableLiveData<String>()
 
     private val _logOutDialog = MutableLiveData<Unit>()
 

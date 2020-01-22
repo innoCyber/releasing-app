@@ -36,8 +36,6 @@ class SearchViewModel @Inject constructor(
     protected val _openDeviceConfiguration = MutableLiveData<Event<Unit>>()
     val openDeviceConfiguration: LiveData<Event<Unit>> = _openDeviceConfiguration
 
-    private val _noOperator = MutableLiveData<Event<Unit>>()
-    val noOperator: LiveData<Event<Unit>> = _noOperator
 
     private val _networkState = MutableLiveData<Event<NetworkState>>()
     val networkState: LiveData<Event<NetworkState>> = _networkState
@@ -76,15 +74,6 @@ class SearchViewModel @Inject constructor(
 
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
-                //check if there is an operator
-                val operator = repository.getOperatorName()
-                if (operator == null) {
-                    withContext(appCoroutineDispatchers.main) {
-                        _noOperator.value = Event(Unit)
-                        _networkState.value = Event(NetworkState.LOADED)
-                    }
-                    return@launch
-                }
 
                 //already configured
                 val config = _configuration.value
