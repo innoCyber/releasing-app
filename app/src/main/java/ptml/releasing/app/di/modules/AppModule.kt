@@ -5,11 +5,9 @@ import dagger.Binds
 import dagger.Module
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.data.domain.repository.ImeiRepository
-import ptml.releasing.app.data.local.BaseUrlProviderImpl
 import ptml.releasing.app.data.local.ImeiRepositoryImpl
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.data.local.PreferencesManagerImpl
-import ptml.releasing.app.data.remote.BaseUrlProvider
 import ptml.releasing.app.di.modules.local.LocalModule
 import ptml.releasing.app.di.modules.main.MainModule
 import ptml.releasing.app.di.modules.network.NetworkModule
@@ -43,8 +41,6 @@ abstract class AppModule {
     @ReleasingAppScope
     abstract fun imeiRepo(imeiRepositoryImpl: ImeiRepositoryImpl): ImeiRepository
 
-    @Binds
-    abstract fun baseUrl(imeiRepositoryImpl: BaseUrlProviderImpl): BaseUrlProvider
 
     @Binds
     @ReleasingAppScope

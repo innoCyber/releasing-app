@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import ptml.releasing.BuildConfig
 import ptml.releasing.app.utils.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +18,6 @@ import javax.inject.Named
 
 class RestClient @Inject constructor(
     context: Context,
-    baseUrlProvider: BaseUrlProvider,
     gson: Gson,
     @Named(Constants.DEBUG)
     debug: Boolean
@@ -44,7 +44,7 @@ class RestClient @Inject constructor(
 
         val client = httpClient.build()
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlProvider.getUrl())
+            .baseUrl(BuildConfig.BASE_AUTH_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()
