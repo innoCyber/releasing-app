@@ -17,6 +17,7 @@ import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
+import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
@@ -31,7 +32,6 @@ import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
-import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import java.util.*
 
@@ -114,12 +114,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             }
         })
 
-        viewModel.noOperator.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                //show dialog
-                showOperatorErrorDialog()
-            }
-        })
 
         viewModel.openDeviceConfiguration.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
@@ -275,23 +269,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         }
 
         Timber.e("Error occurred during search: msg: %s", response)
-    }
-
-
-    private fun showOperatorErrorDialog() {
-        val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.error),
-            message = getString(R.string.no_operator_msg),
-            buttonText = getString(android.R.string.ok),
-            listener = object : InfoDialog.InfoListener {
-                override fun onConfirm() {
-                    viewModel.openOperatorDialog()
-                }
-            },
-            hasNegativeButton = true,
-            negativeButtonText = getString(android.R.string.cancel)
-        )
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 

@@ -1,78 +1,154 @@
 package ptml.releasing.login.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.state.DataState
+import ptml.releasing.app.data.domain.usecase.LoginUseCase
+import ptml.releasing.app.data.domain.usecase.SetLoggedInUseCase
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Event
-import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.extensions.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
-import ptml.releasing.login.model.User
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Created by kryptkode on 1/21/2020.
+ */
 class LoginViewModel @Inject constructor(
+    private val setLoggedInUseCase: SetLoggedInUseCase,
+    private val loginUseCase: LoginUseCase,
+    private val context: Context,
+    updateChecker: RemoteConfigUpdateChecker,
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+    appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val usernameValidation = MutableLiveData<Event<Int?>>()
-    fun getUsernameValidation() : LiveData<Event<Int?>> = usernameValidation
+    val badgeId = MutableLiveData<String>()
 
-    private val passwordValidation = MutableLiveData<Event<Int?>>()
-    fun getPasswordValidation() : LiveData<Event<Int?>> = passwordValidation
 
-    private val errorMessage = MutableLiveData<Event<String?>>()
-    fun getErrorMessage(): LiveData<Event<String?>> = errorMessage
+    private val badgeIdError = MutableLiveData<String>()
+    fun getBadgeIdErrorState(): LiveData<String> = badgeIdError
 
-    private  val loadNext = MutableLiveData<Event<Unit>>()
-    fun getLoadNext(): LiveData<Event<Unit>> = loadNext
+    val password = MutableLiveData<String>()
 
-    private val networkState = MutableLiveData<Event<NetworkState>>()
-    fun getNetworkState():LiveData<Event<NetworkState>> = networkState
+    private val passwordError = MutableLiveData<String>()
+    fun getPasswordErrorState(): LiveData<String> = passwordError
 
-    fun login(username: String?, password: String?) {
-        if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
-            if (username.isNullOrEmpty()) {
-                usernameValidation.value = Event(R.string.username_empty)
-            }
+    val hideKeyBoard = MutableLiveData<Boolean>()
 
-            if (password.isNullOrEmpty()) {
-                passwordValidation.value = Event(R.string.password_empty)
-            }
+    private val loginDataState = MutableLiveData<DataState<Unit>>()
+    fun getLoginDataState(): LiveData<DataState<Unit>> = loginDataState
 
+    private val goToSearchEvent = MutableLiveData<Event<Unit>>()
+    fun getGoToSearchEvent(): LiveData<Event<Unit>> = goToSearchEvent
+
+    val loading = loginDataState.mapFunc {
+        it == DataState.Loading
+    }
+
+    private val goToReset = MutableLiveData<Event<Unit>>()
+    fun getGoToReset(): LiveData<Event<Unit>> = goToReset
+
+    fun handleLogin() {
+        //hideKeyBoard
+        hideKeyBoard.postValue(true)
+
+        //clear errors
+        badgeIdError.postValue("")
+        passwordError.postValue("")
+
+        val badgeId = badgeId.value
+        val password = password.value
+
+        if (!meetsAllConditions(badgeId, password)) {
             return
         }
 
-        usernameValidation.value = Event(null)
-        passwordValidation.value = Event(null)
+        authenticate(badgeId, password)
 
-        val user = User(username, password)
-        if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+    }
+
+    @Suppress("NAME_SHADOWING")
+    private fun authenticate(
+        badgeId: String?,
+        password: String?
+    ) {
+        viewModelScope.launch {
+            loginDataState.postValue(DataState.Loading)
             try {
-                val result = repository.loginAsync(user).await()
-                withContext(appCoroutineDispatchers.main) {
-                    Timber.d("Response: %s", result)
-                    if (result.isSuccess) {
-                        loadNext.postValue(Event(Unit))
-                    } else {
-                        errorMessage.postValue(Event(result.message))
-                    }
-                    networkState.postValue(Event(NetworkState.LOADED))
+
+                val response = loginUseCase.execute(
+                    LoginUseCase.Params(
+                        badgeId ?: "",
+                        password ?: "",
+                        imei ?: ""
+                    )
+                )
+                if (response?.success == true) {
+                    loginUser()
+                } else {
+                    loginDataState.postValue(DataState.Error(response?.message))
                 }
-            } catch (it: Throwable) {
-                Timber.e(it)
-                networkState.postValue(Event(NetworkState.error(it)))
+            } catch (e: Exception) {
+                handleError(e, "Authentication error")
             }
         }
     }
+
+    private fun handleError(e: Exception, message: String? = "Error") {
+        Timber.e(e, message)
+        loginDataState.postValue(DataState.Error(e.localizedMessage))
+    }
+
+    private fun loginUser() {
+        viewModelScope.launch {
+            try {
+                setLoggedInUseCase.execute(SetLoggedInUseCase.Params(true))
+                loginDataState.postValue(DataState.Success(Unit))
+                navigateToNextScreen()
+            } catch (e: Exception) {
+                handleError(e, "Login User")
+            }
+        }
+    }
+
+    private fun navigateToNextScreen() {
+        goToSearchEvent.postValue(Event(Unit))
+    }
+
+    fun handleReset() {
+        //hideKeyBoard
+        hideKeyBoard.postValue(true)
+        goToReset.postValue(Event(Unit))
+
+    }
+
+    private fun meetsAllConditions(
+        badgeId: String?,
+        password: String?
+    ): Boolean {
+
+        if (badgeId.isNullOrEmpty() || password.isNullOrEmpty()) {
+            if (badgeId.isNullOrEmpty()) {
+                badgeIdError.postValue(context.getString(R.string.badge_id_required_message))
+            }
+
+            if (password.isNullOrEmpty()) {
+                passwordError.postValue(context.getString(R.string.password_required_message))
+            }
+            return false
+        }
+
+        return true
+    }
+
 
 }

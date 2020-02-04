@@ -12,9 +12,9 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.databinding.ActivityDeviceConfigBinding
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
+import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 
 @RuntimePermissions
@@ -26,13 +26,13 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         binding.includeProgress.root.visibility = View.VISIBLE
         initErrorDrawable(binding.includeError.imgError)
         if (!viewModel.checkIfFirst()) {
-            startNewActivity(SearchActivity::class.java, true)
+            startNewActivity(LoginActivity::class.java, true)
             return
         }
 
         viewModel.openSearchActivity().observe(this, Observer {
             hideLoading(binding.includeError.root)
-            startNewActivity(SearchActivity::class.java, true)
+            startNewActivity(LoginActivity::class.java, true)
         })
 
         viewModel.showDeviceError().observe(this, Observer {

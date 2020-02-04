@@ -20,8 +20,8 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 6
-        versionName "1.2.1"
+        versionCode 11
+        versionName "1.3.2"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
@@ -72,11 +72,14 @@ android {
 
         // Specific values
         if (name.contains("dev")) {
-            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
+            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:1448\"")
+            variant.buildConfigField("String", "BASE_AUTH_URL", "\"http://192.168.43.115:1449\"")
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
         } else if (name.contains("production")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
             variant.buildConfigField("String", "IMEI", "\"\"")
         }
     }
@@ -133,11 +136,13 @@ dependencies {
     // architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$archComponentsVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$archComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archComponentsVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$archComponentsVersion"
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
 //    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutine"
 

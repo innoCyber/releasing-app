@@ -52,4 +52,8 @@ object Constants{
     const val PLAY_STORE_URL_BASE = "https://play.google.com/store/apps/details?id="
     const val MARKET_URI_BASE = "market://details?id="
     const val PLAY_STORE_PACKAGE_NAME = "com.android.vending"
+
+    const val INVALID_ID = -1
+    const val DEBUG = "debug"
+    const val PASSWORD_LENGTH = 6
 }

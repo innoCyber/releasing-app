@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
+import ptml.releasing.adminlogin.viewmodel.LoginViewModel
 import ptml.releasing.app.di.mapkeys.ViewModelKey
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
@@ -14,9 +15,9 @@ import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.download_damages.viewmodel.DamageViewModel
 import ptml.releasing.internet_error_logs.view_model.ErrorLogsViewModel
-import ptml.releasing.login.viewmodel.LoginViewModel
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
 import ptml.releasing.quick_remarks.viewmodel.QuickRemarkViewModel
+import ptml.releasing.resetpassword.viewmodel.ResetPasswordViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -39,9 +40,6 @@ abstract class ViewModelModule {
     abstract fun bindConfigViewModel(myViewModel: ConfigViewModel): ViewModel
 
 
-
-
-
     @Binds
     @IntoMap
     @ViewModelKey(DamageViewModel::class)
@@ -52,7 +50,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     abstract fun bindSearchViewModel(myViewModel: SearchViewModel): ViewModel
-
 
 
     @Binds
@@ -92,4 +89,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ErrorLogsViewModel::class)
     abstract fun bindErrorLogsViewModel(viewModel: ErrorLogsViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ptml.releasing.login.viewmodel.LoginViewModel::class)
+    abstract fun bindLoginModelViewModel(viewModel: ptml.releasing.login.viewmodel.LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ResetPasswordViewModel::class)
+    abstract fun bindResetPasswordViewModel(viewModel: ResetPasswordViewModel): ViewModel
+
 }

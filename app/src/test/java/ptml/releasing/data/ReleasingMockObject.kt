@@ -2,7 +2,7 @@ package ptml.releasing.data
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ptml.releasing.configuration.models.*
+import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.base.BaseTest
@@ -10,7 +10,7 @@ import ptml.releasing.cargo_info.model.FormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.Option
 import ptml.releasing.cargo_search.model.Value
-import ptml.releasing.login.model.User
+import ptml.releasing.configuration.models.*
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.quick_remarks.model.QuickRemark

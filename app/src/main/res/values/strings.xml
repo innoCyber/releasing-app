@@ -193,7 +193,7 @@
     <string name="errors_present_in_form">Some error(s) are present in the form</string>
     <string name="confirm_action">Confirm Action</string>
     <string name="proceed_to_reset_msg">Are you sure you want to proceed to reset the form?</string>
-    <string name="yes">Yes</string>
+    <string name="yes">Yes</string>f
     <string name="no">No</string>
     <string name="admin_settings">Admin Settings</string>
     <string name="badge_id_hint">Badge ID</string>
@@ -223,7 +223,7 @@
     <string name="search_complete">Search complete</string>
     <string name="no_devices_found">No devices were found \nEnsure the device is within range</string>
     <string name="no_bt_message">No bluetooth functionality on your phone \nPlease contact the administrator</string>
-    <string name="no_operator_logged_in">No operator logged in</string>
+    <string name="no_operator_logged_in">No badge ID</string>
 
     <string name="network_state_wifi">Wi-Fi</string>
     <string name="network_state_mobile">3G/4G</string>
@@ -261,5 +261,21 @@
     <string name="share_with">Share with…</string>
     <string name="logs_exported_error_msg">Error occurred while exporting logs: %s</string>
     <string name="logs_exporting_msg">Exporting logs…</string>
+
+
+    <!--USER LOGIN-->
+    <string name="login_badge_id_hint">Badge ID</string>
+    <string name="login_password_hint">Password</string>
+    <string name="reset_password">Reset Password</string>
+
+    <string name="badge_id_required_message">A badge ID is required</string>
+    <string name="password_required_message">Password is required</string>
+    <string name="password_too_short_message">Your password should be at least 6 characters</string>
+    <string name="password_no_match_message">The passwords do not match</string>
+    <string name="login_loading_message">Please wait…</string>
+
+    <string name="forgot_new_password_hint">New password</string>
+    <string name="forgot_confirm_password_hint">Confirm password</string>
+    <string name="password_reset_success">Your password was reset successfully</string>
 
 </resources>

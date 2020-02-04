@@ -27,4 +27,7 @@
 
     <color name="form_textbox_color">#EBEBEB</color>
     <color name="colorDamageButtonText">#FFFFFF</color>
+
+    <color name="colorOnSearchBg">#FFFFFF</color>
+    <color name="colorSearchBg">#2A2A2A</color>
 </resources>
