@@ -11,7 +11,6 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.data.domain.usecase.ResetPasswordUseCase
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Constants.PASSWORD_LENGTH
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.extensions.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -118,8 +117,8 @@ class ResetPasswordViewModel @Inject constructor(
     ): Boolean {
 
         if (badgeId.isNullOrEmpty() ||
-            password.isNullOrEmpty() || password.length < PASSWORD_LENGTH ||
-            passwordConfirm.isNullOrEmpty() || passwordConfirm.length < PASSWORD_LENGTH ||
+            password.isNullOrEmpty() ||
+            passwordConfirm.isNullOrEmpty() ||
             password != passwordConfirm
         ) {
 

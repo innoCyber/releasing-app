@@ -1,6 +1,7 @@
 package ptml.releasing.login.view
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.runBlocking
 import ptml.releasing.BR
 import ptml.releasing.R
@@ -25,6 +26,18 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkIfLoggedIn()
+        binding.progressBar.progressRoot.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.progress_overlay
+            )
+        )
+        binding.progressBar.cardView.setCardBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.progress_overlay
+            )
+        )
         binding.viewModel = viewModel
         setupObservers()
     }

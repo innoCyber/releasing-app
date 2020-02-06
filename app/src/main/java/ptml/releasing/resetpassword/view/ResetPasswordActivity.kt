@@ -1,6 +1,7 @@
 package ptml.releasing.resetpassword.view
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
@@ -28,7 +29,18 @@ class ResetPasswordActivity : BaseActivity<ResetPasswordViewModel, ActivityReset
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.viewModel = viewModel
-
+        binding.progressBar.progressRoot.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.progress_overlay
+            )
+        )
+        binding.progressBar.cardView.setCardBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.progress_overlay
+            )
+        )
         viewModel.getExitState().observe(this) { event ->
             event?.getContentIfNotHandled()?.let {
                 finish()
