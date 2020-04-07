@@ -16,8 +16,8 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.CargoType
-import ptml.releasing.configuration.models.OperationStep
-import ptml.releasing.configuration.models.Terminal
+import ptml.releasing.configuration.models.ReleasingOperationStep
+import ptml.releasing.configuration.models.ReleasingTerminal
 import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.databinding.ActivityConfigBinding
@@ -28,9 +28,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private var cargoAdapter: ConfigSpinnerAdapter<CargoType>? = null
 
-    private var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>? = null
+    private var operationStepAdapter: ConfigSpinnerAdapter<ReleasingOperationStep>? = null
 
-    private var terminalAdapter: ConfigSpinnerAdapter<Terminal>? = null
+    private var terminalAdapter: ConfigSpinnerAdapter<ReleasingTerminal>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,8 +144,8 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun setConfig() {
         viewModel.setConfig(
-            binding.top.selectTerminalSpinner.selectedItem as Terminal?,
-            binding.top.selectOperationSpinner.selectedItem as OperationStep?,
+            binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?,
+            binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?,
             binding.top.selectCargoSpinner.selectedItem as CargoType?,
             binding.top.cameraSwitch.isChecked, (application as ReleasingApplication).provideImei()
         )
@@ -196,12 +196,12 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         }
     }
 
-    private fun setUpOperationStep(operationStepList: List<OperationStep>) {
+    private fun setUpOperationStep(operationStepList: List<ReleasingOperationStep>) {
         operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
         binding.top.selectOperationSpinner.adapter = operationStepAdapter
     }
 
-    private fun setUpTerminal(terminalList: List<Terminal>) {
+    private fun setUpTerminal(terminalList: List<ReleasingTerminal>) {
         terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, terminalList)
         binding.top.selectTerminalSpinner.adapter = terminalAdapter
     }

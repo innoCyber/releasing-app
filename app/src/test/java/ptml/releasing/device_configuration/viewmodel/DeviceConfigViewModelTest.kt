@@ -45,13 +45,13 @@ class DeviceConfigViewModelTest : BaseTest() {
 
         assertEquals(
             Unit,
-            this.deviceConfigViewModel.openSearchActivity.value,
+            this.deviceConfigViewModel.openSearchActivity.value?.peekContent(),
             "Verify the response returns a success"
         )
 
         assertEquals(
             NetworkState.LOADED,
-            this.deviceConfigViewModel.networkState.value,
+            this.deviceConfigViewModel.networkState.value?.peekContent(),
             "Network state should be loaded"
         )
     }
@@ -73,13 +73,13 @@ class DeviceConfigViewModelTest : BaseTest() {
 
         assertEquals(
             Unit,
-            deviceConfigViewModel.showDeviceError.value,
+            deviceConfigViewModel.showDeviceError.value?.peekContent(),
             "The response returns a failure"
         )
 
         assertEquals(
             NetworkState.LOADED,
-            this.deviceConfigViewModel.networkState.value,
+            this.deviceConfigViewModel.networkState.value?.peekContent(),
             "Network state should be loaded"
         )
 
@@ -101,15 +101,11 @@ class DeviceConfigViewModelTest : BaseTest() {
             "The response is null"
         )
 
-        assertEquals(
-            null,
-            deviceConfigViewModel.showDeviceError.value,
-            "The response is null"
-        )
+        assertEquals(null, deviceConfigViewModel.showDeviceError.value, "The response is null")
 
         assertEquals(
             NetworkState.error(getVerifyDeviceException()).throwable?.message,
-            deviceConfigViewModel.networkState.value?.throwable?.message,
+            deviceConfigViewModel.networkState.value?.peekContent()?.throwable?.message,
             "The url is caught"
         )
 

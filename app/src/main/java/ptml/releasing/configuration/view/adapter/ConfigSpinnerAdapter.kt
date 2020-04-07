@@ -10,10 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import ptml.releasing.R
+
 import ptml.releasing.configuration.models.BaseConfig
 
 class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<T>?) : ArrayAdapter<T>(context, id, list ?: mutableListOf()) where T : BaseConfig {
@@ -22,7 +22,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.spinner_single, parent, false)
+            view = inflater.inflate(R.layout.item_spinner, parent, false)
         }
         val textView = view!!.findViewById<TextView>(R.id.tv_category)
         val drawable =   VectorDrawableCompat.create(
@@ -39,7 +39,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         var view = convertView
         if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.spinner_single, parent, false)
+            view = inflater.inflate(R.layout.item_spinner, parent, false)
         }
 
 

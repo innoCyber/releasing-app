@@ -6,15 +6,13 @@ import kotlinx.coroutines.Deferred
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.base.BaseTest
+import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.data.*
 import java.io.IOException
-import kotlin.test.assertEquals
 
 
 @Suppress("UNCHECKED_CAST")
@@ -46,7 +44,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "Network state should be loaded",
-            this.viewModel.networkState.value, `is`(NetworkState.LOADED)
+            this.viewModel.networkState.value?.peekContent(), `is`(NetworkState.LOADED)
         )
 
     }
@@ -73,7 +71,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "Network state should be loaded",
-            this.viewModel.networkState.value, `is`(NetworkState.LOADED)
+            this.viewModel.networkState.value?.peekContent(), `is`(NetworkState.LOADED)
         )
 
     }
@@ -108,7 +106,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "Network state should be loaded",
-            this.viewModel.networkState.value,
+            this.viewModel.networkState.value?.peekContent(),
             `is`(NetworkState.LOADED)
         )
     }
@@ -143,12 +141,12 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "The response should return a success (true)",
-            viewModel.savedSuccess.value, `is`(true)
+            viewModel.savedSuccess.value?.peekContent(), `is`(true)
         )
 
         assertThat(
             "State should be loaded",
-            this.viewModel.networkState.value,
+            this.viewModel.networkState.value?.peekContent(),
             `is`(NetworkState.LOADED)
         )
 
@@ -172,7 +170,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "An IOException should be thrown",
-            this.viewModel.networkState.value?.throwable?.message,
+            this.viewModel.networkState.value?.peekContent()?.throwable?.message,
             `is`(NetworkState.error(IOException(SAVED_CONFIG_ERROR_MESSAGE)).throwable?.message)
         )
 

@@ -106,7 +106,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
 
         builderSingle.setNegativeButton(
             "cancel"
-        ) { dialog, which -> dialog.dismiss() }
+        ) { dialog, _ -> dialog.dismiss() }
 
         builderSingle.setAdapter(arrayAdapter) { dialog, which ->
             val address = arrayAdapter.getItem(which)!!.address
@@ -155,7 +155,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
                                     .setMessage(errorMessage)
                                     .setPositiveButton(
                                         android.R.string.ok
-                                    ) { dialog, which -> dialog.dismiss() }
+                                    ) { dialog, _ -> dialog.dismiss() }
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .show()
                             }

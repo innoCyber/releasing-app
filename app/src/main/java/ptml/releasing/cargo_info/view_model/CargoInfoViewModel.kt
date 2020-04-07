@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
-import ptml.releasing.app.form.FormSubmission
+import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
@@ -16,12 +16,14 @@ import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.damages.view.DamagesActivity
+import ptml.releasing.form.FormSubmission
+import ptml.releasing.form.models.QuickRemark
 import ptml.releasing.printer.model.Settings
-import ptml.releasing.quick_remarks.model.QuickRemark
 import timber.log.Timber
 import javax.inject.Inject
 
 class CargoInfoViewModel @Inject constructor(
+    val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
@@ -58,9 +60,10 @@ class CargoInfoViewModel @Inject constructor(
             val remarks = repository.getQuickRemarkAsync(imei)?.await()
             for (remark in remarks?.data ?: mutableListOf()) {
 
-                map[remark.id ?: return@launch] = remark
+                map[remark.id ?: return@launch] = formMappers.quickRemarkMapper.mapFromModel(remark)
             }
-            val wrapper = FormDataWrapper(map, formConfig)
+            val wrapper =
+                FormDataWrapper(map, formMappers.configureDeviceMapper.mapFromModel(formConfig))
             withContext(appCoroutineDispatchers.main) {
                 _formConfig.postValue(wrapper)
             }
@@ -92,8 +95,12 @@ class CargoInfoViewModel @Inject constructor(
                 formSubmission.submit()
                 val configuration = repository.getSavedConfigAsync()
                 val formSubmissionRequest = FormSubmissionRequest(
-                    formSubmission.valuesList,
-                    formSubmission.selectionList,
+                    formSubmission.valuesList.map {
+                        formMappers.formValueMapper.mapToModel(it)
+                    },
+                    formSubmission.selectionList.map {
+                        formMappers.formSelectionMapper.mapToModel(it)
+                    },
                     getDamages(),
                     configuration.cargoType.id, configuration.operationStep.id,
                     configuration.terminal.id, operator, cargoCode, cargoId, imei

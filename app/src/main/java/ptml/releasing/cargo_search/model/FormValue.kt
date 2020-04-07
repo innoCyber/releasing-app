@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.BaseModel
 
-data class Value(@SerializedName("value") val value: String?) : BaseModel(), Parcelable {
+data class FormValue(@SerializedName("value") val value: String?) : BaseModel(), Parcelable {
     override fun toString(): String {
         return "Value(value=$value) ${super.toString()}"
     }
@@ -25,9 +25,9 @@ data class Value(@SerializedName("value") val value: String?) : BaseModel(), Par
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<Value> = object : Parcelable.Creator<Value> {
-            override fun createFromParcel(source: Parcel): Value = Value(source)
-            override fun newArray(size: Int): Array<Value?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<FormValue> = object : Parcelable.Creator<FormValue> {
+            override fun createFromParcel(source: Parcel): FormValue = FormValue(source)
+            override fun newArray(size: Int): Array<FormValue?> = arrayOfNulls(size)
         }
     }
 }

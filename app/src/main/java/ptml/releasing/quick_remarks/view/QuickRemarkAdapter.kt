@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 import ptml.releasing.databinding.ItemQuickRemarkBinding
-import ptml.releasing.quick_remarks.model.QuickRemark
+import ptml.releasing.quick_remarks.model.ReleasingQuickRemark
 
 class QuickRemarkAdapter(val listener: QuickRemarkListener) : RecyclerView.Adapter<QuickRemarkViewHolder>() {
-    val remarkList = mutableListOf<QuickRemark?>()
+    val remarkList = mutableListOf<ReleasingQuickRemark?>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuickRemarkViewHolder(ItemQuickRemarkBinding.inflate(LayoutInflater.from(parent.context), parent, false), listener)
 
@@ -23,7 +23,7 @@ class QuickRemarkAdapter(val listener: QuickRemarkListener) : RecyclerView.Adapt
 
 
 class QuickRemarkViewHolder(val binding: ItemQuickRemarkBinding, val listener: QuickRemarkListener) : RecyclerView.ViewHolder(binding.root) {
-    fun performBind(item: QuickRemark?) {
+    fun performBind(item: ReleasingQuickRemark?) {
         binding.tvItem.text = item?.name
         binding.tvItem.isSelected = true
         binding.tvItemLayout.setOnClickListener {
@@ -33,6 +33,6 @@ class QuickRemarkViewHolder(val binding: ItemQuickRemarkBinding, val listener: Q
 }
 
 interface QuickRemarkListener {
-    fun onItemClick(item: QuickRemark?)
+    fun onItemClick(item: ReleasingQuickRemark?)
 }
 

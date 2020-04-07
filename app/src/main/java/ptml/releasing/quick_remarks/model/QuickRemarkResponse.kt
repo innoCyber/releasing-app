@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.BaseResponse
 
 
-data class QuickRemarkResponse(@SerializedName("data") val data: List<QuickRemark>) :
+data class QuickRemarkResponse(@SerializedName("data") val data: List<ReleasingQuickRemark>) :
     BaseResponse()

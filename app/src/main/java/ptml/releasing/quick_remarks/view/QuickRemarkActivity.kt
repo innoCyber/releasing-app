@@ -14,7 +14,7 @@ import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityQuickRemarkBinding
-import ptml.releasing.quick_remarks.model.QuickRemark
+import ptml.releasing.quick_remarks.model.ReleasingQuickRemark
 import ptml.releasing.quick_remarks.viewmodel.QuickRemarkViewModel
 import timber.log.Timber
 
@@ -22,7 +22,7 @@ import timber.log.Timber
 class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRemarkBinding>() {
 
     private val listener = object : QuickRemarkListener {
-        override fun onItemClick(item: QuickRemark?) {
+        override fun onItemClick(item: ReleasingQuickRemark?) {
             Timber.d("clicked: %s", item)
             notifyUser(binding.root, getString(R.string.quick_remark_click_message, item?.name))
         }

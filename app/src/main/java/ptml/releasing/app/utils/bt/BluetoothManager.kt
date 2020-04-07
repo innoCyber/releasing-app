@@ -92,9 +92,6 @@ class BluetoothManager(var activity: Activity) {
 
     }
 
-    fun pairDevice(device: BluetoothDevice){
-
-    }
 
     fun enable(enable: Boolean) {
         if (enable) {
@@ -199,7 +196,7 @@ class BluetoothManager(var activity: Activity) {
                 val buffer = ByteArray(1024)
                 try {
                     while (bluetoothAdapter?.isEnabled ==true) {
-                        val bytes = inputStream?.read(buffer)
+                        inputStream?.read(buffer)
                         outString += String(buffer, 0, 1024)
                     }
                 } catch (ioe: IOException) {

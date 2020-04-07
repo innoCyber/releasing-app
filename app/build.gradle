@@ -72,8 +72,8 @@ android {
 
         // Specific values
         if (name.contains("dev")) {
-            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.18.221:1448\"")
-            variant.buildConfigField("String", "BASE_AUTH_URL", "\"http://192.168.18.221:1449\"")
+            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:1448\"")
+            variant.buildConfigField("String", "BASE_AUTH_URL", "\"http://192.168.43.115:1449\"")
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
             variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
@@ -111,6 +111,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation project(':form')
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"

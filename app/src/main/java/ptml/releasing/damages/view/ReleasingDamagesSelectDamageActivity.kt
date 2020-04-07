@@ -24,7 +24,7 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.cargo_info.model.LARGE
 import ptml.releasing.cargo_info.model.SMALL
-import ptml.releasing.damages.model.AssignedDamage
+import ptml.releasing.damages.model.ReleasingAssignedDamage
 import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding
 import ptml.releasing.download_damages.model.Damage
@@ -78,7 +78,7 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 Timber.d("Damage: %s", d)
                 DamagesActivity.currentDamages.add(
-                    AssignedDamage(
+                    ReleasingAssignedDamage(
                         d.id ?: 0,
                         d.description,
                         "",
@@ -95,7 +95,7 @@ class ReleasingDamagesSelectDamageActivity :
             btnLow.setOnClickListener {
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
-                    AssignedDamage(
+                    ReleasingAssignedDamage(
                         d.id ?: 0,
                         d.description,
                         "",

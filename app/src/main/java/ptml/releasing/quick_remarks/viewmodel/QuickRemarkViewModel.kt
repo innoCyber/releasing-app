@@ -11,7 +11,7 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
-import ptml.releasing.quick_remarks.model.QuickRemark
+import ptml.releasing.quick_remarks.model.ReleasingQuickRemark
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,8 +21,8 @@ class QuickRemarkViewModel @Inject constructor(
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val response = MutableLiveData<List<QuickRemark>>()
-    fun  getResponse(): LiveData<List<QuickRemark>> = response
+    private val response = MutableLiveData<List<ReleasingQuickRemark>>()
+    fun getResponse(): LiveData<List<ReleasingQuickRemark>> = response
 
     private val networkState = MutableLiveData<Event<NetworkState>>()
     fun getNetworkState(): LiveData<Event<NetworkState>> = networkState
