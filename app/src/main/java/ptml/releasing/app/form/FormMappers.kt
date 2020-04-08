@@ -49,9 +49,9 @@ class ConfigureDeviceMapper(private val formDataMapper: FormDataMapper) :
 }
 
 class FormDataMapper(private val optionMapper: FormOptionMapper) :
-    FormModelMapper<ReleasingConfigureDeviceData, FormConfigureDeviceData> {
-    override fun mapFromModel(model: ReleasingConfigureDeviceData): FormConfigureDeviceData {
-        val response = FormConfigureDeviceData(
+    FormModelMapper<ReleasingConfigureDeviceData, FormConfiguration> {
+    override fun mapFromModel(model: ReleasingConfigureDeviceData): FormConfiguration {
+        val response = FormConfiguration(
             model.position,
             model.type,
             model.title,
@@ -64,7 +64,7 @@ class FormDataMapper(private val optionMapper: FormOptionMapper) :
         return response
     }
 
-    override fun mapToModel(model: FormConfigureDeviceData): ReleasingConfigureDeviceData {
+    override fun mapToModel(model: FormConfiguration): ReleasingConfigureDeviceData {
         val response = ReleasingConfigureDeviceData(
             model.position,
             model.type,

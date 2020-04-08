@@ -31,7 +31,9 @@ import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.*
-import ptml.releasing.form.models.FormConfigureDeviceData
+import ptml.releasing.form.models.FormConfiguration
+import ptml.releasing.form.models.Voyage
+import ptml.releasing.form.models.generateId
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
@@ -108,7 +110,7 @@ class CargoInfoActivity :
 
         }
 
-        override fun onDataChange(data: FormConfigureDeviceData?, change: Any?) {
+        override fun onDataChange(data: FormConfiguration?, change: Any?) {
 
         }
     }
@@ -354,10 +356,15 @@ class CargoInfoActivity :
 //        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
 //        Timber.w("From assets: %s", findCargoResponse)
 //          }
+
+        val voyages = listOf(Voyage("1994"), Voyage("4355"), Voyage("5454"))
+        val voyageMap = voyages.map {
+            it.generateId() to it
+        }.toMap()
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks)
+            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks, voyageMap)
 
         formBuilder
             ?.init(viewModel.formMappers.formPrefillMapper.mapFromModel(findCargoResponse!!))
