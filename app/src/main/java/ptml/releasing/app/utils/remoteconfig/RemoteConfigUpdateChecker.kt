@@ -38,6 +38,13 @@ class RemoteConfigUpdateChecker @Inject constructor(
         return shouldUpdate(localDamagesVersion, remoteDamagesVersion)
     }
 
+    fun shouldUpdateVoyages(): Boolean {
+        val localVoyageVersion = local.getVoyageVersion()
+        val remoteVoyageVersion = remoteConfigManger.voyageVersion
+        Timber.d("shouldUpdateVoyage(L-R): $localVoyageVersion - $remoteVoyageVersion")
+        return shouldUpdate(localVoyageVersion, remoteVoyageVersion)
+    }
+
     private fun shouldUpdate(localVersion: Long, remoteVersion: Long): Boolean {
         return remoteVersion > localVersion
     }

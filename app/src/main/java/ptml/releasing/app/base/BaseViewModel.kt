@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
 import ptml.releasing.app.utils.*
@@ -30,6 +32,9 @@ open class BaseViewModel @Inject constructor(
     @Inject
     lateinit var logOutUseCase: LogOutUseCase
 
+    @Inject
+    lateinit var voyageRepository: VoyageRepository
+
     protected val goToLogin = MutableLiveData<Event<Unit>>()
     fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
 
@@ -40,6 +45,9 @@ open class BaseViewModel @Inject constructor(
 
     private val _updateDamagesLoadingState = MutableLiveData<NetworkState>()
     val updateDamagesLoadingState: LiveData<NetworkState> = _updateDamagesLoadingState
+
+    private val _updateVoyagesLoadingState = MutableLiveData<NetworkState>()
+    val updateVoyagesLoadingState: LiveData<NetworkState> = _updateVoyagesLoadingState
 
     private val _showUpdateApp = SingleLiveEvent<Unit>()
     val showUpdateApp: LiveData<Unit> = _showUpdateApp
@@ -124,7 +132,6 @@ open class BaseViewModel @Inject constructor(
     }
 
 
-
     fun scanForSearch(scanned: String?) {
         _searchScanned.postValue(scanned)
     }
@@ -183,13 +190,15 @@ open class BaseViewModel @Inject constructor(
         val mustUpdateApp = updateChecker.mustUpdateApp()
         repository.setMustUpdateApp(mustUpdateApp)
         if (updateChecker.shouldUpdateDamages()) {
-            //start intent service to update damages
             _startDamagesUpdate.value = Unit
         }
 
         if (updateChecker.shouldUpdateQuickRemarks()) {
-            //start intent service to update quick remarks
             _startQuickRemarksUpdate.value = Unit
+        }
+
+        if (updateChecker.shouldUpdateVoyages()) {
+            updateVoyages()
         }
     }
 
@@ -236,8 +245,37 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
+    private fun updateVoyages() {
+        if (updatingVoyages()) {
+            Timber.d("Already updating voyages...")
+            return
+        }
+        _updateVoyagesLoadingState.postValue(NetworkState.LOADING)
+        viewModelScope.launch {
+            try {
+                withContext(appCoroutineDispatchers.db) {
+                    Timber.d("Updating voyages...")
+
+                    voyageRepository.downloadRecentVoyages()
+
+                    val voyageVersion = updateChecker.remoteConfigManger.voyageVersion
+                    Timber.d("Downloaded voyages, updating the local voyages version to $voyageVersion")
+                    repository.setVoyagesCurrentVersion(voyageVersion)
+                    _updateVoyagesLoadingState.postValue(NetworkState.LOADED)
+                }
+            } catch (t: Throwable) {
+                Timber.e(t, "Error occurred while trying to update voyages")
+                _updateVoyagesLoadingState.postValue(NetworkState.error(t))
+            }
+        }
+    }
+
     fun updatingDamages(): Boolean {
         return _updateDamagesLoadingState.value == NetworkState.LOADING
+    }
+
+    fun updatingVoyages(): Boolean {
+        return _updateVoyagesLoadingState.value == NetworkState.LOADING
     }
 
     fun updatingQuickRemarks(): Boolean {

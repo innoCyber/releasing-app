@@ -78,6 +78,7 @@ interface Repository {
     fun getImei():String?
 
     fun setDamagesCurrentVersion(currentVersion:Long)
+    fun setVoyagesCurrentVersion(currentVersion: Long)
 
     fun setQuickCurrentVersion(currentVersion:Long)
 

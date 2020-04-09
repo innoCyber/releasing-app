@@ -210,6 +210,22 @@ abstract class BaseActivity<V, D> :
                 if (it.status == Status.FAILED) {
                     notifyUser(getString(R.string.quick_remark_update_failed_msg))
                 }
+            }
+        })
+
+        viewModel.updateVoyagesLoadingState.observe(this, Observer {
+            if (it == NetworkState.LOADING) {
+                progressDialog?.setTitle(getString(R.string.update_voyage_title))
+                progressDialog?.setCancelable(false)
+                progressDialog?.setMessage(getString(R.string.update_voyage_message))
+                progressDialog?.show()
+            } else {
+                if (!viewModel.updatingVoyages()) {
+                    progressDialog?.dismiss()
+                }
+                if (it.status == Status.FAILED) {
+                    notifyUser(getString(R.string.voyage_update_failed_msg))
+                }
 
             }
         })

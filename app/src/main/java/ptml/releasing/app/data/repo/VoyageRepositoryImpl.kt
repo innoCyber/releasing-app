@@ -17,16 +17,20 @@ class VoyageRepositoryImpl(
 
     override suspend fun getRecentVoyages(): List<ReleasingVoyage> {
         return if (local.getRecentVoyages().isEmpty()) {
-            val deviceId = local.getIMEI()
-            val result = remote.getRemoteCaller().getRecentVoyages(deviceId)
-            val data = result.data?.map {
-                voyageMapper.mapFromModel(it)
-            } ?: listOf()
-            local.setRecentVoyages(data)
-            data
+            downloadRecentVoyages()
         } else {
             local.getRecentVoyages()
         }
+    }
+
+    override suspend fun downloadRecentVoyages(): List<ReleasingVoyage> {
+        val deviceId = local.getIMEI()
+        val result = remote.getRemoteCaller().getRecentVoyages(deviceId)
+        val data = result.data?.map {
+            voyageMapper.mapFromModel(it)
+        } ?: listOf()
+        local.setRecentVoyages(data)
+        return data
     }
 
     override suspend fun storeRecentVoyages(voyages: List<ReleasingVoyage>) {

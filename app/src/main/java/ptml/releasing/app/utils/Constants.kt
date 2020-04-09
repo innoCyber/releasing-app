@@ -29,6 +29,7 @@ object Constants{
 
 
     const val DEFAULT_DAMAGES_VERSION = 1L
+    const val DEFAULT_VOYAGE_VERSION = 1L
     const val DEFAULT_QUICK_REMARKS_VERSION = 1L
     const val DEFAULT_APP_VERSION = 1L
 
