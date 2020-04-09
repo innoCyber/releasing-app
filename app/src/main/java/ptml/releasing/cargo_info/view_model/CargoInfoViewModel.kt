@@ -2,27 +2,36 @@ package ptml.releasing.cargo_info.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.configuration.models.ReleasingConfigureDeviceData
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.FormSubmission
+import ptml.releasing.form.FormType
 import ptml.releasing.form.models.QuickRemark
+import ptml.releasing.form.models.Voyage
+import ptml.releasing.form.models.generateId
 import ptml.releasing.printer.model.Settings
 import timber.log.Timber
 import javax.inject.Inject
 
 class CargoInfoViewModel @Inject constructor(
+    private val voyageRepository: VoyageRepository,
     val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
@@ -53,17 +62,40 @@ class CargoInfoViewModel @Inject constructor(
         _goBack.postValue(Event(true))
     }
 
-    fun getFormConfig(imei: String) {
+    fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val map = mutableMapOf<Int, QuickRemark>()
+            val remarksMap = mutableMapOf<Int, QuickRemark>()
             val formConfig = repository.getFormConfigAsync().await()
             val remarks = repository.getQuickRemarkAsync(imei)?.await()
             for (remark in remarks?.data ?: mutableListOf()) {
-
-                map[remark.id ?: return@launch] = formMappers.quickRemarkMapper.mapFromModel(remark)
+                remarksMap[remark.id ?: return@launch] =
+                    formMappers.quickRemarkMapper.mapFromModel(remark)
             }
+
+            val form = if (findCargoResponse?.isSuccess != true) {
+                //add voyage form
+                val formData = formConfig.data.toMutableList()
+                formData.add(getVoyageForm())
+                formConfig.copy(data = formData)
+            } else {
+                formConfig
+            }
+            val voyages = if (findCargoResponse?.isSuccess != true) {
+                voyageRepository.getRecentVoyages().map {
+                    formMappers.voyagesMapper.mapFromModel(it)
+                }.map {
+                    it.generateId() to it
+                }.toMap()
+            } else {
+                null
+            }
+
             val wrapper =
-                FormDataWrapper(map, formMappers.configureDeviceMapper.mapFromModel(formConfig))
+                FormDataWrapper(
+                    remarksMap,
+                    formMappers.configureDeviceMapper.mapFromModel(form),
+                    voyages
+                )
             withContext(appCoroutineDispatchers.main) {
                 _formConfig.postValue(wrapper)
             }
@@ -77,6 +109,21 @@ class CargoInfoViewModel @Inject constructor(
                 _printerSettings.postValue(settings)
             }
         }
+    }
+
+    private fun getVoyageForm(): ReleasingConfigureDeviceData {
+        val data = ReleasingConfigureDeviceData(
+            position = Constants.VOYAGE_ID,
+            type = FormType.VOYAGE.type,
+            title = "Select Voyage",
+            required = true,
+            editable = false,
+            options = listOf(),
+            dataValidation = ""
+        )
+        data.id = Constants.VOYAGE_ID
+
+        return data
     }
 
     fun submitForm(
@@ -129,5 +176,16 @@ class CargoInfoViewModel @Inject constructor(
             formDamageList.add(damage.toFormDamage())
         }
         return formDamageList
+    }
+
+    fun storeLastSelectedVoyage(change: Any?) {
+        viewModelScope.launch {
+            withContext(appCoroutineDispatchers.db) {
+                (change as? Voyage)?.let {
+                    Timber.d("Storing last selected voyage: $it")
+                    voyageRepository.setLastSelectedVoyage(formMappers.voyagesMapper.mapToModel(it))
+                }
+            }
+        }
     }
 }

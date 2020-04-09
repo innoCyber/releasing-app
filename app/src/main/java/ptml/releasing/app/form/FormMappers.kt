@@ -1,5 +1,6 @@
 package ptml.releasing.app.form
 
+import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import ptml.releasing.cargo_info.model.ReleasingFormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.FormOption
@@ -24,7 +25,8 @@ data class FormMappers(
     val terminalMapper: TerminalMapper,
     val formSelectionMapper: FormSelectionMapper,
     val formValueMapper: FormValueMapper,
-    val quickRemarkMapper: QuickRemarkMapper
+    val quickRemarkMapper: QuickRemarkMapper,
+    val voyagesMapper: VoyagesMapper
 )
 
 //TODO: Clean up the data classes for form
@@ -225,5 +227,15 @@ class QuickRemarkMapper : FormModelMapper<ReleasingQuickRemark, QuickRemark> {
         val quickRemark = ReleasingQuickRemark(model.name)
         quickRemark.id = model.id
         return quickRemark
+    }
+}
+
+class VoyagesMapper : FormModelMapper<ReleasingVoyage, Voyage> {
+    override fun mapFromModel(model: ReleasingVoyage): Voyage {
+        return Voyage(model.voyageNumber)
+    }
+
+    override fun mapToModel(model: Voyage): ReleasingVoyage {
+        return ReleasingVoyage(model.voyageNumber)
     }
 }

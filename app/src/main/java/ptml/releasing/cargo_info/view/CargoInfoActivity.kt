@@ -32,8 +32,6 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.*
 import ptml.releasing.form.models.FormConfiguration
-import ptml.releasing.form.models.Voyage
-import ptml.releasing.form.models.generateId
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
@@ -48,6 +46,10 @@ class CargoInfoActivity :
         const val RESPONSE = "response"
         const val QUERY = "query"
         const val DAMAGES_RC = 1234
+    }
+
+    private val findCargoResponse by lazy {
+        intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
     }
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -111,7 +113,11 @@ class CargoInfoActivity :
         }
 
         override fun onDataChange(data: FormConfiguration?, change: Any?) {
-
+            Timber.d("Data changed: ${data?.id}")
+            if (data?.id == Constants.VOYAGE_ID) {
+                Timber.d("Data changed for voyage: $change")
+                viewModel.storeLastSelectedVoyage(change)
+            }
         }
     }
 
@@ -126,7 +132,10 @@ class CargoInfoActivity :
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getFormConfig() {
-        viewModel.getFormConfig((application as ReleasingApplication).provideImei())
+        viewModel.getFormConfig(
+            (application as ReleasingApplication).provideImei(),
+            findCargoResponse
+        )
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
@@ -250,7 +259,7 @@ class CargoInfoActivity :
             createForm(it)
         })
 
-        getFormConfig()
+        getFormConfigWithPermissionCheck()
 
         viewModel.printerSettings.observe(this, Observer {
             this.settings = it
@@ -349,22 +358,16 @@ class CargoInfoActivity :
 
     @VisibleForTesting
     fun createForm(wrapper: FormDataWrapper?) {
-        val findCargoResponse =
-            intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         Timber.d("From sever: %s", findCargoResponse)
         /*if (BuildConfig.DEBUG) {*/
 //        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
 //        Timber.w("From assets: %s", findCargoResponse)
 //          }
 
-        val voyages = listOf(Voyage("1994"), Voyage("4355"), Voyage("5454"))
-        val voyageMap = voyages.map {
-            it.generateId() to it
-        }.toMap()
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks, voyageMap)
+            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks, wrapper?.voyages)
 
         formBuilder
             ?.init(viewModel.formMappers.formPrefillMapper.mapFromModel(findCargoResponse!!))

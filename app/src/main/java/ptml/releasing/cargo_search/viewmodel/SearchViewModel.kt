@@ -8,6 +8,8 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.VoyageRepository
+import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Event
@@ -15,11 +17,15 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.FormOption
+import ptml.releasing.form.models.generateId
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
+    private val voyageRepository: VoyageRepository,
+    private val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
@@ -90,10 +96,27 @@ class SearchViewModel @Inject constructor(
                         _findCargoResponse.value = findCargoResponse
                     } else {
                         Timber.e("Find Cargo failed with message =%s", findCargoResponse?.message)
-
-                        _findCargoHolder.value = findCargoResponse
+                        val lastSelectedVoyage = voyageRepository.getLastSelectedVoyage()
+                        Timber.d("Last selected voyage: $lastSelectedVoyage")
+                        val formResponse = if (lastSelectedVoyage != null) {
+                            val voyageOption = FormOption(
+                                listOf(
+                                    formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage)
+                                        .generateId()
+                                )
+                            )
+                            voyageOption.id = Constants.VOYAGE_ID
+                            val options =
+                                findCargoResponse?.options?.toMutableList() ?: mutableListOf()
+                            options.add(voyageOption)
+                            val modifiedWithVoyage = findCargoResponse?.copy(options = options)
+                            modifiedWithVoyage
+                        } else {
+                            findCargoResponse
+                        }
+                        _findCargoHolder.value = formResponse
                         val cargoNotFoundResponse = CargoNotFoundResponse(
-                            findCargoResponse?.message,
+                            formResponse?.message,
                             Constants.SHIP_SIDE.toLowerCase(Locale.US) == config?.operationStep?.value?.toLowerCase(Locale.US)
                         )
                         _errorMessage.value = cargoNotFoundResponse
@@ -110,7 +133,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun continueToUploadCargo() {
-        val findCargoResponse = _findCargoResponse.value
+        val findCargoResponse = _findCargoHolder.value
         findCargoResponse?.cargoId = 0
         _findCargoResponse.value = findCargoResponse
     }

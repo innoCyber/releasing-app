@@ -69,6 +69,11 @@ class FormMapperModule {
     }
 
     @Provides
+    fun provideVoyages(): VoyagesMapper {
+        return VoyagesMapper()
+    }
+
+    @Provides
     fun provideFormMappers(
         configureDeviceMapper: ConfigureDeviceMapper,
         formPrefillMapper: FormPreFillModelMapper,
@@ -77,7 +82,8 @@ class FormMapperModule {
         terminalMapper: TerminalMapper,
         formSelectionMapper: FormSelectionMapper,
         formValueMapper: FormValueMapper,
-        quickRemarkMapper: QuickRemarkMapper
+        quickRemarkMapper: QuickRemarkMapper,
+        voyagesMapper: VoyagesMapper
     ): FormMappers {
         return FormMappers(
             configureDeviceMapper,
@@ -87,7 +93,8 @@ class FormMapperModule {
             terminalMapper,
             formSelectionMapper,
             formValueMapper,
-            quickRemarkMapper
+            quickRemarkMapper,
+            voyagesMapper
         )
     }
 }

@@ -55,9 +55,9 @@ open class PreferencesManagerImpl @Inject constructor(
         return setStringPreference(prefBaseServerUrl, url)
     }
 
-    override fun getLastSelectedVoyage(): ReleasingVoyage {
+    override fun getLastSelectedVoyage(): ReleasingVoyage? {
         return gson.fromJson(
-            getStringPreference(prefLastSelectedVoyage),
+            getStringPreference(prefLastSelectedVoyage, ""),
             ReleasingVoyage::class.java
         )
     }
@@ -68,7 +68,7 @@ open class PreferencesManagerImpl @Inject constructor(
 
     override fun getRecentVoyages(): List<ReleasingVoyage> {
         return gson.fromJson(
-            getStringPreference(prefRecentVoyages),
+            getStringPreference(prefRecentVoyages, "[]"),
             object : TypeToken<List<ReleasingVoyage>>() {}.type
         )
     }

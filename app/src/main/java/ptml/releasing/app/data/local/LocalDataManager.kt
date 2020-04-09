@@ -29,5 +29,5 @@ interface LocalDataManager {
     fun getRecentVoyages(): List<ReleasingVoyage>
     fun setRecentVoyages(voyages: List<ReleasingVoyage>)
     fun setLastSelectedVoyage(voyage: ReleasingVoyage)
-    fun getLastSelectedVoyage(): ReleasingVoyage
+    fun getLastSelectedVoyage(): ReleasingVoyage?
 }

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 
 data class _Result<T>(
     @SerializedName("success") val success: Boolean?,
-    @SerializedName("data") val body: T?,
+    @SerializedName("data") val data: T?,
     @SerializedName("message") val message: String?
 ) {
     constructor(success: Boolean?, message: String?) : this(success, null, message)
