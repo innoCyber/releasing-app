@@ -232,10 +232,10 @@ class QuickRemarkMapper : FormModelMapper<ReleasingQuickRemark, QuickRemark> {
 
 class VoyagesMapper : FormModelMapper<ReleasingVoyage, Voyage> {
     override fun mapFromModel(model: ReleasingVoyage): Voyage {
-        return Voyage(model.voyageNumber)
+        return Voyage(model.id, model.vesselName)
     }
 
     override fun mapToModel(model: Voyage): ReleasingVoyage {
-        return ReleasingVoyage(model.voyageNumber)
+        return ReleasingVoyage(model.id, model.vesselName)
     }
 }

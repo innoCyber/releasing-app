@@ -24,7 +24,6 @@ import ptml.releasing.form.FormSubmission
 import ptml.releasing.form.FormType
 import ptml.releasing.form.models.QuickRemark
 import ptml.releasing.form.models.Voyage
-import ptml.releasing.form.models.generateId
 import ptml.releasing.printer.model.Settings
 import timber.log.Timber
 import javax.inject.Inject
@@ -82,7 +81,7 @@ class CargoInfoViewModel @Inject constructor(
                 voyageRepository.getRecentVoyages().map {
                     formMappers.voyagesMapper.mapFromModel(it)
                 }.map {
-                    it.generateId() to it
+                    it.id to it
                 }.toMap()
             } else {
                 null
@@ -149,7 +148,7 @@ class CargoInfoViewModel @Inject constructor(
                     getDamages(),
                     configuration.cargoType.id, configuration.operationStep.id,
                     configuration.terminal.id, operator, cargoCode, cargoId,
-                    formSubmission.selectedVoyage?.voyageNumber,
+                    formSubmission.selectedVoyage?.vesselName,
                     imei
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()

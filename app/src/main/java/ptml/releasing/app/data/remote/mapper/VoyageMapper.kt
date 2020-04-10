@@ -11,6 +11,6 @@ import javax.inject.Inject
 class VoyageMapper @Inject constructor() : ModelMapper<VoyageRemote, ReleasingVoyage> {
 
     override fun mapFromModel(model: VoyageRemote): ReleasingVoyage {
-        return ReleasingVoyage(model.voyageNumber)
+        return ReleasingVoyage(model.id, model.vesselName)
     }
 }

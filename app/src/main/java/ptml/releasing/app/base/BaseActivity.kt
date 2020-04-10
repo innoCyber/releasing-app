@@ -235,7 +235,10 @@ abstract class BaseActivity<V, D> :
     }
 
     @NeedsPermission(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateQuickRemarksService() {
         val imei = (application as ReleasingApplication).provideImei()
@@ -243,7 +246,10 @@ abstract class BaseActivity<V, D> :
     }
 
     @NeedsPermission(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateDamagesService() {
         val imei = (application as ReleasingApplication).provideImei()
@@ -251,7 +257,10 @@ abstract class BaseActivity<V, D> :
     }
 
     @OnShowRationale(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun showPhoneStatePermissionRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
@@ -267,7 +276,10 @@ abstract class BaseActivity<V, D> :
     }
 
     @OnPermissionDenied(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun showDeniedForPhoneStatePermission() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
@@ -354,7 +366,12 @@ abstract class BaseActivity<V, D> :
 
 
     @SuppressLint("MissingPermission")
-    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     fun getIMEI() {
         imei = imeiHelper.getImei()
         viewModel.imei = imei
