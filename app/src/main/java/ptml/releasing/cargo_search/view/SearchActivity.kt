@@ -59,6 +59,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 //            binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
         })
 
+        viewModel.updateVoyages()
 
         viewModel.openAdMin.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {

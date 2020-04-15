@@ -272,7 +272,7 @@ open class BaseViewModel @Inject constructor(
         return _updateDamagesLoadingState.value == NetworkState.LOADING
     }
 
-    fun updatingVoyages(): Boolean {
+    private fun updatingVoyages(): Boolean {
         return _updateVoyagesLoadingState.value == NetworkState.LOADING
     }
 

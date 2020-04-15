@@ -347,11 +347,6 @@ abstract class BaseActivity<V, D> :
         viewModel.checkToShowUpdateAppDialog()
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.updateVoyages()
-    }
-
 
     @SuppressLint("MissingPermission")
     @NeedsPermission(
