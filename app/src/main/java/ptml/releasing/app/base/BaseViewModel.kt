@@ -47,8 +47,6 @@ open class BaseViewModel @Inject constructor(
     val updateDamagesLoadingState: LiveData<NetworkState> = _updateDamagesLoadingState
 
     private val _updateVoyagesLoadingState = MutableLiveData<NetworkState>()
-    val updateVoyagesLoadingState: LiveData<NetworkState> = _updateVoyagesLoadingState
-
     private val _showUpdateApp = SingleLiveEvent<Unit>()
     val showUpdateApp: LiveData<Unit> = _showUpdateApp
 
@@ -245,7 +243,7 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
-    private fun updateVoyages() {
+    fun updateVoyages() {
         if (updatingVoyages()) {
             Timber.d("Already updating voyages...")
             return
