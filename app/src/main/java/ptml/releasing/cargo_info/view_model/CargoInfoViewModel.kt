@@ -10,7 +10,6 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -25,6 +24,7 @@ import ptml.releasing.form.FormSubmission
 import ptml.releasing.form.FormType
 import ptml.releasing.form.models.QuickRemark
 import ptml.releasing.form.models.Voyage
+import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import ptml.releasing.printer.model.Settings
 import timber.log.Timber
 import javax.inject.Inject
@@ -123,7 +123,7 @@ class CargoInfoViewModel @Inject constructor(
 
     private fun getVoyageForm(): ReleasingConfigureDeviceData {
         val data = ReleasingConfigureDeviceData(
-            position = Constants.VOYAGE_ID,
+            position = VOYAGE_ID,
             type = FormType.VOYAGE.type,
             title = "Select Voyage",
             required = true,
@@ -131,7 +131,7 @@ class CargoInfoViewModel @Inject constructor(
             options = listOf(),
             dataValidation = ""
         )
-        data.id = Constants.VOYAGE_ID
+        data.id = VOYAGE_ID
 
         return data
     }

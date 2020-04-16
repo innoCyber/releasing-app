@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import permissions.dispatcher.RuntimePermissions
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
@@ -16,7 +15,6 @@ import ptml.releasing.databinding.ActivityVoyageBinding
 import ptml.releasing.voyage.viewmodel.VoyageViewModel
 import timber.log.Timber
 
-@RuntimePermissions
 class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
 
     private val listener = object : VoyageClickListener {
@@ -52,7 +50,7 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
                     showLoading(
                         binding.includeProgress.root,
                         binding.includeProgress.tvMessage,
-                        R.string.downloading_quick_remarks
+                        R.string.downloading_voyages
                     )
                     Timber.e("Loading...")
                 } else {

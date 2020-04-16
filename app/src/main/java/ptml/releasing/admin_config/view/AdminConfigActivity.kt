@@ -22,6 +22,7 @@ import ptml.releasing.download_damages.view.DamageActivity
 import ptml.releasing.internet_error_logs.view.ErrorLogsActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
+import ptml.releasing.voyage.view.VoyageActivity
 
 class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConfigBinding>() {
 
@@ -44,6 +45,16 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     startNewActivity(DamageActivity::class.java)
+                } else {
+                    showConfigurationErrorDialog()
+                }
+            }
+        })
+
+        viewModel.openVoyages.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    startNewActivity(VoyageActivity::class.java)
                 } else {
                     showConfigurationErrorDialog()
                 }
@@ -139,6 +150,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openQuickRemark()
         }
 
+        binding.includeAdminConfig.btnVoyages.setOnClickListener {
+            viewModel.openVoyage()
+        }
+
         binding.includeAdminConfig.btnErrorLogs.setOnClickListener {
             viewModel.openErrorLogs()
         }
@@ -179,15 +194,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     }
 
     private fun showConfigurationErrorDialog() {
-        /*     InfoConfirmDialog.showDialog(context = this,
-                     title = getString(R.string.config_error),
-                     message = getString(R.string.config_error_message),
-                     topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
-                 override fun onConfirm() {
-     //                    viewModel.openConfiguration()
-                 }
-             })*/
-
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.config_error),
             message = getString(R.string.config_error_message),

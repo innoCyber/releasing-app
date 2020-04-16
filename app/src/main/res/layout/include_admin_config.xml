@@ -82,6 +82,15 @@
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/btn_server" />
 
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_voyages"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/voyage_screen_title"
+            app:drawableStartCompat="@drawable/ic_voyage"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_quick_remarks" />
+
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton
             android:id="@+id/btn_error_logs"
@@ -90,7 +99,7 @@
             app:drawableStartCompat="@drawable/ic_view_logs"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
-            app:layout_constraintTop_toBottomOf="@id/btn_quick_remarks" />
+            app:layout_constraintTop_toBottomOf="@id/btn_voyages" />
 
         <ptml.releasing.app.views.SupportVectorDrawablesButton
             android:id="@+id/btn_enable_logs"

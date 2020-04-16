@@ -253,6 +253,7 @@
     <string name="update_voyage_message">Voyage update in progress</string>
     <string name="voyage_update_failed_msg">Failed to update voyage</string>
     <string name="downloading_quick_remarks">Downloading quick remarks</string>
+    <string name="downloading_voyages">Downloading voyages</string>
     <string name="view_logs">View Logs</string>
     <string name="activity_error_logs_title">Error Logs</string>
     <string name="no_error_logs">No error logs yet!</string>

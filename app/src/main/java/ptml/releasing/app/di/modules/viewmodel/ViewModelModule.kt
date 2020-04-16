@@ -18,6 +18,7 @@ import ptml.releasing.internet_error_logs.view_model.ErrorLogsViewModel
 import ptml.releasing.printer.viewmodel.PrinterSettingsViewModel
 import ptml.releasing.quick_remarks.viewmodel.QuickRemarkViewModel
 import ptml.releasing.resetpassword.viewmodel.ResetPasswordViewModel
+import ptml.releasing.voyage.viewmodel.VoyageViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -101,4 +102,8 @@ abstract class ViewModelModule {
     @ViewModelKey(ResetPasswordViewModel::class)
     abstract fun bindResetPasswordViewModel(viewModel: ResetPasswordViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(VoyageViewModel::class)
+    abstract fun bindVoyageViewModel(viewModel: VoyageViewModel): ViewModel
 }
