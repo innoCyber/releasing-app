@@ -281,5 +281,6 @@
     <string name="forgot_new_password_hint">New password</string>
     <string name="forgot_confirm_password_hint">Confirm password</string>
     <string name="password_reset_success">Your password was reset successfully</string>
+    <string name="voyage_screen_title">Voyages</string>
 
 </resources>

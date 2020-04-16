@@ -18,6 +18,7 @@ import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.configuration.models.ReleasingConfigureDeviceData
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.FormSubmission
@@ -69,7 +70,7 @@ class CargoInfoViewModel @Inject constructor(
                     formMappers.quickRemarkMapper.mapFromModel(remark)
             }
 
-            val form = if (findCargoResponse?.isSuccess != true) {
+            val form = if (shouldAddVoyage(findCargoResponse, formConfig)) {
                 //add voyage form
                 val formData = formConfig.data.toMutableList()
                 formData.add(getVoyageForm())
@@ -97,6 +98,18 @@ class CargoInfoViewModel @Inject constructor(
                 _formConfig.postValue(wrapper)
             }
         }
+    }
+
+    private fun shouldAddVoyage(
+        findCargoResponse: FindCargoResponse?,
+        formConfig: ConfigureDeviceResponse
+    ): Boolean {
+        return findCargoResponse?.isSuccess != true && containsNoVoyage(formConfig)
+    }
+
+    private fun containsNoVoyage(formConfig: ConfigureDeviceResponse): Boolean {
+        val voyageForm = formConfig.data.filter { it.type == FormType.VOYAGE.type }
+        return voyageForm.isEmpty()
     }
 
     fun getSettings() {
