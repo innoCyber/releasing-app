@@ -1,6 +1,7 @@
 package ptml.releasing.app.data.local
 
 import ptml.releasing.app.data.domain.model.login.LoginEntity
+import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 
 /**
  * Created by kryptkode on 10/23/2019.
@@ -24,4 +25,9 @@ interface LocalDataManager {
 
     fun getServerBaseUrl(): String
     fun setServerBaseUrl(url: String)
+
+    fun getRecentVoyages(): List<ReleasingVoyage>
+    fun setRecentVoyages(voyages: List<ReleasingVoyage>)
+    fun setLastSelectedVoyage(voyage: ReleasingVoyage)
+    fun getLastSelectedVoyage(): ReleasingVoyage?
 }

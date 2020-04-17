@@ -7,4 +7,5 @@ package ptml.releasing.app.data.remote
 object Endpoints {
     const val LOGIN = "AndroidAppDriverLogin"
     const val RESET_PASSWORD = "AndroidAppDriverResetPassword"
+    const val GET_RECENT_VOYAGES = "getRecentVoyages"
 }   

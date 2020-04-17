@@ -2,8 +2,10 @@ package ptml.releasing.app.data.local
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.data.domain.model.login.LoginEntity
+import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import javax.inject.Inject
 
 /**
@@ -53,4 +55,25 @@ open class PreferencesManagerImpl @Inject constructor(
         return setStringPreference(prefBaseServerUrl, url)
     }
 
+    override fun getLastSelectedVoyage(): ReleasingVoyage? {
+        return gson.fromJson(
+            getStringPreference(prefLastSelectedVoyage, ""),
+            ReleasingVoyage::class.java
+        )
+    }
+
+    override fun setLastSelectedVoyage(voyage: ReleasingVoyage) {
+        return setStringPreference(prefLastSelectedVoyage, gson.toJson(voyage))
+    }
+
+    override fun getRecentVoyages(): List<ReleasingVoyage> {
+        return gson.fromJson(
+            getStringPreference(prefRecentVoyages, "[]"),
+            object : TypeToken<List<ReleasingVoyage>>() {}.type
+        )
+    }
+
+    override fun setRecentVoyages(voyages: List<ReleasingVoyage>) {
+        return setStringPreference(prefRecentVoyages, gson.toJson(voyages))
+    }
 }

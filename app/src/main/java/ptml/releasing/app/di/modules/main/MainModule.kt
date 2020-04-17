@@ -5,6 +5,11 @@ import dagger.Provides
 import kotlinx.coroutines.Dispatchers
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.VoyageRepository
+import ptml.releasing.app.data.local.LocalDataManager
+import ptml.releasing.app.data.remote.RestClient
+import ptml.releasing.app.data.remote.mapper.VoyageMapper
+import ptml.releasing.app.data.repo.VoyageRepositoryImpl
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.local.ReleasingLocal
@@ -45,6 +50,15 @@ class MainModule {
             network = Dispatchers.IO,
             main = Dispatchers.Main
         )
+    }
+
+    @Provides
+    fun provideVoyageRepository(
+        localDataManager: LocalDataManager,
+        restClient: RestClient,
+        voyageMapper: VoyageMapper
+    ): VoyageRepository {
+        return VoyageRepositoryImpl(localDataManager, restClient, voyageMapper)
     }
 
 

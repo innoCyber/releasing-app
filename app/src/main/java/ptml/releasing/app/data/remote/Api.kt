@@ -2,6 +2,7 @@ package ptml.releasing.app.data.remote
 
 
 import ptml.releasing.app.data.remote.request.ResetPasswordRequest
+import ptml.releasing.app.data.remote.result.VoyageRemote
 import ptml.releasing.app.data.remote.result._Result
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,5 +24,10 @@ interface Api {
 
     @POST(Endpoints.RESET_PASSWORD)
     suspend fun resetPassword(@Body request: ResetPasswordRequest): _Result<Unit>
+
+    @GET(Endpoints.GET_RECENT_VOYAGES)
+    suspend fun getRecentVoyages(
+        @Query("imei") imei: String?
+    ): _Result<List<VoyageRemote>>
 
 }

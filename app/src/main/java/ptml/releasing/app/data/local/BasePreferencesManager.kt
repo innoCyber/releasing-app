@@ -13,6 +13,8 @@ abstract class BasePreferencesManager(protected val sharedPreferences: SharedPre
     protected val prefLoggedIn = "prefLoggedIn"
     protected val prefImei = "prefImei"
     protected val prefBaseServerUrl = "server_url"
+    protected val prefRecentVoyages = "prefRecentVoyages"
+    protected val prefLastSelectedVoyage = "prefLastSelectedVoyage"
     protected val defaultStringValue = "{}"
 
     protected fun setStringPreference(key: String, value: String) {
