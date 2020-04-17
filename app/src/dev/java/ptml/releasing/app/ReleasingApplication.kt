@@ -35,8 +35,8 @@ open class ReleasingApplication : DaggerApplication() {
     }
 
     private fun initLogger() {
+        Timber.plant(Timber.DebugTree())
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
 
         } else {
             Timber.plant(CrashReportingTree())

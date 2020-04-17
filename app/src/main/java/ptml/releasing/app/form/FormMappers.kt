@@ -137,8 +137,8 @@ class FormPreFillModelMapper(
 
     override fun mapFromModel(model: FindCargoResponse): FormPreFillResponse {
         return FormPreFillResponse(
-            model.message,
             model.isSuccess,
+            model.message,
             model.cargoId,
             0,
             model.barcode,
