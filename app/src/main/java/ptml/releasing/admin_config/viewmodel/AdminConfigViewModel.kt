@@ -2,6 +2,7 @@ package ptml.releasing.admin_config.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,6 +22,7 @@ class AdminConfigViewModel @Inject constructor(
     private val _openConfig = MutableLiveData<Event<Unit>>()
     private val _openPrinterSettings = MutableLiveData<Event<Unit>>()
     private val _openDownloadDamages = MutableLiveData<Event<Boolean>>()
+    private val _openVoyages = MutableLiveData<Event<Boolean>>()
     private val _openQuickRemark = MutableLiveData<Event<Boolean>>()
     private val _serverUrl = MutableLiveData<Event<String?>>()
     private val _openSearch = MutableLiveData<Event<Boolean>>()
@@ -36,6 +38,7 @@ class AdminConfigViewModel @Inject constructor(
     val openConfirmShowLogs: LiveData<Event<Boolean?>> = _openConfirmShowLogs
     val openConfig: LiveData<Event<Unit>> = _openConfig
     val openQuickRemark: LiveData<Event<Boolean>> = _openQuickRemark
+    val openVoyages: LiveData<Event<Boolean>> = _openVoyages
     val openDownloadDamages: LiveData<Event<Boolean>> = _openDownloadDamages
     val openPrinterSettings: LiveData<Event<Unit>> = _openPrinterSettings
     val openSearch: LiveData<Event<Boolean>> = _openSearch
@@ -76,6 +79,17 @@ class AdminConfigViewModel @Inject constructor(
             val configured = repository.isConfiguredAsync()
             withContext(appCoroutineDispatchers.main) {
                 _openQuickRemark.postValue(Event(configured))
+            }
+        }
+    }
+
+    fun openVoyage() {
+        viewModelScope.launch {
+            withContext(appCoroutineDispatchers.db) {
+                val configured = repository.isConfiguredAsync()
+                withContext(appCoroutineDispatchers.main) {
+                    _openVoyages.postValue(Event(configured))
+                }
             }
         }
     }

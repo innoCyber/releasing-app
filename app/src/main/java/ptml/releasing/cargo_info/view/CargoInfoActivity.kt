@@ -114,7 +114,7 @@ class CargoInfoActivity :
 
         override fun onDataChange(data: FormConfiguration?, change: Any?) {
             Timber.d("Data changed: ${data?.id}")
-            if (data?.id == Constants.VOYAGE_ID) {
+            if (data?.type == FormType.VOYAGE.type) {
                 Timber.d("Data changed for voyage: $change")
                 viewModel.storeLastSelectedVoyage(change)
             }

@@ -17,6 +17,7 @@ import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.FormOption
+import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -102,7 +103,7 @@ class SearchViewModel @Inject constructor(
                                         .id
                                 )
                             )
-                            voyageOption.id = Constants.VOYAGE_ID
+                            voyageOption.id = VOYAGE_ID
                             val options =
                                 findCargoResponse?.options?.toMutableList() ?: mutableListOf()
                             options.add(voyageOption)

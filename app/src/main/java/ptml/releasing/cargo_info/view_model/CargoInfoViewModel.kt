@@ -10,7 +10,6 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -18,12 +17,14 @@ import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.configuration.models.ReleasingConfigureDeviceData
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.FormSubmission
 import ptml.releasing.form.FormType
 import ptml.releasing.form.models.QuickRemark
 import ptml.releasing.form.models.Voyage
+import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import ptml.releasing.printer.model.Settings
 import timber.log.Timber
 import javax.inject.Inject
@@ -69,7 +70,7 @@ class CargoInfoViewModel @Inject constructor(
                     formMappers.quickRemarkMapper.mapFromModel(remark)
             }
 
-            val form = if (findCargoResponse?.isSuccess != true) {
+            val form = if (shouldAddVoyage(findCargoResponse, formConfig)) {
                 //add voyage form
                 val formData = formConfig.data.toMutableList()
                 formData.add(getVoyageForm())
@@ -99,6 +100,18 @@ class CargoInfoViewModel @Inject constructor(
         }
     }
 
+    private fun shouldAddVoyage(
+        findCargoResponse: FindCargoResponse?,
+        formConfig: ConfigureDeviceResponse
+    ): Boolean {
+        return findCargoResponse?.isSuccess != true && containsNoVoyage(formConfig)
+    }
+
+    private fun containsNoVoyage(formConfig: ConfigureDeviceResponse): Boolean {
+        val voyageForm = formConfig.data.filter { it.type == FormType.VOYAGE.type }
+        return voyageForm.isEmpty()
+    }
+
     fun getSettings() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             val settings = repository.getSettings()
@@ -110,7 +123,7 @@ class CargoInfoViewModel @Inject constructor(
 
     private fun getVoyageForm(): ReleasingConfigureDeviceData {
         val data = ReleasingConfigureDeviceData(
-            position = Constants.VOYAGE_ID,
+            position = VOYAGE_ID,
             type = FormType.VOYAGE.type,
             title = "Select Voyage",
             required = true,
@@ -118,7 +131,7 @@ class CargoInfoViewModel @Inject constructor(
             options = listOf(),
             dataValidation = ""
         )
-        data.id = Constants.VOYAGE_ID
+        data.id = VOYAGE_ID
 
         return data
     }

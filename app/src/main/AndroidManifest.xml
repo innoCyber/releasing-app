@@ -90,6 +90,11 @@
             android:name=".resetpassword.view.ResetPasswordActivity"
             android:theme="@style/AppTheme.UserAuth" />
 
+        <activity
+            android:name=".voyage.view.VoyageActivity"
+            android:label="@string/voyage_screen_title"
+            android:parentActivityName=".admin_config.view.AdminConfigActivity" />
+
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="d7e683318f33a8f9a4a4e0eddefb3b32c9ba1d67"/>
