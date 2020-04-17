@@ -22,7 +22,7 @@ class DamageViewModel @Inject constructor(
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val response = MutableLiveData<List<Damage>>()
+    val response = MutableLiveData<List<Damage>>()
     fun getResponse(): LiveData<List<Damage>> = response
 
     private val networkState = SingleLiveEvent<Event<NetworkState>>()

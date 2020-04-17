@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.BaseModel
 
-data class Option(@SerializedName("selected") val selected: List<Int>?) : BaseModel() {
+data class FormOption(@SerializedName("selected") val selected: List<Int>?) : BaseModel() {
     override fun toString(): String {
         return "Option(selected=$selected) ${super.toString()}"
     }
@@ -25,9 +25,9 @@ data class Option(@SerializedName("selected") val selected: List<Int>?) : BaseMo
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<Option> = object : Parcelable.Creator<Option> {
-            override fun createFromParcel(source: Parcel): Option = Option(source)
-            override fun newArray(size: Int): Array<Option?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<FormOption> = object : Parcelable.Creator<FormOption> {
+            override fun createFromParcel(source: Parcel): FormOption = FormOption(source)
+            override fun newArray(size: Int): Array<FormOption?> = arrayOfNulls(size)
         }
     }
 }

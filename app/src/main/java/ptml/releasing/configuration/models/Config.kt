@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.AppResponse
 import ptml.releasing.app.base.BaseModel
 import ptml.releasing.app.base.BaseResponse
-import ptml.releasing.app.form.adapter.SelectModel
 
 
 open class BaseConfig : BaseModel() {
@@ -45,7 +44,7 @@ class CargoType : BaseConfig() {
 
 }
 
-data class Terminal(
+data class ReleasingTerminal(
         @SerializedName("cargo_type")
         val categoryTypeId: Int
 ) : BaseConfig() {
@@ -57,7 +56,7 @@ data class Terminal(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Terminal) return false
+        if (other !is ReleasingTerminal) return false
         if (!super.equals(other)) return false
 
         if (categoryTypeId != other.categoryTypeId) return false
@@ -75,13 +74,13 @@ data class Terminal(
 }
 
 
-data class OperationStep(
+data class ReleasingOperationStep(
         @SerializedName("cargo_type")
         val cargo_type: Int
 ) : BaseConfig() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is OperationStep) return false
+        if (other !is ReleasingOperationStep) return false
         if (!super.equals(other)) return false
 
         if (cargo_type != other.cargo_type) return false
@@ -104,12 +103,12 @@ data class OperationStep(
 
 
 data class AdminConfigResponse(
-        @SerializedName("cargo_type")
+    @SerializedName("cargo_type")
         val cargoTypeList: List<CargoType>?,
-        @SerializedName("operation_step")
-        val operationStepList: List<OperationStep>?,
-        @SerializedName("terminal")
-        val terminalList: List<Terminal>?
+    @SerializedName("operation_step")
+    val operationStepList: List<ReleasingOperationStep>?,
+    @SerializedName("terminal")
+    val terminalList: List<ReleasingTerminal>?
 ) : AppResponse() {
 
 
@@ -144,10 +143,10 @@ data class AdminConfigResponse(
 }
 
 data class Configuration(
-        @SerializedName("terminal") val terminal: Terminal,
-        @SerializedName("operationStep") val operationStep: OperationStep,
-        @SerializedName("cargoType") val cargoType: CargoType,
-        @SerializedName("cameraEnabled") val cameraEnabled: Boolean
+    @SerializedName("terminal") val terminal: ReleasingTerminal,
+    @SerializedName("operationStep") val operationStep: ReleasingOperationStep,
+    @SerializedName("cargoType") val cargoType: CargoType,
+    @SerializedName("cameraEnabled") val cameraEnabled: Boolean
 ) : AppResponse() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -183,39 +182,28 @@ data class ConfigureDeviceParams(
         @SerializedName("imei") val imei: String
 )
 
-data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ConfigureDeviceData>) : BaseResponse() {
+data class ConfigureDeviceResponse(@SerializedName("data") val data: List<ReleasingConfigureDeviceData>) :
+    BaseResponse() {
     override fun toString(): String {
         return "ConfigureDeviceResponse(data=$data)"
     }
 }
 
-data class ConfigureDeviceData(
-        @SerializedName("order_id") val position: Int = 0,
-        @SerializedName("type") val type: String,
-        @SerializedName("title") val title: String,
-        @SerializedName("is_required") val required: Boolean,
-        @SerializedName("is_editable") val editable: Boolean,
-        @SerializedName("options") val options: List<Options>,
-        @SerializedName("data_validation") val dataValidation: String
+data class ReleasingConfigureDeviceData(
+    @SerializedName("order_id") val position: Int = 0,
+    @SerializedName("type") val type: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("is_required") val required: Boolean,
+    @SerializedName("is_editable") val editable: Boolean,
+    @SerializedName("options") val options: List<ReleasingOptions>,
+    @SerializedName("data_validation") val dataValidation: String
 ) : BaseModel() {
     override fun toString(): String {
         return "ConfigureDeviceData(position=$position, type='$type', title='$title', required=$required, editable=$editable, options=$options, dataValidation='$dataValidation') ${super.toString()}"
     }
 }
 
-data class Options(
+data class ReleasingOptions(
         @SerializedName("name") val name: String,
         @SerializedName("is_selected") val isSelected: Boolean
-) : BaseModel(), SelectModel {
-    var position = 0
-    override fun position() = position
-
-    override var checked: Boolean = isSelected
-
-    override fun text() = name
-
-    override fun id(): Int {
-        return id ?: 0
-    }
-
-}
+) : BaseModel()

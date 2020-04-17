@@ -22,13 +22,13 @@ class DeviceConfigViewModel @Inject constructor(
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val networkState = MutableLiveData<Event<NetworkState>>()
+    val networkState = MutableLiveData<Event<NetworkState>>()
     fun  getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
-    private val openSearchActivity = MutableLiveData<Event<Unit>>()
+    val openSearchActivity = MutableLiveData<Event<Unit>>()
     fun openSearchActivity(): LiveData<Event<Unit>> = openSearchActivity
 
-    private val showDeviceError = SingleLiveEvent<Event<Unit>>()
+    val showDeviceError = SingleLiveEvent<Event<Unit>>()
     fun showDeviceError(): LiveData<Event<Unit>> = showDeviceError
 
 

@@ -7,32 +7,32 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import dagger.android.support.DaggerAppCompatActivity;
+import java.util.LinkedList;
+import java.util.List;
+
 import ptml.releasing.BR;
 import ptml.releasing.R;
 import ptml.releasing.app.base.BaseActivity;
-import ptml.releasing.damages.model.AssignedDamage;
+import ptml.releasing.damages.model.ReleasingAssignedDamage;
 import ptml.releasing.damages.view_model.DummyViewModel;
 import ptml.releasing.databinding.ActivityReleasingDamagesBinding;
-import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleasingDamagesBinding> {
 
 
-
-    public static List<AssignedDamage> currentDamages = new LinkedList<AssignedDamage>();
+    public static List<ReleasingAssignedDamage> currentDamages = new LinkedList<ReleasingAssignedDamage>();
     @Nullable
     public static Integer typeContainer = 0;
     public static String currentDamageZone = ""; // R,T,L,D,F,B
@@ -61,13 +61,64 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
         currentDamagePoint = "";
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        refreshDamages();
+
+        if (currentDamages.size() == 0) {
+            setResult(0);
+            finish();
+        }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.releasing_damages_title);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
+
+        if (DamagesActivity.currentDamages.size() == 0)
+            addDamage();
+
+        refreshDamages();
+        setupListeners();
+    }
+
+    private void setupListeners() {
+
+
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(0);
+                finish();
+            }
+        });
+
+        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDamage();
+            }
+        });
+    }
+
+    void addDamage() {
+        startActivityForResult(new Intent(DamagesActivity.this, ReleasingDamagesSelectZoneActivity.class), 0);
+    }
+
     class CargoDamagesAdapter extends BaseAdapter {
 
         Context context;
-        List<AssignedDamage> damages;
+        List<ReleasingAssignedDamage> damages;
         private LayoutInflater inflater = null;
 
-        public CargoDamagesAdapter(Context context, List<AssignedDamage> damages) {
+        public CargoDamagesAdapter(Context context, List<ReleasingAssignedDamage> damages) {
 
             this.context = context;
             this.damages = damages;
@@ -217,56 +268,6 @@ public class DamagesActivity extends BaseActivity<DummyViewModel, ActivityReleas
             });
 
             return convertView;
-        }
-    }
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTitle(R.string.releasing_damages_title);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        }
-
-        if(DamagesActivity.currentDamages.size() == 0)
-            addDamage();
-
-        refreshDamages();
-        setupListeners();
-    }
-
-    private void setupListeners() {
-
-
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(0);
-                finish();
-            }
-        });
-
-        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addDamage();
-            }
-        });
-    }
-
-    void addDamage() {
-        startActivityForResult(new Intent(DamagesActivity.this, ReleasingDamagesSelectZoneActivity.class), 0);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        refreshDamages();
-
-        if(currentDamages.size() == 0) {
-            setResult(0);
-            finish();
         }
     }
 

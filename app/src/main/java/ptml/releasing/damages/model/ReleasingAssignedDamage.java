@@ -1,13 +1,14 @@
 package ptml.releasing.damages.model;
 
 import org.jetbrains.annotations.NotNull;
+
 import ptml.releasing.cargo_info.model.FormDamage;
 
 /**
  * Created by marcojacovone on 14/04/17.
  */
 
-public class AssignedDamage extends Damage {
+public class ReleasingAssignedDamage extends ReleasingDamage {
 
     private String damageRemarks;
     private int damageCount;
@@ -30,7 +31,7 @@ public class AssignedDamage extends Damage {
         this.size = size;
     }
 
-    public AssignedDamage(int id, String name, String damageRemarks, int damageCount, int containerType, String position, String location, String size) {
+    public ReleasingAssignedDamage(int id, String name, String damageRemarks, int damageCount, int containerType, String position, String location, String size) {
         super(id, name, containerType, position);
         this.damageRemarks = damageRemarks;
         this.damageCount = damageCount;

@@ -14,7 +14,7 @@
         android:padding="@dimen/constraint_default_margin_8dp"
         android:text="@string/app_name"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/colorGrayHint"
+        android:textColor="@color/colorGray"
         app:drawableEndCompat="@drawable/ic_arrow_drop_down" />
 
 

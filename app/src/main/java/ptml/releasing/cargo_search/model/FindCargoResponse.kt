@@ -9,16 +9,16 @@ data class FindCargoResponse(
     @SerializedName("cargo_id") var cargoId: Int,
     @SerializedName("type_container") val typeContainer: Int,
     @SerializedName("barcode") var barcode: String?,
-    @SerializedName("values") val values: List<Value>?,
-    @SerializedName("options") val options: List<Option>?
+    @SerializedName("values") val values: List<FormValue>?,
+    @SerializedName("options") val options: List<FormOption>?
 ) : BaseResponse(), Parcelable {
 
     constructor(source: Parcel) : this(
         source.readInt(),
         source.readInt(),
         source.readString(),
-        source.createTypedArrayList(Value.CREATOR),
-        source.createTypedArrayList(Option.CREATOR)
+        source.createTypedArrayList(FormValue.CREATOR),
+        source.createTypedArrayList(FormOption.CREATOR)
     )
 
     override fun describeContents() = 0

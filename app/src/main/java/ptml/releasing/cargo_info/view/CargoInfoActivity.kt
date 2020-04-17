@@ -19,7 +19,6 @@ import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.form.*
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
@@ -31,6 +30,8 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
+import ptml.releasing.form.*
+import ptml.releasing.form.models.FormConfigureDeviceData
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
@@ -104,6 +105,10 @@ class CargoInfoActivity :
         }
 
         override fun onEndLoad() {
+
+        }
+
+        override fun onDataChange(data: FormConfigureDeviceData?, change: Any?) {
 
         }
     }
@@ -352,10 +357,10 @@ class CargoInfoActivity :
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(wrapper?.configureDeviceData?.data, wrapper?.remarks)
+            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks)
 
         formBuilder
-            ?.init(findCargoResponse)
+            ?.init(viewModel.formMappers.formPrefillMapper.mapFromModel(findCargoResponse!!))
             ?.initializeData()
 
         binding.formContainer.addView(formView)

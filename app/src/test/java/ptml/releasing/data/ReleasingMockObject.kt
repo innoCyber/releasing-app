@@ -6,15 +6,15 @@ import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.base.BaseTest
-import ptml.releasing.cargo_info.model.FormSelection
+import ptml.releasing.cargo_info.model.ReleasingFormSelection
 import ptml.releasing.cargo_search.model.FindCargoResponse
-import ptml.releasing.cargo_search.model.Option
-import ptml.releasing.cargo_search.model.Value
+import ptml.releasing.cargo_search.model.FormOption
+import ptml.releasing.cargo_search.model.FormValue
 import ptml.releasing.configuration.models.*
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
-import ptml.releasing.quick_remarks.model.QuickRemark
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
+import ptml.releasing.quick_remarks.model.ReleasingQuickRemark
 import java.io.File
 import java.net.SocketTimeoutException
 
@@ -44,7 +44,11 @@ fun getLoginSuccess() = BaseResponse("", true)
 fun getLoginFail() = BaseResponse(LOGIN_FAILURE_MSG, false)
 
 fun getAdminConfigurationSuccess() =
-    AdminConfigResponse(listOf<CargoType>(), listOf<OperationStep>(), listOf<Terminal>())
+    AdminConfigResponse(
+        listOf<CargoType>(),
+        listOf<ReleasingOperationStep>(),
+        listOf<ReleasingTerminal>()
+    )
 
 fun getAdminConfigurationFail() = AdminConfigResponse(null, null, null)
 
@@ -64,15 +68,15 @@ fun mockConfiguration(): ConfigureDeviceResponse {
     return ConfigureDeviceResponse(mutableListOf())
 }
 
-fun mockTerminal(): Terminal {
-    val terminal = Terminal(2)
+fun mockTerminal(): ReleasingTerminal {
+    val terminal = ReleasingTerminal(2)
     terminal.id = MOCK_TERMINAL_ID
     terminal.value = MOCK_TERMINAL_VALUE
     return terminal
 }
 
-fun mockOperationStep(): OperationStep {
-    val operationStep = OperationStep(MOCK_OPERATION_STEP_CATEGORY_ID)
+fun mockOperationStep(): ReleasingOperationStep {
+    val operationStep = ReleasingOperationStep(MOCK_OPERATION_STEP_CATEGORY_ID)
     operationStep.value = MOCK_OPERATION_STEP_VALUE
     operationStep.id = MOCK_OPERATION_STEP_ID
     return operationStep
@@ -119,9 +123,9 @@ val findCargoResponse: FindCargoResponse by lazy {
     createFindCargoResponseSuccess()
 }
 
-val emptyValues = mapOf<Int?, Value>()
+val emptyValues = mapOf<Int?, FormValue>()
 
-val emptyOptions = mapOf<Int?, Option>()
+val emptyOptions = mapOf<Int?, FormOption>()
 
 
 fun createFindCargoResponseSuccess(): FindCargoResponse {
@@ -129,34 +133,34 @@ fun createFindCargoResponseSuccess(): FindCargoResponse {
     return Gson().fromJson(json, FindCargoResponse::class.java)
 }
 
-val emptyValuesList = listOf<Value>()
+val emptyValuesList = listOf<FormValue>()
 val emptyDamagesList = listOf<Damage>()
-val emptyFormSelection = listOf<FormSelection>()
+val emptyFormSelection = listOf<ReleasingFormSelection>()
 
-val quickRemarks: Map<Int, QuickRemark> by lazy {
+val quickRemarks: Map<Int, ReleasingQuickRemark> by lazy {
     createQuickRemarks()
 }
 
-val quickRemarks6: Map<Int, QuickRemark> by lazy {
+val quickRemarks6: Map<Int, ReleasingQuickRemark> by lazy {
     createQuickRemarks6()
 }
 
-private fun createQuickRemarks(): Map<Int, QuickRemark> {
+private fun createQuickRemarks(): Map<Int, ReleasingQuickRemark> {
     val json = getJson("quickRemarks.json")
     val remarks = Gson().fromJson(json, QuickRemarkResponse::class.java)
 
-    val map = mutableMapOf<Int, QuickRemark>()
+    val map = mutableMapOf<Int, ReleasingQuickRemark>()
     for (remark in remarks?.data ?: mutableListOf()) {
         map[remark.id ?: continue] = remark
     }
     return map
 }
 
-private fun createQuickRemarks6(): Map<Int, QuickRemark> {
+private fun createQuickRemarks6(): Map<Int, ReleasingQuickRemark> {
     val json = getJson("quickRemarks6.json")
     val remarks = Gson().fromJson(json, QuickRemarkResponse::class.java)
 
-    val map = mutableMapOf<Int, QuickRemark>()
+    val map = mutableMapOf<Int, ReleasingQuickRemark>()
     for (remark in remarks?.data ?: mutableListOf()) {
         map[remark.id ?: continue] = remark
     }
@@ -166,8 +170,8 @@ private fun createQuickRemarks6(): Map<Int, QuickRemark> {
 const val TEXT_BOX_ID = 2
 const val TEXT_BOX_TITLE = "Enter Grid"
 const val TEXT_BOX_VALIDATION = "alphanumeric"
-fun getTextBoxData(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun getTextBoxData(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         TEXT_BOX_ID,
         Constants.TEXT_BOX,
         TEXT_BOX_TITLE,
@@ -182,8 +186,8 @@ fun getTextBoxData(): ConfigureDeviceData {
 const val BUTTON_ID = 33
 const val BUTTON_NUMBER = 43
 const val BUTTON_TITLE = "Damages"
-fun buttonData(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun buttonData(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         BUTTON_ID,
         Constants.DAMAGES,
         BUTTON_TITLE,
@@ -197,8 +201,8 @@ fun buttonData(): ConfigureDeviceData {
 
 const val SINGLE_SELECT_ID = 33
 const val SINGLE_SELECT_TITLE = "Damages"
-fun getSingleDataWithOptions(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun getSingleDataWithOptions(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         SINGLE_SELECT_ID,
         Constants.SINGLE_SELECT,
         SINGLE_SELECT_TITLE,
@@ -209,8 +213,8 @@ fun getSingleDataWithOptions(): ConfigureDeviceData {
     )
 }
 
-fun getSingleDataNoOptions(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun getSingleDataNoOptions(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         SINGLE_SELECT_ID,
         Constants.SINGLE_SELECT,
         SINGLE_SELECT_TITLE,
@@ -221,8 +225,8 @@ fun getSingleDataNoOptions(): ConfigureDeviceData {
     )
 }
 
-fun getSingleDataOneOptions(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun getSingleDataOneOptions(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         SINGLE_SELECT_ID,
         Constants.SINGLE_SELECT,
         SINGLE_SELECT_TITLE,
@@ -242,14 +246,14 @@ val singleSelectOptions by lazy {
 const val OPTION_NAME = "Option name"
 const val OPTION_ID = 32
 val optionsSample by lazy {
-    val options = Options(OPTION_NAME, true)
+    val options = ReleasingOptions(OPTION_NAME, true)
     options.id = OPTION_ID
     options
 }
 
-fun provideSingleSelectOptions(): List<Options> {
+fun provideSingleSelectOptions(): List<ReleasingOptions> {
     val json = getJson("singleSelectOptions.json")
-    val type = object : TypeToken<List<Options>>() {}
+    val type = object : TypeToken<List<ReleasingOptions>>() {}
     return Gson().fromJson(json, type.type)
 }
 
@@ -260,8 +264,8 @@ val quickRemarkData by lazy {
 
 const val QUICK_REMARK_NAME = "Option name"
 const val QUICK_REMARK_ID = 32
-fun provideQuickRemarkData(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun provideQuickRemarkData(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         QUICK_REMARK_ID,
         Constants.QUICK_REMARKS,
         QUICK_REMARK_NAME,
@@ -275,8 +279,8 @@ fun provideQuickRemarkData(): ConfigureDeviceData {
 
 const val MULTI_SELECT_NAME = "Multiselect name"
 const val MULTI_SELECT_ID = 333
-fun provideMultiSelectData(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun provideMultiSelectData(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         MULTI_SELECT_ID,
         Constants.MULTI_SELECT,
         MULTI_SELECT_NAME,
@@ -288,8 +292,8 @@ fun provideMultiSelectData(): ConfigureDeviceData {
 }
 
 
-fun provideMultiSelectDataWithOneOption(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun provideMultiSelectDataWithOneOption(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         MULTI_SELECT_ID,
         Constants.MULTI_SELECT,
         MULTI_SELECT_NAME,
@@ -300,8 +304,8 @@ fun provideMultiSelectDataWithOneOption(): ConfigureDeviceData {
     )
 }
 
-fun provideMultiSelectDataNoOption(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun provideMultiSelectDataNoOption(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         MULTI_SELECT_ID,
         Constants.MULTI_SELECT,
         MULTI_SELECT_NAME,
@@ -312,9 +316,9 @@ fun provideMultiSelectDataNoOption(): ConfigureDeviceData {
     )
 }
 
-private fun provideMultiSelectOptions(): List<Options> {
+private fun provideMultiSelectOptions(): List<ReleasingOptions> {
     val json = getJson("multiSelectOptions.json")
-    val type = object : TypeToken<List<Options>>() {}
+    val type = object : TypeToken<List<ReleasingOptions>>() {}
     return Gson().fromJson(json, type.type)
 }
 
@@ -338,8 +342,8 @@ fun provideMultiSelectItemsList6(): List<Int> {
 
 const val CHECK_BOX_NAME = "Check name"
 const val CHECK_BOX_ID = 354
-fun provideCheckBoxData(): ConfigureDeviceData {
-    return ConfigureDeviceData(
+fun provideCheckBoxData(): ReleasingConfigureDeviceData {
+    return ReleasingConfigureDeviceData(
         CHECK_BOX_ID,
         Constants.CHECK_BOX,
         CHECK_BOX_NAME,
@@ -351,27 +355,27 @@ fun provideCheckBoxData(): ConfigureDeviceData {
 }
 
 
-val configureDeviceData: List<ConfigureDeviceData> by lazy {
+val configureDeviceData: List<ReleasingConfigureDeviceData> by lazy {
     provideConfigureDeviceData()
 }
 
 
-val configureDeviceDataNonRequired: List<ConfigureDeviceData> by lazy {
+val configureDeviceDataNonRequired: List<ReleasingConfigureDeviceData> by lazy {
     provideConfigureDeviceDataNonRequired()
 }
 
-val configureDeviceDataSomeRequired: List<ConfigureDeviceData> by lazy {
+val configureDeviceDataSomeRequired: List<ReleasingConfigureDeviceData> by lazy {
     provideConfigureDeviceDataSomeRequired()
 }
 
-val configureDeviceDataWithInvalidFormType: List<ConfigureDeviceData> by lazy {
+val configureDeviceDataWithInvalidFormType: List<ReleasingConfigureDeviceData> by lazy {
     configureDeviceDataWithInvalidFormType()
 }
 
 
-private fun configureDeviceDataWithInvalidFormType(): MutableList<ConfigureDeviceData> {
+private fun configureDeviceDataWithInvalidFormType(): MutableList<ReleasingConfigureDeviceData> {
     val list = configureDeviceData.toMutableList()
-    val configureDeviceData = ConfigureDeviceData(
+    val configureDeviceData = ReleasingConfigureDeviceData(
         2,
         Constants.UNKNOWN,
         "",
@@ -386,18 +390,18 @@ private fun configureDeviceDataWithInvalidFormType(): MutableList<ConfigureDevic
     return list
 }
 
-private fun provideConfigureDeviceData(): List<ConfigureDeviceData> {
+private fun provideConfigureDeviceData(): List<ReleasingConfigureDeviceData> {
     val json = getJson("setConfigDeviceSuccess.json")
 
     return Gson().fromJson(json, ConfigureDeviceResponse::class.java).data
 }
 
-private fun provideConfigureDeviceDataNonRequired(): List<ConfigureDeviceData> {
+private fun provideConfigureDeviceDataNonRequired(): List<ReleasingConfigureDeviceData> {
     val json = getJson("setConfigDeviceSuccessNonRequired.json")
     return Gson().fromJson(json, ConfigureDeviceResponse::class.java).data
 }
 
-private fun provideConfigureDeviceDataSomeRequired(): List<ConfigureDeviceData> {
+private fun provideConfigureDeviceDataSomeRequired(): List<ReleasingConfigureDeviceData> {
     val json = getJson("setConfigDeviceSuccessSomeRequired.json")
     return Gson().fromJson(json, ConfigureDeviceResponse::class.java).data
 }

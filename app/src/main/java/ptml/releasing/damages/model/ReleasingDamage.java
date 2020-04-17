@@ -4,10 +4,10 @@ package ptml.releasing.damages.model;
  * Created by marcojacovone on 31/03/17.
  */
 
-public class Damage {
+public class ReleasingDamage {
 
     @SuppressWarnings("unused")
-    private static final String TAG = Damage.class.getSimpleName();
+    private static final String TAG = ReleasingDamage.class.getSimpleName();
 
     private int id;
     private String name;
@@ -30,7 +30,7 @@ public class Damage {
         this.position = position;
     }
 
-    public Damage(int id, String name, int containerType, String position) {
+    public ReleasingDamage(int id, String name, int containerType, String position) {
         this.id = id;
         this.name = name;
         this.containerType = containerType;

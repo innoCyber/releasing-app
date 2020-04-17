@@ -21,22 +21,22 @@ class ConfigViewModel @Inject constructor(
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-    private val configResponse = MutableLiveData<AdminConfigResponse>()
+    val configResponse = MutableLiveData<AdminConfigResponse>()
     fun getConfigResponse(): LiveData<AdminConfigResponse> = configResponse
 
-    private val operationStepList = MutableLiveData<List<OperationStep>>()
-    fun getOperationStepList(): LiveData<List<OperationStep>> = operationStepList
+    private val operationStepList = MutableLiveData<List<ReleasingOperationStep>>()
+    fun getOperationStepList(): LiveData<List<ReleasingOperationStep>> = operationStepList
 
-    private val terminalList = MutableLiveData<List<Terminal>>()
-    fun getTerminalList(): LiveData<List<Terminal>> = terminalList
+    private val terminalList = MutableLiveData<List<ReleasingTerminal>>()
+    fun getTerminalList(): LiveData<List<ReleasingTerminal>> = terminalList
 
-    private val networkState = MutableLiveData<Event<NetworkState>>()
+    val networkState = MutableLiveData<Event<NetworkState>>()
     fun getNetworkState(): LiveData<Event<NetworkState>>  = networkState
 
-    private val savedSuccess = MutableLiveData<Event<Boolean>>()
+    val savedSuccess = MutableLiveData<Event<Boolean>>()
     fun getSavedSuccess(): LiveData<Event<Boolean>> = savedSuccess
 
-    private val configuration = MutableLiveData<Configuration>()
+    val configuration = MutableLiveData<Configuration>()
     fun getConfiguration(): LiveData<Configuration> = configuration
 
     fun getConfig(imei: String) {
@@ -72,8 +72,8 @@ class ConfigViewModel @Inject constructor(
     }
 
     fun setConfig(
-        terminal: Terminal?,
-        operationStep: OperationStep?,
+        terminal: ReleasingTerminal?,
+        operationStep: ReleasingOperationStep?,
         cargoType: CargoType?,
         checked: Boolean,
         imei: String
@@ -141,8 +141,8 @@ class ConfigViewModel @Inject constructor(
     }
 
 
-    private fun getOperationStepForCargo(cargoType: CargoType): MutableList<OperationStep> {
-        val list = mutableListOf<OperationStep>()
+    private fun getOperationStepForCargo(cargoType: CargoType): MutableList<ReleasingOperationStep> {
+        val list = mutableListOf<ReleasingOperationStep>()
         for (operationStep in configResponse.value?.operationStepList ?: mutableListOf()) {
             if (operationStep.cargo_type == cargoType.id) {
                 Timber.d("Operation step has  a category_id: %s", cargoType.id)
@@ -155,8 +155,8 @@ class ConfigViewModel @Inject constructor(
     }
 
 
-    private fun getTerminalsCargo(cargoType: CargoType): MutableList<Terminal> {
-        val list = mutableListOf<Terminal>()
+    private fun getTerminalsCargo(cargoType: CargoType): MutableList<ReleasingTerminal> {
+        val list = mutableListOf<ReleasingTerminal>()
         for (terminal in configResponse.value?.terminalList ?: mutableListOf()) {
             if (terminal.categoryTypeId == cargoType.id) {
                 Timber.d("terminal has  a category_id: %s", cargoType.id)

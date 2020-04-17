@@ -8,6 +8,7 @@ import ptml.releasing.app.data.domain.repository.ImeiRepository
 import ptml.releasing.app.data.local.ImeiRepositoryImpl
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.data.local.PreferencesManagerImpl
+import ptml.releasing.app.di.modules.form.FormMapperModule
 import ptml.releasing.app.di.modules.local.LocalModule
 import ptml.releasing.app.di.modules.main.MainModule
 import ptml.releasing.app.di.modules.network.NetworkModule
@@ -27,7 +28,8 @@ import ptml.releasing.resetpassword.model.ResetPasswordModule
         UiModule::class,
         MainModule::class,
         LoginModule::class,
-        ResetPasswordModule::class
+        ResetPasswordModule::class,
+        FormMapperModule::class
     ]
 )
 abstract class AppModule {
