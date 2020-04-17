@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
-import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
@@ -24,7 +23,6 @@ import java.util.*
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-    private val voyageRepository: VoyageRepository,
     private val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker

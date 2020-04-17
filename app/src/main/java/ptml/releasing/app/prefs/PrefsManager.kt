@@ -30,6 +30,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val APP_VERSION = "app_version_minimum"
         const val QUICK_REMARKS_VERSION = "quick_remarks_current_version"
         const val DAMAGES_VERSION = "damages_current_version"
+        const val VOYAGE_VERSION = "voyage_current_version"
         const val MUST_UPDATE_APP = "must_update_app"
         const val IMEI = "imei"
         const val INTERNET_ERROR_LOGGING_ENABLED = "internet_error_logging_enabled"
@@ -123,6 +124,14 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun getDamagesCurrentVersion(): Long {
         return sharedPreferences.getLong(DAMAGES_VERSION, Constants.DEFAULT_DAMAGES_VERSION)
+    }
+
+    override fun getVoyageVersion(): Long {
+        return sharedPreferences.getLong(VOYAGE_VERSION, Constants.DEFAULT_VOYAGE_VERSION)
+    }
+
+    override fun setVoyageCurrentVersion(currentVersion: Long) {
+        sharedPreferences.edit().putLong(VOYAGE_VERSION, currentVersion).apply()
     }
 
     override fun setQuickCurrentVersion(currentVersion: Long) {

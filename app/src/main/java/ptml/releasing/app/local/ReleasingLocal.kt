@@ -47,6 +47,14 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getDamagesVersion(): Long = prefs.getDamagesCurrentVersion()
 
+    override fun getVoyageVersion(): Long {
+        return prefs.getVoyageVersion()
+    }
+
+    override fun setVoyageCurrentVersion(currentVersion: Long) {
+        return prefs.setVoyageCurrentVersion(currentVersion)
+    }
+
     override fun setQuickCurrentVersion(currentVersion: Long) = prefs.setQuickCurrentVersion(currentVersion)
 
     override fun getQuickRemarksVersion(): Long = prefs.getQuickCurrentVersion()

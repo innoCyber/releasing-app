@@ -220,7 +220,8 @@ open class ReleasingRepository @Inject constructor(
     override fun getImei(): String? = local.getImei()
 
     override fun setDamagesCurrentVersion(currentVersion: Long) = local.setDamagesCurrentVersion(currentVersion)
-
+    override fun setVoyagesCurrentVersion(currentVersion: Long) =
+        local.setVoyageCurrentVersion(currentVersion)
     override fun setQuickCurrentVersion(currentVersion: Long) = local.setQuickCurrentVersion(currentVersion)
 
     override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)

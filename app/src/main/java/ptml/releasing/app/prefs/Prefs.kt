@@ -52,4 +52,6 @@ interface Prefs {
 
     fun isInternetErrorLoggingEnabled():Boolean
     fun setInternetErrorLoggingEnabled(enabled:Boolean)
+    fun getVoyageVersion(): Long
+    fun setVoyageCurrentVersion(currentVersion: Long)
 }

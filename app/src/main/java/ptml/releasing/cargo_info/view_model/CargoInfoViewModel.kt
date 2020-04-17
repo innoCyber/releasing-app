@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
-import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
@@ -31,7 +30,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class CargoInfoViewModel @Inject constructor(
-    private val voyageRepository: VoyageRepository,
     val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker

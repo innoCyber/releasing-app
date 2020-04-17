@@ -23,6 +23,8 @@ class RemoteConfigManager @Inject constructor() {
                 Constants.DEFAULT_QUICK_REMARKS_VERSION
             map[DAMAGES_VERSION] =
                 Constants.DEFAULT_DAMAGES_VERSION
+            map[VOYAGE_VERSION] =
+                Constants.DEFAULT_VOYAGE_VERSION
             return map
         }
 
@@ -35,6 +37,9 @@ class RemoteConfigManager @Inject constructor() {
 
     val damagesVersion: Long
         get() = remoteConfig.getLong(DAMAGES_VERSION)
+
+    val voyageVersion: Long
+        get() = remoteConfig.getLong(VOYAGE_VERSION)
 
     private val _loadingState = MutableLiveData<NetworkState>()
     val loadingState: LiveData<NetworkState> = _loadingState
@@ -87,7 +92,7 @@ class RemoteConfigManager @Inject constructor() {
     }
 
     private fun logValues() {
-        Timber.d("DAMAGES: $damagesVersion, QUICK: $quickRemarkVersion, APP_VERSION: $appVersion")
+        Timber.d("DAMAGES: $damagesVersion, QUICK: $quickRemarkVersion, APP_VERSION: $appVersion  VOYAGE_VERSION=$voyageVersion")
     }
 
     companion object {
@@ -95,6 +100,7 @@ class RemoteConfigManager @Inject constructor() {
         const val APP_VERSION = "app_version"
         const val QUICK_REMARKS_VERSION = "quick_remarks_version"
         const val DAMAGES_VERSION = "damages_version"
+        const val VOYAGE_VERSION = "voyage_version"
 
         const val ERROR_MESSAGE =
             "No configs were fetched from the backend and the local fetched configs have already been activated"

@@ -37,6 +37,9 @@ interface Local {
     fun setDamagesCurrentVersion(currentVersion:Long)
     fun getDamagesVersion():Long
 
+    fun setVoyageCurrentVersion(currentVersion: Long)
+    fun getVoyageVersion(): Long
+
     fun setQuickCurrentVersion(currentVersion:Long)
     fun getQuickRemarksVersion():Long
 
