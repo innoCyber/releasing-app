@@ -137,6 +137,8 @@ class FormPreFillModelMapper(
 
     override fun mapFromModel(model: FindCargoResponse): FormPreFillResponse {
         return FormPreFillResponse(
+            model.message,
+            model.isSuccess,
             model.cargoId,
             0,
             model.barcode,
@@ -147,6 +149,8 @@ class FormPreFillModelMapper(
 
     override fun mapToModel(model: FormPreFillResponse): FindCargoResponse {
         return FindCargoResponse(
+            model.message,
+            model.isSuccess,
             model.cargoId,
             0,
             model.barcode,
@@ -232,10 +236,10 @@ class QuickRemarkMapper : FormModelMapper<ReleasingQuickRemark, QuickRemark> {
 
 class VoyagesMapper : FormModelMapper<ReleasingVoyage, Voyage> {
     override fun mapFromModel(model: ReleasingVoyage): Voyage {
-        return Voyage(model.voyageNumber)
+        return Voyage(model.id, model.vesselName)
     }
 
     override fun mapToModel(model: Voyage): ReleasingVoyage {
-        return ReleasingVoyage(model.voyageNumber)
+        return ReleasingVoyage(model.id, model.vesselName)
     }
 }
