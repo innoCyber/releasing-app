@@ -23,7 +23,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(
+open class SearchViewModel @Inject constructor(
     private val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
@@ -38,8 +38,11 @@ class SearchViewModel @Inject constructor(
     private val _scan = MutableLiveData<Event<Unit>>()
     val scan: LiveData<Event<Unit>> = _scan
 
-    protected val _openDeviceConfiguration = MutableLiveData<Event<Unit>>()
+    private val _openDeviceConfiguration = MutableLiveData<Event<Unit>>()
     val openDeviceConfiguration: LiveData<Event<Unit>> = _openDeviceConfiguration
+
+    private val _openVoyage = MutableLiveData<Event<Unit>>()
+    val openVoyage: LiveData<Event<Unit>> = _openVoyage
 
 
     private val _networkState = MutableLiveData<Event<NetworkState>>()
@@ -163,6 +166,10 @@ class SearchViewModel @Inject constructor(
 
     fun openDeviceConfiguration() {
         _openDeviceConfiguration.value = Event(Unit)
+    }
+
+    fun handleNavVoyageClick() {
+        _openVoyage.postValue(Event(Unit))
     }
 
 
