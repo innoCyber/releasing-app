@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="ptml.releasing.cargo_search.viewmodel.SearchViewModel"/>
+            type="ptml.releasing.cargo_search.viewmodel.SearchViewModel" />
     </data>
 
 
@@ -58,6 +58,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_input"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/constraint_default_margin_8dp"
@@ -75,10 +76,10 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/round_rect_white"
                         android:hint="@string/search_hint"
-                        android:textCursorDrawable="@drawable/bg_search_cursor"
                         android:imeActionLabel="@string/verify"
                         android:inputType="text"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textCursorDrawable="@drawable/bg_search_cursor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,10 +88,10 @@
                     android:id="@+id/btn_verify_layout"
                     style="@style/RippleLayoutStyle.Configure"
                     android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_scan"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
                     app:layout_constraintTop_toBottomOf="@id/til_input"
-                    app:layout_constraintBottom_toTopOf="@id/tv_scan"
                     app:layout_constraintVertical_bias="0">
 
                     <ptml.releasing.app.views.SupportVectorDrawablesButton
@@ -100,25 +101,21 @@
                 </ptml.releasing.app.views.MaterialRippleLayout>
 
 
-
-
-
                 <TextView
                     android:id="@+id/tv_scan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/constraint_default_margin_8dp"
-                    android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
-                    tools:visibility="gone"
                     android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
+                    android:layout_marginBottom="@dimen/constraint_default_margin_8dp"
                     android:padding="@dimen/constraint_default_margin_4dp"
                     android:text="@string/scan_barcode"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/colorWhite"
+                    app:layout_constraintBottom_toTopOf="@id/img_qr_code_layout"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintBottom_toTopOf="@id/img_qr_code_layout"
-                    />
+                    tools:visibility="gone" />
 
                 <View
                     android:id="@+id/divider_l"
@@ -126,13 +123,13 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="@dimen/constraint_default_margin_8dp"
                     android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
-                    tools:visibility="gone"
                     android:background="@color/colorGray"
                     app:layout_constraintBottom_toBottomOf="@id/tv_scan"
                     app:layout_constraintEnd_toStartOf="@id/tv_scan"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
                     app:layout_constraintTop_toTopOf="@id/tv_scan"
-                    app:layout_constraintVertical_bias="0.55" />
+                    app:layout_constraintVertical_bias="0.55"
+                    tools:visibility="gone" />
 
                 <View
                     android:id="@+id/divider_r"
@@ -140,28 +137,28 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="@dimen/constraint_default_margin_8dp"
                     android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
-                    tools:visibility="gone"
                     android:background="@color/colorGray"
                     app:layout_constraintBottom_toBottomOf="@id/tv_scan"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintStart_toEndOf="@id/tv_scan"
                     app:layout_constraintTop_toTopOf="@id/tv_scan"
-                    app:layout_constraintVertical_bias="0.55" />
+                    app:layout_constraintVertical_bias="0.55"
+                    tools:visibility="gone" />
 
 
                 <ptml.releasing.app.views.MaterialRippleLayout
                     android:id="@+id/img_qr_code_layout"
                     style="@style/RippleLayoutStyle.Search"
-                    tools:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="@dimen/constraint_default_margin_16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/guideline_t">
+                    app:layout_constraintTop_toBottomOf="@id/guideline_t"
+                    tools:visibility="gone">
 
                     <ImageView
                         android:id="@+id/img_qr_code"
@@ -170,8 +167,6 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center" />
                 </ptml.releasing.app.views.MaterialRippleLayout>
-
-
 
 
                 <androidx.constraintlayout.widget.Guideline
