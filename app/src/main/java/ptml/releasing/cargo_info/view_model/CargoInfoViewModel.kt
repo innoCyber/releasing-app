@@ -78,15 +78,11 @@ class CargoInfoViewModel @Inject constructor(
             } else {
                 formConfig
             }
-            val voyages = if (findCargoResponse?.isSuccess != true) {
-                voyageRepository.getRecentVoyages().map {
-                    formMappers.voyagesMapper.mapFromModel(it)
-                }.map {
-                    it.id to it
-                }.toMap()
-            } else {
-                null
-            }
+            val voyages = voyageRepository.getRecentVoyages().map {
+                formMappers.voyagesMapper.mapFromModel(it)
+            }.map {
+                it.id to it
+            }.toMap()
 
             val wrapper =
                 FormDataWrapper(
