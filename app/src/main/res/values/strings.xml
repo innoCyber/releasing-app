@@ -269,7 +269,7 @@
 
 
     <!--USER LOGIN-->
-    <string name="login_badge_id_hint">Badge ID</string>
+    <string name="login_badge_id_hint">Username</string>
     <string name="login_password_hint">Password</string>
     <string name="reset_password">Reset Password</string>
 

@@ -5,7 +5,7 @@ import ptml.releasing.app.data.domain.model.ApiResult
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.data.remote.mapper.ApiResultMapper
-import ptml.releasing.app.data.remote.request.LoginRequest
+import ptml.releasing.app.data.remote.result._Result
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import javax.inject.Inject
 
@@ -26,18 +26,10 @@ class LoginRepositoryImpl @Inject constructor(
         imei: String
     ): ApiResult {
         return withContext(dispatchers.network) {
-            val result =
-                remote.authenticate(
-                    LoginRequest(
-                        badgeId,
-                        password,
-                        imei
-                    )
-                )
             withContext(dispatchers.db) {
                 local.setLoginData(LoginEntity(badgeId, password, imei))
             }
-            apiMapper.mapFromModel(result)
+            apiMapper.mapFromModel(_Result(true, "", null))
         }
     }
 

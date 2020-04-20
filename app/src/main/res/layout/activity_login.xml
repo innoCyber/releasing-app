@@ -65,7 +65,7 @@
                     android:id="@+id/badge_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:text="@={viewModel.badgeId}"
                     app:hideKeyboardOnInputDone="@{true}" />
 
@@ -81,6 +81,7 @@
                 android:layout_marginTop="@dimen/login_text_input_margin"
                 android:layout_marginEnd="@dimen/login_text_input_margin"
                 android:hint="@string/login_password_hint"
+                android:visibility="gone"
                 app:errorText="@{viewModel.passwordErrorState}"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
                 app:layout_constraintStart_toStartOf="@id/guideline_l"
