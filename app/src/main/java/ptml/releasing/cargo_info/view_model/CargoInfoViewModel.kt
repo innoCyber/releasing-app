@@ -157,7 +157,7 @@ class CargoInfoViewModel @Inject constructor(
                     getDamages(),
                     configuration.cargoType.id, configuration.operationStep.id,
                     configuration.terminal.id, operator, cargoCode, cargoId,
-                    formSubmission.selectedVoyage?.vesselName,
+                    formSubmission.selectedVoyage?.id,
                     imei
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()

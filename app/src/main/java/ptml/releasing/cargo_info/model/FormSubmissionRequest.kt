@@ -13,6 +13,6 @@ data class FormSubmissionRequest(
     @SerializedName("operator") val operator: String?,
     @SerializedName("cargo_code") val cargoCode: String?,
     @SerializedName("cargo_id") val cargoId: Int?,
-    @SerializedName("voyage") val voyage: String?,
+    @SerializedName("voyage") val voyageId: Int?,
     @SerializedName("imei") val imei: String?
 )
