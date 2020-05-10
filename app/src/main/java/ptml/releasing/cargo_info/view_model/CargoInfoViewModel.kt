@@ -134,8 +134,8 @@ class CargoInfoViewModel @Inject constructor(
 
     fun submitForm(
         formSubmission: FormSubmission,
+        findCargoResponse: FindCargoResponse?,
         cargoCode: String?,
-        cargoId: Int?,
         imei: String?
     ) {
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
@@ -155,8 +155,14 @@ class CargoInfoViewModel @Inject constructor(
                         formMappers.formSelectionMapper.mapToModel(it)
                     },
                     getDamages(),
-                    configuration.cargoType.id, configuration.operationStep.id,
-                    configuration.terminal.id, operator, cargoCode, cargoId,
+                    configuration.cargoType.id,
+                    configuration.operationStep.id,
+                    configuration.terminal.id,
+                    operator,
+                    cargoCode,
+                    findCargoResponse?.mrkNumber,
+                    findCargoResponse?.grimaldiContainer,
+                    findCargoResponse?.cargoId,
                     formSubmission.selectedVoyage?.id,
                     imei
                 )
