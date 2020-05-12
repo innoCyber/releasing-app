@@ -154,6 +154,8 @@ class FormPreFillModelMapper(
             model.cargoId,
             0,
             model.barcode,
+            "",
+            "",
             model.values?.map { formPrefillValueMapper.mapToModel(it) },
             model.options?.map { formPrefillOptionMapper.mapToModel(it) })
     }

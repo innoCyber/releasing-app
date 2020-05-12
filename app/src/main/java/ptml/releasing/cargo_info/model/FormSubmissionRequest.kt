@@ -12,7 +12,9 @@ data class FormSubmissionRequest(
     @SerializedName("terminal") val terminal: Int?,
     @SerializedName("operator") val operator: String?,
     @SerializedName("cargo_code") val cargoCode: String?,
+    @SerializedName("mrkno") var mrkNumber: String?,
+    @SerializedName("GrimandiContainer") var grimaldiContainer: String?,
     @SerializedName("cargo_id") val cargoId: Int?,
-    @SerializedName("voyage") val voyage: String?,
+    @SerializedName("voyage") val voyageId: Int?,
     @SerializedName("imei") val imei: String?
 )

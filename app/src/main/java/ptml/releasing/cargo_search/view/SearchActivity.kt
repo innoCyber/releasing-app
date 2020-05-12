@@ -32,6 +32,7 @@ import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
+import ptml.releasing.voyage.view.VoyageActivity
 import timber.log.Timber
 import java.util.*
 
@@ -123,6 +124,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             }
         })
 
+        viewModel.openVoyage.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this, VoyageActivity::class.java)
+                startActivity(intent)
+            }
+        })
 
         viewModel.searchScanned.observe(this, Observer {
             binding.appBarHome.content.includeSearch.editInput.setText(it)
@@ -431,6 +438,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 }
                 R.id.nav_device_configuration -> {
                     viewModel.openDeviceConfiguration()
+                }
+
+                R.id.nav_voyage -> {
+                    viewModel.handleNavVoyageClick()
                 }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)

@@ -78,15 +78,11 @@ class CargoInfoViewModel @Inject constructor(
             } else {
                 formConfig
             }
-            val voyages = if (findCargoResponse?.isSuccess != true) {
-                voyageRepository.getRecentVoyages().map {
-                    formMappers.voyagesMapper.mapFromModel(it)
-                }.map {
-                    it.id to it
-                }.toMap()
-            } else {
-                null
-            }
+            val voyages = voyageRepository.getRecentVoyages().map {
+                formMappers.voyagesMapper.mapFromModel(it)
+            }.map {
+                it.id to it
+            }.toMap()
 
             val wrapper =
                 FormDataWrapper(
@@ -138,8 +134,8 @@ class CargoInfoViewModel @Inject constructor(
 
     fun submitForm(
         formSubmission: FormSubmission,
+        findCargoResponse: FindCargoResponse?,
         cargoCode: String?,
-        cargoId: Int?,
         imei: String?
     ) {
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
@@ -159,9 +155,15 @@ class CargoInfoViewModel @Inject constructor(
                         formMappers.formSelectionMapper.mapToModel(it)
                     },
                     getDamages(),
-                    configuration.cargoType.id, configuration.operationStep.id,
-                    configuration.terminal.id, operator, cargoCode, cargoId,
-                    formSubmission.selectedVoyage?.vesselName,
+                    configuration.cargoType.id,
+                    configuration.operationStep.id,
+                    configuration.terminal.id,
+                    operator,
+                    cargoCode,
+                    findCargoResponse?.mrkNumber,
+                    findCargoResponse?.grimaldiContainer,
+                    findCargoResponse?.cargoId,
+                    formSubmission.selectedVoyage?.id,
                     imei
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()

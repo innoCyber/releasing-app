@@ -81,8 +81,6 @@ class CargoInfoActivity :
 
                 FormType.DAMAGES -> {
                     damageView = view
-                    val findCargoResponse = intent?.extras?.getBundle(Constants.EXTRAS)
-                        ?.getParcelable<FindCargoResponse>(RESPONSE)
                     DamagesActivity.typeContainer = findCargoResponse?.typeContainer
                     val intent = Intent(this@CargoInfoActivity, DamagesActivity::class.java)
                     startActivityForResult(
@@ -141,12 +139,10 @@ class CargoInfoActivity :
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun submitForm(formValidator: FormValidator) {
         val formSubmission = FormSubmission(formBuilder, formBuilder?.data, formValidator)
-        val findCargoResponse =
-            intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
         viewModel.submitForm(
             formSubmission,
+            findCargoResponse,
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY),
-            findCargoResponse?.cargoId,
             (application as ReleasingApplication).provideImei()
         )
     }

@@ -17,12 +17,13 @@ import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.FormOption
+import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(
+open class SearchViewModel @Inject constructor(
     private val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
@@ -37,8 +38,11 @@ class SearchViewModel @Inject constructor(
     private val _scan = MutableLiveData<Event<Unit>>()
     val scan: LiveData<Event<Unit>> = _scan
 
-    protected val _openDeviceConfiguration = MutableLiveData<Event<Unit>>()
+    private val _openDeviceConfiguration = MutableLiveData<Event<Unit>>()
     val openDeviceConfiguration: LiveData<Event<Unit>> = _openDeviceConfiguration
+
+    private val _openVoyage = MutableLiveData<Event<Unit>>()
+    val openVoyage: LiveData<Event<Unit>> = _openVoyage
 
 
     private val _networkState = MutableLiveData<Event<NetworkState>>()
@@ -54,7 +58,6 @@ class SearchViewModel @Inject constructor(
 
     private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     val errorMessage: LiveData<CargoNotFoundResponse> = _errorMessage
-
 
 
     fun openAdmin() {
@@ -88,34 +91,19 @@ class SearchViewModel @Inject constructor(
                     imei,
                     cargoNumber.trim()
                 )?.await()
+                val formResponse = addLastSelectedVoyage(findCargoResponse)
                 withContext(appCoroutineDispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
-                        Timber.v("findCargoResponse: %s", findCargoResponse)
-                        _findCargoResponse.value = findCargoResponse
+                        Timber.v("findCargoResponse: %s", formResponse)
+                        _findCargoResponse.value = formResponse
                     } else {
-                        Timber.e("Find Cargo failed with message =%s", findCargoResponse?.message)
-                        val lastSelectedVoyage = voyageRepository.getLastSelectedVoyage()
-                        Timber.d("Last selected voyage: $lastSelectedVoyage")
-                        val formResponse = if (lastSelectedVoyage != null) {
-                            val voyageOption = FormOption(
-                                listOf(
-                                    formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage)
-                                        .id
-                                )
-                            )
-                            voyageOption.id = VOYAGE_ID
-                            val options =
-                                findCargoResponse?.options?.toMutableList() ?: mutableListOf()
-                            options.add(voyageOption)
-                            val modifiedWithVoyage = findCargoResponse?.copy(options = options)
-                            modifiedWithVoyage
-                        } else {
-                            findCargoResponse
-                        }
+                        Timber.e("Find Cargo failed with message =%s", formResponse?.message)
                         _findCargoHolder.value = formResponse
                         val cargoNotFoundResponse = CargoNotFoundResponse(
                             formResponse?.message,
-                            Constants.SHIP_SIDE.toLowerCase(Locale.US) == config?.operationStep?.value?.toLowerCase(Locale.US)
+                            Constants.SHIP_SIDE.toLowerCase(Locale.US) == config?.operationStep?.value?.toLowerCase(
+                                Locale.US
+                            )
                         )
                         _errorMessage.value = cargoNotFoundResponse
                     }
@@ -127,6 +115,40 @@ class SearchViewModel @Inject constructor(
                     _networkState.value = Event(NetworkState.error(e))
                 }
             }
+        }
+    }
+
+    private suspend fun addLastSelectedVoyage(findCargoResponse: FindCargoResponse?): FindCargoResponse? {
+        val lastSelectedVoyage = voyageRepository.getLastSelectedVoyage()
+
+        Timber.d("Last selected voyage: $lastSelectedVoyage")
+        return if (lastSelectedVoyage != null) {
+            val voyageOption = FormOption(
+                listOf(
+                    formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage)
+                        .id
+                )
+            )
+            voyageOption.id = getVoyageId()
+            val options =
+                findCargoResponse?.options?.toMutableList() ?: mutableListOf()
+            options.add(voyageOption)
+            val modifiedWithVoyage = findCargoResponse?.copy(options = options)
+            modifiedWithVoyage
+        } else {
+            findCargoResponse
+        }
+    }
+
+    private suspend fun getVoyageId(): Int {
+        val form = repository.getFormConfigAsync().await()
+        val voyageForm = form.data.filter {
+            it.type == FormType.VOYAGE.type
+        }
+        return if (voyageForm.isNotEmpty()) {
+            voyageForm[0].id ?: VOYAGE_ID
+        } else {
+            VOYAGE_ID
         }
     }
 
@@ -144,6 +166,10 @@ class SearchViewModel @Inject constructor(
 
     fun openDeviceConfiguration() {
         _openDeviceConfiguration.value = Event(Unit)
+    }
+
+    fun handleNavVoyageClick() {
+        _openVoyage.postValue(Event(Unit))
     }
 
 
