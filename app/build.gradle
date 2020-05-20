@@ -9,10 +9,10 @@ apply plugin: 'io.fabric'
 android {
     signingConfigs {
         Releasing {
-            storeFile file('G:\\Android\\GrayStatic\\ReleasingNew\\keystore.jks')
-            storePassword 'grimaldi'
-            keyAlias = 'grimaldi'
-            keyPassword 'grimaldi'
+            storeFile file(getLocalProperty("KEYSTORE_FILE"))
+            storePassword getLocalProperty("KEYSTORE_PASSWORD")
+            keyAlias = getLocalProperty("KEYSTORE_KEY_ALIAS")
+            keyPassword getLocalProperty("KEYSTORE_KEY_PASSWORD")
         }
     }
     compileSdkVersion rootProject.compileSdkVersion
@@ -68,12 +68,12 @@ android {
     applicationVariants.all { variant ->
         def name = variant.getName()
         //default values
-        variant.buildConfigField("String", "IMEI", "\"861327032935756\"")
+        variant.buildConfigField("String", "IMEI", getLocalProperty("TEST_IMEI"))
 
         // Specific values
         if (name.contains("dev")) {
-            variant.buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:1448\"")
-            variant.buildConfigField("String", "BASE_AUTH_URL", "\"http://192.168.43.115:1449\"")
+            variant.buildConfigField("String", "BASE_URL", getLocalProperty("DEV_BASE_URL"))
+            variant.buildConfigField("String", "BASE_AUTH_URL", getLocalProperty("DEV_BASE_AUTH_URL"))
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
             variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
