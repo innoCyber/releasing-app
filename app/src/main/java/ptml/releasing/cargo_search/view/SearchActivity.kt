@@ -239,7 +239,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         val bundle = Bundle()
         bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
         bundle.putString(
-            CargoInfoActivity.QUERY,
+            CargoInfoActivity.CARGO_CODE,
             binding.appBarHome.content.includeSearch.editInput.text.toString()
         )
         val intent = Intent(this@SearchActivity, CargoInfoActivity::class.java)

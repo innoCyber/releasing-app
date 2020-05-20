@@ -22,7 +22,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES = "damages"
         const val SAVED_CONFIG = "saved_config"
         const val DEVICE_CONFIG = "device_config"
-        const val SETTINGS = "settings"
+        const val PRINTER_SETTINGS = "settings"
         const val OPERATOR_NAME = "operator_name"
         const val SERVER_URL = "server_url"
         const val QUICK_REMARK = "quick_remark"
@@ -86,12 +86,15 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         sharedPreferences.edit().putString(DEVICE_CONFIG, gson.toJson(response)).apply()
     }
 
-    override fun saveSettings(settings: Settings?) {
-        sharedPreferences.edit().putString(SETTINGS, gson.toJson(settings)).apply()
+    override fun savePrinterSettings(settings: Settings?) {
+        sharedPreferences.edit().putString(PRINTER_SETTINGS, gson.toJson(settings)).apply()
     }
 
-    override fun getSettings(): Settings {
-        return gson.fromJson(sharedPreferences.getString(SETTINGS, "{}"), Settings::class.java)
+    override fun getPrinterBarcodeSettings(): Settings {
+        return gson.fromJson(
+            sharedPreferences.getString(PRINTER_SETTINGS, "{}"),
+            Settings::class.java
+        )
     }
 
     override fun getOperatorName(): String? {

@@ -44,7 +44,7 @@ class CargoInfoActivity :
 
     companion object {
         const val RESPONSE = "response"
-        const val QUERY = "query"
+        const val CARGO_CODE = "query"
         const val DAMAGES_RC = 1234
     }
 
@@ -53,12 +53,12 @@ class CargoInfoActivity :
     }
 
     private lateinit var bluetoothManager: BluetoothManager
-    private var settings: Settings? = null
+    private var printerBarcodeSettings: Settings? = null
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
 
-    var validatorListener = object : FormValidator.ValidatorListener {
+    private var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
             val msg = getString(R.string.errors_present_in_form)
             notifyUser(binding.root, msg)
@@ -72,7 +72,7 @@ class CargoInfoActivity :
                 FormType.PRINTER -> {
 
                     printerView = view
-                    viewModel.getSettings()
+                    viewModel.onPrintBarcode()
                 }
 
                 FormType.IMAGES -> {
@@ -142,27 +142,22 @@ class CargoInfoActivity :
         viewModel.submitForm(
             formSubmission,
             findCargoResponse,
-            intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY),
+            intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
             (application as ReleasingApplication).provideImei()
         )
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    fun handlePrint(settings: Settings?) {
+    fun printBarcode(barcode: String) {
         printerView?.isEnabled = false
         val t = Thread(Runnable {
             try {
                 /*  val db = ReleasingDBAdapter(this@ReleasingActivity)
                   db.open()*/
 
-                val macAddress = settings?.currentPrinter
-                val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
-                val findCargoResponse =
-                    intent?.extras?.getBundle(Constants.EXTRAS)
-                        ?.getParcelable<FindCargoResponse>(RESPONSE)
-                val barcode = findCargoResponse?.barcode
+                val macAddress = printerBarcodeSettings?.currentPrinter
                 val labelCpclData =
-                    settings?.labelCpclData?.replace("var_barcode", barcode ?: input ?: "")
+                    printerBarcodeSettings?.labelCpclData?.replace("var_barcode", barcode)
                 /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
                 Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
@@ -177,19 +172,6 @@ class CargoInfoActivity :
                 // This prints the label.
 
                 // Send the data to printer as a byte array.
-                /* labelCpclData = "! 0 200 200 406 1\n" +
-                         "PW 480\n" +
-                         "TONE 0\n" +
-                         "SPEED 4\n" +
-                         "ON-FEED IGNORE\n" +
-                         "NO-PACE\n" +
-                         "BAR-SENSE\n" +
-                         "T 4 0 179 47 PTML\n" +
-                         "BT 7 0 6\n" +
-                         "B 39 1 30 216 31 134 XXXB0005643\n" +
-                         "FORM\n" +
-                         "PRINT"*/
-//                labelCpclData = "Hello World"
                 thePrinterConn.write(labelCpclData?.toByteArray())
 
                 // Make sure the data got to the printer before closing the connection
@@ -229,7 +211,7 @@ class CargoInfoActivity :
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
         DamagesActivity.resetValues() //reset the static values
-        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
+        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
         binding.tvNumber.text = input
 
         bluetoothManager = BluetoothManager(this)
@@ -257,9 +239,9 @@ class CargoInfoActivity :
 
         getFormConfigWithPermissionCheck()
 
-        viewModel.printerSettings.observe(this, Observer {
-            this.settings = it
-            handleSelectPrinterClick(it)
+        viewModel.printerBarcodeSettings.observe(this, Observer {
+            this.printerBarcodeSettings = it
+            tryToPrintIfPermissionsAreGranted()
         })
 
         viewModel.networkState.observe(this, Observer {event->
@@ -330,8 +312,7 @@ class CargoInfoActivity :
             if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
     }
 
-    private fun handleSelectPrinterClick(settings: Settings?) {
-//        handlePrintWithPermissionCheck(settings)
+    private fun tryToPrintIfPermissionsAreGranted() {
         if (bluetoothManager.bluetoothAdapter == null) {
             showErrorDialog(getString(R.string.no_bt_message))
             Timber.e("No Bluetooth device")
@@ -339,7 +320,7 @@ class CargoInfoActivity :
         }
 
         if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
-            handlePrintWithPermissionCheck(settings)
+            printBarcodeWithPermissionCheck(findCargoResponse?.barcode ?: "")
         } else {
             attemptToTurnBluetoothOn()
         }
@@ -355,11 +336,6 @@ class CargoInfoActivity :
     @VisibleForTesting
     fun createForm(wrapper: FormDataWrapper?) {
         Timber.d("From sever: %s", findCargoResponse)
-        /*if (BuildConfig.DEBUG) {*/
-//        findCargoResponse = FormLoader.loadFindCargoResponseFromAssets(applicationContext)
-//        Timber.w("From assets: %s", findCargoResponse)
-//          }
-
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
@@ -519,8 +495,7 @@ class CargoInfoActivity :
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PrinterSettingsActivity.RC_BT) {
             if (resultCode == Activity.RESULT_OK) {
-                //populate devices
-                handlePrintWithPermissionCheck(settings)
+                printBarcodeWithPermissionCheck(findCargoResponse?.barcode ?: "")
             } else {
                 showTurnBlueToothPrompt()
             }
