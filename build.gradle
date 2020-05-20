@@ -82,4 +82,15 @@ ext {
     robolectricVersion = "4.3"
     coreTestVersion = "1.0.0"
     truthVersion = "1.0"
+
+    getLocalProperty = { propertyKey ->
+        Properties properties = new Properties()
+        File propertiesFile = project.rootProject.file('local.properties')
+        if (propertiesFile.canRead()) {
+            properties.load(new FileInputStream(propertiesFile))
+            return properties[propertyKey]
+        } else {
+            throw new GradleException("Could not read local.properties!")
+        }
+    }
 }

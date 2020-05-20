@@ -1,3 +1,13 @@
 include ':app'
 include ':form'
-project(':form').projectDir = new File('G:\\Android\\Form\\form')
+ext.getLocalProperty = { propertyKey ->
+    Properties properties = new Properties()
+    File propsFile = new File("local.properties")
+    if (propsFile.canRead()) {
+        properties.load(new FileInputStream(propsFile))
+        return properties[propertyKey]
+    } else {
+        throw new GradleException("Could not read local.properties!")
+    }
+}
+project(':form').projectDir = new File(ext.getLocalProperty("FORM_MODULE"))
