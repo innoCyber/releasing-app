@@ -53,8 +53,8 @@ class CargoInfoViewModel @Inject constructor(
     private val _formConfig = MutableLiveData<FormDataWrapper>()
     val formConfig: LiveData<FormDataWrapper> = _formConfig
 
-    private val _printerSettings = MutableLiveData<Settings>()
-    val printerSettings: LiveData<Settings> = _printerSettings
+    private val _printerBarcodeSettings = MutableLiveData<Settings>()
+    val printerBarcodeSettings: LiveData<Settings> = _printerBarcodeSettings
 
     fun goBack() {
         _goBack.postValue(Event(true))
@@ -108,11 +108,11 @@ class CargoInfoViewModel @Inject constructor(
         return voyageForm.isEmpty()
     }
 
-    fun getSettings() {
+    fun onPrintBarcode() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val settings = repository.getSettings()
+            val settings = repository.getPrinterBarcodeSettings()
             withContext(appCoroutineDispatchers.main) {
-                _printerSettings.postValue(settings)
+                _printerBarcodeSettings.postValue(settings)
             }
         }
     }

@@ -171,9 +171,9 @@ open class ReleasingRepository @Inject constructor(
 
     override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
 
-    override fun getSettings() = local.getSettings()
+    override fun getPrinterBarcodeSettings() = local.getPrinterBarcodeSettings()
 
-    override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
+    override fun savePrinterSettings(settings: Settings?) = local.savePrinterSettings(settings)
 
     override fun getOperatorName() = local.getOperatorName()
 

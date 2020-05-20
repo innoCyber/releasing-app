@@ -54,8 +54,8 @@ interface Repository {
     suspend fun getDamagesByPosition(imei: String, position: String, typeContainer:Int?): List<Damage>
 
 
-    fun saveSettings(settings: Settings?)
-    fun getSettings(): Settings
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterBarcodeSettings(): Settings
 
     fun saveOperatorName(name: String?)
     fun getOperatorName(): String?
