@@ -3,8 +3,8 @@ package ptml.releasing.cargo_info.view_model
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.work.WorkManager
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,12 +22,12 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.configuration.models.ReleasingConfigureDeviceData
 import ptml.releasing.damages.view.DamagesActivity
-import ptml.releasing.images.worker.ImageUploadWorker
 import ptml.releasing.form.FormSubmission
 import ptml.releasing.form.FormType
 import ptml.releasing.form.models.QuickRemark
 import ptml.releasing.form.models.Voyage
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
+import ptml.releasing.images.worker.ImageUploadWorker
 import ptml.releasing.printer.model.Settings
 import timber.log.Timber
 import javax.inject.Inject
@@ -69,7 +69,7 @@ class CargoInfoViewModel @Inject constructor(
     }
 
     fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val remarksMap = mutableMapOf<Int, QuickRemark>()
             val formConfig = repository.getFormConfigAsync().await()
             val remarks = repository.getQuickRemarkAsync(imei)?.await()
@@ -98,7 +98,7 @@ class CargoInfoViewModel @Inject constructor(
                     formMappers.configureDeviceMapper.mapFromModel(form),
                     voyages
                 )
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 _formConfig.postValue(wrapper)
             }
         }
@@ -117,9 +117,9 @@ class CargoInfoViewModel @Inject constructor(
     }
 
     fun onPrintBarcode() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val settings = repository.getPrinterBarcodeSettings()
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 _printerBarcodeSettings.postValue(settings)
             }
         }
@@ -148,7 +148,7 @@ class CargoInfoViewModel @Inject constructor(
     ) {
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
         _networkState.postValue(Event(NetworkState.LOADING))
-        CoroutineScope(appCoroutineDispatchers.network).launch {
+        CoroutineScope(dispatchers.network).launch {
             try {
 
                 val operator = getLoginUseCase.execute().badgeId
@@ -171,12 +171,13 @@ class CargoInfoViewModel @Inject constructor(
                     findCargoResponse?.mrkNumber,
                     findCargoResponse?.grimaldiContainer,
                     findCargoResponse?.cargoId,
+                    getPhotoNames(cargoCode),
                     formSubmission.selectedVoyage?.id,
                     imei
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()
 
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     if (result.isSuccess) {
                         //schedule upload images
                         val workRequest =
@@ -199,7 +200,7 @@ class CargoInfoViewModel @Inject constructor(
 
     fun getImagesCount(cargoCode: String?){
         Timber.d("Get image count $cargoCode")
-        CoroutineScope(appCoroutineDispatchers.db).launch {
+        CoroutineScope(dispatchers.db).launch {
             val count = repository.getImages(cargoCode ?: return@launch).size
             Timber.d("Image count: $count")
             imagesCountState.postValue(count)
@@ -222,7 +223,7 @@ class CargoInfoViewModel @Inject constructor(
 
     fun storeLastSelectedVoyage(change: Any?) {
         viewModelScope.launch {
-            withContext(appCoroutineDispatchers.db) {
+            withContext(dispatchers.db) {
                 (change as? Voyage)?.let {
                     Timber.d("Storing last selected voyage: $it")
                     voyageRepository.setLastSelectedVoyage(formMappers.voyagesMapper.mapToModel(it))

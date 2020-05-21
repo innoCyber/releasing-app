@@ -30,9 +30,10 @@ class MainModule {
     fun provideRepository(
         remote: Remote,
         local: Local,
-        appCoroutineDispatchers: AppCoroutineDispatchers
+        appCoroutineDispatchers: AppCoroutineDispatchers,
+        fileUtils: FileUtils
     ): Repository {
-        return ReleasingRepository(remote, local, appCoroutineDispatchers)
+        return ReleasingRepository(remote, local, appCoroutineDispatchers, fileUtils)
     }
 
     @Provides
@@ -50,7 +51,7 @@ class MainModule {
     @ReleasingAppScope
     fun provideDispatchers(): AppCoroutineDispatchers {
         return AppCoroutineDispatchers(
-            db = Dispatchers.Default,
+            db = Dispatchers.IO,
             network = Dispatchers.IO,
             main = Dispatchers.Main
         )

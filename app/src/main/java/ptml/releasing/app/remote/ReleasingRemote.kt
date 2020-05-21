@@ -1,18 +1,14 @@
 package ptml.releasing.app.remote
 
-import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
-import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.adminlogin.model.api.LoginApiService
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_info.model.api.UploadDataService
 import ptml.releasing.cargo_search.model.api.FindCargoService
 import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService
-import ptml.releasing.cargo_search.model.api.FindCargoService
-import ptml.releasing.images.api.UploadImageService
-import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import ptml.releasing.download_damages.model.api.DamageApiService
+import ptml.releasing.images.api.UploadImageService
 import ptml.releasing.quick_remarks.model.api.QuickRemarkService
 import retrofit2.Retrofit
 import javax.inject.Inject

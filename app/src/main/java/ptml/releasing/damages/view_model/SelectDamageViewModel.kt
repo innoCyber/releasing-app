@@ -48,9 +48,9 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
             }
 
 
-            compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            compositeJob = CoroutineScope(dispatchers.db).launch {
                 val list = repository.getDamagesByPosition(imei, position, typeContainer)
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     _damagesListFiltered.postValue(list)
                     _damagesList.value = list
                     _networkState.postValue(Event(NetworkState.LOADED))
@@ -69,7 +69,7 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
             return
         }
 
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             delay(500)
             val list = mutableListOf<Damage>()
             for (i in _damagesList.value ?: mutableListOf()) {
@@ -79,7 +79,7 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
                 }
             }
 
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 Timber.d("List: %s", list)
                 _damagesListFiltered.postValue(list)
             }

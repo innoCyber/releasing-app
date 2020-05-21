@@ -70,7 +70,7 @@ ext {
     junitVersion = "4.12"
     espressoVersion = '3.1.0-beta02'
 
-    daggerVersion = '2.16'
+    daggerVersion = '2.24'
     leakCanaryVersion = "1.6.3"
     timberVersion = "4.7.1"
     
@@ -82,7 +82,7 @@ ext {
 
     glideVersion = "4.9.0"
     workerVersion = "2.1.0"
-    assistedInjectVersion = "0.4.0"
+    assistedInjectVersion = "0.5.2"
     robolectricVersion = "4.3"
     coreTestVersion = "1.0.0"
     truthVersion = "1.0"

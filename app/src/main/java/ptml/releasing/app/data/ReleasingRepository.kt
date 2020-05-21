@@ -5,8 +5,8 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import ptml.releasing.BuildConfig
-import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.adminlogin.model.User
+import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -18,7 +18,6 @@ import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.images.model.Image
-import ptml.releasing.login.model.User
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import timber.log.Timber
@@ -233,7 +232,6 @@ open class ReleasingRepository @Inject constructor(
     override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
 
     override fun mustUpdateApp(): Boolean = local.mustUpdateApp()
-
 
 
     override fun setAppMinimumVersion(version: Long) = local.setAppVersion(version)

@@ -17,11 +17,15 @@ import timber.log.Timber
 
 
 open class ReleasingApplication : DaggerApplication() {
+    open val appComponent by lazy {
+        DaggerAppComponent
+            .builder()
+            .bindApplication(this)
+            .build()
+    }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder()
-            .bindNetwork(NetworkModule())
-            .bindApplication(this).build()
+        return appComponent
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -32,7 +36,7 @@ open class ReleasingApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-//        initializeLeakCanary()
+        initializeLeakCanary()
         initWorkerFactory()
     }
 

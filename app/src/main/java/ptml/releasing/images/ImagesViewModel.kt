@@ -2,7 +2,9 @@ package ptml.releasing.images
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -22,8 +24,8 @@ class ImagesViewModel @Inject constructor(
     val fileUtils: FileUtils,
     updateChecker: RemoteConfigUpdateChecker,
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers
-) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+    dispatchers: AppCoroutineDispatchers
+) : BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val openCamera = SingleLiveEvent<Unit>()
     fun getOpenCameraState(): LiveData<Unit> = openCamera
@@ -52,15 +54,17 @@ class ImagesViewModel @Inject constructor(
         if (loadingState.value != NetworkState.LOADING) {
             loadingState.postValue(NetworkState.LOADING)
 
-            launch(appCoroutineDispatchers.db) {
-                try {
-                    imagesMap.clear()
-                    imagesMap.putAll(repository.getImages(cargoCode))
-                    imageFiles.postValue(imagesMap.values.toList())
-                    loadingState.postValue(NetworkState.LOADED)
-                } catch (e: Throwable) {
-                    loadingState.postValue(NetworkState.error(e))
-                    handleError(e)
+            viewModelScope.launch {
+                withContext(dispatchers.db) {
+                    try {
+                        imagesMap.clear()
+                        imagesMap.putAll(repository.getImages(cargoCode))
+                        imageFiles.postValue(imagesMap.values.toList())
+                        loadingState.postValue(NetworkState.LOADED)
+                    } catch (e: Throwable) {
+                        loadingState.postValue(NetworkState.error(e))
+                        handleError(e)
+                    }
                 }
 
             }
@@ -76,38 +80,42 @@ class ImagesViewModel @Inject constructor(
     }
 
     fun handleFileAdded(file: File) {
-        launch(appCoroutineDispatchers.db) {
-            try {
-                cargoCode?.let {
-                    if (fileUtils.isValidImageFile(file)) {
-                        val image = createImage(file)
-                        repository.addImage(it, image)
-                        addFile.postValue(image)
-                    } else {
-                        Timber.d("Added file ${file.absolutePath} is not a valid image")
+        viewModelScope.launch {
+            withContext(dispatchers.db) {
+                try {
+                    cargoCode?.let {
+                        if (fileUtils.isValidImageFile(file)) {
+                            val image = createImage(file)
+                            repository.addImage(it, image)
+                            addFile.postValue(image)
+                        } else {
+                            Timber.d("Added file ${file.absolutePath} is not a valid image")
+                        }
                     }
+                } catch (e: Throwable) {
+                    handleError(e)
                 }
-            } catch (e: Throwable) {
-                handleError(e)
             }
         }
     }
 
     fun handleFileRemoved(file: File) {
-        launch(appCoroutineDispatchers.db) {
-            try {
-                cargoCode?.let {
-                    if (fileUtils.isValidImageFile(file)) {
-                        val image = createImage(file)
-                        repository.removeImage(it, image)
-                        removeFile.postValue(image)
+        viewModelScope.launch {
+            withContext(dispatchers.db) {
+                try {
+                    cargoCode?.let {
+                        if (fileUtils.isValidImageFile(file)) {
+                            val image = createImage(file)
+                            repository.removeImage(it, image)
+                            removeFile.postValue(image)
 
-                    } else {
-                        Timber.d("Removed file ${file.absolutePath} is not a valid image")
+                        } else {
+                            Timber.d("Removed file ${file.absolutePath} is not a valid image")
+                        }
                     }
+                } catch (e: Throwable) {
+                    handleError(e)
                 }
-            } catch (e: Throwable) {
-                handleError(e)
             }
         }
     }
@@ -137,13 +145,15 @@ class ImagesViewModel @Inject constructor(
         //remove from server
         if (deleteNotify.value != NetworkState.LOADING) {
             deleteNotify.postValue(NetworkState.LOADING)
-            launch(appCoroutineDispatchers.db) {
-                try {
-                    repository.delete(imageList, cargoCode)
-                    loadingState.postValue(NetworkState.LOADED)
-                } catch (e: Throwable) {
-                    loadingState.postValue(NetworkState.error(e))
-                    handleError(e)
+            viewModelScope.launch {
+                withContext(dispatchers.db) {
+                    try {
+                        repository.delete(imageList, cargoCode)
+                        loadingState.postValue(NetworkState.LOADED)
+                    } catch (e: Throwable) {
+                        loadingState.postValue(NetworkState.error(e))
+                        handleError(e)
+                    }
                 }
             }
 
@@ -151,22 +161,23 @@ class ImagesViewModel @Inject constructor(
     }
 
     fun compressImageFile(currentPhotoPath: String?, cargoCode: String?) {
+        viewModelScope.launch {
+            withContext(dispatchers.db) {
+                try {
+                    //post temp image
+                    Timber.d("To compress: $currentPhotoPath")
+                    val file = File(currentPhotoPath ?: "")
+                    if (fileUtils.isValidImageFile(file)) {
+                        val image = createImage(file)
+                        addFile.postValue(image)
+                    } else {
+                        Timber.d("Added file ${file.absolutePath} is not a valid image")
+                    }
 
-        launch(appCoroutineDispatchers.db) {
-            try {
-                //post temp image
-                Timber.d("To compress: $currentPhotoPath")
-                val file  = File(currentPhotoPath ?: "")
-                if (fileUtils.isValidImageFile(file)) {
-                    val image = createImage(file)
-                    addFile.postValue(image)
-                } else {
-                    Timber.d("Added file ${file.absolutePath} is not a valid image")
+                    repository.compressImageFile(currentPhotoPath, cargoCode)
+                } catch (e: Throwable) {
+                    handleError(e)
                 }
-
-                repository.compressImageFile(currentPhotoPath, cargoCode)
-            } catch (e: Throwable) {
-                handleError(e)
             }
         }
     }

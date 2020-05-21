@@ -2,8 +2,6 @@ package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
@@ -12,8 +10,8 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
-import ptml.releasing.images.model.Image
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import java.io.File
@@ -94,8 +92,6 @@ interface Repository {
 
     fun isInternetErrorLoggingEnabled():Boolean
     fun setInternetErrorLoggingEnabled(enabled:Boolean)
-    fun setAppCurrentVersion(version: Long)
-    fun getAppCurrentVersion(): Long
 
     suspend fun storeImages(cargoCode: String, imageMap: Map<String, Image>)
     suspend fun addImage(cargoCode: String, image: Image)

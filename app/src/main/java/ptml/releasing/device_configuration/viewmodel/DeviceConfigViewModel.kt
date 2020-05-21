@@ -35,10 +35,10 @@ class DeviceConfigViewModel @Inject constructor(
     fun verifyDeviceId(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 val response = repository.verifyDeviceIdAsync(imei).await()
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     if (response.isSuccess) {
                         openSearchActivity.postValue(Event(Unit))
                         repository.setImei(imei)

@@ -42,12 +42,12 @@ class ConfigViewModel @Inject constructor(
     fun getConfig(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 Timber.d("Getting configuration")
                 val response = repository.getAdminConfigurationAsync(imei).await()
 
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
                     Timber.d("Checking if there is a saved configuration")
@@ -83,7 +83,7 @@ class ConfigViewModel @Inject constructor(
 //        operationStep.id = 32 //TODO Remove this in production
         val configuration =
             Configuration(terminal ?: return, operationStep ?: return, cargoType ?: return, checked)
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             try {
                 repository.setSavedConfigAsync(configuration)
                 val result = repository.setConfigurationDeviceAsync(
@@ -114,16 +114,16 @@ class ConfigViewModel @Inject constructor(
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(Event(NetworkState.LOADING))
 
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 Timber.d("Refreshing configuration")
                 val response = repository.downloadAdminConfigurationAsync(imei).await()
 
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
                     Timber.d("Checking if there is a saved configuration")
-                    withContext(appCoroutineDispatchers.db) {
+                    withContext(dispatchers.db) {
                         Timber.d("Refreshing removes the previous configuration")
                         repository.setConfigured(false)
                     }

@@ -13,10 +13,10 @@ import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import javax.inject.Inject
 
 class AdminConfigViewModel @Inject constructor(
-    repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
+    repository: Repository, dispatchers: AppCoroutineDispatchers,
     updateChecker: RemoteConfigUpdateChecker
 ) :
-    BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+    BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val _openConfig = MutableLiveData<Event<Unit>>()
     private val _openPrinterSettings = MutableLiveData<Event<Unit>>()
@@ -48,7 +48,7 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     private fun fetchInternetErrorState() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val enabled = repository.isInternetErrorLoggingEnabled()
             _internetErrorEnabled.postValue(enabled)
         }
@@ -63,18 +63,18 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     fun openDownloadDamages() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val configured = repository.isConfiguredAsync()
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 _openDownloadDamages.postValue(Event(configured))
             }
         }
     }
 
     fun openQuickRemark() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val configured = repository.isConfiguredAsync()
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 _openQuickRemark.postValue(Event(configured))
             }
         }
@@ -95,25 +95,25 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     fun openSearch() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val configured = repository.isConfiguredAsync()
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 _openSearch.postValue(Event(configured))
             }
         }
     }
 
     fun openServer() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val serverUrl = repository.getServerUrl()
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 _serverUrl.postValue(Event(serverUrl))
             }
         }
     }
 
     fun saveServerUrl(url: String?) {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             repository.saveServerUrl(url)
         }
     }
@@ -132,7 +132,7 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     fun handleToggleEnableLogs() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val enabled = !repository.isInternetErrorLoggingEnabled()
             repository.setInternetErrorLoggingEnabled(enabled)
             _internetErrorEnabled.postValue(enabled)

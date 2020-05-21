@@ -72,10 +72,7 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setUpdateApp(shouldUpdate)
 
     override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()
-
-
-    override fun getAppCurrentVersion(): Long = prefs.getAppCurrentVersion()
-
+    
     override fun addImage(cargoCode: String, file: Image) = prefs.addImage(cargoCode, file)
 
     override fun removeImage(cargoCode: String, file: Image) = prefs.removeImage(cargoCode, file)

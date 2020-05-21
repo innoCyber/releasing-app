@@ -114,11 +114,6 @@ class CargoInfoActivity :
 
         }
 
-        override fun onImageButtonLoaded(view: View) {
-            imagesView = view
-            viewModel.getImagesCount(getCargoCode())
-        }
-
         override fun onDataChange(data: FormConfiguration?, change: Any?) {
             Timber.d("Data changed: ${data?.id}")
             if (data?.type == FormType.VOYAGE.type) {
@@ -497,7 +492,7 @@ class CargoInfoActivity :
     }
 
     private fun getCargoCode(): String? {
-        return intent?.extras?.getBundle(Constants.EXTRAS)?.getString(QUERY)
+        return intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
     }
 
 

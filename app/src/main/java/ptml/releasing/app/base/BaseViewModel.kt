@@ -21,7 +21,7 @@ import javax.inject.Inject
 open class BaseViewModel @Inject constructor(
     protected val updateChecker: RemoteConfigUpdateChecker,
     protected val repository: Repository,
-    protected val appCoroutineDispatchers: AppCoroutineDispatchers
+    protected val dispatchers: AppCoroutineDispatchers
 ) : ViewModel() {
 
     var imei: String? = null
@@ -206,7 +206,7 @@ open class BaseViewModel @Inject constructor(
             return
         }
         _updateQuickRemarkLoadingState.postValue(NetworkState.LOADING)
-        CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
+        CoroutineScope(dispatchers.network + compositeJob).launch {
             try {
                 Timber.d("Updating quick remarks...")
                 repository.downloadQuickRemarkAsync(imei)?.await()
@@ -227,7 +227,7 @@ open class BaseViewModel @Inject constructor(
             return
         }
         _updateDamagesLoadingState.postValue(NetworkState.LOADING)
-        CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
+        CoroutineScope(dispatchers.network + compositeJob).launch {
             try {
                 Timber.d("Updating damages...")
                 repository.downloadDamagesAsync(imei)?.await()
@@ -251,7 +251,7 @@ open class BaseViewModel @Inject constructor(
         _updateVoyagesLoadingState.postValue(NetworkState.LOADING)
         viewModelScope.launch {
             try {
-                withContext(appCoroutineDispatchers.db) {
+                withContext(dispatchers.db) {
                     Timber.d("Updating voyages...")
 
                     voyageRepository.downloadRecentVoyages()

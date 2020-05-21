@@ -56,10 +56,10 @@ class LoginViewModel @Inject constructor(
         val user = User(username, password)
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 val result = repository.loginAsync(user).await()
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     Timber.d("Response: %s", result)
                     if (result.isSuccess) {
                         loadNext.postValue(Event(Unit))

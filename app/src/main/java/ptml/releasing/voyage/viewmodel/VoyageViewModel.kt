@@ -37,9 +37,9 @@ class VoyageViewModel @Inject constructor(
         networkState.postValue(Event(NetworkState.LOADING))
         viewModelScope.launch {
             try {
-                withContext(appCoroutineDispatchers.db) {
+                withContext(dispatchers.db) {
                     val result = voyageRepository.getRecentVoyages()
-                    withContext(appCoroutineDispatchers.main) {
+                    withContext(dispatchers.main) {
                         if (result.isNotEmpty()) {
                             this@VoyageViewModel.response.postValue(result)
                             networkState.postValue(Event(NetworkState.LOADED))
@@ -63,9 +63,9 @@ class VoyageViewModel @Inject constructor(
         networkState.postValue(Event(NetworkState.LOADING))
         viewModelScope.launch {
             try {
-                withContext(appCoroutineDispatchers.network) {
+                withContext(dispatchers.network) {
                     val result = voyageRepository.downloadRecentVoyages()
-                    withContext(appCoroutineDispatchers.main) {
+                    withContext(dispatchers.main) {
                         if (result.isNotEmpty()) {
                             this@VoyageViewModel.response.postValue(result)
                             networkState.postValue(Event(NetworkState.LOADED))

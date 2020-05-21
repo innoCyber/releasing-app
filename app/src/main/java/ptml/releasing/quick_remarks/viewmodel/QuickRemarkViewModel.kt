@@ -32,11 +32,11 @@ class QuickRemarkViewModel @Inject constructor(
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
         networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
 
                 val response = repository.getQuickRemarkAsync(imei)?.await()
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
                         this@QuickRemarkViewModel.response.postValue(response.data)
                         networkState.postValue(Event(NetworkState.LOADED))
@@ -60,12 +60,12 @@ class QuickRemarkViewModel @Inject constructor(
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
         networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
 
 
                 val response = repository.downloadQuickRemarkAsync(imei)?.await()
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
                         this@QuickRemarkViewModel.response.postValue(response.data)
                         networkState.postValue(Event(NetworkState.LOADED))
