@@ -16,8 +16,8 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.CargoType
-import ptml.releasing.configuration.models.OperationStep
-import ptml.releasing.configuration.models.Terminal
+import ptml.releasing.configuration.models.ReleasingOperationStep
+import ptml.releasing.configuration.models.ReleasingTerminal
 import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.databinding.ActivityConfigBinding
@@ -28,9 +28,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private var cargoAdapter: ConfigSpinnerAdapter<CargoType>? = null
 
-    private var operationStepAdapter: ConfigSpinnerAdapter<OperationStep>? = null
+    private var operationStepAdapter: ConfigSpinnerAdapter<ReleasingOperationStep>? = null
 
-    private var terminalAdapter: ConfigSpinnerAdapter<Terminal>? = null
+    private var terminalAdapter: ConfigSpinnerAdapter<ReleasingTerminal>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,49 +51,55 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             }
         }
 
-        viewModel.configData.observe(this, Observer {
+        viewModel.getConfigResponse().observe(this, Observer {
             setUpSpinners(it)
         })
 
-        viewModel.operationStepList.observe(this, Observer {
+        viewModel.getOperationStepList().observe(this, Observer {
             setUpOperationStep(it)
         })
-        viewModel.terminalList.observe(this, Observer {
+        viewModel.getTerminalList().observe(this, Observer {
 //            setUpTerminal(it)
         })
 
 
-        viewModel.network.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.getting_configuration
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
-                binding.top.root.visibility = View.VISIBLE
-                binding.bottom.root.visibility = View.VISIBLE
+        viewModel.getNetworkState().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.getting_configuration
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                    binding.top.root.visibility = View.VISIBLE
+                    binding.bottom.root.visibility = View.VISIBLE
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
-            }
+
         })
 
 
-        viewModel.savedSuccess.observe(this, Observer {
-            if (it) {
-                notifyUser(getString(R.string.config_saved_success))
-                setResult(Activity.RESULT_OK)
-                finish()
+        viewModel.getSavedSuccess().observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    notifyUser(getString(R.string.config_saved_success))
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
             }
         })
 
-        viewModel.configuration.observe(this, Observer {
+        viewModel.getConfiguration().observe(this, Observer {
             val terminal = it.terminal
             val operationStep = it.operationStep
             val cargoType = it.cargoType
@@ -138,8 +144,8 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun setConfig() {
         viewModel.setConfig(
-            binding.top.selectTerminalSpinner.selectedItem as Terminal?,
-            binding.top.selectOperationSpinner.selectedItem as OperationStep?,
+            binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?,
+            binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?,
             binding.top.selectCargoSpinner.selectedItem as CargoType?,
             binding.top.cameraSwitch.isChecked, (application as ReleasingApplication).provideImei()
         )
@@ -190,12 +196,12 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         }
     }
 
-    private fun setUpOperationStep(operationStepList: List<OperationStep>) {
+    private fun setUpOperationStep(operationStepList: List<ReleasingOperationStep>) {
         operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
         binding.top.selectOperationSpinner.adapter = operationStepAdapter
     }
 
-    private fun setUpTerminal(terminalList: List<Terminal>) {
+    private fun setUpTerminal(terminalList: List<ReleasingTerminal>) {
         terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, terminalList)
         binding.top.selectTerminalSpinner.adapter = terminalAdapter
     }

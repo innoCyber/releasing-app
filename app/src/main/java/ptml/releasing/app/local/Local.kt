@@ -3,8 +3,6 @@ package ptml.releasing.app.local
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.download_damages.model.Damage
-
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
@@ -25,8 +23,8 @@ interface Local {
     fun getDeviceConfiguration(): ConfigureDeviceResponse?
     fun saveDeviceConfiguration(response:ConfigureDeviceResponse?)
 
-    fun saveSettings(settings: Settings?)
-    fun getSettings(): Settings
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterBarcodeSettings(): Settings
 
     fun saveOperatorName(name:String?)
     fun getOperatorName():String?
@@ -38,21 +36,17 @@ interface Local {
     fun getQuickRemarks(): QuickRemarkResponse?
 
     fun setDamagesCurrentVersion(currentVersion:Long)
-    fun getDamagesCurrentVersion():Long
+    fun getDamagesVersion():Long
+
+    fun setVoyageCurrentVersion(currentVersion: Long)
+    fun getVoyageVersion(): Long
 
     fun setQuickCurrentVersion(currentVersion:Long)
-    fun getQuickCurrentVersion():Long
+    fun getQuickRemarksVersion():Long
 
-    fun setAppMinimumVersion(version:Long)
-    fun getAppMinimumVersion():Long
+    fun setAppVersion(version:Long)
+    fun getAppVersion():Long
 
-
-    fun setAppCurrentVersion(version:Long)
-    fun getAppCurrentVersion():Long
-
-
-    fun setShouldUpdateApp(shouldUpdate:Boolean)
-    fun shouldUpdateApp():Boolean
 
     fun setImei(imei:String)
     fun getImei():String?
@@ -62,6 +56,9 @@ interface Local {
 
     fun storeImages(cargoCode:String, imageMap: Map<String, Image>)
     fun getImages(cargoCode: String): Map<String, Image>
+    fun isInternetErrorLoggingEnabled():Boolean
+    fun setInternetErrorLoggingEnabled(enabled:Boolean)
+
 
     fun addImage(cargoCode: String, file: Image)
     fun removeImage(cargoCode: String, file: Image)

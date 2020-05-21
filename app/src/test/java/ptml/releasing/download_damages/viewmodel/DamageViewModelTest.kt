@@ -10,7 +10,7 @@ import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.base.BaseTest
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.data.DAMAGE_SIZE
-import ptml.releasing.data.IMEI
+import ptml.releasing.data.VALID_IMEI
 import ptml.releasing.data.downloadDamagesSuccess
 
 @Suppress("UNCHECKED_CAST")
@@ -21,12 +21,12 @@ class DamageViewModelTest : BaseTest() {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `get damages with valid IMEI`() {
+    fun `get damages with valid IMEI is successful`() {
         coEvery {
             repository.getDamagesAsync(any())
         }returns downloadDamagesSuccess().toDeferredAsync() as Deferred<DamageResponse>
 
-        viewModel.getDamages(IMEI)
+        viewModel.getDamages(VALID_IMEI)
 
         assertEquals(DAMAGE_SIZE, viewModel.response.value?.size)
 

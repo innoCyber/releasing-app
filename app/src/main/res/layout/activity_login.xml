@@ -1,137 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ptml.releasing.login.viewmodel.LoginViewModel" />
+
+        <import type="ptml.releasing.app.data.domain.state.DataState" />
+    </data>
 
     <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05" />
 
 
             <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_l"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.05"/>
+                android:id="@+id/guideline_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
 
-            <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_r"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.95"/>
-
-
-
-
-            <TextView
-                    android:id="@+id/tv_admin_id"
-                    style="@style/LabelStyle"
-                    android:text="@string/admin_id"
-                    android:layout_marginTop="@dimen/constraint_default_margin_32dp"
-                    app:layout_constraintEnd_toStartOf="@id/guideline_r"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/img_app_icon"
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:layout_marginTop="@dimen/app_icon_margin_top"
+                android:contentDescription="@string/app_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_launcher" />
 
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_admin_id"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:errorEnabled="true"
-                    android:layout_marginTop="@dimen/constraint_default_margin_8dp"
-                    app:errorTextAppearance="@style/TextLimitError"
-                    app:hintEnabled="false"
-                    app:layout_constraintEnd_toStartOf="@id/guideline_r"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_admin_id">
+                android:id="@+id/badge_id_input"
+                style="@style/Widget.Driver.TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_first_text_input_margin_top"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:hint="@string/login_badge_id_hint"
+                app:errorText="@{viewModel.badgeIdErrorState}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/img_app_icon">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:maxLines="1"
-                        tools:text="@tools:sample/full_names"/>
+                    android:id="@+id/badge_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@={viewModel.badgeId}"
+                    app:hideKeyboardOnInputDone="@{true}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <TextView
-                    android:id="@+id/tv_password"
-                    style="@style/LabelStyle"
-                    android:text="@string/password"
-                    app:layout_constraintEnd_toStartOf="@id/guideline_r"
-                    app:layout_constraintHorizontal_bias="0"
-                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/til_admin_id"/>
-
-
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_password"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/constraint_default_margin_8dp"
-                    app:errorEnabled="true"
-                    app:errorTextAppearance="@style/TextLimitError"
-                    app:hintEnabled="false"
-                    app:passwordToggleEnabled="true"
-                    app:passwordToggleContentDescription="@string/app_name"
-                    app:layout_constraintEnd_toStartOf="@id/guideline_r"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_password">
-
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        tools:text="@tools:sample/last_names"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <ptml.releasing.app.views.MaterialRippleLayout
-                    android:id="@+id/btn_login_layout"
-                    style="@style/RippleLayoutStyle.Configure"
-                    app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/til_password">
-
-                <ptml.releasing.app.views.SupportVectorDrawablesButton
-                        android:id="@+id/btn_login"
-                        style="@style/ButtonStyle.Save"
-                        android:text="@string/login"/>
-            </ptml.releasing.app.views.MaterialRippleLayout>
-
-
-            <include layout="@layout/progress_bar_layout"
-                android:id="@+id/include_progress"
-                android:layout_width="match_parent"
+                android:id="@+id/password_input"
+                style="@style/Widget.Driver.TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_text_input_margin"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:hint="@string/login_password_hint"
                 android:visibility="gone"
-                android:layout_height="match_parent"/>
+                app:errorText="@{viewModel.passwordErrorState}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/badge_id_input">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:text="@={viewModel.password}"
+                    app:hideKeyboardOnInputDone="@{true}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/btn_reset"
+                style="@style/Widget.Driver.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_btn_margin_top"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:enabled="@{!viewModel.loading}"
+                android:onClick="@{()->viewModel.handleReset()}"
+                android:text="@string/reset_password"
+                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                app:layout_constraintEnd_toStartOf="@id/btn_login"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/password_input" />
+
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/Widget.Driver.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_btn_margin_top"
+                android:layout_marginEnd="@dimen/login_text_input_margin"
+                android:enabled="@{!viewModel.loading}"
+                android:onClick="@{()-> viewModel.handleLogin()}"
+                android:text="@string/login"
+                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toEndOf="@id/btn_reset"
+                app:layout_constraintTop_toBottomOf="@id/password_input" />
 
             <include
-                android:id="@+id/include_error"
-                layout="@layout/error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/progress_bar"
+                layout="@layout/progress_bar_layout"
                 android:visibility="gone" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

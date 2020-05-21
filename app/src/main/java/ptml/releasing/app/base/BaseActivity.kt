@@ -2,9 +2,9 @@
 
 package ptml.releasing.app.base
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
@@ -34,26 +34,22 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
+import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.ReleasingApplication
-import ptml.releasing.app.dialogs.ChooseOperatorInputDialog
-import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.NetworkState
-import ptml.releasing.app.utils.PlayStoreUtils
-import ptml.releasing.app.utils.Status
+import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
-import ptml.releasing.login.view.LoginActivity
 import timber.log.Timber
 import javax.inject.Inject
 
 @RuntimePermissions
-abstract class BaseActivity<T, D> :
-    DaggerAppCompatActivity() where T : BaseViewModel, D : ViewDataBinding {
+abstract class BaseActivity<V, D> :
+    DaggerAppCompatActivity() where V : BaseViewModel, D : ViewDataBinding {
     private val networkSubject = MutableLiveData<Boolean>()
     private lateinit var receiver: BroadcastReceiver
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
@@ -64,12 +60,24 @@ abstract class BaseActivity<T, D> :
 
 
     protected lateinit var binding: D
-    protected lateinit var viewModel: T
+    protected lateinit var viewModel: V
 
     @Inject
     protected lateinit var viewModeFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var networkUtils: NetworkUtils
+
     private var progressDialog: ProgressDialog? = null
+
+    var imei: String? = null
+
+    @Inject
+    lateinit var imeiHelper: ImeiHelper
+
+    @Inject
+    lateinit var navigator: Navigator
+
 
     companion object {
         const val RC_BARCODE = 112
@@ -116,10 +124,6 @@ abstract class BaseActivity<T, D> :
             startNewActivity(LoginActivity::class.java)
         })
 
-        viewModel.savedOperatorName.observe(this, Observer {
-            notifyUser(binding.root, getString(R.string.operator_name_saved_success_msg, it))
-        })
-
 
         viewModel.operatorName.observe(this, Observer {
             when (this) {
@@ -143,29 +147,18 @@ abstract class BaseActivity<T, D> :
 
         })
 
-        viewModel.openEnterDialog.observe(this, Observer {
-            openEnterDialog(it)
-        })
-
-
-        viewModel.openOperatorDialog.observe(this, Observer {
-            openOperatorDialog()
-        })
-
         viewModel.logOutDialog.observe(this, Observer {
             showLogOutConfirmDialog()
         })
 
-        viewModel.logOutOperator.observe(this, Observer {
-            notifyUser(binding.root, getString(R.string.operator_log_out_msg, it))
+        viewModel.getGoToLogin().observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                navigator.goToLogin(this)
+            }
         })
 
-        viewModel.showMustUpdateApp.observe(this, Observer {
+        viewModel.showUpdateApp.observe(this, Observer {
             showMustUpdateDialog()
-        })
-
-        viewModel.showShouldUpdateApp.observe(this, Observer {
-            showShouldUpdateDialog()
         })
 
 
@@ -217,13 +210,18 @@ abstract class BaseActivity<T, D> :
                 if (it.status == Status.FAILED) {
                     notifyUser(getString(R.string.quick_remark_update_failed_msg))
                 }
-
             }
         })
+
+        getIMEIWithPermissionCheck()
+        hideKeyBoardOnTouchOfNonEditableViews()
     }
 
     @NeedsPermission(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateQuickRemarksService() {
         val imei = (application as ReleasingApplication).provideImei()
@@ -231,7 +229,10 @@ abstract class BaseActivity<T, D> :
     }
 
     @NeedsPermission(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateDamagesService() {
         val imei = (application as ReleasingApplication).provideImei()
@@ -239,7 +240,10 @@ abstract class BaseActivity<T, D> :
     }
 
     @OnShowRationale(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun showPhoneStatePermissionRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(
@@ -255,7 +259,10 @@ abstract class BaseActivity<T, D> :
     }
 
     @OnPermissionDenied(
-        android.Manifest.permission.READ_PHONE_STATE
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun showDeniedForPhoneStatePermission() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_denied))
@@ -333,29 +340,6 @@ abstract class BaseActivity<T, D> :
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
-    private fun openOperatorDialog() {
-        val dialog = ChooseOperatorInputDialog.newInstance(object :
-            ChooseOperatorInputDialog.ChooseOperatorListener {
-            override fun onScan() {
-                viewModel.openBarCodeScanner()
-            }
-
-            override fun onEnter() {
-                viewModel.openEnterDialog()
-            }
-        })
-        dialog.show(supportFragmentManager, dialog.javaClass.name)
-    }
-
-    private fun openEnterDialog(it: String?) {
-        val dialog = EditTextDialog.newInstance(it, object : EditTextDialog.EditTextDialogListener {
-            override fun onSave(value: String) {
-                viewModel.saveOperatorName(value)
-            }
-        }, getString(R.string.enter_operator_name), getString(R.string.operator_name), false)
-        dialog.isCancelable = false
-        dialog.show(supportFragmentManager, dialog.javaClass.name)
-    }
 
     override fun onResume() {
         super.onResume()
@@ -363,6 +347,23 @@ abstract class BaseActivity<T, D> :
         viewModel.checkToShowUpdateAppDialog()
     }
 
+
+    @SuppressLint("MissingPermission")
+    @NeedsPermission(
+        android.Manifest.permission.READ_PHONE_STATE,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+    fun getIMEI() {
+        imei = imeiHelper.getImei()
+        viewModel.imei = imei
+        onImeiGotten(imei)
+    }
+
+    open fun onImeiGotten(imei: String?) {
+
+    }
 
     @NeedsPermission(android.Manifest.permission.CAMERA)
     fun openBarCodeScanner(requestCode: Int) {
@@ -406,12 +407,7 @@ abstract class BaseActivity<T, D> :
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_BARCODE && resultCode == RESULT_OK) {
-            val operatorName = data?.getStringExtra(Constants.BAR_CODE)
-            //save
-            Timber.d("Scanned Operator name: %s", operatorName)
-            viewModel.saveOperatorName(operatorName)
-        } else if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
+        if (requestCode == RC_SEARCH && resultCode == RESULT_OK) {
             //save
             val scanned = data?.getStringExtra(Constants.BAR_CODE)
             Timber.d("Scanned: %s", scanned)
@@ -424,9 +420,9 @@ abstract class BaseActivity<T, D> :
 
     }
 
-
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, getLayoutResourceId())
+        binding.lifecycleOwner = this
         binding.setVariable(getBindingVariable(), viewModel)
         binding.executePendingBindings()
     }
@@ -602,10 +598,7 @@ abstract class BaseActivity<T, D> :
 
     @Suppress("DEPRECATION")
     fun isOffline(): Boolean {
-        val manager = this
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        return !(manager.activeNetworkInfo != null && manager.activeNetworkInfo.isConnectedOrConnecting)
+        return networkUtils.isOffline()
     }
 
 
@@ -619,12 +612,6 @@ abstract class BaseActivity<T, D> :
     }
 
     fun hideLoading(view: View) {
-
-        val slide = AnimationUtils.loadAnimation(
-            this,
-            R.anim.up_down
-        )
-        view.startAnimation(slide)
         view.visibility = View.GONE
     }
 
@@ -657,26 +644,21 @@ abstract class BaseActivity<T, D> :
 //    abstract fun observeNetworkChanges(connectivityObservable: Observable<Boolean>)
 
 
-    protected abstract fun getViewModelClass(): Class<T>
+    protected abstract fun getViewModelClass(): Class<V>
 
 
-    protected fun initOperator(operatorName: String?) {
+    protected fun initOperator(operatorName: String) {
         Timber.d("Passed Operator name is %s", operatorName)
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
         val operatorIndicator = findViewById<ImageView>(R.id.img_indicator)
-        operatorIndicator.setImageResource(if (TextUtils.isEmpty(operatorName)) R.drawable.operator_circle_red else R.drawable.operator_circle)
+        operatorIndicator.setImageResource(R.drawable.operator_circle)
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text =
             if (TextUtils.isEmpty(operatorName)) getString(R.string.no_operator_logged_in) else operatorName
         val changeOperator = findViewById<Button>(R.id.btn_change)
-        changeOperator?.text =
-            if (TextUtils.isEmpty(operatorName)) getString(R.string.add_operator) else getString(R.string.log_off)
+        changeOperator?.text = getString(R.string.log_off)
         changeOperator?.setOnClickListener {
-            if (TextUtils.isEmpty(operatorName)) {
-                viewModel.openOperatorDialog()
-            } else {
-                viewModel.showLogOutConfirmDialog()
-            }
+            viewModel.showLogOutConfirmDialog()
         }
 
     }

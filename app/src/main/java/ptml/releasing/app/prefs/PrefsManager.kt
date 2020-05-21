@@ -25,18 +25,18 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES = "damages"
         const val SAVED_CONFIG = "saved_config"
         const val DEVICE_CONFIG = "device_config"
-        const val SETTINGS = "settings"
+        const val PRINTER_SETTINGS = "settings"
         const val OPERATOR_NAME = "operator_name"
         const val SERVER_URL = "server_url"
         const val QUICK_REMARK = "quick_remark"
 
-        const val APP_MINIMUM_VERSION = "app_version_minimum"
-        const val APP_CURRENT_VERSION = "app_current_minimum"
-        const val QUICK_REMARKS_CURRENT_VERSION = "quick_remarks_current_version"
-        const val DAMAGES_CURRENT_VERSION = "damages_current_version"
-        const val SHOULD_UPDATE_APP = "should_update_app"
+        const val APP_VERSION = "app_version_minimum"
+        const val QUICK_REMARKS_VERSION = "quick_remarks_current_version"
+        const val DAMAGES_VERSION = "damages_current_version"
+        const val VOYAGE_VERSION = "voyage_current_version"
         const val MUST_UPDATE_APP = "must_update_app"
         const val IMEI = "imei"
+        const val INTERNET_ERROR_LOGGING_ENABLED = "internet_error_logging_enabled"
         const val WORKER_ID = "_workerId"
     }
 
@@ -54,10 +54,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getConfig(): AdminConfigResponse? {
-        return gson.fromJson(
-            sharedPreferences.getString(CONFIG, null),
-            AdminConfigResponse::class.java
-        )
+        return gson.fromJson(sharedPreferences.getString(CONFIG, null), AdminConfigResponse::class.java)
     }
 
     override fun saveDamages(response: DamageResponse?) {
@@ -69,10 +66,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getSavedConfig(): Configuration {
-        return gson.fromJson(
-            sharedPreferences.getString(SAVED_CONFIG, "{}"),
-            Configuration::class.java
-        )
+        return gson.fromJson(sharedPreferences.getString(SAVED_CONFIG, "{}"), Configuration::class.java)
     }
 
     override fun setSavedConfig(configuration: Configuration) {
@@ -88,10 +82,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getDeviceConfiguration(): ConfigureDeviceResponse? {
-        return gson.fromJson(
-            sharedPreferences.getString(DEVICE_CONFIG, "{}"),
-            ConfigureDeviceResponse::class.java
-        )
+        return gson.fromJson(sharedPreferences.getString(DEVICE_CONFIG, "{}"), ConfigureDeviceResponse::class.java)
 //        return FormLoader.loadFromAssets(context)
     }
 
@@ -99,12 +90,15 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         sharedPreferences.edit().putString(DEVICE_CONFIG, gson.toJson(response)).apply()
     }
 
-    override fun saveSettings(settings: Settings?) {
-        sharedPreferences.edit().putString(SETTINGS, gson.toJson(settings)).apply()
+    override fun savePrinterSettings(settings: Settings?) {
+        sharedPreferences.edit().putString(PRINTER_SETTINGS, gson.toJson(settings)).apply()
     }
 
-    override fun getSettings(): Settings {
-        return gson.fromJson(sharedPreferences.getString(SETTINGS, "{}"), Settings::class.java)
+    override fun getPrinterBarcodeSettings(): Settings {
+        return gson.fromJson(
+            sharedPreferences.getString(PRINTER_SETTINGS, "{}"),
+            Settings::class.java
+        )
     }
 
     override fun getOperatorName(): String? {
@@ -128,45 +122,39 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getQuickRemarks(): QuickRemarkResponse? {
-        return gson.fromJson(
-            sharedPreferences.getString(QUICK_REMARK, null),
-            QuickRemarkResponse::class.java
-        )
+        return gson.fromJson(sharedPreferences.getString(QUICK_REMARK, null), QuickRemarkResponse::class.java)
     }
 
     override fun setDamagesCurrentVersion(currentVersion: Long) {
-        sharedPreferences.edit().putLong(DAMAGES_CURRENT_VERSION, currentVersion).apply()
+        sharedPreferences.edit().putLong(DAMAGES_VERSION, currentVersion).apply()
     }
 
     override fun getDamagesCurrentVersion(): Long {
-        return sharedPreferences.getLong(DAMAGES_CURRENT_VERSION, Constants.DEFAULT_DAMAGES_VERSION)
+        return sharedPreferences.getLong(DAMAGES_VERSION, Constants.DEFAULT_DAMAGES_VERSION)
+    }
+
+    override fun getVoyageVersion(): Long {
+        return sharedPreferences.getLong(VOYAGE_VERSION, Constants.DEFAULT_VOYAGE_VERSION)
+    }
+
+    override fun setVoyageCurrentVersion(currentVersion: Long) {
+        sharedPreferences.edit().putLong(VOYAGE_VERSION, currentVersion).apply()
     }
 
     override fun setQuickCurrentVersion(currentVersion: Long) {
-        sharedPreferences.edit().putLong(QUICK_REMARKS_CURRENT_VERSION, currentVersion).apply()
+        sharedPreferences.edit().putLong(QUICK_REMARKS_VERSION, currentVersion).apply()
     }
 
     override fun getQuickCurrentVersion(): Long {
-        return sharedPreferences.getLong(
-            QUICK_REMARKS_CURRENT_VERSION,
-            Constants.DEFAULT_QUICK_REMARKS_VERSION
-        )
+        return sharedPreferences.getLong(QUICK_REMARKS_VERSION, Constants.DEFAULT_QUICK_REMARKS_VERSION)
     }
 
-    override fun setAppMinimumVersion(version: Long) {
-        sharedPreferences.edit().putLong(APP_MINIMUM_VERSION, version).apply()
+    override fun setAppVersion(version: Long) {
+        sharedPreferences.edit().putLong(APP_VERSION, version).apply()
     }
 
-    override fun getAppMinimumVersion(): Long {
-        return sharedPreferences.getLong(APP_MINIMUM_VERSION, Constants.DEFAULT_APP_MINIMUM_VERSION)
-    }
-
-    override fun setShouldUpdateApp(shouldUpdate: Boolean) {
-        return sharedPreferences.edit().putBoolean(SHOULD_UPDATE_APP, shouldUpdate).apply()
-    }
-
-    override fun shouldUpdateApp(): Boolean {
-        return sharedPreferences.getBoolean(SHOULD_UPDATE_APP, false)
+    override fun getAppVersion(): Long {
+        return sharedPreferences.getLong(APP_VERSION, Constants.DEFAULT_APP_VERSION)
     }
 
     override fun setImei(imei: String) {
@@ -181,16 +169,17 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         return sharedPreferences.getBoolean(MUST_UPDATE_APP, false)
     }
 
-    override fun setMustUpdateApp(shouldUpdate: Boolean) {
+    override fun setUpdateApp(shouldUpdate: Boolean) {
         return sharedPreferences.edit().putBoolean(MUST_UPDATE_APP, shouldUpdate).apply()
     }
 
-    override fun setAppCurrentVersion(version: Long) {
-        return sharedPreferences.edit().putLong(APP_CURRENT_VERSION, version).apply()
+
+    override fun isInternetErrorLoggingEnabled(): Boolean {
+        return sharedPreferences.getBoolean(INTERNET_ERROR_LOGGING_ENABLED, false)
     }
 
-    override fun getAppCurrentVersion(): Long {
-        return sharedPreferences.getLong(APP_CURRENT_VERSION, Constants.DEFAULT_APP_CURRENT_VERSION)
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) {
+        return sharedPreferences.edit().putBoolean(INTERNET_ERROR_LOGGING_ENABLED, enabled).apply()
     }
 
     override fun getImages(cargoCode: String):  Map<String, Image> {

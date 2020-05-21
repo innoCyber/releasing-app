@@ -92,9 +92,6 @@ class BluetoothManager(var activity: Activity) {
 
     }
 
-    fun pairDevice(device: BluetoothDevice){
-
-    }
 
     fun enable(enable: Boolean) {
         if (enable) {
@@ -139,7 +136,7 @@ class BluetoothManager(var activity: Activity) {
             Thread(Runnable {
                 try {
                     socket = serverSocket?.accept()
-                    Timber.d("SERVER SOCKET", "Server socket accepted")
+                    Timber.d("Server socket accepted")
                     listenForMessage()
                 } catch (ioe: IOException) {
                     ioe.printStackTrace()
@@ -178,11 +175,11 @@ class BluetoothManager(var activity: Activity) {
                     ) as BluetoothSocket
                     socket?.connect()
                     connectionState = true
-                    Timber.d("CONNECTED", "Device Connected")
+                    Timber.d( "Device Connected")
                     listenForMessage()
                 } catch (e: Exception) {
                     connectionState = false
-                    Timber.e("BLUETOOTH CONNECT", "error connecting")
+                    Timber.e( "url connecting")
                 }
 
             }
@@ -199,7 +196,7 @@ class BluetoothManager(var activity: Activity) {
                 val buffer = ByteArray(1024)
                 try {
                     while (bluetoothAdapter?.isEnabled ==true) {
-                        val bytes = inputStream?.read(buffer)
+                        inputStream?.read(buffer)
                         outString += String(buffer, 0, 1024)
                     }
                 } catch (ioe: IOException) {
@@ -377,7 +374,7 @@ class BluetoothManager(var activity: Activity) {
                         return true
 
                     } catch (e: Exception) {
-                        Timber.e(e, "error connecting")
+                        Timber.e(e, "url connecting")
                         return false
                     }
 

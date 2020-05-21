@@ -12,51 +12,51 @@ import java.io.File
 
 interface Prefs {
     fun isFirst(): Boolean
-    fun setFirst(value: Boolean)
+    fun setFirst(value:Boolean)
     fun saveConfig(response: AdminConfigResponse?)
     fun getConfig(): AdminConfigResponse?
     fun saveDamages(response: DamageResponse?)
-    fun getDamages(): DamageResponse?
+    fun getDamages():DamageResponse?
 
-    fun getSavedConfig(): Configuration
+    fun getSavedConfig():Configuration
     fun setSavedConfig(configuration: Configuration)
-    fun isConfigured(): Boolean
-    fun setConfigured(isConfigured: Boolean)
+    fun isConfigured():Boolean
+    fun setConfigured(isConfigured:Boolean)
 
     fun getDeviceConfiguration(): ConfigureDeviceResponse?
     fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)
-    fun saveSettings(settings: Settings?)
-    fun getSettings(): Settings
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterBarcodeSettings(): Settings
 
-    fun saveOperatorName(name: String?)
-    fun getOperatorName(): String?
+    fun saveOperatorName(name:String?)
+    fun getOperatorName():String?
 
-    fun saveServerUrl(url: String?)
-    fun getServerUrl(): String?
+    fun saveServerUrl(url:String?)
+    fun getServerUrl():String?
 
     fun saveQuickRemarks(response: QuickRemarkResponse?)
-    fun getQuickRemarks(): QuickRemarkResponse?
+    fun getQuickRemarks():QuickRemarkResponse?
 
-    fun setDamagesCurrentVersion(currentVersion: Long)
-    fun getDamagesCurrentVersion(): Long
+    fun setDamagesCurrentVersion(currentVersion:Long)
+    fun getDamagesCurrentVersion():Long
 
-    fun setQuickCurrentVersion(currentVersion: Long)
-    fun getQuickCurrentVersion(): Long
+    fun setQuickCurrentVersion(currentVersion:Long)
+    fun getQuickCurrentVersion():Long
 
-    fun setAppMinimumVersion(version: Long)
-    fun getAppMinimumVersion(): Long
+    fun setAppVersion(version:Long)
+    fun getAppVersion():Long
 
-    fun setAppCurrentVersion(version: Long)
-    fun getAppCurrentVersion(): Long
 
-    fun setShouldUpdateApp(shouldUpdate: Boolean)
-    fun shouldUpdateApp(): Boolean
+    fun setUpdateApp(shouldUpdate:Boolean)
+    fun mustUpdateApp():Boolean
 
-    fun setMustUpdateApp(shouldUpdate: Boolean)
-    fun mustUpdateApp(): Boolean
+    fun setImei(imei:String)
+    fun getImei():String?
 
-    fun setImei(imei: String)
-    fun getImei(): String?
+    fun isInternetErrorLoggingEnabled():Boolean
+    fun setInternetErrorLoggingEnabled(enabled:Boolean)
+    fun getVoyageVersion(): Long
+    fun setVoyageCurrentVersion(currentVersion: Long)
 
     fun addImage(cargoCode: String, file: Image)
     fun removeImage(cargoCode: String, file: Image)

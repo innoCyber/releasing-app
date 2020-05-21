@@ -3,8 +3,13 @@ package ptml.releasing.damages.view
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -19,7 +24,7 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.cargo_info.model.LARGE
 import ptml.releasing.cargo_info.model.SMALL
-import ptml.releasing.damages.model.AssignedDamage
+import ptml.releasing.damages.model.ReleasingAssignedDamage
 import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding
 import ptml.releasing.download_damages.model.Damage
@@ -73,7 +78,7 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 Timber.d("Damage: %s", d)
                 DamagesActivity.currentDamages.add(
-                    AssignedDamage(
+                    ReleasingAssignedDamage(
                         d.id ?: 0,
                         d.description,
                         "",
@@ -90,7 +95,7 @@ class ReleasingDamagesSelectDamageActivity :
             btnLow.setOnClickListener {
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
-                    AssignedDamage(
+                    ReleasingAssignedDamage(
                         d.id ?: 0,
                         d.description,
                         "",
@@ -135,23 +140,26 @@ class ReleasingDamagesSelectDamageActivity :
         })
 
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.loading
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
+        viewModel.networkState.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.loading
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
-            }
         })
 
 

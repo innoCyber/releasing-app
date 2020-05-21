@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".login.view.LoginActivity"
+            android:name=".adminlogin.view.LoginActivity"
                 android:label="@string/admin_login"
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
         <activity
@@ -81,6 +81,19 @@
                 android:name=".quick_remarks.view.QuickRemarkActivity"
                 android:label="@string/quick_remarks"
                 android:parentActivityName=".admin_config.view.AdminConfigActivity"/>
+        <activity android:name=".internet_error_logs.view.ErrorLogsActivity"
+                android:label="@string/activity_error_logs_title"/>
+        <activity
+            android:name=".login.view.LoginActivity"
+            android:theme="@style/AppTheme.UserAuth" />
+        <activity
+            android:name=".resetpassword.view.ResetPasswordActivity"
+            android:theme="@style/AppTheme.UserAuth" />
+
+        <activity
+            android:name=".voyage.view.VoyageActivity"
+            android:label="@string/voyage_screen_title"
+            android:parentActivityName=".admin_config.view.AdminConfigActivity" />
         <activity android:name=".images.upload.UploadImagesActivity"/>
         <activity android:name="ptml.releasing.images.viewer.ImageViewerActivity" />
 
@@ -116,6 +129,16 @@
         </receiver>
 
 
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

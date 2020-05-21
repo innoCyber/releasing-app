@@ -1,13 +1,14 @@
 package ptml.releasing.app.di.modules.network
 
 import android.content.Context
-import ptml.releasing.app.di.scopes.ReleasingAppScope
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.errorlogger.InternetErrorLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -28,9 +29,10 @@ class OkhttpClientModule {
 
     @ReleasingAppScope
     @Provides
-    fun provideOkhttpClient(cache: Cache?, httpInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkhttpClient(cache: Cache?, httpInterceptor: HttpLoggingInterceptor, errorLoggingInterceptor: InternetErrorLoggingInterceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(httpInterceptor)
+        builder.addInterceptor(errorLoggingInterceptor)
         builder.cache(cache)
         builder.retryOnConnectionFailure(true)
         builder.writeTimeout(Constants.WRITE_TIME_OUT, TimeUnit.SECONDS)

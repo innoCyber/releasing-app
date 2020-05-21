@@ -17,6 +17,7 @@ import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
+import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
@@ -31,7 +32,7 @@ import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
-import ptml.releasing.login.view.LoginActivity
+import ptml.releasing.voyage.view.VoyageActivity
 import timber.log.Timber
 import java.util.*
 
@@ -46,7 +47,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        initErrorDrawable(binding.appBarHome.content.includeError.imgError)
         viewModel.getSavedConfig()
         viewModel.isConfigured.observe(this, Observer {
             binding.appBarHome.content.tvConfigMessageContainer.visibility =
@@ -59,42 +60,39 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 //            binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
         })
 
+        viewModel.updateVoyages()
 
-        viewModel.openAdMin.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
+        viewModel.openAdMin.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(LoginActivity::class.java)
+            }
         })
 
         viewModel.savedConfiguration.observe(this, Observer {
             updateTop(it)
         })
 
-        viewModel.verify.observe(this, Observer {
-            search()
+        viewModel.verify.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                search()
+            }
         })
 
         viewModel.getSavedConfig()
 
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                /* showLoading( Removing loading progress bar as per requirements
-                     binding.appBarHome.content.includeProgress.root,
-                     binding.appBarHome.content.includeProgress.tvMessage,
-                     R.string.loading
-                 )*/
-            } else {
-                hideLoading(binding.appBarHome.content.includeProgress.root)
-            }
-
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(
-                    binding.appBarHome.content.includeError.root,
-                    binding.appBarHome.content.includeError.tvMessage,
-                    error
-                )
-            } else {
-                hideLoading(binding.appBarHome.content.includeError.root)
+        viewModel.networkState.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(
+                        binding.appBarHome.content.includeError.root,
+                        binding.appBarHome.content.includeError.tvMessage,
+                        error
+                    )
+                } else {
+                    hideLoading(binding.appBarHome.content.includeError.root)
+                }
             }
         })
 
@@ -112,20 +110,26 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             animateBadge(it)
         })
 
-        viewModel.scan.observe(this, Observer {
-            openBarCodeScannerWithPermissionCheck(RC_SEARCH)
+        viewModel.scan.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                openBarCodeScannerWithPermissionCheck(RC_SEARCH)
+            }
         })
 
-        viewModel.noOperator.observe(this, Observer {
-            //show dialog
-            showOperatorErrorDialog()
+
+        viewModel.openDeviceConfiguration.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this, ConfigActivity::class.java)
+                startActivityForResult(intent, RC_CONFIG)
+            }
         })
 
-        viewModel.openDeviceConfiguration.observe(this, Observer {
-            val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, RC_CONFIG)
+        viewModel.openVoyage.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this, VoyageActivity::class.java)
+                startActivity(intent)
+            }
         })
-
 
         viewModel.searchScanned.observe(this, Observer {
             binding.appBarHome.content.includeSearch.editInput.setText(it)
@@ -235,7 +239,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         val bundle = Bundle()
         bundle.putParcelable(CargoInfoActivity.RESPONSE, it)
         bundle.putString(
-            CargoInfoActivity.QUERY,
+            CargoInfoActivity.CARGO_CODE,
             binding.appBarHome.content.includeSearch.editInput.text.toString()
         )
         val intent = Intent(this@SearchActivity, CargoInfoActivity::class.java)
@@ -273,23 +277,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         }
 
         Timber.e("Error occurred during search: msg: %s", response)
-    }
-
-
-    private fun showOperatorErrorDialog() {
-        val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.error),
-            message = getString(R.string.no_operator_msg),
-            buttonText = getString(android.R.string.ok),
-            listener = object : InfoDialog.InfoListener {
-                override fun onConfirm() {
-                    viewModel.openOperatorDialog()
-                }
-            },
-            hasNegativeButton = true,
-            negativeButtonText = getString(android.R.string.cancel)
-        )
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
 
@@ -345,9 +332,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     Constants.BAR_CODE
                 )
             )
-        } else if(requestCode == RC_CARGO_INFO && resultCode == RESULT_OK){
+        } else if (requestCode == RC_CARGO_INFO && resultCode == RESULT_OK) {
             binding.appBarHome.content.includeSearch.editInput.setText("")
-        }else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -417,9 +404,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun initBeforeView() {
         super.initBeforeView()
-        if (viewModel.isConfigured()) {
-//            startNewActivity(SearchActivity::class.java)
-        } else {
+        if (!viewModel.isConfigured()) {
             startNewActivity(LoginActivity::class.java)
         }
     }
@@ -453,6 +438,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 }
                 R.id.nav_device_configuration -> {
                     viewModel.openDeviceConfiguration()
+                }
+
+                R.id.nav_voyage -> {
+                    viewModel.handleNavVoyageClick()
                 }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)

@@ -18,15 +18,10 @@ import timber.log.Timber
 
 open class ReleasingApplication : DaggerApplication() {
 
-    open val appComponent by lazy {
-        DaggerAppComponent
-            .builder()
-            .bindApplication(this)
-            .build()
-    }
-
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return appComponent
+        return DaggerAppComponent.builder()
+            .bindNetwork(NetworkModule())
+            .bindApplication(this).build()
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -44,7 +39,6 @@ open class ReleasingApplication : DaggerApplication() {
     private fun initLogger() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-
         } else {
             Timber.plant(CrashReportingTree())
         }
@@ -70,13 +64,13 @@ open class ReleasingApplication : DaggerApplication() {
     @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-        return when (BuildConfig.DEBUG) {
+          return when (BuildConfig.DEBUG) {
             true -> BuildConfig.IMEI
             else -> {
                 val telephonyManager =
                     getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    telephonyManager.imei
+                    telephonyManager.imei ?: ""
                 } else {
                     telephonyManager.deviceId
                 }

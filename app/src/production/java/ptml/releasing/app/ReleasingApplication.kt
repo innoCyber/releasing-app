@@ -7,15 +7,12 @@ import android.telephony.TelephonyManager
 import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.squareup.leakcanary.LeakCanary
-
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import io.fabric.sdk.android.Fabric
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.di.components.DaggerAppComponent
 import ptml.releasing.app.di.modules.network.NetworkModule
-import ptml.releasing.app.utils.log.CrashReportingTree
 import timber.log.Timber
 
 
@@ -45,17 +42,12 @@ open class ReleasingApplication : DaggerApplication() {
     private fun initLogger() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-
-        } else {
-            Timber.plant(CrashReportingTree())
         }
-
     }
 
     @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission", "HardwareIds", "Deprecation")
     fun provideImei(): String {
-
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             telephonyManager.imei

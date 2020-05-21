@@ -1,8 +1,8 @@
 package ptml.releasing.app.local
 
+import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
-import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.images.model.Image
@@ -16,7 +16,7 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun getDamages() = prefs.getDamages()
     override fun saveDamages(response: DamageResponse?) = prefs.saveDamages(response)
 
-    override fun getSavedConfig(): Configuration = prefs.getSavedConfig()
+    override fun getSavedConfig(): Configuration= prefs.getSavedConfig()
     override fun setSavedConfig(configuration: Configuration) = prefs.setSavedConfig(configuration)
 
     override fun isFirst() = prefs.isFirst()
@@ -25,14 +25,12 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun isConfigured() = prefs.isConfigured()
 
-    override fun setConfigured(isConfigured: Boolean) = prefs.setConfigured(isConfigured)
+    override fun setConfigured(isConfigured: Boolean)  = prefs.setConfigured(isConfigured)
 
     override fun getDeviceConfiguration() = prefs.getDeviceConfiguration()
-    override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?) =
-        prefs.saveDeviceConfiguration(response)
-
-    override fun getSettings() = prefs.getSettings()
-    override fun saveSettings(settings: Settings?) = prefs.saveSettings(settings)
+    override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)= prefs.saveDeviceConfiguration(response)
+    override fun getPrinterBarcodeSettings() = prefs.getPrinterBarcodeSettings()
+    override fun savePrinterSettings(settings: Settings?) = prefs.savePrinterSettings(settings)
 
     override fun getOperatorName() = prefs.getOperatorName()
 
@@ -46,33 +44,35 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun saveQuickRemarks(response: QuickRemarkResponse?) = prefs.saveQuickRemarks(response)
 
-    override fun setDamagesCurrentVersion(currentVersion: Long) =
-        prefs.setDamagesCurrentVersion(currentVersion)
+    override fun setDamagesCurrentVersion(currentVersion: Long) = prefs.setDamagesCurrentVersion(currentVersion)
 
-    override fun getDamagesCurrentVersion(): Long = prefs.getDamagesCurrentVersion()
+    override fun getDamagesVersion(): Long = prefs.getDamagesCurrentVersion()
 
-    override fun setQuickCurrentVersion(currentVersion: Long) =
-        prefs.setQuickCurrentVersion(currentVersion)
+    override fun getVoyageVersion(): Long {
+        return prefs.getVoyageVersion()
+    }
 
-    override fun getQuickCurrentVersion(): Long = prefs.getQuickCurrentVersion()
+    override fun setVoyageCurrentVersion(currentVersion: Long) {
+        return prefs.setVoyageCurrentVersion(currentVersion)
+    }
 
-    override fun setAppMinimumVersion(version: Long) = prefs.setAppMinimumVersion(version)
+    override fun setQuickCurrentVersion(currentVersion: Long) = prefs.setQuickCurrentVersion(currentVersion)
 
-    override fun getAppMinimumVersion(): Long = prefs.getAppMinimumVersion()
+    override fun getQuickRemarksVersion(): Long = prefs.getQuickCurrentVersion()
 
-    override fun setShouldUpdateApp(shouldUpdate: Boolean) = prefs.setShouldUpdateApp(shouldUpdate)
+    override fun setAppVersion(version: Long) = prefs.setAppVersion(version)
 
-    override fun shouldUpdateApp(): Boolean = prefs.shouldUpdateApp()
+    override fun getAppVersion(): Long = prefs.getAppVersion()
+
 
     override fun setImei(imei: String) = prefs.setImei(imei)
 
     override fun getImei(): String? = prefs.getImei()
 
-    override fun setMustUpdateApp(shouldUpdate: Boolean) = prefs.setMustUpdateApp(shouldUpdate)
+    override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setUpdateApp(shouldUpdate)
 
-    override fun mustUpdateApp(): Boolean = prefs.mustUpdateApp()
+    override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()
 
-    override fun setAppCurrentVersion(version: Long) = prefs.setAppCurrentVersion(version)
 
     override fun getAppCurrentVersion(): Long = prefs.getAppCurrentVersion()
 
@@ -88,4 +88,7 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun addWorkerId(cargoCode: String, workerId: String)  = prefs.addWorkerId(cargoCode, workerId)
 
     override fun getWorkerId(cargoCode: String): String? = prefs.getWorkerId(cargoCode)
+    override fun isInternetErrorLoggingEnabled() = prefs.isInternetErrorLoggingEnabled()
+
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = prefs.setInternetErrorLoggingEnabled(enabled)
 }

@@ -45,15 +45,17 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
             }
         }
 
-        viewModel.printerSettings.observe(this, Observer {
+        viewModel.getPrinterSettings().observe(this, Observer {
             binding.AdminPrinterSettingsEdtLabelCpclData.setText(if (it.labelCpclData.isNullOrEmpty()) Constants.DEFAULT_PRINTER_CODE else it.labelCpclData)
             binding.AdminPrinterSettingsEdtPrinterValue.setText(it.currentPrinterName)
         })
 
         viewModel.getSettings()
-        viewModel.close.observe(this, Observer {
-            setResult(Activity.RESULT_OK)
-            finish()
+        viewModel.getClose().observe(this, Observer {event->
+            event.getContentIfNotHandled().let {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         })
 
         binding.AdminPrinterSettingsEdtLabelCpclData.setText(Constants.DEFAULT_PRINTER_CODE)
@@ -104,7 +106,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
 
         builderSingle.setNegativeButton(
             "cancel"
-        ) { dialog, which -> dialog.dismiss() }
+        ) { dialog, _ -> dialog.dismiss() }
 
         builderSingle.setAdapter(arrayAdapter) { dialog, which ->
             val address = arrayAdapter.getItem(which)!!.address
@@ -153,7 +155,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
                                     .setMessage(errorMessage)
                                     .setPositiveButton(
                                         android.R.string.ok
-                                    ) { dialog, which -> dialog.dismiss() }
+                                    ) { dialog, _ -> dialog.dismiss() }
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .show()
                             }

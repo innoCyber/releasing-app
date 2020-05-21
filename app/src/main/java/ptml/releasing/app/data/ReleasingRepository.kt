@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.base.BaseResponse
+import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -68,6 +69,7 @@ open class ReleasingRepository @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e)
                 downloadDamagesAsync(imei)
+
             }
         }
     }
@@ -177,9 +179,9 @@ open class ReleasingRepository @Inject constructor(
 
     override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
 
-    override fun getSettings() = local.getSettings()
+    override fun getPrinterBarcodeSettings() = local.getPrinterBarcodeSettings()
 
-    override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
+    override fun savePrinterSettings(settings: Settings?) = local.savePrinterSettings(settings)
 
     override fun getOperatorName() = local.getOperatorName()
 
@@ -219,43 +221,36 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override fun setShouldUpdateApp(shouldUpdate: Boolean) = local.setShouldUpdateApp(shouldUpdate)
-
-    override fun shouldUpdateApp(): Boolean = local.shouldUpdateApp()
-
     override fun setImei(imei: String) = local.setImei(imei)
 
     override fun getImei(): String? = local.getImei()
 
-    override fun setDamagesCurrentVersion(currentVersion: Long) =
-        local.setDamagesCurrentVersion(currentVersion)
-
-    override fun setQuickCurrentVersion(currentVersion: Long) =
-        local.setQuickCurrentVersion(currentVersion)
+    override fun setDamagesCurrentVersion(currentVersion: Long) = local.setDamagesCurrentVersion(currentVersion)
+    override fun setVoyagesCurrentVersion(currentVersion: Long) =
+        local.setVoyageCurrentVersion(currentVersion)
+    override fun setQuickCurrentVersion(currentVersion: Long) = local.setQuickCurrentVersion(currentVersion)
 
     override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
 
     override fun mustUpdateApp(): Boolean = local.mustUpdateApp()
 
-    override fun setAppCurrentVersion(version: Long) = local.setAppCurrentVersion(version)
 
-    override fun getAppCurrentVersion(): Long = local.getAppCurrentVersion()
 
-    override fun setAppMinimumVersion(version: Long) = local.setAppMinimumVersion(version)
+    override fun setAppMinimumVersion(version: Long) = local.setAppVersion(version)
 
-    override fun getAppMinimumVersion(): Long = local.getAppMinimumVersion()
+    override fun getAppMinimumVersion(): Long = local.getAppVersion()
 
     override fun checkToResetLocalAppUpdateValues() {
         val currentVersion = BuildConfig.VERSION_CODE.toLong()
-        if (currentVersion > local.getAppMinimumVersion()) {
+        if (currentVersion > local.getAppVersion()) {
             local.setMustUpdateApp(false)
-            local.setAppMinimumVersion(currentVersion)
-        }
-        if (currentVersion > local.getAppCurrentVersion()) {
-            local.setShouldUpdateApp(false)
-            local.setAppCurrentVersion(currentVersion)
+            local.setAppVersion(currentVersion)
         }
     }
+
+    override fun isInternetErrorLoggingEnabled() = local.isInternetErrorLoggingEnabled()
+
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = local.setInternetErrorLoggingEnabled(enabled)
 
     override suspend fun addImage(cargoCode: String, image: Image) {
         local.addImage(cargoCode, image)

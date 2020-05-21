@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -15,40 +16,41 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DeviceConfigViewModel @Inject constructor(
-    repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+    repository: Repository,
+    appCoroutineDispatchers: AppCoroutineDispatchers,
+    updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
 
-    private val _networkState = MutableLiveData<NetworkState>()
-    val networkState: LiveData<NetworkState> = _networkState
+    val networkState = MutableLiveData<Event<NetworkState>>()
+    fun  getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
+    val openSearchActivity = MutableLiveData<Event<Unit>>()
+    fun openSearchActivity(): LiveData<Event<Unit>> = openSearchActivity
 
-    private val _openSearchActivity = SingleLiveEvent<Unit>()
-    val openSearchActivity: LiveData<Unit> = _openSearchActivity
-
-    private val _showDeviceError = SingleLiveEvent<Unit>()
-    val showDeviceError: LiveData<Unit> = _showDeviceError
+    val showDeviceError = SingleLiveEvent<Event<Unit>>()
+    fun showDeviceError(): LiveData<Event<Unit>> = showDeviceError
 
 
     fun verifyDeviceId(imei: String) {
-        if (networkState.value == NetworkState.LOADING) return
-        _networkState.postValue(NetworkState.LOADING)
+        if (networkState.value?.peekContent() == NetworkState.LOADING) return
+        networkState.postValue(Event(NetworkState.LOADING))
         compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
                 val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(appCoroutineDispatchers.main) {
                     if (response.isSuccess) {
-                        _openSearchActivity.postValue(Unit)
+                        openSearchActivity.postValue(Event(Unit))
                         repository.setImei(imei)
                         repository.setFirst(false)
                     } else {
-                        _showDeviceError.postValue(Unit)
+                        showDeviceError.postValue(Event(Unit))
                     }
-                    _networkState.postValue(NetworkState.LOADED)
+                    networkState.postValue(Event(NetworkState.LOADED))
                 }
             } catch (it: Throwable) {
                 Timber.e(it, "Error occurred")
-                _networkState.postValue(NetworkState.error(it))
+                networkState.postValue(Event(NetworkState.error(it)))
             }
         }
 
