@@ -15,6 +15,6 @@ interface UploadImageService {
         @Query("cargo_code") cargoCode: String?,
         @Query("cargo_id") cargoId: Int?,
         @Part("PhotoName") imageName: String,
-        @Part("image") file: MultipartBody.Part
+        @Part file: MultipartBody.Part
     ): BaseResponse
 }
