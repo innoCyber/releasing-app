@@ -111,9 +111,12 @@ interface Repository {
    suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?)
 
     suspend fun uploadImage(
+        cargoTypeId: Int?,
+        cargoCode: String?,
+        cargoId: Int?,
         imageName: String,
         file: MultipartBody.Part
-    ):BaseResponse
+    ): BaseResponse
 
     fun addWorkerId(cargoCode: String, workerId:String)
     fun getWorkerId(cargoCode: String): String?

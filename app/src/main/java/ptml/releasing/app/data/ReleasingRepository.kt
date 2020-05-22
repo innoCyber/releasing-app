@@ -136,7 +136,8 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun getFormConfigAsync(): Deferred<ConfigureDeviceResponse> {
-        return local.getDeviceConfiguration()?.toDeferredAsync() as Deferred<ConfigureDeviceResponse>
+        return local.getDeviceConfiguration()
+            ?.toDeferredAsync() as Deferred<ConfigureDeviceResponse>
     }
 
 
@@ -224,10 +225,14 @@ open class ReleasingRepository @Inject constructor(
 
     override fun getImei(): String? = local.getImei()
 
-    override fun setDamagesCurrentVersion(currentVersion: Long) = local.setDamagesCurrentVersion(currentVersion)
+    override fun setDamagesCurrentVersion(currentVersion: Long) =
+        local.setDamagesCurrentVersion(currentVersion)
+
     override fun setVoyagesCurrentVersion(currentVersion: Long) =
         local.setVoyageCurrentVersion(currentVersion)
-    override fun setQuickCurrentVersion(currentVersion: Long) = local.setQuickCurrentVersion(currentVersion)
+
+    override fun setQuickCurrentVersion(currentVersion: Long) =
+        local.setQuickCurrentVersion(currentVersion)
 
     override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
 
@@ -248,7 +253,8 @@ open class ReleasingRepository @Inject constructor(
 
     override fun isInternetErrorLoggingEnabled() = local.isInternetErrorLoggingEnabled()
 
-    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = local.setInternetErrorLoggingEnabled(enabled)
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) =
+        local.setInternetErrorLoggingEnabled(enabled)
 
     override suspend fun addImage(cargoCode: String, image: Image) {
         local.addImage(cargoCode, image)
@@ -311,13 +317,19 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override suspend fun uploadImage(
+        cargoTypeId: Int?,
+        cargoCode: String?,
+        cargoId: Int?,
         imageName: String,
         file: MultipartBody.Part
-    ): BaseResponse = remote.uploadImage(imageName, file)
+    ): BaseResponse {
+        return remote.uploadImage(cargoTypeId, cargoCode, cargoId, imageName, file)
+    }
 
-    override fun addWorkerId(cargoCode: String, workerId: String) = local.addWorkerId(cargoCode, workerId)
+    override fun addWorkerId(cargoCode: String, workerId: String) =
+        local.addWorkerId(cargoCode, workerId)
 
-    override fun getWorkerId(cargoCode: String): String?  = local.getWorkerId(cargoCode)
+    override fun getWorkerId(cargoCode: String): String? = local.getWorkerId(cargoCode)
 }
 
 

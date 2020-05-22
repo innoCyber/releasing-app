@@ -2,41 +2,30 @@ package ptml.releasing.images.worker
 
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.annotation.VisibleForTesting
+import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import kotlinx.coroutines.Deferred
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import ptml.releasing.R
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.di.modules.worker.ChildWorkerFactory
+import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_CARGO_CODE
+import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_ID
+import ptml.releasing.app.utils.ProgressRequestBody
+import ptml.releasing.app.utils.upload.CancelWorkReceiver
+import ptml.releasing.app.utils.upload.NotificationHelper
+import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
+import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
-import ptml.releasing.app.utils.ProgressRequestBody
-import android.content.Intent
-import androidx.core.app.NotificationCompat
-import com.google.gson.Gson
-import okhttp3.OkHttpClient
-import ptml.releasing.BuildConfig
-import ptml.releasing.R
-import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_CARGO_CODE
-import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_ID
-import ptml.releasing.app.utils.CoroutineCallAdapterFactory
-import ptml.releasing.app.utils.upload.NotificationHelper
-
-import ptml.releasing.app.utils.upload.CancelWorkReceiver
-import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
-
-import ptml.releasing.device_configuration.view.DeviceConfigActivity
-import ptml.releasing.images.api.UploadImageService
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 /**
@@ -53,6 +42,8 @@ class ImageUploadWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val cargoCode = inputData.getString(CARGO_CODE_KEY)
+        val cargoId = inputData.getInt(CARGO_ID_KEY, 0)
+        val cargoType = inputData.getInt(CARGO_TYPE_KEY, 0)
         //begin upload for file images
         var result = Result.retry()
 
@@ -69,7 +60,7 @@ class ImageUploadWorker @AssistedInject constructor(
                 for (i in 0 until totalImages) {
                     val image = imagesList[i]
                     val status = "${i + 1}/$totalImages"
-                    val response = uploadImageAsync(image, cargoCode, status)
+                    val response = uploadImageAsync(image, cargoCode, cargoType, cargoId, status)
                     val success = response.isSuccess
                     Timber.d("Success: $success")
                     successResponse.add(success)
@@ -113,11 +104,13 @@ class ImageUploadWorker @AssistedInject constructor(
     private suspend fun uploadImageAsync(
         it: Image,
         cargoCode: String,
+        cargoType: Int,
+        cargoId: Int,
         status: String
     ): BaseResponse {
         val body = createMultipartBody(it.imageUri, cargoCode, status)
 
-        return repository.uploadImage(it.name ?: "", body)
+        return repository.uploadImage(cargoType, cargoCode, cargoId, it.name ?: "", body)
     }
 
 
@@ -266,8 +259,10 @@ class ImageUploadWorker @AssistedInject constructor(
     companion object {
 
         const val CARGO_CODE_KEY = "cargo_code_key"
+        const val CARGO_ID_KEY = "cargo_id_key"
+        const val CARGO_TYPE_KEY = "cargo_type_key"
 
-        fun createWorkRequest(cargoCode: String): OneTimeWorkRequest {
+        fun createWorkRequest(cargoCode: String, cargoId: Int, cargoType: Int): OneTimeWorkRequest {
 
             val myConstraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -276,6 +271,8 @@ class ImageUploadWorker @AssistedInject constructor(
 
             val inputData = Data.Builder()
                 .putString(CARGO_CODE_KEY, cargoCode)
+                .putInt(CARGO_ID_KEY, cargoId)
+                .putInt(CARGO_TYPE_KEY, cargoType)
                 .build()
 
             val workRequest = OneTimeWorkRequest

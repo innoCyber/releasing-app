@@ -2,10 +2,10 @@ package ptml.releasing.images.worker
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ListenableWorker
 import androidx.work.testing.TestListenableWorkerBuilder
 import io.mockk.coEvery
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -32,6 +32,8 @@ class ImageUploadWorkerTest {
     private lateinit var context: Context
     private lateinit var repository: Repository
     private val testCargoCode = "1234"
+    private val testCargoId = 22
+    private val testCargoType = 3
 
     @Before
     fun init() {
@@ -42,6 +44,8 @@ class ImageUploadWorkerTest {
 
         val inputData = Data.Builder()
             .putString(ImageUploadWorker.CARGO_CODE_KEY, testCargoCode)
+            .putInt(ImageUploadWorker.CARGO_ID_KEY, testCargoId)
+            .putInt(ImageUploadWorker.CARGO_TYPE_KEY, testCargoType)
             .build()
 
         worker = TestListenableWorkerBuilder<ImageUploadWorker>(context)
@@ -60,8 +64,8 @@ class ImageUploadWorkerTest {
         } returns uploadedImages
 
         coEvery {
-            repository.uploadImage(any(), any())
-        }returns BaseResponse("", true).toDeferredAsync() as Deferred<BaseResponse>
+            repository.uploadImage(testCargoType, testCargoCode, testCargoId, any(), any())
+        } returns BaseResponse("", true)
 
         coEvery {
             repository.addImage(any(), any())
@@ -87,8 +91,8 @@ class ImageUploadWorkerTest {
         } returns testImages
 
         coEvery {
-            repository.uploadImage(any(), any())
-        }returns BaseResponse("", false).toDeferredAsync() as Deferred<BaseResponse>
+            repository.uploadImage(testCargoType, testCargoCode, testCargoId, any(), any())
+        } returns BaseResponse("", false)
 
         coEvery {
             repository.addImage(any(), any())
