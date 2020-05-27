@@ -70,36 +70,41 @@ class CargoInfoViewModel @Inject constructor(
 
     fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
         compositeJob = CoroutineScope(dispatchers.db).launch {
-            val remarksMap = mutableMapOf<Int, QuickRemark>()
-            val formConfig = repository.getFormConfigAsync().await()
-            val remarks = repository.getQuickRemarkAsync(imei)?.await()
-            for (remark in remarks?.data ?: mutableListOf()) {
-                remarksMap[remark.id ?: return@launch] =
-                    formMappers.quickRemarkMapper.mapFromModel(remark)
-            }
+            try {
+                val remarksMap = mutableMapOf<Int, QuickRemark>()
+                val formConfig = repository.getFormConfigAsync().await()
+                val remarks = repository.getQuickRemarkAsync(imei)?.await()
+                for (remark in remarks?.data ?: mutableListOf()) {
+                    remarksMap[remark.id ?: return@launch] =
+                        formMappers.quickRemarkMapper.mapFromModel(remark)
+                }
 
-            val form = if (shouldAddVoyage(findCargoResponse, formConfig)) {
-                //add voyage form
-                val formData = formConfig.data.toMutableList()
-                formData.add(getVoyageForm())
-                formConfig.copy(data = formData)
-            } else {
-                formConfig
-            }
-            val voyages = voyageRepository.getRecentVoyages().map {
-                formMappers.voyagesMapper.mapFromModel(it)
-            }.map {
-                it.id to it
-            }.toMap()
+                val form = if (shouldAddVoyage(findCargoResponse, formConfig)) {
+                    //add voyage form
+                    val formData = formConfig.data.toMutableList()
+                    formData.add(getVoyageForm())
+                    formConfig.copy(data = formData)
+                } else {
+                    formConfig
+                }
 
-            val wrapper =
-                FormDataWrapper(
-                    remarksMap,
-                    formMappers.configureDeviceMapper.mapFromModel(form),
-                    voyages
-                )
-            withContext(dispatchers.main) {
-                _formConfig.postValue(wrapper)
+                val voyages = voyageRepository.getRecentVoyages().map {
+                    formMappers.voyagesMapper.mapFromModel(it)
+                }.map {
+                    it.id to it
+                }.toMap()
+
+                val wrapper =
+                    FormDataWrapper(
+                        remarksMap,
+                        formMappers.configureDeviceMapper.mapFromModel(form),
+                        voyages
+                    )
+                withContext(dispatchers.main) {
+                    _formConfig.postValue(wrapper)
+                }
+            } catch (e: Exception) {
+                _errorMessage.postValue(Event(e.localizedMessage))
             }
         }
     }

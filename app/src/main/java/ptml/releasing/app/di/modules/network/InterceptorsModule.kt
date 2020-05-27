@@ -1,10 +1,11 @@
 package ptml.releasing.app.di.modules.network
 
 
-import ptml.releasing.app.di.scopes.ReleasingAppScope
 import dagger.Module
 import dagger.Provides
 import okhttp3.logging.HttpLoggingInterceptor
+import ptml.releasing.BuildConfig
+import ptml.releasing.app.di.scopes.ReleasingAppScope
 import timber.log.Timber
 
 @Module
@@ -15,6 +16,6 @@ class InterceptorsModule{
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
             message -> Timber.e(message)
-        }).setLevel(HttpLoggingInterceptor.Level.NONE)
+        }).setLevel(if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
     }
 }

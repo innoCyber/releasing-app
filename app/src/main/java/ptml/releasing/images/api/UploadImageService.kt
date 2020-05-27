@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface UploadImageService {
     @Multipart
-    @POST("UploadImage")
+    @POST("ImagesUpload")
     suspend fun upload(
         @Query("cargo_type") cargoTypeId: Int?,
         @Query("cargo_code") cargoCode: String?,

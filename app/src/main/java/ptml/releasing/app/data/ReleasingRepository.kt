@@ -3,10 +3,8 @@ package ptml.releasing.app.data
 import android.net.Uri
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
 import ptml.releasing.BuildConfig
 import ptml.releasing.adminlogin.model.User
-import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -314,16 +312,6 @@ open class ReleasingRepository @Inject constructor(
             //delete the uncompressed file
             fileUtils.deleteFile(File(currentPhotoPath ?: return))
         }
-    }
-
-    override suspend fun uploadImage(
-        cargoTypeId: Int?,
-        cargoCode: String?,
-        cargoId: Int?,
-        imageName: String,
-        file: MultipartBody.Part
-    ): BaseResponse {
-        return remote.uploadImage(cargoTypeId, cargoCode, cargoId, imageName, file)
     }
 
     override fun addWorkerId(cargoCode: String, workerId: String) =

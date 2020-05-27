@@ -23,6 +23,7 @@ import ptml.releasing.app.utils.upload.CancelWorkReceiver
 import ptml.releasing.app.utils.upload.NotificationHelper
 import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
+import ptml.releasing.images.api.ImageUploadRepository
 import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
@@ -32,6 +33,7 @@ import java.io.File
 Created by kryptkode on 8/6/2019
  */
 class ImageUploadWorker @AssistedInject constructor(
+    @VisibleForTesting val imageUploadRepository: ImageUploadRepository,
     @VisibleForTesting val repository: Repository,
     @Assisted private val context: Context,
     @Assisted private val params: WorkerParameters
@@ -110,7 +112,7 @@ class ImageUploadWorker @AssistedInject constructor(
     ): BaseResponse {
         val body = createMultipartBody(it.imageUri, cargoCode, status)
 
-        return repository.uploadImage(cargoType, cargoCode, cargoId, it.name ?: "", body)
+        return imageUploadRepository.uploadImage(cargoType, cargoCode, cargoId, it.name ?: "", body)
     }
 
 
@@ -127,7 +129,7 @@ class ImageUploadWorker @AssistedInject constructor(
         val file = File(fileUri.path ?: "")
         Timber.d("createMultipartBody")
         return MultipartBody.Part.createFormData(
-            "image",
+            "UploadedImage",
             file.name,
             createCountingRequestBody(file, fileUri, cargoCode, status)
         )

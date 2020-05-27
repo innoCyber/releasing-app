@@ -1,7 +1,6 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
-import okhttp3.MultipartBody
 import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
@@ -109,14 +108,6 @@ interface Repository {
     )
 
    suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?)
-
-    suspend fun uploadImage(
-        cargoTypeId: Int?,
-        cargoCode: String?,
-        cargoId: Int?,
-        imageName: String,
-        file: MultipartBody.Part
-    ): BaseResponse
 
     fun addWorkerId(cargoCode: String, workerId:String)
     fun getWorkerId(cargoCode: String): String?

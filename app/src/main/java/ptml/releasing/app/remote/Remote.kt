@@ -1,7 +1,6 @@
 package ptml.releasing.app.remote
 
 import kotlinx.coroutines.Deferred
-import okhttp3.MultipartBody
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.model.FindCargoResponse
@@ -35,12 +34,4 @@ interface Remote {
     suspend fun uploadData(
         request: FormSubmissionRequest
     ): Deferred<BaseResponse>
-
-    suspend fun uploadImage(
-        cargoTypeId: Int?,
-        cargoCode: String?,
-        cargoId: Int?,
-        imageName: String,
-        file: MultipartBody.Part
-    ): BaseResponse
 }

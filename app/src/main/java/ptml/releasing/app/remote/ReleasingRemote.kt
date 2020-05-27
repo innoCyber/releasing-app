@@ -1,8 +1,6 @@
 package ptml.releasing.app.remote
 
-import okhttp3.MultipartBody
 import ptml.releasing.adminlogin.model.api.LoginApiService
-import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_info.model.api.UploadDataService
 import ptml.releasing.cargo_search.model.api.FindCargoService
@@ -52,14 +50,5 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
 
     override suspend fun uploadData(request: FormSubmissionRequest) = uploadDataService.uploadData(request)
 
-    override suspend fun uploadImage(
-        cargoTypeId: Int?,
-        cargoCode: String?,
-        cargoId: Int?,
-        imageName: String,
-        file: MultipartBody.Part
-    ): BaseResponse {
-        return uploadImageService.upload(cargoTypeId, cargoCode, cargoId, imageName, file)
-    }
 }
 
