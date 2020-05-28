@@ -57,6 +57,7 @@ class CargoInfoActivity :
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
+    var textToPrint: String? = null
 
     private var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
@@ -70,8 +71,8 @@ class CargoInfoActivity :
         override fun onClickFormButton(type: FormType, view: View) {
             when (type) {
                 FormType.PRINTER -> {
-
                     printerView = view
+                    textToPrint = findCargoResponse?.barcode ?: ""
                     viewModel.onPrintBarcode()
                 }
 
@@ -80,6 +81,15 @@ class CargoInfoActivity :
                 }
 
                 FormType.PRINTER_DAMAGES -> {
+                    if (DamagesActivity.currentDamages.isEmpty()) {
+                        notifyUser("Please select damages before you can print")
+                        return
+                    }
+                    printerView = view
+                    val damagesDescriptions = DamagesActivity.currentDamages.map {
+                        "${it.name.trim()}\r\n"
+                    }
+                    textToPrint = damagesDescriptions.joinToString()
                     viewModel.onPrintDamages()
                 }
 
@@ -155,7 +165,7 @@ class CargoInfoActivity :
 
         getFormConfigWithPermissionCheck()
 
-        viewModel.printerBarcodeSettings.observe(this, Observer {
+        viewModel.printerSettings.observe(this, Observer {
             this.printerBarcodeSettings = it
             tryToPrintIfPermissionsAreGranted()
         })
@@ -225,7 +235,7 @@ class CargoInfoActivity :
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PrinterSettingsActivity.RC_BT) {
             if (resultCode == Activity.RESULT_OK) {
-                printBarcodeWithPermissionCheck(findCargoResponse?.barcode ?: "")
+                printWithPermissionCheck()
             } else {
                 showTurnBlueToothPrompt()
             }
@@ -263,7 +273,7 @@ class CargoInfoActivity :
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    fun printBarcode(barcode: String) {
+    fun print() {
         printerView?.isEnabled = false
         val t = Thread(Runnable {
             try {
@@ -272,8 +282,12 @@ class CargoInfoActivity :
 
                 val macAddress = printerBarcodeSettings?.currentPrinter
                 val labelCpclData =
-                    printerBarcodeSettings?.labelCpclData?.replace("var_barcode", barcode)
-                /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
+                    printerBarcodeSettings?.labelCpclData?.replace(
+                        Constants.PRINTER_TEXT_TO_REPLACE,
+                        textToPrint ?: "No text set"
+                    )
+
+
                 Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
@@ -345,7 +359,7 @@ class CargoInfoActivity :
         }
 
         if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
-            printBarcodeWithPermissionCheck(findCargoResponse?.barcode ?: "")
+            printWithPermissionCheck()
         } else {
             attemptToTurnBluetoothOn()
         }

@@ -34,6 +34,7 @@ object Constants {
     const val DEFAULT_APP_VERSION = 1L
 
 
+    const val PRINTER_TEXT_TO_REPLACE = "var_text"
     const val DEFAULT_BARCODE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
@@ -43,7 +44,7 @@ object Constants {
             "BAR-SENSE\r\n" +
             "T 4 0 179 20 PTML\r\n" +
             "BT 7 0 6\r\n" +
-            "B 39 1 30 200 31 70 var_barcode\r\n" +
+            "B 39 1 30 200 31 70 $PRINTER_TEXT_TO_REPLACE\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
 
@@ -62,7 +63,7 @@ object Constants {
             "T 4 0 179 20 PTML\r\n" +
             "ML 47\r\n" +
             "T 4 0 10 20\r\n" +
-            "var_texts" +
+            PRINTER_TEXT_TO_REPLACE +
             "ENDML\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
