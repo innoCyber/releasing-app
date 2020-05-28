@@ -43,7 +43,7 @@ class PrinterSettingsViewModel @Inject constructor(
             settings?.currentPrinterName = currentPrinterName
             settings?.labelCpclData = label
 
-            repository.savePrinterSettings(settings)
+            repository.savePrinterBarcodeSettings(settings)
             withContext(appCoroutineDispatchers.main) {
                 close.postValue(Event(Unit))
             }

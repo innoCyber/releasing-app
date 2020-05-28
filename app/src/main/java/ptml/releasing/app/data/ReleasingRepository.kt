@@ -172,8 +172,13 @@ open class ReleasingRepository @Inject constructor(
     override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
 
     override fun getPrinterBarcodeSettings() = local.getPrinterBarcodeSettings()
+    override fun getPrinterMultilineSettings() = local.getPrinterBarcodeSettings()
 
-    override fun savePrinterSettings(settings: Settings?) = local.savePrinterSettings(settings)
+    override fun savePrinterBarcodeSettings(settings: Settings?) =
+        local.savePrinterBarcodeSettings(settings)
+
+    override fun savePrinterMultilineSettings(settings: Settings?) =
+        local.savePrinterBarcodeSettings(settings)
 
     override fun getOperatorName() = local.getOperatorName()
 

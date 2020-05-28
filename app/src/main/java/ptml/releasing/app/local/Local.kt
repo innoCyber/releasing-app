@@ -22,8 +22,11 @@ interface Local {
     fun getDeviceConfiguration(): ConfigureDeviceResponse?
     fun saveDeviceConfiguration(response:ConfigureDeviceResponse?)
 
-    fun savePrinterSettings(settings: Settings?)
+    fun savePrinterBarcodeSettings(settings: Settings?)
     fun getPrinterBarcodeSettings(): Settings
+
+    fun getPrinterMultilineSettings(): Settings
+    fun savePrinterMultilineSettings(settings: Settings?)
 
     fun saveOperatorName(name:String?)
     fun getOperatorName():String?

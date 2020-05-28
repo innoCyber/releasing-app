@@ -117,6 +117,13 @@ class CargoInfoViewModel @Inject constructor(
         }
     }
 
+    fun onPrintDamages() {
+        viewModelScope.launch {
+            val settings = repository.getPrinterBarcodeSettings()
+            _printerBarcodeSettings.postValue(settings)
+        }
+    }
+
     private fun getVoyageForm(): ReleasingConfigureDeviceData {
         val data = ReleasingConfigureDeviceData(
             position = VOYAGE_ID,

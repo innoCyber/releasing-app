@@ -79,6 +79,10 @@ class CargoInfoActivity :
 
                 }
 
+                FormType.PRINTER_DAMAGES -> {
+                    viewModel.onPrintDamages()
+                }
+
                 FormType.DAMAGES -> {
                     damageView = view
                     DamagesActivity.typeContainer = findCargoResponse?.typeContainer
