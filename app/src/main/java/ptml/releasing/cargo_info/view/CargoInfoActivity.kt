@@ -375,10 +375,37 @@ class CargoInfoActivity :
     @VisibleForTesting
     fun createForm(wrapper: FormDataWrapper?) {
         Timber.d("From sever: %s", findCargoResponse)
+
+        val newForm = wrapper?.formConfigureDeviceResponse?.data?.toMutableList() ?: mutableListOf()
+
+        newForm.add(
+            FormConfiguration(
+                position = 0,
+                type = FormType.DAMAGES.type,
+                title = "Add damages",
+                required = true,
+                editable = false,
+                options = listOf(),
+                dataValidation = ""
+            )
+        )
+
+        newForm.add(
+            FormConfiguration(
+                position = 0,
+                type = FormType.PRINTER_DAMAGES.type,
+                title = "Print damages",
+                required = false,
+                editable = false,
+                options = listOf(),
+                dataValidation = ""
+            )
+        )
+
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks, wrapper?.voyages)
+            ?.build(newForm, wrapper?.remarks, wrapper?.voyages)
 
         formBuilder
             ?.init(viewModel.formMappers.formPrefillMapper.mapFromModel(findCargoResponse!!))
