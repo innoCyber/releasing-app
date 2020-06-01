@@ -53,7 +53,7 @@ object Constants {
      * the "var_texts" string should be replaced by the text to be printed
      * each line of text should  be terminated by \r\n (carriage return  and new line characters)
      * */
-    const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
+ /*   const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
             "SPEED 4\r\n" +
@@ -67,6 +67,24 @@ object Constants {
             "ENDML\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
+*/
+
+    const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
+            "PW 480\r\n" +
+            "TONE 50\r\n" +
+            "SPEED 4\r\n" +
+            "ON-FEED IGNORE\r\n" +
+            "NO-PACE\r\n" +
+            "BAR-SENSE\r\n" +
+            "T 4 0 179 20 PTML\r\n" +
+            "ML 47\r\n" +
+            "T 7 0 45 70\r\n" +
+            "$PRINTER_TEXT_TO_REPLACE\n" +
+            "ENDML\r\n" +
+            "FORM\r\n" +
+            "PRINT\r\n"
+
+
 
     const val ALPHANUMERIC = "alphanumeric"
     const val NUMERIC = "numeric"
