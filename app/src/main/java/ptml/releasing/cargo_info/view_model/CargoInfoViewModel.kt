@@ -111,7 +111,7 @@ class CargoInfoViewModel @Inject constructor(
 
     fun onPrintBarcode() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val settings = repository.getPrinterBarcodeSettings()
+            val settings = repository.getPrinterSettings()
             withContext(appCoroutineDispatchers.main) {
                 _printerSettings.postValue(settings)
             }
@@ -120,7 +120,7 @@ class CargoInfoViewModel @Inject constructor(
 
     fun onPrintDamages() {
         viewModelScope.launch {
-            val settings = repository.getPrinterBarcodeSettings()
+            val settings = repository.getPrinterSettings()
             settings.labelCpclData = Constants.DEFAULT_MULTILINE_PRINTER_SETTINGS
             _printerSettings.postValue(settings)
         }

@@ -54,8 +54,8 @@ interface Repository {
     suspend fun getDamagesByPosition(imei: String, position: String, typeContainer:Int?): List<Damage>
 
 
-    fun savePrinterBarcodeSettings(settings: Settings?)
-    fun getPrinterBarcodeSettings(): Settings
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterSettings(): Settings
 
     fun getPrinterMultilineSettings(): Settings
     fun savePrinterMultilineSettings(settings: Settings?)
