@@ -23,11 +23,8 @@ interface Prefs {
     fun getDeviceConfiguration(): ConfigureDeviceResponse?
     fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)
 
-    fun savePrinterBarcodeSettings(settings: Settings?)
-    fun getPrinterBarcodeSettings(): Settings
-
-    fun getPrinterMultilineSettings(): Settings
-    fun savePrinterMultilineSettings(settings: Settings?)
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterSettings(): Settings
 
     fun saveOperatorName(name:String?)
     fun getOperatorName():String?

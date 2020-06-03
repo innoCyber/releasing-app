@@ -22,8 +22,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES = "damages"
         const val SAVED_CONFIG = "saved_config"
         const val DEVICE_CONFIG = "device_config"
-        const val PRINTER_BARCODE_SETTINGS = "settings"
-        const val PRINTER_MULTI_LINE_SETTINGS = "printer_multi_line_settings"
+        const val PRINTER_SETTINGS = "settings"
         const val OPERATOR_NAME = "operator_name"
         const val SERVER_URL = "server_url"
         const val QUICK_REMARK = "quick_remark"
@@ -87,28 +86,17 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         sharedPreferences.edit().putString(DEVICE_CONFIG, gson.toJson(response)).apply()
     }
 
-    override fun savePrinterBarcodeSettings(settings: Settings?) {
-        sharedPreferences.edit().putString(PRINTER_BARCODE_SETTINGS, gson.toJson(settings)).apply()
+    override fun savePrinterSettings(settings: Settings?) {
+        sharedPreferences.edit().putString(PRINTER_SETTINGS, gson.toJson(settings)).apply()
     }
 
-    override fun getPrinterBarcodeSettings(): Settings {
+    override fun getPrinterSettings(): Settings {
         return gson.fromJson(
-            sharedPreferences.getString(PRINTER_BARCODE_SETTINGS, "{}"),
+            sharedPreferences.getString(PRINTER_SETTINGS, "{}"),
             Settings::class.java
         )
     }
 
-    override fun getPrinterMultilineSettings(): Settings {
-        return gson.fromJson(
-            sharedPreferences.getString(PRINTER_MULTI_LINE_SETTINGS, "{}"),
-            Settings::class.java
-        )
-    }
-
-    override fun savePrinterMultilineSettings(settings: Settings?) {
-        sharedPreferences.edit().putString(PRINTER_MULTI_LINE_SETTINGS, gson.toJson(settings))
-            .apply()
-    }
 
     override fun getOperatorName(): String? {
         return sharedPreferences.getString(OPERATOR_NAME, null)
