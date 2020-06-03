@@ -1,6 +1,6 @@
 package ptml.releasing.app.utils
 
-object Constants{
+object Constants {
 
     const val BAR_CODE: String = "barcode"
     const val EXTRAS = "extras"
@@ -20,7 +20,7 @@ object Constants{
     const val IMAGES = "images"
     const val PRINTER = "printer"
     const val DAMAGES = "damages"
-    const val SINGLE_SELECT ="single_select"
+    const val SINGLE_SELECT = "single_select"
     const val MULTI_SELECT = "multi_select"
     const val CHECK_BOX = "checkbox"
     const val QUICK_REMARKS = "quick_remarks"
@@ -34,7 +34,8 @@ object Constants{
     const val DEFAULT_APP_VERSION = 1L
 
 
-    const val DEFAULT_PRINTER_CODE = "! 0 200 200 400 1\r\n" +
+    const val PRINTER_TEXT_TO_REPLACE = "var_text"
+    const val DEFAULT_BARCODE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
             "SPEED 4\r\n" +
@@ -43,9 +44,47 @@ object Constants{
             "BAR-SENSE\r\n" +
             "T 4 0 179 20 PTML\r\n" +
             "BT 7 0 6\r\n" +
-            "B 39 1 30 200 31 70 var_barcode\r\n" +
+            "B 39 1 30 200 31 70 $PRINTER_TEXT_TO_REPLACE\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
+
+    /**
+     * Default printer settings for multiline text
+     * the "var_texts" string should be replaced by the text to be printed
+     * each line of text should  be terminated by \r\n (carriage return  and new line characters)
+     * */
+ /*   const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
+            "PW 480\r\n" +
+            "TONE 50\r\n" +
+            "SPEED 4\r\n" +
+            "ON-FEED IGNORE\r\n" +
+            "NO-PACE\r\n" +
+            "BAR-SENSE\r\n" +
+            "T 4 0 179 20 PTML\r\n" +
+            "ML 47\r\n" +
+            "T 4 0 10 20\r\n" +
+            PRINTER_TEXT_TO_REPLACE +
+            "ENDML\r\n" +
+            "FORM\r\n" +
+            "PRINT\r\n"
+*/
+
+    const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
+            "PW 480\r\n" +
+            "TONE 50\r\n" +
+            "SPEED 4\r\n" +
+            "ON-FEED IGNORE\r\n" +
+            "NO-PACE\r\n" +
+            "BAR-SENSE\r\n" +
+            "T 4 0 179 20 PTML\r\n" +
+            "ML 47\r\n" +
+            "T 7 0 45 70\r\n" +
+            "$PRINTER_TEXT_TO_REPLACE\n" +
+            "ENDML\r\n" +
+            "FORM\r\n" +
+            "PRINT\r\n"
+
+
 
     const val ALPHANUMERIC = "alphanumeric"
     const val NUMERIC = "numeric"

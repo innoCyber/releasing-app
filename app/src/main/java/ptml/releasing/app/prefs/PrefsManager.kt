@@ -90,12 +90,13 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         sharedPreferences.edit().putString(PRINTER_SETTINGS, gson.toJson(settings)).apply()
     }
 
-    override fun getPrinterBarcodeSettings(): Settings {
+    override fun getPrinterSettings(): Settings {
         return gson.fromJson(
             sharedPreferences.getString(PRINTER_SETTINGS, "{}"),
             Settings::class.java
         )
     }
+
 
     override fun getOperatorName(): String? {
         return sharedPreferences.getString(OPERATOR_NAME, null)

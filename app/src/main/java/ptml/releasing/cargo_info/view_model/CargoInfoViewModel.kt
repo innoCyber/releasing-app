@@ -10,6 +10,7 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -53,8 +54,8 @@ class CargoInfoViewModel @Inject constructor(
     private val _formConfig = MutableLiveData<FormDataWrapper>()
     val formConfig: LiveData<FormDataWrapper> = _formConfig
 
-    private val _printerBarcodeSettings = MutableLiveData<Settings>()
-    val printerBarcodeSettings: LiveData<Settings> = _printerBarcodeSettings
+    private val _printerSettings = MutableLiveData<Settings>()
+    val printerSettings: LiveData<Settings> = _printerSettings
 
     fun goBack() {
         _goBack.postValue(Event(true))
@@ -110,10 +111,18 @@ class CargoInfoViewModel @Inject constructor(
 
     fun onPrintBarcode() {
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val settings = repository.getPrinterBarcodeSettings()
+            val settings = repository.getPrinterSettings()
             withContext(appCoroutineDispatchers.main) {
-                _printerBarcodeSettings.postValue(settings)
+                _printerSettings.postValue(settings)
             }
+        }
+    }
+
+    fun onPrintDamages() {
+        viewModelScope.launch {
+            val settings = repository.getPrinterSettings()
+            settings.labelCpclData = Constants.DEFAULT_MULTILINE_PRINTER_SETTINGS
+            _printerSettings.postValue(settings)
         }
     }
 

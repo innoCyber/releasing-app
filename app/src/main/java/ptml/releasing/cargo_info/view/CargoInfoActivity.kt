@@ -57,6 +57,7 @@ class CargoInfoActivity :
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
+    var textToPrint: String? = null
 
     private var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
@@ -70,13 +71,33 @@ class CargoInfoActivity :
         override fun onClickFormButton(type: FormType, view: View) {
             when (type) {
                 FormType.PRINTER -> {
-
                     printerView = view
+                    textToPrint = findCargoResponse?.barcode ?: ""
                     viewModel.onPrintBarcode()
                 }
 
                 FormType.IMAGES -> {
 
+                }
+
+                FormType.PRINTER_DAMAGES -> {
+                    if (DamagesActivity.currentDamages.isEmpty()) {
+                        notifyUser("Please select damages before you can print")
+                        return
+                    }
+                    printerView = view
+                    val damagesDescriptions = DamagesActivity.currentDamages.mapIndexed {index, damage->
+                        var description = "${index +1}. ${damage.name.trim()}"
+                        if(description.length > 25){
+                            val builder = StringBuilder(description)
+                            builder.insert(25, "\r\n")
+                            description = builder.toString()
+                        }
+                        "${description}\r\n"
+
+                    }
+                    textToPrint = damagesDescriptions.joinToString()
+                    viewModel.onPrintDamages()
                 }
 
                 FormType.DAMAGES -> {
@@ -119,6 +140,117 @@ class CargoInfoActivity :
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        showUpEnabled(true)
+        DamagesActivity.resetValues() //reset the static values
+        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
+        binding.tvNumber.text = input
+
+        bluetoothManager = BluetoothManager(this)
+        bluetoothManager.adapterListener = object : BluetoothManager.AdapterListener {
+            override fun onAdapterError() {
+                showErrorDialog(getString(R.string.no_bt_message))
+            }
+        }
+
+        viewModel.goBack.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                onBackPressed()
+            }
+        })
+
+        viewModel.savedConfiguration.observe(this, Observer {
+            updateTop(it)
+        })
+
+        viewModel.getSavedConfig()
+
+        viewModel.formConfig.observe(this, Observer {
+            createForm(it)
+        })
+
+        getFormConfigWithPermissionCheck()
+
+        viewModel.printerSettings.observe(this, Observer {
+            this.printerBarcodeSettings = it
+            tryToPrintIfPermissionsAreGranted()
+        })
+
+        viewModel.networkState.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.submitting_form
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
+            }
+        })
+
+        viewModel.submitSuccess.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                notifyUser(getString(R.string.form_submit_success_msg))
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+        })
+
+        viewModel.errorMessage.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                showErrorDialog(it)
+            }
+        })
+
+
+
+        binding.includeError.btnReload.setOnClickListener {
+            validateSaveSubmit()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        damageView?.findViewById<TextView>(R.id.tv_number)?.text =
+            DamagesActivity.currentDamages.size.toString()
+        val errorView: View? =
+            if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
+        errorView?.visibility =
+            if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PrinterSettingsActivity.RC_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                printWithPermissionCheck()
+            } else {
+                showTurnBlueToothPrompt()
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
     private fun validateSaveSubmit() {
         val formValidator = FormValidator(formBuilder, formBuilder?.data)
         formValidator.listener = validatorListener
@@ -148,7 +280,7 @@ class CargoInfoActivity :
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    fun printBarcode(barcode: String) {
+    fun print() {
         printerView?.isEnabled = false
         val t = Thread(Runnable {
             try {
@@ -157,8 +289,12 @@ class CargoInfoActivity :
 
                 val macAddress = printerBarcodeSettings?.currentPrinter
                 val labelCpclData =
-                    printerBarcodeSettings?.labelCpclData?.replace("var_barcode", barcode)
-                /*db.getSettings().getLabelCpclData().replaceAll("var_barcode", cargo.getBarCode())*/
+                    printerBarcodeSettings?.labelCpclData?.replace(
+                        Constants.PRINTER_TEXT_TO_REPLACE,
+                        textToPrint ?: "No text set"
+                    )
+
+
                 Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
@@ -207,85 +343,6 @@ class CargoInfoActivity :
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        showUpEnabled(true)
-        DamagesActivity.resetValues() //reset the static values
-        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
-        binding.tvNumber.text = input
-
-        bluetoothManager = BluetoothManager(this)
-        bluetoothManager.adapterListener = object : BluetoothManager.AdapterListener {
-            override fun onAdapterError() {
-                showErrorDialog(getString(R.string.no_bt_message))
-            }
-        }
-
-        viewModel.goBack.observe(this, Observer {event->
-            event.getContentIfNotHandled()?.let {
-                onBackPressed()
-            }
-        })
-
-        viewModel.savedConfiguration.observe(this, Observer {
-            updateTop(it)
-        })
-
-        viewModel.getSavedConfig()
-
-        viewModel.formConfig.observe(this, Observer {
-            createForm(it)
-        })
-
-        getFormConfigWithPermissionCheck()
-
-        viewModel.printerBarcodeSettings.observe(this, Observer {
-            this.printerBarcodeSettings = it
-            tryToPrintIfPermissionsAreGranted()
-        })
-
-        viewModel.networkState.observe(this, Observer {event->
-            event.getContentIfNotHandled()?.let {
-                if (it == NetworkState.LOADING) {
-                    showLoading(
-                        binding.includeProgress.root,
-                        binding.includeProgress.tvMessage,
-                        R.string.submitting_form
-                    )
-                } else {
-                    hideLoading(binding.includeProgress.root)
-                }
-
-                if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
-                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-                } else {
-                    hideLoading(binding.includeError.root)
-                }
-            }
-        })
-
-        viewModel.submitSuccess.observe(this, Observer {event->
-            event.getContentIfNotHandled()?.let {
-                notifyUser(getString(R.string.form_submit_success_msg))
-                setResult(Activity.RESULT_OK)
-                finish()
-            }
-        })
-
-        viewModel.errorMessage.observe(this, Observer {event->
-            event.getContentIfNotHandled()?.let {
-                showErrorDialog(it)
-            }
-        })
-
-
-
-        binding.includeError.btnReload.setOnClickListener {
-            validateSaveSubmit()
-        }
-    }
-
     private fun showSuccessDialog() {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.form_submit_success_title),
@@ -301,17 +358,6 @@ class CargoInfoActivity :
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        damageView?.findViewById<TextView>(R.id.tv_number)?.text =
-            DamagesActivity.currentDamages.size.toString()
-        val errorView: View? =
-            if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
-        errorView?.visibility =
-            if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
-    }
-
     private fun tryToPrintIfPermissionsAreGranted() {
         if (bluetoothManager.bluetoothAdapter == null) {
             showErrorDialog(getString(R.string.no_bt_message))
@@ -320,7 +366,7 @@ class CargoInfoActivity :
         }
 
         if (bluetoothManager.bluetoothAdapter?.isEnabled == true) {
-            printBarcodeWithPermissionCheck(findCargoResponse?.barcode ?: "")
+            printWithPermissionCheck()
         } else {
             attemptToTurnBluetoothOn()
         }
@@ -336,10 +382,37 @@ class CargoInfoActivity :
     @VisibleForTesting
     fun createForm(wrapper: FormDataWrapper?) {
         Timber.d("From sever: %s", findCargoResponse)
+
+        val newForm = wrapper?.formConfigureDeviceResponse?.data?.toMutableList() ?: mutableListOf()
+
+        newForm.add(
+            FormConfiguration(
+                position = 0,
+                type = FormType.DAMAGES.type,
+                title = "Add damages",
+                required = true,
+                editable = false,
+                options = listOf(),
+                dataValidation = ""
+            )
+        )
+
+        newForm.add(
+            FormConfiguration(
+                position = 0,
+                type = FormType.PRINTER_DAMAGES.type,
+                title = "Print damages",
+                required = false,
+                editable = false,
+                options = listOf(),
+                dataValidation = ""
+            )
+        )
+
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(wrapper?.formConfigureDeviceResponse?.data, wrapper?.remarks, wrapper?.voyages)
+            ?.build(newForm, wrapper?.remarks, wrapper?.voyages)
 
         formBuilder
             ?.init(viewModel.formMappers.formPrefillMapper.mapFromModel(findCargoResponse!!))
@@ -481,28 +554,6 @@ class CargoInfoActivity :
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
     }
 
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        onRequestPermissionsResult(requestCode, grantResults)
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PrinterSettingsActivity.RC_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                printBarcodeWithPermissionCheck(findCargoResponse?.barcode ?: "")
-            } else {
-                showTurnBlueToothPrompt()
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
 
     override fun getViewModelClass() = CargoInfoViewModel::class.java
 
