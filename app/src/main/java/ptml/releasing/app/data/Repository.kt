@@ -57,9 +57,6 @@ interface Repository {
     fun savePrinterSettings(settings: Settings?)
     fun getPrinterSettings(): Settings
 
-    fun getPrinterMultilineSettings(): Settings
-    fun savePrinterMultilineSettings(settings: Settings?)
-
     fun saveOperatorName(name: String?)
     fun getOperatorName(): String?
 
