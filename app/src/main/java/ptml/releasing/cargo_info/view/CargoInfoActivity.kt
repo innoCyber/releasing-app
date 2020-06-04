@@ -383,8 +383,7 @@ class CargoInfoActivity :
     fun createForm(wrapper: FormDataWrapper?) {
         Timber.d("From sever: %s", findCargoResponse)
 
-        val newForm = wrapper?.formConfigureDeviceResponse?.data?.toMutableList() ?: mutableListOf()
-
+        val newForm = wrapper?.formConfigureDeviceResponse?.data
 
         formBuilder = FormBuilder(this)
         val formView = formBuilder
