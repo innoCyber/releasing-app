@@ -7,24 +7,79 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        Releasing {
+            storeFile file(getLocalProperty("KEYSTORE_FILE"))
+            storePassword getLocalProperty("KEYSTORE_PASSWORD")
+            keyAlias = getLocalProperty("KEYSTORE_KEY_ALIAS")
+            keyPassword getLocalProperty("KEYSTORE_KEY_PASSWORD")
+        }
+    }
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 22
+        versionName "1.3.13"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
-
-        buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
-//        buildConfigField("String", "BASE_URL", "\"http://192.168.43.115:3000\"")
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions 'server'
+    productFlavors {
+        dev {
+            dimension 'server'
+            applicationIdSuffix '.dev'
+            versionNameSuffix "-dev-" + getDate()
+            versionCode 1
+            signingConfig signingConfigs.Releasing
+        }
+
+        staging {
+            dimension 'server'
+            applicationIdSuffix '.staging'
+            versionNameSuffix "-staging-" + "-b" + getDate()
+            versionCode 6
+            signingConfig signingConfigs.Releasing
+        }
+
+        production {
+            dimension 'server'
+            signingConfig signingConfigs.Releasing
+        }
+    }
+
+    applicationVariants.all { variant ->
+        def name = variant.getName()
+        //default values
+        variant.buildConfigField("String", "IMEI", getLocalProperty("TEST_IMEI"))
+
+        // Specific values
+        if (name.contains("dev")) {
+            variant.buildConfigField("String", "BASE_URL", getLocalProperty("DEV_BASE_URL"))
+            variant.buildConfigField("String", "BASE_AUTH_URL", getLocalProperty("DEV_BASE_AUTH_URL"))
+        } else if (name.contains("staging")) {
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
+        } else if (name.contains("production")) {
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
         }
     }
 
@@ -40,11 +95,22 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation project(':form')
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -52,11 +118,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine"
 
     //Android Kotlin extensions
-    implementation 'androidx.core:core-ktx:1.0.1'
+    implementation 'androidx.core:core-ktx:1.1.0'
 
     //appcompat
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
-    implementation "androidx.vectordrawable:vectordrawable:1.1.0-beta01"
+    implementation "androidx.vectordrawable:vectordrawable:$supportLibVersion"
 
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -70,11 +136,13 @@ dependencies {
     // architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$archComponentsVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$archComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archComponentsVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$archComponentsVersion"
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
 //    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutine"
 
@@ -103,7 +171,10 @@ dependencies {
     // unit testing
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation "androidx.test:core:${coreTestVersion}"
     testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "org.robolectric:robolectric:${robolectricVersion}"
+    testImplementation "com.google.truth:truth:${truthVersion}"
 
     //instrumentation testing
     androidTestImplementation "androidx.test:runner:$runnerVersion"
@@ -111,11 +182,37 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$testRunner"
     androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
+
+    //zebra sdk
     implementation files('libs/zebra_android_sdk.jar')
 
     //barcode scanning
     implementation 'me.dm7.barcodescanner:zbar:1.8.3'
 
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
+    //crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    //firebase analytics
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+
+    //firebase remote config
+    implementation 'com.google.firebase:firebase-config:18.0.0'
+
+
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    implementation "androidx.paging:paging-runtime:$pagingVersion"
+
+    debugImplementation "com.amitshekhar.android:debug-db:1.0.6"
 
 }
+
+static def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
+}
+
+apply plugin: 'com.google.gms.google-services'

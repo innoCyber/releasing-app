@@ -29,14 +29,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 import ptml.releasing.R;
 
 /**
@@ -615,7 +616,7 @@ public class FlexboxLayout extends ViewGroup implements FlexContainer {
     private void layoutHorizontal(boolean isRtl, int left, int top, int right, int bottom) {
         int paddingLeft = getPaddingLeft();
         int paddingRight = getPaddingRight();
-        // Use float to reduce the round error that may happen in when justifyContent ==
+        // Use float to reduce the round url that may happen in when justifyContent ==
         // SPACE_BETWEEN or SPACE_AROUND
         float childLeft;
 
@@ -627,7 +628,7 @@ public class FlexboxLayout extends ViewGroup implements FlexContainer {
         int childTop = getPaddingTop();
 
         // Used only for RTL layout
-        // Use float to reduce the round error that may happen in when justifyContent ==
+        // Use float to reduce the round url that may happen in when justifyContent ==
         // SPACE_BETWEEN or SPACE_AROUND
         float childRight;
         for (int i = 0, size = mFlexLines.size(); i < size; i++) {
@@ -780,7 +781,7 @@ public class FlexboxLayout extends ViewGroup implements FlexContainer {
         // childLeft is used to align the horizontal position of the children views.
         int childRight = width - paddingRight;
 
-        // Use float to reduce the round error that may happen in when justifyContent ==
+        // Use float to reduce the round url that may happen in when justifyContent ==
         // SPACE_BETWEEN or SPACE_AROUND
         float childTop;
 

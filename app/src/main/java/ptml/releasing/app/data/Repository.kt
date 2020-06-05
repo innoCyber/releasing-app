@@ -1,15 +1,15 @@
 package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
-import ptml.releasing.login.model.User
-import ptml.releasing.configuration.models.ConfigureDeviceResponse
-import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
+import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
@@ -46,7 +46,7 @@ interface Repository {
     fun getSavedConfigAsync(): Configuration
     fun setSavedConfigAsync(configuration: Configuration)
 
-    fun isFirstAsync(): Boolean
+    fun isFirst(): Boolean
     fun setFirst(value: Boolean)
     fun isConfiguredAsync(): Boolean
     fun setConfigured(isConfigured: Boolean)
@@ -54,8 +54,8 @@ interface Repository {
     suspend fun getDamagesByPosition(imei: String, position: String, typeContainer:Int?): List<Damage>
 
 
-    fun saveSettings(settings: Settings?)
-    fun getSettings(): Settings
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterSettings(): Settings
 
     fun saveOperatorName(name: String?)
     fun getOperatorName(): String?
@@ -71,5 +71,22 @@ interface Repository {
     suspend fun downloadQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
     suspend fun getQuickRemarkAsync(imei: String): Deferred<QuickRemarkResponse>?
 
+    fun setMustUpdateApp(shouldUpdate:Boolean)
+    fun mustUpdateApp():Boolean
 
+    fun setImei(imei:String)
+    fun getImei():String?
+
+    fun setDamagesCurrentVersion(currentVersion:Long)
+    fun setVoyagesCurrentVersion(currentVersion: Long)
+
+    fun setQuickCurrentVersion(currentVersion:Long)
+
+    fun checkToResetLocalAppUpdateValues()
+
+    fun setAppMinimumVersion(version:Long)
+    fun getAppMinimumVersion():Long
+
+    fun isInternetErrorLoggingEnabled():Boolean
+    fun setInternetErrorLoggingEnabled(enabled:Boolean)
 }

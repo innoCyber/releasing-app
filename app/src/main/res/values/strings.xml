@@ -193,7 +193,7 @@
     <string name="errors_present_in_form">Some error(s) are present in the form</string>
     <string name="confirm_action">Confirm Action</string>
     <string name="proceed_to_reset_msg">Are you sure you want to proceed to reset the form?</string>
-    <string name="yes">Yes</string>
+    <string name="yes">Yes</string>f
     <string name="no">No</string>
     <string name="admin_settings">Admin Settings</string>
     <string name="badge_id_hint">Badge ID</string>
@@ -223,7 +223,7 @@
     <string name="search_complete">Search complete</string>
     <string name="no_devices_found">No devices were found \nEnsure the device is within range</string>
     <string name="no_bt_message">No bluetooth functionality on your phone \nPlease contact the administrator</string>
-    <string name="no_operator_logged_in">No operator logged in</string>
+    <string name="no_operator_logged_in">No badge ID</string>
 
     <string name="network_state_wifi">Wi-Fi</string>
     <string name="network_state_mobile">3G/4G</string>
@@ -236,4 +236,52 @@
     <string name="quick_remark_click_message">You clicked %s</string>
     <string name="empty_damages_error_message">No downloaded damages, please contact the administrator</string>
     <string name="enter_damage_remark_hint">Damage remark</string>
+    <string name="open_playstore_with">Open PlayStore with…</string>
+    <string name="update_required_title">New version available</string>
+    <string name="must_update_required_msg">You will be directed to Play Store update the app to the new version</string>
+    <string name="should_update_required_msg">Please update the app to the new version</string>
+    <string name="update_required_ok">Update</string>
+    <string name="update_required_cancel">No, thanks</string>
+    <string name="update_damages_title">Please wait</string>
+    <string name="update_damages_message">Updating damages in progress</string>
+    <string name="update_quick_remarks_title">Please wait</string>
+    <string name="update_quick_remarks_message">Updating quick remarks in progress</string>
+    <string name="quick_remark_update_failed_msg">Failed to update quick remark</string>
+    <string name="damages_update_failed_msg">Failed to update damages</string>
+
+    <string name="update_voyage_title">Please wait</string>
+    <string name="update_voyage_message">Voyage update in progress</string>
+    <string name="voyage_update_failed_msg">Failed to update voyage</string>
+    <string name="downloading_quick_remarks">Downloading quick remarks</string>
+    <string name="downloading_voyages">Downloading voyages</string>
+    <string name="view_logs">View Logs</string>
+    <string name="activity_error_logs_title">Error Logs</string>
+    <string name="no_error_logs">No error logs yet!</string>
+    <string name="disable_logs">Disable Internet Error Logs</string>
+    <string name="enable_logs">Enable Internet Error Logs</string>
+    <string name="disable_logs_confirm_message">Are you sure you want to disable internet error logging?</string>
+    <string name="enable_logs_confirm_message">Are you sure you want to enable internet error logging?</string>
+    <string name="export_logs_text">Export Logs</string>
+    <string name="logs_exported_success_msg">Logs exported successfully at %s</string>
+    <string name="share_with">Share with…</string>
+    <string name="logs_exported_error_msg">Error occurred while exporting logs: %s</string>
+    <string name="logs_exporting_msg">Exporting logs…</string>
+
+
+    <!--USER LOGIN-->
+    <string name="login_badge_id_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="reset_password">Reset Password</string>
+
+    <string name="badge_id_required_message">A badge ID is required</string>
+    <string name="password_required_message">Password is required</string>
+    <string name="password_too_short_message">Your password should be at least 6 characters</string>
+    <string name="password_no_match_message">The passwords do not match</string>
+    <string name="login_loading_message">Please wait…</string>
+
+    <string name="forgot_new_password_hint">New password</string>
+    <string name="forgot_confirm_password_hint">Confirm password</string>
+    <string name="password_reset_success">Your password was reset successfully</string>
+    <string name="voyage_screen_title">Voyages</string>
+
 </resources>

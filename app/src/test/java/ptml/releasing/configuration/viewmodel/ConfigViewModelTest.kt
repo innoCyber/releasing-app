@@ -3,135 +3,133 @@ package ptml.releasing.configuration.viewmodel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Deferred
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.base.BaseTest
+import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.data.*
 import java.io.IOException
-import kotlin.test.assertEquals
 
 
+@Suppress("UNCHECKED_CAST")
 class ConfigViewModelTest : BaseTest() {
 
 
     private val repository: ReleasingRepository = mockk()
-    private val viewModel by lazy { ConfigViewModel(repository, dispatcher) }
+    private val viewModel by lazy { ConfigViewModel(repository, dispatcher, updateChecker) }
 
     @Test
-    fun `get admin configuration success`() {
+    fun `get admin configuration with registered IMEI when the device was not previously configured returns a success`() {
         coEvery {
             repository.getAdminConfigurationAsync(any())
         } returns getAdminConfigurationSuccess().toDeferredAsync() as Deferred<AdminConfigResponse>
 
 
-        coEvery{
+        coEvery {
             repository.isConfiguredAsync()
-        }returns isConfiguredFail()
+        } returns isConfiguredFail()
 
-        viewModel.getConfig("")
+        viewModel.getConfig(VALID_IMEI)
 
 
-        assertEquals(
-            getAdminConfigurationSuccess(),
+        assertThat(
+            "the response should return a success",
             this.viewModel.configResponse.value,
-            "Verify the response returns a success"
+            `is`(getAdminConfigurationSuccess())
         )
 
-        assertEquals(
-            NetworkState.LOADED,
-            this.viewModel.networkState.value,
-            "Network state should be loaded"
+        assertThat(
+            "Network state should be loaded",
+            this.viewModel.networkState.value?.peekContent(), `is`(NetworkState.LOADED)
         )
 
     }
 
 
     @Test
-    fun `get admin configuration fail`() {
+    fun `get admin configuration  with invalid IMEI when the device was not previously configured returns a failure`() {
         coEvery {
             repository.getAdminConfigurationAsync(any())
         } returns getAdminConfigurationFail().toDeferredAsync() as Deferred<AdminConfigResponse>
 
-        coEvery{
+        coEvery {
             repository.isConfiguredAsync()
-        }returns isConfiguredFail()
+        } returns isConfiguredFail()
 
 
-        viewModel.getConfig("")
+        viewModel.getConfig(INVALID_IMEI)
 
 
-        assertEquals(
-            getAdminConfigurationFail(),
-            this.viewModel.configResponse.value,
-            "Verify the response returns a success"
+        assertThat(
+            "the response should return a failure",
+            this.viewModel.configResponse.value, `is`(getAdminConfigurationFail())
         )
 
-        assertEquals(
-            NetworkState.LOADED,
-            this.viewModel.networkState.value,
-            "Network state should be loaded"
+        assertThat(
+            "Network state should be loaded",
+            this.viewModel.networkState.value?.peekContent(), `is`(NetworkState.LOADED)
         )
 
     }
 
     @Test
-    fun `get admin config with previously saved config`(){
+    fun `get admin config when the device was previously configured returns a success`() {
         coEvery {
             repository.getAdminConfigurationAsync(any())
         } returns getAdminConfigurationSuccess().toDeferredAsync() as Deferred<AdminConfigResponse>
 
-
-        coEvery{
+        coEvery {
             repository.isConfiguredAsync()
-        }returns isConfiguredSuccess()
+        } returns isConfiguredSuccess()
 
 
-        coEvery{
+        coEvery {
             repository.getSavedConfigAsync()
-        }returns getSavedConfig()
+        } returns getSavedConfig()
 
         viewModel.getConfig("")
 
-
-        assertEquals(
-            getAdminConfigurationSuccess(),
+        assertThat(
+            "the response should return a success",
             this.viewModel.configResponse.value,
-            "Verify the response returns a success"
+            `is`(getAdminConfigurationSuccess())
         )
 
-        assertEquals(getSavedConfig(), viewModel.configuration.value,
-            "The retrieved config data")
-
-        assertEquals(
-            NetworkState.LOADED,
-            this.viewModel.networkState.value,
-            "Network state should be loaded"
+        assertThat(
+            "The retrieved config data should be non-null",
+            viewModel.configuration.value, `is`(getSavedConfig())
         )
 
+        assertThat(
+            "Network state should be loaded",
+            this.viewModel.networkState.value?.peekContent(),
+            `is`(NetworkState.LOADED)
+        )
     }
 
 
     @Test
-    fun `save admin config with success`(){
+    fun `save admin config is successful`() {
         coEvery {
             repository.setSavedConfigAsync(any())
-        }returns Unit
+        } returns Unit
 
         coEvery {
             repository.setConfigured(any())
-        }returns Unit
+        } returns Unit
 
         coEvery {
             repository.setConfigurationDeviceAsync(
                 mockCargoType().id,
                 mockOperationStep().id,
                 mockTerminal().id,
-                provideImei())
-        }returns mockConfiguration().toDeferredAsync() as Deferred<ConfigureDeviceResponse>
+                provideImei()
+            )
+        } returns mockConfiguration().toDeferredAsync() as Deferred<ConfigureDeviceResponse>
 
         viewModel.setConfig(
             mockTerminal(),
@@ -141,13 +139,15 @@ class ConfigViewModelTest : BaseTest() {
             provideImei()
         )
 
-        assertEquals(true, viewModel.savedSuccess.value,
-            "The config was saved")
+        assertThat(
+            "The response should return a success (true)",
+            viewModel.savedSuccess.value?.peekContent(), `is`(true)
+        )
 
-        assertEquals(
-            NetworkState.LOADED,
-            this.viewModel.networkState.value,
-            "State should be loaded"
+        assertThat(
+            "State should be loaded",
+            this.viewModel.networkState.value?.peekContent(),
+            `is`(NetworkState.LOADED)
         )
 
 
@@ -155,10 +155,10 @@ class ConfigViewModelTest : BaseTest() {
 
 
     @Test
-    fun `save admin config with error`(){
+    fun `save admin config fails with exception`() {
         coEvery {
             repository.setSavedConfigAsync(any())
-        }throws  IOException(SAVED_CONFIG_ERROR_MESSAGE)
+        } throws IOException(SAVED_CONFIG_ERROR_MESSAGE)
 
         viewModel.setConfig(
             mockTerminal(),
@@ -168,10 +168,10 @@ class ConfigViewModelTest : BaseTest() {
             provideImei()
         )
 
-        assertEquals(
-            NetworkState.error(IOException(SAVED_CONFIG_ERROR_MESSAGE)).throwable?.message,
-            this.viewModel.networkState.value?.throwable?.message,
-            "Error occurred"
+        assertThat(
+            "An IOException should be thrown",
+            this.viewModel.networkState.value?.peekContent()?.throwable?.message,
+            `is`(NetworkState.error(IOException(SAVED_CONFIG_ERROR_MESSAGE)).throwable?.message)
         )
 
 

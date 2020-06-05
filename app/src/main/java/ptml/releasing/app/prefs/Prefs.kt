@@ -22,8 +22,9 @@ interface Prefs {
 
     fun getDeviceConfiguration(): ConfigureDeviceResponse?
     fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)
-    fun saveSettings(settings:Settings?)
-    fun getSettings():Settings
+
+    fun savePrinterSettings(settings: Settings?)
+    fun getPrinterSettings(): Settings
 
     fun saveOperatorName(name:String?)
     fun getOperatorName():String?
@@ -33,4 +34,25 @@ interface Prefs {
 
     fun saveQuickRemarks(response: QuickRemarkResponse?)
     fun getQuickRemarks():QuickRemarkResponse?
+
+    fun setDamagesCurrentVersion(currentVersion:Long)
+    fun getDamagesCurrentVersion():Long
+
+    fun setQuickCurrentVersion(currentVersion:Long)
+    fun getQuickCurrentVersion():Long
+
+    fun setAppVersion(version:Long)
+    fun getAppVersion():Long
+
+
+    fun setUpdateApp(shouldUpdate:Boolean)
+    fun mustUpdateApp():Boolean
+
+    fun setImei(imei:String)
+    fun getImei():String?
+
+    fun isInternetErrorLoggingEnabled():Boolean
+    fun setInternetErrorLoggingEnabled(enabled:Boolean)
+    fun getVoyageVersion(): Long
+    fun setVoyageCurrentVersion(currentVersion: Long)
 }

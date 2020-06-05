@@ -1,8 +1,8 @@
 package ptml.releasing.app.local
 
+import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
-import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.printer.model.Settings
@@ -28,8 +28,9 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getDeviceConfiguration() = prefs.getDeviceConfiguration()
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)= prefs.saveDeviceConfiguration(response)
-    override fun getSettings() = prefs.getSettings()
-    override fun saveSettings(settings: Settings?) = prefs.saveSettings(settings)
+    override fun getPrinterSettings() = prefs.getPrinterSettings()
+    override fun savePrinterSettings(settings: Settings?) =
+        prefs.savePrinterSettings(settings)
 
     override fun getOperatorName() = prefs.getOperatorName()
 
@@ -42,4 +43,38 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
     override fun getQuickRemarks() = prefs.getQuickRemarks()
 
     override fun saveQuickRemarks(response: QuickRemarkResponse?) = prefs.saveQuickRemarks(response)
+
+    override fun setDamagesCurrentVersion(currentVersion: Long) = prefs.setDamagesCurrentVersion(currentVersion)
+
+    override fun getDamagesVersion(): Long = prefs.getDamagesCurrentVersion()
+
+    override fun getVoyageVersion(): Long {
+        return prefs.getVoyageVersion()
+    }
+
+    override fun setVoyageCurrentVersion(currentVersion: Long) {
+        return prefs.setVoyageCurrentVersion(currentVersion)
+    }
+
+    override fun setQuickCurrentVersion(currentVersion: Long) = prefs.setQuickCurrentVersion(currentVersion)
+
+    override fun getQuickRemarksVersion(): Long = prefs.getQuickCurrentVersion()
+
+    override fun setAppVersion(version: Long) = prefs.setAppVersion(version)
+
+    override fun getAppVersion(): Long = prefs.getAppVersion()
+
+
+    override fun setImei(imei: String) = prefs.setImei(imei)
+
+    override fun getImei(): String? = prefs.getImei()
+
+    override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setUpdateApp(shouldUpdate)
+
+    override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()
+
+
+    override fun isInternetErrorLoggingEnabled() = prefs.isInternetErrorLoggingEnabled()
+
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = prefs.setInternetErrorLoggingEnabled(enabled)
 }

@@ -19,6 +19,7 @@ import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.download_damages.view.DamageActivity
+import ptml.releasing.internet_error_logs.view.ErrorLogsActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
 
@@ -30,6 +31,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showUpEnabled(true)
+
         viewModel.isConfigured.observe(this, Observer {
             binding.tvConfigMessageContainer.visibility =
                 if (it) View.GONE else View.VISIBLE //hide or show the not configured message
@@ -37,42 +40,78 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         viewModel.getSavedConfig()
 
-        viewModel.openDownloadDamages.observe(this, Observer {
-            if (it) {
-                startNewActivity(DamageActivity::class.java)
-            } else {
-                showConfigurationErrorDialog()
+        viewModel.openDownloadDamages.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    startNewActivity(DamageActivity::class.java)
+                } else {
+                    showConfigurationErrorDialog()
+                }
             }
         })
 
-        viewModel.openQuickRemark.observe(this, Observer {
-            if (it) {
-                startNewActivity(QuickRemarkActivity::class.java)
-            } else {
-                showConfigurationErrorDialog()
+        viewModel.openQuickRemark.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    startNewActivity(QuickRemarkActivity::class.java)
+                } else {
+                    showConfigurationErrorDialog()
+                }
+
             }
         })
 
-        viewModel.openPrinterSettings.observe(this, Observer {
-            startNewActivity(PrinterSettingsActivity::class.java)
+        viewModel.openPrinterSettings.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(PrinterSettingsActivity::class.java)
+
+            }
         })
 
-        viewModel.openConfig.observe(this, Observer {
-            val intent = Intent(this, ConfigActivity::class.java)
-            startActivityForResult(intent, RC_CONFIG)
+        viewModel.openConfig.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this, ConfigActivity::class.java)
+                startActivityForResult(intent, RC_CONFIG)
+            }
         })
 
-        viewModel.serverUrl.observe(this, Observer {
-            showServerUrlDialog(it)
+        viewModel.serverUrl.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                showServerUrlDialog(it)
+            }
         })
 
-        viewModel.openSearch.observe(this, Observer {
-            onBackPressed()
+        viewModel.openSearch.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                onBackPressed()
+            }
         })
 
+        viewModel.openErrorLogs.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                startNewActivity(ErrorLogsActivity::class.java)
+            }
+        })
 
+        viewModel.internetErrorEnabled.observe(this, Observer {
+            binding.includeAdminConfig.btnEnableLogs.text = getString(if(it) R.string.disable_logs else R.string.enable_logs)
+        })
 
-        showUpEnabled(true)
+        viewModel.openConfirmShowLogs.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                val dialogFragment = InfoDialog.newInstance(
+                    title = getString(R.string.confirm_action),
+                    message = getString(if(it) R.string.disable_logs_confirm_message else R.string.enable_logs_confirm_message),
+                    buttonText = getString(android.R.string.ok),
+                    listener = object : InfoDialog.InfoListener {
+                        override fun onConfirm() {
+                    viewModel.handleToggleEnableLogs()
+                        }
+                    })
+                dialogFragment.isCancelable = false
+                dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+            }
+        })
 
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
             viewModel.openConfig()
@@ -86,8 +125,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openPrinterSetting()
         }
 
-
-
         binding.includeAdminConfig.btnSearch.setOnClickListener {
             viewModel.openSearch()
         }
@@ -100,7 +137,13 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             viewModel.openQuickRemark()
         }
 
+        binding.includeAdminConfig.btnErrorLogs.setOnClickListener {
+            viewModel.openErrorLogs()
+        }
 
+        binding.includeAdminConfig.btnEnableLogs.setOnClickListener {
+            viewModel.handleAskToToggleEnableLogs()
+        }
     }
 
     override fun onBackPressed() {
@@ -134,15 +177,6 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     }
 
     private fun showConfigurationErrorDialog() {
-        /*     InfoConfirmDialog.showDialog(context = this,
-                     title = getString(R.string.config_error),
-                     message = getString(R.string.config_error_message),
-                     topIcon = R.drawable.ic_error, listener = object : InfoConfirmDialog.InfoListener {
-                 override fun onConfirm() {
-     //                    viewModel.openConfiguration()
-                 }
-             })*/
-
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.config_error),
             message = getString(R.string.config_error_message),

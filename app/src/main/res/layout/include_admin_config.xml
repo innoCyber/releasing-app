@@ -78,10 +78,29 @@
             style="@style/ButtonStyle.HomeBottom"
             android:text="@string/quick_remarks"
             app:drawableStartCompat="@drawable/ic_config"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/btn_server" />
+
+
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_error_logs"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/view_logs"
+            app:drawableStartCompat="@drawable/ic_view_logs"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_quick_remarks" />
+
+        <ptml.releasing.app.views.SupportVectorDrawablesButton
+            android:id="@+id/btn_enable_logs"
+            style="@style/ButtonStyle.HomeBottom"
+            android:text="@string/disable_logs"
+            app:drawableStartCompat="@drawable/ic_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/btn_error_logs" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

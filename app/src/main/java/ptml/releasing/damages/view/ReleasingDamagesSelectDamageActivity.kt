@@ -2,46 +2,33 @@ package ptml.releasing.damages.view
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.local.ReleasingLocal
 import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.cargo_info.model.FormDamageSize
 import ptml.releasing.cargo_info.model.LARGE
 import ptml.releasing.cargo_info.model.SMALL
-import ptml.releasing.cargo_search.viewmodel.SearchViewModel
-import ptml.releasing.configuration.models.CargoType
-import ptml.releasing.configuration.models.OperationStep
-import ptml.releasing.configuration.models.Terminal
-import ptml.releasing.configuration.view.onRequestPermissionsResult
-import ptml.releasing.damages.model.AssignedDamage
+import ptml.releasing.damages.model.ReleasingAssignedDamage
 import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingSelectDamagesBinding
-import ptml.releasing.databinding.EmptyLayoutBinding
 import ptml.releasing.download_damages.model.Damage
-import ptml.releasing.download_damages.model.DamageResponse
 import timber.log.Timber
-
-
-import javax.inject.Inject
-import java.util.ArrayList
 
 @RuntimePermissions
 class ReleasingDamagesSelectDamageActivity :
@@ -91,7 +78,7 @@ class ReleasingDamagesSelectDamageActivity :
                 val d = damages[position]
                 Timber.d("Damage: %s", d)
                 DamagesActivity.currentDamages.add(
-                    AssignedDamage(
+                    ReleasingAssignedDamage(
                         d.id ?: 0,
                         d.description,
                         "",
@@ -108,7 +95,7 @@ class ReleasingDamagesSelectDamageActivity :
             btnLow.setOnClickListener {
                 val d = damages[position]
                 DamagesActivity.currentDamages.add(
-                    AssignedDamage(
+                    ReleasingAssignedDamage(
                         d.id ?: 0,
                         d.description,
                         "",
@@ -153,23 +140,26 @@ class ReleasingDamagesSelectDamageActivity :
         })
 
 
-        viewModel.networkState.observe(this, Observer {
-            if (it == NetworkState.LOADING) {
-                showLoading(
-                    binding.includeProgress.root,
-                    binding.includeProgress.tvMessage,
-                    R.string.loading
-                )
-            } else {
-                hideLoading(binding.includeProgress.root)
+        viewModel.networkState.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let {
+                if (it == NetworkState.LOADING) {
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.loading
+                    )
+                } else {
+                    hideLoading(binding.includeProgress.root)
+                }
+
+                if (it.status == Status.FAILED) {
+                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                } else {
+                    hideLoading(binding.includeError.root)
+                }
             }
 
-            if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
-            } else {
-                hideLoading(binding.includeError.root)
-            }
         })
 
 

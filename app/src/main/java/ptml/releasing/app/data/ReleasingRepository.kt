@@ -2,6 +2,8 @@ package ptml.releasing.app.data
 
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
+import ptml.releasing.BuildConfig
+import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
@@ -11,7 +13,6 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
-import ptml.releasing.login.model.User
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import timber.log.Timber
@@ -73,7 +74,7 @@ open class ReleasingRepository @Inject constructor(
                     local.saveDamages(remoteResponse.await())
                     remoteResponse
                 }
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 Timber.e(e)
                 null
             }
@@ -91,7 +92,7 @@ open class ReleasingRepository @Inject constructor(
         local.setSavedConfig(configuration)
     }
 
-    override fun isFirstAsync(): Boolean {
+    override fun isFirst(): Boolean {
         return local.isFirst()
     }
 
@@ -170,9 +171,11 @@ open class ReleasingRepository @Inject constructor(
 
     override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
 
-    override fun getSettings() = local.getSettings()
+    override fun getPrinterSettings() = local.getPrinterSettings()
 
-    override fun saveSettings(settings: Settings?) = local.saveSettings(settings)
+    override fun savePrinterSettings(settings: Settings?) =
+        local.savePrinterSettings(settings)
+
 
     override fun getOperatorName() = local.getOperatorName()
 
@@ -205,15 +208,45 @@ open class ReleasingRepository @Inject constructor(
                 }
                 remoteResponse
 
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 Timber.e(e)
                 null
             }
         }
-
     }
 
 
+
+    override fun setImei(imei: String) = local.setImei(imei)
+
+    override fun getImei(): String? = local.getImei()
+
+    override fun setDamagesCurrentVersion(currentVersion: Long) = local.setDamagesCurrentVersion(currentVersion)
+    override fun setVoyagesCurrentVersion(currentVersion: Long) =
+        local.setVoyageCurrentVersion(currentVersion)
+    override fun setQuickCurrentVersion(currentVersion: Long) = local.setQuickCurrentVersion(currentVersion)
+
+    override fun setMustUpdateApp(shouldUpdate: Boolean) = local.setMustUpdateApp(shouldUpdate)
+
+    override fun mustUpdateApp(): Boolean = local.mustUpdateApp()
+
+
+
+    override fun setAppMinimumVersion(version: Long) = local.setAppVersion(version)
+
+    override fun getAppMinimumVersion(): Long = local.getAppVersion()
+
+    override fun checkToResetLocalAppUpdateValues() {
+        val currentVersion = BuildConfig.VERSION_CODE.toLong()
+        if (currentVersion > local.getAppVersion()) {
+            local.setMustUpdateApp(false)
+            local.setAppVersion(currentVersion)
+        }
+    }
+
+    override fun isInternetErrorLoggingEnabled() = local.isInternetErrorLoggingEnabled()
+
+    override fun setInternetErrorLoggingEnabled(enabled: Boolean) = local.setInternetErrorLoggingEnabled(enabled)
 }
 
 

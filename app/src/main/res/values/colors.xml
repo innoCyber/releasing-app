@@ -27,4 +27,8 @@
 
     <color name="form_textbox_color">#EBEBEB</color>
     <color name="colorDamageButtonText">#FFFFFF</color>
+
+    <color name="colorOnSearchBg">#FFFFFF</color>
+    <color name="colorSearchBg">#2A2A2A</color>
+    <color name="progress_overlay">#92000000</color>
 </resources>
