@@ -96,7 +96,7 @@ class CargoInfoActivity :
                         "${description}\r\n"
 
                     }
-                    textToPrint = damagesDescriptions.joinToString()
+                    textToPrint = damagesDescriptions.joinToString(separator="")
                     viewModel.onPrintDamages()
                 }
 
