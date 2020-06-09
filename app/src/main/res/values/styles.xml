@@ -531,17 +531,6 @@
     </style>
 
 
-    <style name="Damages.IncreaseLength" parent="Damages.Button">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:text">@string/back</item>
-        <item name="android:padding">2dp</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:background">@drawable/btn_bg_reset</item>
-
-    </style>
-
-
     <style name="Damages.GoBackOther" parent="Damages.GoBack">
         <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
     </style>
