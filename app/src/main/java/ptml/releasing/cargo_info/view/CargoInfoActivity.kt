@@ -86,12 +86,18 @@ class CargoInfoActivity :
                         return
                     }
                     printerView = view
+
+
+
                     val damagesDescriptions = DamagesActivity.currentDamages.mapIndexed {index, damage->
-                        var description = "${index +1}. ${damage.name.trim()}"
+                        var description = "${index +1}.${damage.damageCount} ${" "}${damage.name.trim()}"
+
                         if(description.length > 25){
                             val builder = StringBuilder(description)
-                            builder.insert(25, "\r\n")
+
+                            builder.insert(35, "\r\n")
                             description = builder.toString()
+
                         }
                         "${description}\r\n"
 
