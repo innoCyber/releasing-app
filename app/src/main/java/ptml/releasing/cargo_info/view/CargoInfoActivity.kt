@@ -90,16 +90,35 @@ class CargoInfoActivity :
 
 
                     val damagesDescriptions = DamagesActivity.currentDamages.mapIndexed {index, damage->
-                        var description = "${index +1}.${damage.damageCount} ${" "}${damage.name.trim()}"
 
-                        if(description.length > 25){
-                            val builder = StringBuilder(description)
+                        var damageName = damage.name.trim()
 
-                            builder.insert(35, "\r\n")
-                            description = builder.toString()
+
+                        if(damageName.contains("1")){
+                            var description = "${index +1}.${damageName.replace("1" , "${damage.damageCount}")}"
+                            if(description.length > 25){
+                                val builder = StringBuilder(description)
+
+                                builder.insert(25, "\r\n")
+                                description = builder.toString()
+
+                            }
+                            "${description}\r\n"
+
+                        }else{
+                            var description = "${index +1}.${damage.damageCount} ${" "}${damageName.replace("1" , "${damage.damageCount}")}"
+                            if(description.length > 25){
+                                val builder = StringBuilder(description)
+
+                                builder.insert(20, "\r\n")
+                                description = builder.toString()
+
+                            }
+                            "${description}\r\n"
 
                         }
-                        "${description}\r\n"
+
+
 
                     }
                     textToPrint = damagesDescriptions.joinToString(separator="")
