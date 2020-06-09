@@ -1,5 +1,7 @@
 package ptml.releasing.app.utils
 
+import ptml.releasing.damages.view.DamagesActivity
+
 object Constants {
 
     const val BAR_CODE: String = "barcode"
@@ -69,7 +71,9 @@ object Constants {
             "PRINT\r\n"
 */
 
-    const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 1500 1\r\n" +
+
+
+    const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 2000 1\r\n" +
             "PW 480\r\n" +
             "LH 0 10\r\n" +
             "TONE 50\r\n" +

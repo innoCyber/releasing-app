@@ -175,6 +175,8 @@
     <string name="search">Search</string>
     <string name="general_msg_print_error">Print error</string>
     <string name="back">Back</string>
+    <string name="increaseLength">Increase Length</string>
+
     <string name="scan_operator_badge">Scan Operator Badge</string>
     <string name="operator_name_saved_success_msg">You have successfully saved operator %s</string>
     <string name="change">Change</string>

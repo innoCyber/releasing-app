@@ -87,8 +87,6 @@ class CargoInfoActivity :
                     }
                     printerView = view
 
-
-
                     val damagesDescriptions = DamagesActivity.currentDamages.mapIndexed {index, damage->
 
                         var damageName = damage.name.trim()

@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true">
-
         <ListView
             android:id="@+id/listView"
             android:layout_width="0dp"
@@ -23,8 +22,6 @@
             app:layout_constraintTop_toBottomOf="@id/include_operator_badge"
             app:layout_constraintVertical_bias="1.0"
             tools:listitem="@layout/cell_cargo_damages" />
-
-
         <include
             android:id="@+id/include_operator_badge"
             layout="@layout/include_operator_badge"
@@ -44,21 +41,21 @@
             android:visibility="gone" />
 
 
-        <Button
-            android:id="@+id/btn_back"
-            style="@style/Damages.GoBack"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_add"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent" />
+            <Button
+                android:id="@+id/btn_back"
+                style="@style/Damages.GoBack"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_add"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/btn_add"
-            style="@style/Damages.Add"
-            android:text="@string/releasing_damages_txt_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_back" />
+            <Button
+                android:id="@+id/btn_add"
+                style="@style/Damages.Add"
+                android:text="@string/releasing_damages_txt_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_back" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
