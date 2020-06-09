@@ -530,6 +530,7 @@
 
     </style>
 
+
     <style name="Damages.GoBackOther" parent="Damages.GoBack">
         <item name="drawableStartCompat">@drawable/ic_arrow_back_white</item>
     </style>

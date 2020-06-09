@@ -9,8 +9,8 @@ data class Damage(
     @SerializedName("typeContainer") val typeContainer: Int
 ):BaseModel(){
     override fun toString(): String {
+
         return "Damage(id=$id, description='$description', position='$position', typeContainer=$typeContainer)"
     }
-
 
 }
