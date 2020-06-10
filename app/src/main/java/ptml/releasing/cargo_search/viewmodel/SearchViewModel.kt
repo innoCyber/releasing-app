@@ -93,7 +93,7 @@ open class SearchViewModel @Inject constructor(
                 )?.await()
                 val formResponse = addLastSelectedVoyage(findCargoResponse)
                 withContext(appCoroutineDispatchers.main) {
-                    findCargoResponse?.isSuccess= true
+                   // findCargoResponse?.isSuccess= true
                     if (findCargoResponse?.isSuccess == true) {
                         Timber.v("findCargoResponse: %s", formResponse)
                         _findCargoResponse.value = formResponse

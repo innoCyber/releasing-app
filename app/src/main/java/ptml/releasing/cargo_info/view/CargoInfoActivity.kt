@@ -13,11 +13,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
+import kotlinx.coroutines.runBlocking
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.ErrorHandler
@@ -35,12 +37,17 @@ import ptml.releasing.form.models.FormConfiguration
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
+import javax.inject.Inject
 
 @RuntimePermissions
 class CargoInfoActivity :
     BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
+    @Inject
+    lateinit var loginRepository: LoginRepository
 
     companion object {
         const val RESPONSE = "response"
@@ -52,12 +59,15 @@ class CargoInfoActivity :
         intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
     }
 
+
+    var input: String? = null
     private lateinit var bluetoothManager: BluetoothManager
     private var printerBarcodeSettings: Settings? = null
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
-    var textToPrint: String? = null
+    var textToPrint: String? = ""
+
 
     private var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
@@ -87,39 +97,67 @@ class CargoInfoActivity :
                     }
                     printerView = view
 
-                    val damagesDescriptions = DamagesActivity.currentDamages.mapIndexed {index, damage->
+                    val damagesDescriptions =
+                        DamagesActivity.currentDamages.mapIndexed { index, damage ->
 
-                        var damageName = damage.name.trim()
+                            val damageName = damage.name.trim()
 
+                            if (damageName.contains("1")) {
+                                var description = "${index + 1}.${" "}${damageName.replace(
+                                    "1",
+                                    "${damage.damageCount}"
+                                )}"
+                                if (description.length > 25) {
+                                    val builder = StringBuilder(description)
 
-                        if(damageName.contains("1")){
-                            var description = "${index +1}.${damageName.replace("1" , "${damage.damageCount}")}"
-                            if(description.length > 25){
-                                val builder = StringBuilder(description)
+                                    builder.insert(25, "\r\n")
+                                    description = builder.toString()
 
-                                builder.insert(25, "\r\n")
-                                description = builder.toString()
+                                }
+                                "${description}"
+
+                            } else {
+                                var description =
+                                    "${index + 1}.${" "}${damage.damageCount} ${" "}${damageName.replace(
+                                        "1",
+                                        "${damage.damageCount}"
+                                    )}"
+                                if (description.length > 25) {
+                                    val builder = StringBuilder(description)
+
+                                    builder.insert(20, "\r\n")
+                                    description = builder.toString()
+                                }
+                                "${description}"
 
                             }
-                            "${description}\r\n"
-
-                        }else{
-                            var description = "${index +1}.${damage.damageCount} ${" "}${damageName.replace("1" , "${damage.damageCount}")}"
-                            if(description.length > 25){
-                                val builder = StringBuilder(description)
-
-                                builder.insert(20, "\r\n")
-                                description = builder.toString()
-
-                            }
-                            "${description}\r\n"
 
                         }
 
 
+                    var summaryText = ""
 
+                    runBlocking {
+                        summaryText = summaryText.plus("\r\nCargo Number : ${input}\r\n")
+                        summaryText = summaryText.plus("Status : ${findCargoResponse?.status}\r\n")
+                        summaryText =
+                            summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
+                        summaryText = summaryText.plus(
+                            "Date : ${SimpleDateFormat(
+                                "dd-MMM-yyyy hh:mm",
+                                Locale.getDefault()
+                            ).format(Calendar.getInstance().time)}\r\n"
+                        )
+                        summaryText =
+                            summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
                     }
-                    textToPrint = damagesDescriptions.joinToString(separator="")
+
+                    textToPrint = textToPrint.plus(summaryText)
+                    textToPrint = textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
+                    textToPrint = textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
+
+                    Timber.d("Printer code: %s", textToPrint)
+
                     viewModel.onPrintDamages()
                 }
 
@@ -167,7 +205,7 @@ class CargoInfoActivity :
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
         DamagesActivity.resetValues() //reset the static values
-        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
+        input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
         binding.tvNumber.text = input
 
         bluetoothManager = BluetoothManager(this)
@@ -318,7 +356,7 @@ class CargoInfoActivity :
                     )
 
 
-                Timber.e("Printer code: %s", labelCpclData)
+                // Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
 
@@ -425,6 +463,7 @@ class CargoInfoActivity :
 
 
     private fun updateTop(it: Configuration) {
+
         binding.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.includeHome.tvOperationStepFooter.text = it.operationStep.value
         binding.includeHome.tvTerminalFooter.text = it.terminal.value
