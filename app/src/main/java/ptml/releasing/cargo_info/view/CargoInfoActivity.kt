@@ -59,7 +59,6 @@ class CargoInfoActivity :
         intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
     }
 
-
     var input: String? = null
     private lateinit var bluetoothManager: BluetoothManager
     private var printerBarcodeSettings: Settings? = null
@@ -130,8 +129,7 @@ class CargoInfoActivity :
                     runBlocking {
                         summaryText = summaryText.plus("\r\nCargo Number : ${input}\r\n")
                         summaryText = summaryText.plus("Status : ${findCargoResponse?.status}\r\n")
-                        summaryText =
-                            summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
+                        summaryText = summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
                         summaryText = summaryText.plus(
                             "Date : ${SimpleDateFormat(
                                 "dd-MMM-yyyy hh:mm",
@@ -147,7 +145,9 @@ class CargoInfoActivity :
                     textToPrint =
                         textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
 
-                    Timber.d("Printer code: %s", textToPrint)
+
+                    Timber.d("Printer code: %s", textToPrint!!.length)
+
 
                     viewModel.onPrintDamages()
                 }
