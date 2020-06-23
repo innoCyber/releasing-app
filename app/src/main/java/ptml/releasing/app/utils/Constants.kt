@@ -73,6 +73,7 @@ object Constants {
 
 
 
+/*
        const  val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 2000 1\r\n" +
             "PW 480\r\n" +
             "LH 0 10\r\n" +
@@ -88,7 +89,22 @@ object Constants {
             "ENDML\r\n" +
             "FORM\r\n" +
             "PRINT\r\n"
+*/
 
+    const  val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 1500 1\r\n" +
+            "PW 480\r\n" +
+            "TONE 50\r\n" +
+            "SPEED 4\r\n" +
+            "ON-FEED IGNORE\r\n" +
+            "NO-PACE\r\n" +
+            "BAR-SENSE\r\n" +
+          "T 4 0 179 20 PTML\r\n" +
+            "ML 47\r\n" +
+            "T 7 0 45 70\r\n" +
+            "$PRINTER_TEXT_TO_REPLACE\n" +
+            "ENDML\r\n" +
+            "FORM\r\n" +
+            "PRINT\r\n"
 
 
     const val ALPHANUMERIC = "alphanumeric"

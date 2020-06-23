@@ -107,13 +107,7 @@ class CargoInfoActivity :
                                     "1",
                                     "${damage.damageCount}"
                                 )}"
-                                if (description.length > 25) {
-                                    val builder = StringBuilder(description)
-
-                                    builder.insert(25, "\r\n")
-                                    description = builder.toString()
-
-                                }
+                                description = description.replace("(.{25})".toRegex(), "$1\n")
                                 "${description}"
 
                             } else {
@@ -122,12 +116,8 @@ class CargoInfoActivity :
                                         "1",
                                         "${damage.damageCount}"
                                     )}"
-                                if (description.length > 25) {
-                                    val builder = StringBuilder(description)
+                                description = description.replace("(.{25})".toRegex(), "$1\n")
 
-                                    builder.insert(20, "\r\n")
-                                    description = builder.toString()
-                                }
                                 "${description}"
 
                             }
@@ -154,7 +144,8 @@ class CargoInfoActivity :
 
                     textToPrint = textToPrint.plus(summaryText)
                     textToPrint = textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
-                    textToPrint = textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
+                    textToPrint =
+                        textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
 
                     Timber.d("Printer code: %s", textToPrint)
 
