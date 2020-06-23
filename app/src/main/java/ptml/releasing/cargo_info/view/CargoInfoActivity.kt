@@ -107,7 +107,7 @@ class CargoInfoActivity :
                                     "1",
                                     "${damage.damageCount}"
                                 )}"
-                                description = description.replace("(.{25})".toRegex(), "$1\n")
+                                description = description.replace("(.{30})".toRegex(), "$1\n")
                                 "${description}"
 
                             } else {
@@ -116,7 +116,7 @@ class CargoInfoActivity :
                                         "1",
                                         "${damage.damageCount}"
                                     )}"
-                                description = description.replace("(.{25})".toRegex(), "$1\n")
+                                description = description.replace("(.{30})".toRegex(), "$1\n")
 
                                 "${description}"
 
