@@ -289,6 +289,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?) {
         viewModel.findCargo(cargoNumber, (application as ReleasingApplication).provideImei())
+
+
     }
 
 

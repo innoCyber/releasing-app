@@ -162,6 +162,8 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         return sharedPreferences.getString(IMEI, null)
     }
 
+
+
     override fun mustUpdateApp(): Boolean {
         return sharedPreferences.getBoolean(MUST_UPDATE_APP, false)
     }

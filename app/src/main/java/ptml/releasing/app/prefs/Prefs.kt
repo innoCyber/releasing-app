@@ -51,6 +51,7 @@ interface Prefs {
     fun setImei(imei:String)
     fun getImei():String?
 
+
     fun isInternetErrorLoggingEnabled():Boolean
     fun setInternetErrorLoggingEnabled(enabled:Boolean)
     fun getVoyageVersion(): Long

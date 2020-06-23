@@ -61,38 +61,53 @@ class CargoInfoViewModel @Inject constructor(
         _goBack.postValue(Event(true))
     }
 
+
     fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
+
+
+
         compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
-            val remarksMap = mutableMapOf<Int, QuickRemark>()
-            val formConfig = repository.getFormConfigAsync().await()
-            val remarks = repository.getQuickRemarkAsync(imei)?.await()
-            for (remark in remarks?.data ?: mutableListOf()) {
-                remarksMap[remark.id ?: return@launch] =
-                    formMappers.quickRemarkMapper.mapFromModel(remark)
-            }
 
-            val form = if (shouldAddVoyage(findCargoResponse, formConfig)) {
-                //add voyage form
-                val formData = formConfig.data.toMutableList()
-                formData.add(getVoyageForm())
-                formConfig.copy(data = formData)
-            } else {
-                formConfig
-            }
-            val voyages = voyageRepository.getRecentVoyages().map {
-                formMappers.voyagesMapper.mapFromModel(it)
-            }.map {
-                it.id to it
-            }.toMap()
+            try{
+                val remarksMap = mutableMapOf<Int, QuickRemark>()
+                val formConfig = repository.getFormConfigAsync().await()
+                val remarks = repository.getQuickRemarkAsync(imei)?.await()
+                for (remark in remarks?.data ?: mutableListOf()) {
+                    remarksMap[remark.id ?: return@launch] =
+                        formMappers.quickRemarkMapper.mapFromModel(remark)
+                }
 
-            val wrapper =
-                FormDataWrapper(
-                    remarksMap,
-                    formMappers.configureDeviceMapper.mapFromModel(form),
-                    voyages
-                )
-            withContext(appCoroutineDispatchers.main) {
-                _formConfig.postValue(wrapper)
+                val form = if (shouldAddVoyage(findCargoResponse, formConfig)) {
+                    //add voyage form
+                    val formData = formConfig.data.toMutableList()
+                    formData.add(getVoyageForm())
+                    formConfig.copy(data = formData)
+                } else {
+                    formConfig
+                }
+
+                val voyages =  try{voyageRepository.getRecentVoyages().map {
+                    formMappers.voyagesMapper.mapFromModel(it)
+                }.map {
+                    it.id to it
+                }.toMap()}
+                catch (e: Exception){
+                    mapOf<Int, Voyage>()
+                }
+
+
+                val wrapper =
+                    FormDataWrapper(
+                        remarksMap,
+                        formMappers.configureDeviceMapper.mapFromModel(form),
+                        voyages
+                    )
+                withContext(appCoroutineDispatchers.main) {
+                    _formConfig.postValue(wrapper)
+                }
+            }catch (e: Exception) {
+                Timber.e(e)
+                _networkState.postValue(Event(NetworkState.error(e)))
             }
         }
     }
