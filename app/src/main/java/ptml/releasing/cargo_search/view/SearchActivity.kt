@@ -1,5 +1,6 @@
 package ptml.releasing.cargo_search.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -43,6 +44,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     companion object {
         const val RC_CONFIG = 434
         const val RC_CARGO_INFO = 343
+        const val DATE_TIME = "date_time"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -283,6 +285,14 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     private fun search() {
         binding.appBarHome.content.includeSearch.btnVerify.hideSoftInputFromWindow()
         findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString())
+        saveLastActivityTimeStamp()
+    }
+
+
+    private fun saveLastActivityTimeStamp() {
+        val sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val date = Calendar.getInstance().timeInMillis
+        sharedPreference.edit().putLong(DATE_TIME, date).apply()
     }
 
 
