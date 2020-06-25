@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -345,9 +346,9 @@ class CargoInfoActivity :
 
 
     private fun saveLastActivityTimeStamp() {
-        val sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val date = Calendar.getInstance().timeInMillis
-        sharedPreference.edit().putLong(SearchActivity.DATE_TIME, date).apply()
+        prefs.edit().putLong(SearchActivity.DATE_TIME, date).apply()
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)

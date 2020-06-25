@@ -3,6 +3,7 @@ package ptml.releasing.cargo_search.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -46,7 +47,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         const val RC_CONFIG = 434
         const val RC_CARGO_INFO = 343
         const val DATE_TIME = "date_time"
-        const val TIME_WORKER = "time_worker"
+
 
     }
 
@@ -70,7 +71,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.openAdMin.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 startNewActivity(LoginActivity::class.java)
-                WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
+
             }
         })
 
@@ -294,9 +295,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
 
     private fun saveLastActivityTimeStamp() {
-        val sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val date = Calendar.getInstance().timeInMillis
-        sharedPreference.edit().putLong(DATE_TIME, date).apply()
+        prefs.edit().putLong(DATE_TIME, date).apply()
     }
 
 
