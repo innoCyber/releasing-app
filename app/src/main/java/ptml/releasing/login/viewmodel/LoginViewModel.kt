@@ -162,7 +162,7 @@ class LoginViewModel @Inject constructor(
         return true
     }
 
-    internal fun saveWork() {
+    private fun saveWork() {
         val saveTime = PeriodicWorkRequest.Builder(
             SaveTimeWorker::class.java, 15, TimeUnit.MINUTES
         ).addTag(TIME_WORKER)

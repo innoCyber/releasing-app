@@ -12,6 +12,7 @@ class SaveTimeWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, param
     override fun doWork(): Result {
 
         return try {
+
               Log.d("TimeWorker","Hello")
             Result.success()
         } catch (throwable: Throwable) {
