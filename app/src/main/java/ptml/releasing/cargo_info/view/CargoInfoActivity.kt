@@ -2,6 +2,7 @@ package ptml.releasing.cargo_info.view
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -29,6 +30,7 @@ import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
@@ -338,6 +340,14 @@ class CargoInfoActivity :
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
             (application as ReleasingApplication).provideImei()
         )
+        saveLastActivityTimeStamp()
+    }
+
+
+    private fun saveLastActivityTimeStamp() {
+        val sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val date = Calendar.getInstance().timeInMillis
+        sharedPreference.edit().putLong(SearchActivity.DATE_TIME, date).apply()
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -418,6 +428,7 @@ class CargoInfoActivity :
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
+
 
     private fun tryToPrintIfPermissionsAreGranted() {
         if (bluetoothManager.bluetoothAdapter == null) {
