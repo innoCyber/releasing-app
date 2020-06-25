@@ -47,6 +47,8 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
             val loggedIn = loginRepository.getLoggedIn()
             if (loggedIn) {
                 navigator.goToSearch(this@LoginActivity)
+
+
             }
         }
     }

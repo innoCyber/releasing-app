@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
@@ -15,7 +17,9 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.extensions.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.save_time_worker.SaveTimeWorker
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -29,6 +33,12 @@ class LoginViewModel @Inject constructor(
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+
+
+    companion object {
+        const val TIME_WORKER = "time_worker"
+    }
+    var workManager = WorkManager.getInstance(context)
 
 
     val badgeId = MutableLiveData<String>()
@@ -69,9 +79,11 @@ class LoginViewModel @Inject constructor(
         val password = password.value
 
         if (!meetsAllConditions(badgeId, password)) {
+
             return
         }
 
+        saveWork()
         authenticate(badgeId, password)
 
     }
@@ -150,5 +162,15 @@ class LoginViewModel @Inject constructor(
         return true
     }
 
+    internal fun saveWork() {
+        val saveTime = PeriodicWorkRequest.Builder(
+            SaveTimeWorker::class.java, 15, TimeUnit.MINUTES
+        ).addTag(TIME_WORKER)
+
+        val saveWork = saveTime.build()
+        workManager.enqueue(saveWork)
+
+
+    }
 
 }
