@@ -51,7 +51,13 @@ interface Repository {
     fun isConfiguredAsync(): Boolean
     fun setConfigured(isConfigured: Boolean)
 
-    suspend fun getDamagesByPosition(imei: String, position: String, typeContainer:Int?): List<Damage>
+    suspend fun getDamagesByPosition(
+        imei: String,
+        position: String,
+        typeContainer: Int?
+    ): List<Damage>
+
+    suspend fun getDamages(imei: String): List<Damage>
 
 
     fun savePrinterSettings(settings: Settings?)

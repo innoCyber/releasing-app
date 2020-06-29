@@ -5,7 +5,6 @@ package ptml.releasing.app.base
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
@@ -94,11 +93,6 @@ abstract class BaseActivity<V, D> :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        if (isInactiveInLastHour()){
-            viewModel.logOutOperator()
-            WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
-        }
         progressDialog = ProgressDialog(this)
 
         val networkListener = NetworkListener(this)
@@ -228,6 +222,11 @@ abstract class BaseActivity<V, D> :
 
         getIMEIWithPermissionCheck()
         hideKeyBoardOnTouchOfNonEditableViews()
+
+        /* if (isInactiveInLastHour()){
+             viewModel.logOutOperator()
+             WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
+         }*/
     }
 
     @NeedsPermission(

@@ -169,6 +169,12 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
+    override suspend fun getDamages(imei: String): List<Damage> {
+        return withContext(appCoroutineDispatchers.db) {
+            getDamagesAsync(imei)?.await()?.data ?: listOf()
+        }
+    }
+
     override suspend fun uploadData(request: FormSubmissionRequest) = remote.uploadData(request)
 
     override fun getPrinterSettings() = local.getPrinterSettings()

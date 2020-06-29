@@ -2,7 +2,6 @@ package ptml.releasing.cargo_info.view
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -21,6 +20,7 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.Constants
@@ -29,11 +29,13 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.model.FormDataWrapper
+import ptml.releasing.cargo_info.model.LARGE
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.damages.model.ReleasingAssignedDamage
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.*
 import ptml.releasing.form.models.FormConfiguration
@@ -41,7 +43,6 @@ import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -51,6 +52,9 @@ class CargoInfoActivity :
 
     @Inject
     lateinit var loginRepository: LoginRepository
+
+    @Inject
+    lateinit var repository: Repository
 
     companion object {
         const val RESPONSE = "response"
@@ -93,66 +97,62 @@ class CargoInfoActivity :
                 }
 
                 FormType.PRINTER_DAMAGES -> {
-                    if (DamagesActivity.currentDamages.isEmpty()) {
-                        notifyUser("Please select damages before you can print")
-                        return
-                    }
-                    printerView = view
-
-                    val damagesDescriptions =
-                        DamagesActivity.currentDamages.mapIndexed { index, damage ->
-
-                            val damageName = damage.name.trim()
-
-                            if (damageName.contains("1")) {
-                                var description = "${index + 1}.${" "}${damageName.replace(
-                                    "1",
-                                    "${damage.damageCount}"
-                                )}"
-                                description = description.replace("(.{30})".toRegex(), "$1\n")
-                                "${description}"
-
-                            } else {
-                                var description =
-                                    "${index + 1}.${" "}${damage.damageCount} ${" "}${damageName.replace(
-                                        "1",
-                                        "${damage.damageCount}"
-                                    )}"
-                                description = description.replace("(.{30})".toRegex(), "$1\n")
-
-                                "${description}"
-
-                            }
-
+//                    if (DamagesActivity.currentDamages.isEmpty()) {
+//                        notifyUser("Please select damages before you can print")
+//                        return
+//                    }
+                    runBlocking {
+                        val currentDamages = repository.getDamages("").map { d ->
+                            ReleasingAssignedDamage(
+                                d.id ?: 0,
+                                d.description,
+                                "",
+                                1,
+                                d.typeContainer,
+                                d.position,
+                                DamagesActivity.currentDamageZone + DamagesActivity.currentDamagePoint,
+                                LARGE
+                            )
                         }
 
+                        val damagesDescriptions =
+                            currentDamages.mapIndexed { index, damage ->
 
-                    var summaryText = ""
+                                val damageName = damage.name.trim()
+                                val description = "${damage.damageCount}x $damageName"
+                                description.replace("(.{30})".toRegex(), "$1\n")
+                            }
 
-                    runBlocking {
-                        summaryText = summaryText.plus("\r\nCargo Number : ${input}\r\n")
-                        summaryText = summaryText.plus("Status : ${findCargoResponse?.status}\r\n")
-                        summaryText = summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
-                        summaryText = summaryText.plus(
-                            "Date : ${SimpleDateFormat(
-                                "dd-MMM-yyyy hh:mm",
-                                Locale.getDefault()
-                            ).format(Calendar.getInstance().time)}\r\n"
-                        )
-                        summaryText =
-                            summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
+
+                        var summaryText = ""
+
+                        runBlocking {
+                            summaryText = summaryText.plus("\r\nCargo Number : ${input}\r\n")
+                            summaryText =
+                                summaryText.plus("Status : ${findCargoResponse?.status}\r\n")
+                            summaryText =
+                                summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
+                            summaryText = summaryText.plus(
+                                "Date : ${SimpleDateFormat(
+                                    "dd-MMM-yyyy hh:mm",
+                                    Locale.getDefault()
+                                ).format(Calendar.getInstance().time)}\r\n"
+                            )
+                            summaryText =
+                                summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
+                        }
+
+                        textToPrint = textToPrint.plus(summaryText)
+                        textToPrint =
+                            textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
+                        textToPrint =
+                            textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
+
+
+                        Timber.d("Printer code: %s", textToPrint)
                     }
-
-                    textToPrint = textToPrint.plus(summaryText)
-                    textToPrint = textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
-                    textToPrint =
-                        textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
-
-
-                    Timber.d("Printer code: %s", textToPrint!!.length)
-
-
-                    viewModel.onPrintDamages()
+                    printerView = view
+//                    viewModel.onPrintDamages()
                 }
 
                 FormType.DAMAGES -> {
