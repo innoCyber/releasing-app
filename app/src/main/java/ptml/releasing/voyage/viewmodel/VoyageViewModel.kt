@@ -97,6 +97,6 @@ class VoyageViewModel @Inject constructor(
     }
 
     companion object {
-        private const val NO_VOYAGES_MSG = "No voyages found. Please try again"
+        private const val NO_VOYAGES_MSG = "No voyages found."
     }
 }
