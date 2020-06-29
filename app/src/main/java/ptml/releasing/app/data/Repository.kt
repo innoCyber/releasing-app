@@ -57,8 +57,6 @@ interface Repository {
         typeContainer: Int?
     ): List<Damage>
 
-    suspend fun getDamages(imei: String): List<Damage>
-
 
     fun savePrinterSettings(settings: Settings?)
     fun getPrinterSettings(): Settings
