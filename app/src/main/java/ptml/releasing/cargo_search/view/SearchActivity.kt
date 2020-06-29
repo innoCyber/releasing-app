@@ -84,7 +84,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.networkState.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(
                         binding.appBarHome.content.includeError.root,
                         binding.appBarHome.content.includeError.tvMessage,

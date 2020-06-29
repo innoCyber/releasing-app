@@ -38,7 +38,6 @@ import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -251,7 +250,7 @@ class CargoInfoActivity :
                 }
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)
