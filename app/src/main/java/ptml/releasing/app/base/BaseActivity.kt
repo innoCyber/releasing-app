@@ -612,7 +612,11 @@ abstract class BaseActivity<V, D> :
 
 
     fun showLoading(view: View, textView: TextView, @StringRes message: Int) {
-        textView.text = getString(message)
+        showLoading(view, textView, getString(message))
+    }
+
+    fun showLoading(view: View, textView: TextView, message: String) {
+        textView.text = message
 
         val bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up)
 
