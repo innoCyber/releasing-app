@@ -127,9 +127,8 @@ class CargoInfoActivity :
                             summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
                     }
 
-                    textToPrint = textToPrint.plus(summaryText)
                     textToPrint =
-                        textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
+                        summaryText.plus("\r\nList of Damages\r\n-----------------\r\n")
                     textToPrint =
                         textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
 
@@ -388,6 +387,10 @@ class CargoInfoActivity :
         })
 
         t.start()
+
+    }
+
+    private fun setPrinterPageLength(textToPrint: String): String {
 
     }
 
