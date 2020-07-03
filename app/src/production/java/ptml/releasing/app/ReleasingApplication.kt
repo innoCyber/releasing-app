@@ -12,7 +12,6 @@ import dagger.android.support.DaggerApplication
 import io.fabric.sdk.android.Fabric
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.di.components.DaggerAppComponent
-import ptml.releasing.app.di.modules.network.NetworkModule
 import timber.log.Timber
 
 
@@ -20,7 +19,6 @@ open class ReleasingApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.builder()
-            .bindNetwork(NetworkModule())
             .bindApplication(this).build()
     }
 
