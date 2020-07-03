@@ -146,6 +146,10 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
 //    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutine"
 
+    //worker
+    def work_version = "2.3.4"
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
     //dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"

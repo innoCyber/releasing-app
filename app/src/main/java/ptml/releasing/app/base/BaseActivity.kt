@@ -5,13 +5,16 @@ package ptml.releasing.app.base
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -30,6 +33,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
@@ -45,6 +49,7 @@ import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @RuntimePermissions
@@ -57,7 +62,6 @@ abstract class BaseActivity<V, D> :
     private var networkStateWrapper: NetworkStateWrapper? = null
     private var snackBar: Snackbar? = null
     private var firstTime = true
-
 
     protected lateinit var binding: D
     protected lateinit var viewModel: V
@@ -82,11 +86,19 @@ abstract class BaseActivity<V, D> :
     companion object {
         const val RC_BARCODE = 112
         const val RC_SEARCH = 113
+        const val TIME_WORKER = "time_worker"
+        const val DATE_TIME = "date_time"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        if (isInactiveInLastHour()){
+            viewModel.logOutOperator()
+            WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
+        }
         progressDialog = ProgressDialog(this)
 
         val networkListener = NetworkListener(this)
@@ -148,6 +160,7 @@ abstract class BaseActivity<V, D> :
         })
 
         viewModel.logOutDialog.observe(this, Observer {
+
             showLogOutConfirmDialog()
         })
 
@@ -335,6 +348,7 @@ abstract class BaseActivity<V, D> :
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     viewModel.logOutOperator()
+                    WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
                 }
             })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
@@ -665,6 +679,18 @@ abstract class BaseActivity<V, D> :
 
     protected fun hideOperator() {
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
+    }
+    private fun isInactiveInLastHour(): Boolean {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val currentDate = Calendar.getInstance().timeInMillis
+        val savedTime = prefs.getLong(DATE_TIME ,0)
+        val timediff =currentDate - savedTime
+        Log.e("TimeDiff" , "${timediff}")
+
+        return timediff> 3600000
+
+
+
     }
 
 

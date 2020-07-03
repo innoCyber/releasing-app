@@ -2,9 +2,11 @@ package ptml.releasing.cargo_info.view
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -29,6 +31,7 @@ import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
@@ -57,7 +60,6 @@ class CargoInfoActivity :
     private val findCargoResponse by lazy {
         intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
     }
-
 
     var input: String? = null
     private lateinit var bluetoothManager: BluetoothManager
@@ -106,13 +108,7 @@ class CargoInfoActivity :
                                     "1",
                                     "${damage.damageCount}"
                                 )}"
-                                if (description.length > 25) {
-                                    val builder = StringBuilder(description)
-
-                                    builder.insert(25, "\r\n")
-                                    description = builder.toString()
-
-                                }
+                                description = description.replace("(.{30})".toRegex(), "$1\n")
                                 "${description}"
 
                             } else {
@@ -121,12 +117,8 @@ class CargoInfoActivity :
                                         "1",
                                         "${damage.damageCount}"
                                     )}"
-                                if (description.length > 25) {
-                                    val builder = StringBuilder(description)
+                                description = description.replace("(.{30})".toRegex(), "$1\n")
 
-                                    builder.insert(20, "\r\n")
-                                    description = builder.toString()
-                                }
                                 "${description}"
 
                             }
@@ -139,8 +131,7 @@ class CargoInfoActivity :
                     runBlocking {
                         summaryText = summaryText.plus("\r\nCargo Number : ${input}\r\n")
                         summaryText = summaryText.plus("Status : ${findCargoResponse?.status}\r\n")
-                        summaryText =
-                            summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
+                        summaryText = summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
                         summaryText = summaryText.plus(
                             "Date : ${SimpleDateFormat(
                                 "dd-MMM-yyyy hh:mm",
@@ -153,9 +144,12 @@ class CargoInfoActivity :
 
                     textToPrint = textToPrint.plus(summaryText)
                     textToPrint = textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
-                    textToPrint = textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
+                    textToPrint =
+                        textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
 
-                    Timber.d("Printer code: %s", textToPrint)
+
+                    Timber.d("Printer code: %s", textToPrint!!.length)
+
 
                     viewModel.onPrintDamages()
                 }
@@ -337,6 +331,14 @@ class CargoInfoActivity :
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
             (application as ReleasingApplication).provideImei()
         )
+        saveLastActivityTimeStamp()
+    }
+
+
+    private fun saveLastActivityTimeStamp() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val date = Calendar.getInstance().timeInMillis
+        prefs.edit().putLong(SearchActivity.DATE_TIME, date).apply()
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -417,6 +419,7 @@ class CargoInfoActivity :
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
+
 
     private fun tryToPrintIfPermissionsAreGranted() {
         if (bluetoothManager.bluetoothAdapter == null) {
