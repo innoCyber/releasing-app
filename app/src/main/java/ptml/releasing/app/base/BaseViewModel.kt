@@ -13,6 +13,8 @@ import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
 import ptml.releasing.app.data.local.LocalDataManager
+import ptml.releasing.app.eventbus.EventBus
+import ptml.releasing.app.eventbus.LoginSessionTimeoutEvent
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.Configuration
@@ -39,6 +41,9 @@ open class BaseViewModel @Inject constructor(
 
     @Inject
     lateinit var localDataManager: LocalDataManager
+
+    @Inject
+    lateinit var eventBus: EventBus
 
     protected val goToLogin = MutableLiveData<Event<Unit>>()
     fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
@@ -88,6 +93,22 @@ open class BaseViewModel @Inject constructor(
 
     val operatorName: LiveData<String> = _operatorName
     val savedConfiguration: LiveData<Configuration> = _configuration
+
+
+    init {
+        subscribeToSessionTimeoutEvent()
+    }
+
+    private fun subscribeToSessionTimeoutEvent() {
+        viewModelScope.launch {
+            Timber.d("Subscribing to login timeout event")
+            val channel = eventBus.asChannel<LoginSessionTimeoutEvent>()
+            for (event in channel) {
+                Timber.d("Gotten login session event, logging out")
+                logOutOperator()
+            }
+        }
+    }
 
 
     override fun onCleared() {

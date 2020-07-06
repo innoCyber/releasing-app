@@ -13,7 +13,7 @@ interface WorkerBindingModule {
     @Binds
     @IntoMap
     @WorkerKey(CheckLoginWorker::class)
-    fun bindSaveTimeWorker(factory: CheckLoginWorker.Factory): ChildWorkerFactory
+    fun bindCheckLoginWorker(factory: CheckLoginWorker.Factory): ChildWorkerFactory
 
 
 }

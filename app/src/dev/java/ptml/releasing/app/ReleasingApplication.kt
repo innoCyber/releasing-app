@@ -12,6 +12,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.di.components.DaggerAppComponent
+import ptml.releasing.app.di.modules.network.NetworkModule
 import ptml.releasing.app.utils.log.CrashReportingTree
 import timber.log.Timber
 
@@ -21,6 +22,7 @@ open class ReleasingApplication : DaggerApplication() {
         DaggerAppComponent
             .builder()
             .bindApplication(this)
+            .bindNetwork(NetworkModule())
             .build()
     }
 

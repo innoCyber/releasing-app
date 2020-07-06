@@ -1,5 +1,6 @@
 package ptml.releasing.cargo_search.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -19,11 +20,13 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.FormOption
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 open class SearchViewModel @Inject constructor(
+    private val context: Context,
     private val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
@@ -59,6 +62,9 @@ open class SearchViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     val errorMessage: LiveData<CargoNotFoundResponse> = _errorMessage
 
+    init {
+        scheduleCheckLoginWorker()
+    }
 
     fun openAdmin() {
         _openAdmin.value = Event(Unit)
@@ -171,6 +177,10 @@ open class SearchViewModel @Inject constructor(
 
     fun handleNavVoyageClick() {
         _openVoyage.postValue(Event(Unit))
+    }
+
+    private fun scheduleCheckLoginWorker() {
+        CheckLoginWorker.scheduleWork(context)
     }
 
 
