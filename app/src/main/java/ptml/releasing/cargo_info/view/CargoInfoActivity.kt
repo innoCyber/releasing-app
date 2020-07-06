@@ -71,6 +71,7 @@ class CargoInfoActivity :
     var damageView: View? = null
     var printerView: View? = null
     var textToPrint: String? = ""
+    var isPrintingDamages = false
 
 
     private var validatorListener = object : FormValidator.ValidatorListener {
@@ -85,6 +86,7 @@ class CargoInfoActivity :
         override fun onClickFormButton(type: FormType, view: View) {
             when (type) {
                 FormType.PRINTER -> {
+                    isPrintingDamages = false
                     printerView = view
                     textToPrint = findCargoResponse?.barcode ?: ""
                     viewModel.onPrintBarcode()
@@ -127,15 +129,14 @@ class CargoInfoActivity :
                             summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
                     }
 
-                    textToPrint = textToPrint.plus(summaryText)
                     textToPrint =
-                        textToPrint.plus("\r\nList of Damages\r\n-----------------\r\n")
+                        summaryText.plus("\r\nList of Damages\r\n-----------------\r\n")
                     textToPrint =
                         textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
 
 
                     Timber.d("Printer code: %s", textToPrint)
-
+                    isPrintingDamages = true
                     printerView = view
                     viewModel.onPrintDamages()
                 }
@@ -338,12 +339,15 @@ class CargoInfoActivity :
                 val macAddress = printerBarcodeSettings?.currentPrinter
                 val labelCpclData =
                     printerBarcodeSettings?.labelCpclData?.replace(
+                        Constants.PRINTER_HEIGHT_TO_REPLACE,
+                        getPrinterPageHeight(textToPrint)
+                    )?.replace(
                         Constants.PRINTER_TEXT_TO_REPLACE,
                         textToPrint ?: "No text set"
                     )
 
 
-                // Timber.e("Printer code: %s", labelCpclData)
+                 Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
 
@@ -389,6 +393,19 @@ class CargoInfoActivity :
 
         t.start()
 
+    }
+
+    private fun getPrinterPageHeight(textToPrint: String?): String {
+        val height = if (isPrintingDamages) {
+            val lines = textToPrint?.split("\n")?.size ?: 0
+            val height =
+                lines * (Constants.MULTILINE_LINES_PAGE_HEIGHT / Constants.MULTILINE_LINES_PER_PAGE)
+            height.toString()
+        } else {
+            "400"
+        }
+        Timber.d("Printing with height: $height")
+        return height
     }
 
     private fun showSuccessDialog() {

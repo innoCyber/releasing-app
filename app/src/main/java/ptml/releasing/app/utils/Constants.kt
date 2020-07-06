@@ -34,6 +34,9 @@ object Constants {
     const val DEFAULT_APP_VERSION = 1L
 
     const val PRINTER_TEXT_TO_REPLACE = "var_text"
+    const val PRINTER_HEIGHT_TO_REPLACE = "var_height"
+    const val MULTILINE_LINES_PER_PAGE= 20
+    const val MULTILINE_LINES_PAGE_HEIGHT= 1050
     const val DEFAULT_BARCODE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
@@ -70,7 +73,7 @@ object Constants {
 
 
 
-    const  val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 1000 1\r\n" +
+    const  val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 $PRINTER_HEIGHT_TO_REPLACE 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
             "SPEED 4\r\n" +
