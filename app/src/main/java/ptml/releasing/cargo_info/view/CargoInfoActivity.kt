@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
-import android.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -31,7 +30,6 @@ import ptml.releasing.app.utils.bt.BluetoothManager
 import ptml.releasing.cargo_info.model.FormDataWrapper
 import ptml.releasing.cargo_info.view_model.CargoInfoViewModel
 import ptml.releasing.cargo_search.model.FindCargoResponse
-import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
@@ -318,14 +316,6 @@ class CargoInfoActivity :
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
             (application as ReleasingApplication).provideImei()
         )
-        saveLastActivityTimeStamp()
-    }
-
-
-    private fun saveLastActivityTimeStamp() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val date = Calendar.getInstance().timeInMillis
-        prefs.edit().putLong(SearchActivity.DATE_TIME, date).apply()
     }
 
     @NeedsPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)

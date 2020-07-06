@@ -96,6 +96,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
@@ -202,12 +206,22 @@ dependencies {
     //firebase remote config
     implementation 'com.google.firebase:firebase-config:18.0.0'
 
+    //worker
+    def workerVersion = "2.3.4"
+    implementation "androidx.work:work-runtime-ktx:$workerVersion"
+    androidTestImplementation "androidx.work:work-testing:$workerVersion"
+
+    def assistedInjectVersion = "0.5.2"
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
+
 
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation "androidx.paging:paging-runtime:$pagingVersion"
+
 
     debugImplementation "com.amitshekhar.android:debug-db:1.0.6"
 

@@ -15,6 +15,8 @@ import ptml.releasing.app.di.modules.network.NetworkModule
 import ptml.releasing.app.di.modules.ui.UiModule
 import ptml.releasing.app.di.modules.viewmodel.ViewModelFactoryModule
 import ptml.releasing.app.di.modules.viewmodel.ViewModelModule
+import ptml.releasing.app.di.modules.worker.SampleAssistedInjectModule
+import ptml.releasing.app.di.modules.worker.WorkerBindingModule
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.login.model.LoginModule
 import ptml.releasing.resetpassword.model.ResetPasswordModule
@@ -29,7 +31,9 @@ import ptml.releasing.resetpassword.model.ResetPasswordModule
         MainModule::class,
         LoginModule::class,
         ResetPasswordModule::class,
-        FormMapperModule::class
+        FormMapperModule::class,
+        WorkerBindingModule::class,
+        SampleAssistedInjectModule::class
     ]
 )
 abstract class AppModule {

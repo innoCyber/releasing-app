@@ -30,4 +30,7 @@ interface LocalDataManager {
     fun setRecentVoyages(voyages: List<ReleasingVoyage>)
     fun setLastSelectedVoyage(voyage: ReleasingVoyage)
     fun getLastSelectedVoyage(): ReleasingVoyage?
+
+    fun getLastActiveTime(): Long
+    fun setLastActiveTime(time: Long)
 }

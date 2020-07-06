@@ -5,22 +5,27 @@ import android.content.Context
 import android.os.Build
 import android.telephony.TelephonyManager
 import androidx.multidex.MultiDex
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.di.components.DaggerAppComponent
-import ptml.releasing.app.di.modules.network.NetworkModule
 import ptml.releasing.app.utils.log.CrashReportingTree
 import timber.log.Timber
 
 
 open class ReleasingApplication : DaggerApplication() {
+    open val appComponent by lazy {
+        DaggerAppComponent
+            .builder()
+            .bindApplication(this)
+            .build()
+    }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder()
-            .bindNetwork(NetworkModule())
-            .bindApplication(this).build()
+        return appComponent
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -32,6 +37,7 @@ open class ReleasingApplication : DaggerApplication() {
         super.onCreate()
         initLogger()
         initializeLeakCanary()
+        initWorkerFactory()
     }
 
     private fun initLogger() {
@@ -50,6 +56,14 @@ open class ReleasingApplication : DaggerApplication() {
             return
         }
         LeakCanary.install(this)
+    }
+
+
+    protected fun initWorkerFactory() {
+        WorkManager.initialize(
+            this,
+            Configuration.Builder().setWorkerFactory(appComponent.workerFactory()).build()
+        )
     }
 
     @Suppress("DEPRECATION")

@@ -12,10 +12,12 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
+import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.Configuration
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor(
@@ -34,6 +36,9 @@ open class BaseViewModel @Inject constructor(
 
     @Inject
     lateinit var voyageRepository: VoyageRepository
+
+    @Inject
+    lateinit var localDataManager: LocalDataManager
 
     protected val goToLogin = MutableLiveData<Event<Unit>>()
     fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
@@ -278,5 +283,12 @@ open class BaseViewModel @Inject constructor(
 
     fun updatingQuickRemarks(): Boolean {
         return _updateQuickRemarkLoadingState.value == NetworkState.LOADING
+    }
+
+    fun onUserInteraction() {
+        viewModelScope.launch {
+            Timber.d("Updating last user interaction")
+            localDataManager.setLastActiveTime(Calendar.getInstance().timeInMillis)
+        }
     }
 }
