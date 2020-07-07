@@ -12,10 +12,14 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
+import ptml.releasing.app.data.local.LocalDataManager
+import ptml.releasing.app.eventbus.EventBus
+import ptml.releasing.app.eventbus.LoginSessionTimeoutEvent
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.Configuration
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor(
@@ -34,6 +38,12 @@ open class BaseViewModel @Inject constructor(
 
     @Inject
     lateinit var voyageRepository: VoyageRepository
+
+    @Inject
+    lateinit var localDataManager: LocalDataManager
+
+    @Inject
+    lateinit var eventBus: EventBus
 
     protected val goToLogin = MutableLiveData<Event<Unit>>()
     fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
@@ -83,6 +93,22 @@ open class BaseViewModel @Inject constructor(
 
     val operatorName: LiveData<String> = _operatorName
     val savedConfiguration: LiveData<Configuration> = _configuration
+
+
+    init {
+        subscribeToSessionTimeoutEvent()
+    }
+
+    private fun subscribeToSessionTimeoutEvent() {
+        viewModelScope.launch {
+            Timber.d("Subscribing to login timeout event")
+            val channel = eventBus.asChannel<LoginSessionTimeoutEvent>()
+            for (event in channel) {
+                Timber.d("Gotten login session event, logging out")
+                logOutOperator()
+            }
+        }
+    }
 
 
     override fun onCleared() {
@@ -278,5 +304,12 @@ open class BaseViewModel @Inject constructor(
 
     fun updatingQuickRemarks(): Boolean {
         return _updateQuickRemarkLoadingState.value == NetworkState.LOADING
+    }
+
+    fun onUserInteraction() {
+        viewModelScope.launch {
+            Timber.d("Updating last user interaction")
+            localDataManager.setLastActiveTime(Calendar.getInstance().timeInMillis)
+        }
     }
 }

@@ -11,9 +11,7 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -48,7 +46,6 @@ import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 @RuntimePermissions
@@ -222,11 +219,11 @@ abstract class BaseActivity<V, D> :
 
         getIMEIWithPermissionCheck()
         hideKeyBoardOnTouchOfNonEditableViews()
+    }
 
-        /* if (isInactiveInLastHour()){
-             viewModel.logOutOperator()
-             WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
-         }*/
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        viewModel.onUserInteraction()
     }
 
     @NeedsPermission(
@@ -679,18 +676,5 @@ abstract class BaseActivity<V, D> :
     protected fun hideOperator() {
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
     }
-    private fun isInactiveInLastHour(): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val currentDate = Calendar.getInstance().timeInMillis
-        val savedTime = prefs.getLong(DATE_TIME ,0)
-        val timediff =currentDate - savedTime
-        Log.e("TimeDiff" , "${timediff}")
-
-        return timediff> 3600000
-
-
-
-    }
-
 
 }

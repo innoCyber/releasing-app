@@ -1,9 +1,7 @@
 package ptml.releasing.cargo_search.view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,7 +12,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -46,9 +43,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     companion object {
         const val RC_CONFIG = 434
         const val RC_CARGO_INFO = 343
-        const val DATE_TIME = "date_time"
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -173,7 +167,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
             it.setBackgroundResource(R.drawable.save_btn_bg_blue)
             viewModel.verify()
-            saveLastActivityTimeStamp()
         }
 
         binding.appBarHome.content.includeSearch.imgQrCode.setOnClickListener {
@@ -291,15 +284,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     private fun search() {
         binding.appBarHome.content.includeSearch.btnVerify.hideSoftInputFromWindow()
         findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString())
-      }
-
-
-    private fun saveLastActivityTimeStamp() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val date = Calendar.getInstance().timeInMillis
-        prefs.edit().putLong(DATE_TIME, date).apply()
     }
-
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?) {
