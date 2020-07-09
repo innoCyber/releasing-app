@@ -76,4 +76,12 @@ open class PreferencesManagerImpl @Inject constructor(
     override fun setRecentVoyages(voyages: List<ReleasingVoyage>) {
         return setStringPreference(prefRecentVoyages, gson.toJson(voyages))
     }
+
+    override fun getLastActiveTime(): Long {
+        return getLongPreference(prefLastActiveTime)
+    }
+
+    override fun setLastActiveTime(time: Long) {
+        return setLongPreference(prefLastActiveTime, time)
+    }
 }

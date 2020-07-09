@@ -1,5 +1,6 @@
 package ptml.releasing.cargo_search.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -19,11 +20,13 @@ import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.FormOption
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 open class SearchViewModel @Inject constructor(
+    private val context: Context,
     private val formMappers: FormMappers,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
@@ -59,6 +62,9 @@ open class SearchViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     val errorMessage: LiveData<CargoNotFoundResponse> = _errorMessage
 
+    init {
+        scheduleCheckLoginWorker()
+    }
 
     fun openAdmin() {
         _openAdmin.value = Event(Unit)
@@ -79,7 +85,7 @@ open class SearchViewModel @Inject constructor(
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
         _networkState.value = Event(NetworkState.LOADING)
 
-        compositeJob = CoroutineScope(dispatchers.network).launch {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
                 //already configured
@@ -92,7 +98,7 @@ open class SearchViewModel @Inject constructor(
                     cargoNumber.trim()
                 )?.await()
                 val formResponse = addLastSelectedVoyage(findCargoResponse)
-                withContext(dispatchers.main) {
+                withContext(appCoroutineDispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
                         Timber.v("findCargoResponse: %s", formResponse)
                         _findCargoResponse.value = formResponse
@@ -111,7 +117,7 @@ open class SearchViewModel @Inject constructor(
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                withContext(dispatchers.main) {
+                withContext(appCoroutineDispatchers.main) {
                     _networkState.value = Event(NetworkState.error(e))
                 }
             }
@@ -170,6 +176,10 @@ open class SearchViewModel @Inject constructor(
 
     fun handleNavVoyageClick() {
         _openVoyage.postValue(Event(Unit))
+    }
+
+    private fun scheduleCheckLoginWorker() {
+        CheckLoginWorker.scheduleWork(context)
     }
 
 

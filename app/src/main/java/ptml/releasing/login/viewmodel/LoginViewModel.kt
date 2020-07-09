@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
@@ -15,6 +16,7 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.extensions.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,6 +31,13 @@ class LoginViewModel @Inject constructor(
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+
+
+    companion object {
+        const val TIME_WORKER = "time_worker"
+    }
+
+    var workManager = WorkManager.getInstance(context)
 
 
     val badgeId = MutableLiveData<String>()
@@ -69,11 +78,10 @@ class LoginViewModel @Inject constructor(
         val password = password.value
 
         if (!meetsAllConditions(badgeId, password)) {
+
             return
         }
-
         authenticate(badgeId, password)
-
     }
 
     @Suppress("NAME_SHADOWING")
@@ -93,6 +101,7 @@ class LoginViewModel @Inject constructor(
                     )
                 )
                 if (response?.success == true) {
+                    scheduleCheckLoginWorker()
                     loginUser()
                 } else {
                     loginDataState.postValue(DataState.Error(response?.message))
@@ -150,5 +159,8 @@ class LoginViewModel @Inject constructor(
         return true
     }
 
+    private fun scheduleCheckLoginWorker() {
+        CheckLoginWorker.scheduleWork(context)
+    }
 
 }

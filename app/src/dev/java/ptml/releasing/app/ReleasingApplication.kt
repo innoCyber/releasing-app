@@ -21,6 +21,7 @@ open class ReleasingApplication : DaggerApplication() {
         DaggerAppComponent
             .builder()
             .bindApplication(this)
+            .bindNetwork(NetworkModule())
             .build()
     }
 

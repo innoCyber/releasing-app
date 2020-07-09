@@ -14,8 +14,10 @@ enum class Endpoint(
         "Get the admin configuration for operation step, terminal and cargo type"
     ),
     SET_CONFIGURATION_DEVICE(
+
         Urls.SET_CONFIGURATION_DEVICE,
         "Get the form configuration for an operation step"
+
     ),
     DOWNLOAD_DAMAGES(Urls.DOWNLOAD_DAMAGES, "Download damages"),
     FIND_CARGO(Urls.FIND_CARGO, "Get a cargo's information based on it's code"),
@@ -55,11 +57,13 @@ object Urls {
     fun getUrlWithoutParameters(url: String): String {
         val uri = URI(url)
         return URI(
+
             uri.scheme,
             uri.authority,
             uri.path,
             null, // Ignore the query part of the input url
             uri.fragment
+
         ).toString()
     }
 

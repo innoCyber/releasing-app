@@ -29,8 +29,9 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getDeviceConfiguration() = prefs.getDeviceConfiguration()
     override fun saveDeviceConfiguration(response: ConfigureDeviceResponse?)= prefs.saveDeviceConfiguration(response)
-    override fun getPrinterBarcodeSettings() = prefs.getPrinterBarcodeSettings()
-    override fun savePrinterSettings(settings: Settings?) = prefs.savePrinterSettings(settings)
+    override fun getPrinterSettings() = prefs.getPrinterSettings()
+    override fun savePrinterSettings(settings: Settings?) =
+        prefs.savePrinterSettings(settings)
 
     override fun getOperatorName() = prefs.getOperatorName()
 

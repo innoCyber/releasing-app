@@ -12,6 +12,7 @@ import ptml.releasing.app.data.remote.RestClient
 import ptml.releasing.app.data.remote.mapper.VoyageMapper
 import ptml.releasing.app.data.repo.VoyageRepositoryImpl
 import ptml.releasing.app.di.scopes.ReleasingAppScope
+import ptml.releasing.app.eventbus.EventBus
 import ptml.releasing.app.local.Local
 import ptml.releasing.app.local.ReleasingLocal
 import ptml.releasing.app.prefs.Prefs
@@ -55,6 +56,12 @@ class MainModule {
             network = Dispatchers.IO,
             main = Dispatchers.Main
         )
+    }
+
+    @Provides
+    @ReleasingAppScope
+    fun provideEventBus(dispatchers: AppCoroutineDispatchers): EventBus {
+        return EventBus.getInstance(dispatchers)
     }
 
     @Provides

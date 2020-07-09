@@ -46,7 +46,7 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
         }
 
         viewModel.getPrinterSettings().observe(this, Observer {
-            binding.AdminPrinterSettingsEdtLabelCpclData.setText(if (it.labelCpclData.isNullOrEmpty()) Constants.DEFAULT_PRINTER_CODE else it.labelCpclData)
+            binding.AdminPrinterSettingsEdtLabelCpclData.setText(if (it.labelCpclData.isNullOrEmpty()) Constants.DEFAULT_BARCODE_PRINTER_SETTINGS else it.labelCpclData)
             binding.AdminPrinterSettingsEdtPrinterValue.setText(it.currentPrinterName)
         })
 
@@ -58,11 +58,11 @@ class PrinterSettingsActivity : BaseActivity<PrinterSettingsViewModel, ActivityP
             }
         })
 
-        binding.AdminPrinterSettingsEdtLabelCpclData.setText(Constants.DEFAULT_PRINTER_CODE)
+        binding.AdminPrinterSettingsEdtLabelCpclData.setText(Constants.DEFAULT_BARCODE_PRINTER_SETTINGS)
 
         binding.AdminPrinterSettingsBtnReset.setOnClickListener {
             binding.AdminPrinterSettingsEdtLabelCpclData.setText(
-                Constants.DEFAULT_PRINTER_CODE
+                Constants.DEFAULT_BARCODE_PRINTER_SETTINGS
             )
         }
 

@@ -157,7 +157,10 @@ class FormPreFillModelMapper(
             "",
             "",
             model.values?.map { formPrefillValueMapper.mapToModel(it) },
-            model.options?.map { formPrefillOptionMapper.mapToModel(it) })
+            model.options?.map { formPrefillOptionMapper.mapToModel(it) },
+            "",
+            ""
+        )
     }
 }
 

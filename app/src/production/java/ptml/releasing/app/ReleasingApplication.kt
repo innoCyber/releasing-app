@@ -5,11 +5,8 @@ import android.content.Context
 import android.os.Build
 import android.telephony.TelephonyManager
 import androidx.multidex.MultiDex
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
-import io.fabric.sdk.android.Fabric
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.di.components.DaggerAppComponent
 import timber.log.Timber
@@ -30,11 +27,6 @@ open class ReleasingApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-        initFabric()
-    }
-
-    private fun initFabric() {
-        Fabric.with(this, Crashlytics(), CrashlyticsCore())
     }
 
     private fun initLogger() {

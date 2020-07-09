@@ -30,6 +30,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
@@ -58,7 +59,6 @@ abstract class BaseActivity<V, D> :
     private var snackBar: Snackbar? = null
     private var firstTime = true
 
-
     protected lateinit var binding: D
     protected lateinit var viewModel: V
 
@@ -82,6 +82,9 @@ abstract class BaseActivity<V, D> :
     companion object {
         const val RC_BARCODE = 112
         const val RC_SEARCH = 113
+        const val TIME_WORKER = "time_worker"
+        const val DATE_TIME = "date_time"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,6 +151,7 @@ abstract class BaseActivity<V, D> :
         })
 
         viewModel.logOutDialog.observe(this, Observer {
+
             showLogOutConfirmDialog()
         })
 
@@ -215,6 +219,11 @@ abstract class BaseActivity<V, D> :
 
         getIMEIWithPermissionCheck()
         hideKeyBoardOnTouchOfNonEditableViews()
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        viewModel.onUserInteraction()
     }
 
     @NeedsPermission(
@@ -335,6 +344,7 @@ abstract class BaseActivity<V, D> :
             listener = object : InfoDialog.InfoListener {
                 override fun onConfirm() {
                     viewModel.logOutOperator()
+                    WorkManager.getInstance().cancelAllWorkByTag(TIME_WORKER)
                 }
             })
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
@@ -603,7 +613,11 @@ abstract class BaseActivity<V, D> :
 
 
     fun showLoading(view: View, textView: TextView, @StringRes message: Int) {
-        textView.text = getString(message)
+        showLoading(view, textView, getString(message))
+    }
+
+    fun showLoading(view: View, textView: TextView, message: String) {
+        textView.text = message
 
         val bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up)
 
@@ -666,6 +680,5 @@ abstract class BaseActivity<V, D> :
     protected fun hideOperator() {
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
     }
-
 
 }

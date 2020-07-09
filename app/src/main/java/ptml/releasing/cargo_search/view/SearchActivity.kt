@@ -65,6 +65,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.openAdMin.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 startNewActivity(LoginActivity::class.java)
+
             }
         })
 
@@ -84,7 +85,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.networkState.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(
                         binding.appBarHome.content.includeError.root,
                         binding.appBarHome.content.includeError.tvMessage,
@@ -285,10 +286,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString())
     }
 
-
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?) {
         viewModel.findCargo(cargoNumber, (application as ReleasingApplication).provideImei())
+
+
     }
 
 

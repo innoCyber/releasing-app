@@ -12,6 +12,7 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.di.modules.AppModule
 import ptml.releasing.app.di.modules.network.NetworkModule
+import ptml.releasing.app.di.modules.worker.SampleWorkerFactory
 import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.di.modules.worker.SampleWorkerFactory
 

@@ -28,9 +28,9 @@ class PrinterSettingsViewModel @Inject constructor(
 
 
     fun getSettings() {
-        compositeJob = CoroutineScope(dispatchers.db).launch {
-            val settings = repository.getPrinterBarcodeSettings()
-            withContext(dispatchers.main) {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val settings = repository.getPrinterSettings()
+            withContext(appCoroutineDispatchers.main) {
                 printerSettings.postValue(settings)
             }
         }
@@ -38,13 +38,13 @@ class PrinterSettingsViewModel @Inject constructor(
 
     fun setSettings(currentPrinter: String?, currentPrinterName: String?, label: String?) {
         val settings = printerSettings.value
-        compositeJob = CoroutineScope(dispatchers.db).launch {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
             settings?.currentPrinter = currentPrinter
             settings?.currentPrinterName = currentPrinterName
             settings?.labelCpclData = label
 
             repository.savePrinterSettings(settings)
-            withContext(dispatchers.main) {
+            withContext(appCoroutineDispatchers.main) {
                 close.postValue(Event(Unit))
             }
         }

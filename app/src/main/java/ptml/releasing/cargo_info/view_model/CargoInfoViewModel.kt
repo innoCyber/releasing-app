@@ -12,6 +12,7 @@ import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
@@ -57,8 +58,8 @@ class CargoInfoViewModel @Inject constructor(
     private val _formConfig = MutableLiveData<FormDataWrapper>()
     val formConfig: LiveData<FormDataWrapper> = _formConfig
 
-    private val _printerBarcodeSettings = MutableLiveData<Settings>()
-    val printerBarcodeSettings: LiveData<Settings> = _printerBarcodeSettings
+    private val _printerSettings = MutableLiveData<Settings>()
+    val printerSettings: LiveData<Settings> = _printerSettings
 
     private val imagesCountState = MutableLiveData<Int>()
     fun getImagesCountState(): LiveData<Int> = imagesCountState
@@ -68,9 +69,11 @@ class CargoInfoViewModel @Inject constructor(
         _goBack.postValue(Event(true))
     }
 
+
     fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
-        compositeJob = CoroutineScope(dispatchers.db).launch {
-            try {
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+
+            try{
                 val remarksMap = mutableMapOf<Int, QuickRemark>()
                 val formConfig = repository.getFormConfigAsync().await()
                 val remarks = repository.getQuickRemarkAsync(imei)?.await()
@@ -88,11 +91,15 @@ class CargoInfoViewModel @Inject constructor(
                     formConfig
                 }
 
-                val voyages = voyageRepository.getRecentVoyages().map {
+                val voyages =  try{voyageRepository.getRecentVoyages().map {
                     formMappers.voyagesMapper.mapFromModel(it)
                 }.map {
                     it.id to it
-                }.toMap()
+                }.toMap()}
+                catch (e: Exception){
+                    mapOf<Int, Voyage>()
+                }
+
 
                 val wrapper =
                     FormDataWrapper(
@@ -100,11 +107,12 @@ class CargoInfoViewModel @Inject constructor(
                         formMappers.configureDeviceMapper.mapFromModel(form),
                         voyages
                     )
-                withContext(dispatchers.main) {
+                withContext(appCoroutineDispatchers.main) {
                     _formConfig.postValue(wrapper)
                 }
-            } catch (e: Exception) {
-                _errorMessage.postValue(Event(e.localizedMessage))
+            }catch (e: Exception) {
+                Timber.e(e)
+                _networkState.postValue(Event(NetworkState.error(e)))
             }
         }
     }
@@ -122,11 +130,19 @@ class CargoInfoViewModel @Inject constructor(
     }
 
     fun onPrintBarcode() {
-        compositeJob = CoroutineScope(dispatchers.db).launch {
-            val settings = repository.getPrinterBarcodeSettings()
-            withContext(dispatchers.main) {
-                _printerBarcodeSettings.postValue(settings)
+        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+            val settings = repository.getPrinterSettings()
+            withContext(appCoroutineDispatchers.main) {
+                _printerSettings.postValue(settings)
             }
+        }
+    }
+
+    fun onPrintDamages() {
+        viewModelScope.launch {
+            val settings = repository.getPrinterSettings()
+            settings.labelCpclData = Constants.DEFAULT_MULTILINE_PRINTER_SETTINGS
+            _printerSettings.postValue(settings)
         }
     }
 
@@ -153,7 +169,7 @@ class CargoInfoViewModel @Inject constructor(
     ) {
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
         _networkState.postValue(Event(NetworkState.LOADING))
-        CoroutineScope(dispatchers.network).launch {
+        CoroutineScope(appCoroutineDispatchers.network).launch {
             try {
 
                 val operator = getLoginUseCase.execute().badgeId
@@ -176,13 +192,12 @@ class CargoInfoViewModel @Inject constructor(
                     findCargoResponse?.mrkNumber,
                     findCargoResponse?.grimaldiContainer,
                     findCargoResponse?.cargoId,
-                    getPhotoNames(cargoCode),
                     formSubmission.selectedVoyage?.id,
                     imei
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()
 
-                withContext(dispatchers.main) {
+                withContext(appCoroutineDispatchers.main) {
                     if (result.isSuccess) {
                         //schedule upload images
                         val workRequest =
@@ -232,7 +247,7 @@ class CargoInfoViewModel @Inject constructor(
 
     fun storeLastSelectedVoyage(change: Any?) {
         viewModelScope.launch {
-            withContext(dispatchers.db) {
+            withContext(appCoroutineDispatchers.db) {
                 (change as? Voyage)?.let {
                     Timber.d("Storing last selected voyage: $it")
                     voyageRepository.setLastSelectedVoyage(formMappers.voyagesMapper.mapToModel(it))

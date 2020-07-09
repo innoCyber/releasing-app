@@ -283,6 +283,7 @@
     <string name="forgot_confirm_password_hint">Confirm password</string>
     <string name="password_reset_success">Your password was reset successfully</string>
     <string name="voyage_screen_title">Voyages</string>
+    <string name="session_timed_out_msg">Session timed out, logging out</string>
 
     <string name="change_pic_create_file_error">An error occurred while creating file for image, please try again and
         contact the admin
