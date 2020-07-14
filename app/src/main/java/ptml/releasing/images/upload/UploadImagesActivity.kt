@@ -16,15 +16,14 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.image.ImageDirObserver
 import ptml.releasing.app.utils.image.ImageLoader
-import ptml.releasing.images.viewer.ImageViewerActivity
 import ptml.releasing.app.views.SpacesItemDecoration
 import ptml.releasing.databinding.ActivityUploadImagesBinding
 import ptml.releasing.images.ImagesViewModel
 import ptml.releasing.images.model.Image
+import ptml.releasing.images.viewer.ImageViewerActivity
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -163,8 +162,8 @@ class UploadImagesActivity : BaseActivity<ImagesViewModel, ActivityUploadImagesB
             binding.swipeRefreshLayout.isRefreshing = it == NetworkState.LOADING
 
             if (it?.status == Status.FAILED) {
-                val error = ErrorHandler().getErrorMessage(it.throwable)
-                notifyUser(binding.root, getString(error))
+                val error = ErrorHandler(this).getErrorMessage(it.throwable)
+                notifyUser(binding.root, error)
             }
         })
         viewModel.getDeleteNotifyState().observe(this, Observer {

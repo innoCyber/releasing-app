@@ -303,7 +303,7 @@
     <string name="uploading">Uploading image %s</string>
     <string name="in_progress">File upload in progress</string>
     <string name="message_upload_success">Upload successful</string>
-    <string name="message_upload_failed">Upload completed</string>
+    <string name="message_upload_failed">Upload failed</string>
     <string name="file_upload_successful">%d files uploaded successfully</string>
     <string name="file_upload_failed">%1$d image files of %2$d for %3$s failed to upload. Upload would be retried again in the background</string>
     <string name="file_upload_failed_msg">An error occurred during upload, failed uploads will be retried. Please contact the admin</string>

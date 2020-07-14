@@ -24,7 +24,6 @@ import ptml.releasing.app.utils.upload.NotificationHelper
 import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.images.api.ImageUploadRepository
-import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
 
@@ -39,18 +38,20 @@ class ImageUploadWorker @AssistedInject constructor(
     @Assisted private val params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
-    val notificationHelper = NotificationHelper(context)
-    lateinit var notification: NotificationCompat.Builder
+    private val notificationHelper = NotificationHelper(context)
+    private lateinit var notification: NotificationCompat.Builder
+    private val imageBodies = mutableListOf<MultipartBody.Part>()
+    private val fileNames = mutableListOf<String>()
 
     override suspend fun doWork(): Result {
         val cargoCode = inputData.getString(CARGO_CODE_KEY)
         val cargoId = inputData.getInt(CARGO_ID_KEY, 0)
+        val operationStep = inputData.getInt(OPERATION_STEP_KEY, 0)
         val cargoType = inputData.getInt(CARGO_TYPE_KEY, 0)
         //begin upload for file images
         var result = Result.retry()
 
         cargoCode?.let { code ->
-            val successResponse = mutableListOf<Boolean>()
             var totalImages = 0
             Timber.d("Starting work")
             try {
@@ -62,24 +63,21 @@ class ImageUploadWorker @AssistedInject constructor(
                 for (i in 0 until totalImages) {
                     val image = imagesList[i]
                     val status = "${i + 1}/$totalImages"
-                    val response = uploadImageAsync(image, cargoCode, cargoType, cargoId, status)
+                    fileNames.add(image.name ?: "image_${i}")
+                    imageBodies.add(createMultipartBody(image.imageUri, cargoCode, status))
+                }
+
+                if (imageBodies.size > 0) {
+                    val response =
+                        uploadImage(cargoType, cargoId, operationStep, fileNames, imageBodies)
                     val success = response.isSuccess
                     Timber.d("Success: $success")
-                    successResponse.add(success)
-                    image.uploaded = success
-                    repository.addImage(code, image)
-                    result = Result.success()
-                }
-
-                /*If any upload fails, it should be retried later*/
-                for (success in successResponse) {
-                    if (!success) {
-                        Timber.d("One upload failed so the work should be retried")
-                        result = Result.retry()
-                        break
+                    imagesList.forEach {
+                        it.uploaded = success
+                        repository.addImage(cargoCode, it)
                     }
+                    result = if (success) Result.success() else Result.retry()
                 }
-
             } catch (e: Throwable) {
                 Timber.e(e)
                 result = Result.retry()
@@ -91,11 +89,10 @@ class ImageUploadWorker @AssistedInject constructor(
             } else if (totalImages <= 0) {
                 //NO images to be uploaded
                 result = Result.success()
+                Timber.e("Uploaded successfully")
             } else {
-                //show the number of failed
-                val numberOfFailed = successResponse.filter { !it }.size
-                Timber.d("Failed: SIZe: $numberOfFailed")
-                showFailureNotification(cargoCode, numberOfFailed, totalImages)
+                Timber.e("Failed to upload")
+                showFailureNotification(cargoCode)
             }
 
         }
@@ -103,18 +100,21 @@ class ImageUploadWorker @AssistedInject constructor(
         return result
     }
 
-    private suspend fun uploadImageAsync(
-        it: Image,
-        cargoCode: String,
+    private suspend fun uploadImage(
         cargoType: Int,
         cargoId: Int,
-        status: String
+        operationStep: Int,
+        fileNames: List<String>,
+        files: List<MultipartBody.Part>
     ): BaseResponse {
-        val body = createMultipartBody(it.imageUri, cargoCode, status)
-
-        return imageUploadRepository.uploadImage(cargoType, cargoCode, cargoId, it.name ?: "", body)
+        return imageUploadRepository.uploadImage(
+            cargoType,
+            cargoId,
+            operationStep,
+            fileNames,
+            files
+        )
     }
-
 
     /**
      * @param imageUri
@@ -207,7 +207,7 @@ class ImageUploadWorker @AssistedInject constructor(
         )
     }
 
-    private fun showFailureNotification(cargoCode: String?, totalFailed: Int, totalImages: Int) {
+    private fun showFailureNotification(cargoCode: String?) {
         val activityIntent = Intent(context, DeviceConfigActivity::class.java)
 
         val resultPendingIntent = PendingIntent.getActivity(
@@ -228,15 +228,9 @@ class ImageUploadWorker @AssistedInject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val contentText = if (totalImages > 0 && totalFailed > 0) {
-            context.getString(R.string.file_upload_failed, totalFailed, totalImages, cargoCode)
-        } else {
-            context.getString(R.string.file_upload_failed_msg)
-        }
-
         notification = notificationHelper.getNotification(
             context.getString(R.string.message_upload_failed),
-            contentText,
+            context.getString(R.string.file_upload_failed_msg),
             resultPendingIntent
         )
 
@@ -262,9 +256,15 @@ class ImageUploadWorker @AssistedInject constructor(
 
         const val CARGO_CODE_KEY = "cargo_code_key"
         const val CARGO_ID_KEY = "cargo_id_key"
+        const val OPERATION_STEP_KEY = "operation_step"
         const val CARGO_TYPE_KEY = "cargo_type_key"
 
-        fun createWorkRequest(cargoCode: String, cargoId: Int, cargoType: Int): OneTimeWorkRequest {
+        fun createWorkRequest(
+            cargoCode: String,
+            operationStep: Int,
+            cargoId: Int,
+            cargoType: Int
+        ): OneTimeWorkRequest {
 
             val myConstraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -272,9 +272,10 @@ class ImageUploadWorker @AssistedInject constructor(
                 .build()
 
             val inputData = Data.Builder()
-                .putString(CARGO_CODE_KEY, cargoCode)
                 .putInt(CARGO_ID_KEY, cargoId)
                 .putInt(CARGO_TYPE_KEY, cargoType)
+                .putString(CARGO_CODE_KEY, cargoCode)
+                .putInt(OPERATION_STEP_KEY, operationStep)
                 .build()
 
             val workRequest = OneTimeWorkRequest

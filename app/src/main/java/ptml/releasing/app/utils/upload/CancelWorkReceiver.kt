@@ -25,6 +25,7 @@ class CancelWorkReceiver : DaggerBroadcastReceiver() {
         when (intent.action) {
             ACTION_CANCEL -> {
                 notificationHelper.cancelNotification(notificationId)
+//                notificationHelper.cancelNotification(NotificationHelper.SUMMARY_NOTIFICATION_ID)
                 cargoCode.let {
                     val workId = repository.getWorkerId(it)
                     WorkManager.getInstance(context).cancelWorkById(UUID.fromString(workId))

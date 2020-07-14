@@ -70,9 +70,7 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
     }
 
 
-
-
-     fun getSummaryNotification(
+    fun getSummaryNotification(
         title: String,
         body: String
     ): NotificationCompat.Builder {
@@ -88,12 +86,11 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
         builder.setSmallIcon(smallIcon)
         builder.setStyle(bigStyle)
         builder.setGroup(GROUP_KEY)
+        builder.setAutoCancel(true)
         builder.setOnlyAlertOnce(true)
         builder.setGroupSummary(true)
         return builder
     }
-
-
 
 
     fun getNotification(
@@ -113,6 +110,7 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
         builder.setSmallIcon(smallIcon)
         builder.setStyle(bigStyle)
         builder.setGroup(GROUP_KEY)
+        builder.setAutoCancel(true)
         builder.color = ContextCompat.getColor(applicationContext, R.color.colorAccent)
         builder.setContentIntent(resultPendingIntent)
             .setDefaults(NotificationCompat.DEFAULT_ALL).priority = NotificationCompat.PRIORITY_HIGH

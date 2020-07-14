@@ -1,7 +1,5 @@
 package ptml.releasing.app.di.components
 
-
-
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -14,7 +12,6 @@ import ptml.releasing.app.di.modules.AppModule
 import ptml.releasing.app.di.modules.network.NetworkModule
 import ptml.releasing.app.di.modules.worker.SampleWorkerFactory
 import ptml.releasing.app.di.scopes.ReleasingAppScope
-import ptml.releasing.app.di.modules.worker.SampleWorkerFactory
 
 @ReleasingAppScope
 @Component(modules = [AndroidInjectionModule::class, AndroidSupportInjectionModule::class, AppModule::class])
@@ -28,6 +25,9 @@ interface AppComponent: AndroidInjector<DaggerApplication> {
 
         @BindsInstance
         fun bindApplication(application: ReleasingApplication): Builder
+
+        @BindsInstance
+        fun bindNetwork(networkModule: NetworkModule):Builder
 
         fun build(): AppComponent
     }

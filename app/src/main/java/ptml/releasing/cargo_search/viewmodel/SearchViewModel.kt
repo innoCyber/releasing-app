@@ -29,8 +29,8 @@ open class SearchViewModel @Inject constructor(
     private val context: Context,
     private val formMappers: FormMappers,
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
-) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+    dispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val _openAdmin = MutableLiveData<Event<Unit>>()
     val openAdMin: LiveData<Event<Unit>> = _openAdmin
@@ -85,7 +85,7 @@ open class SearchViewModel @Inject constructor(
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
         _networkState.value = Event(NetworkState.LOADING)
 
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
 
                 //already configured
@@ -98,7 +98,7 @@ open class SearchViewModel @Inject constructor(
                     cargoNumber.trim()
                 )?.await()
                 val formResponse = addLastSelectedVoyage(findCargoResponse)
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
                         Timber.v("findCargoResponse: %s", formResponse)
                         _findCargoResponse.value = formResponse
@@ -117,7 +117,7 @@ open class SearchViewModel @Inject constructor(
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     _networkState.value = Event(NetworkState.error(e))
                 }
             }

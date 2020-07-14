@@ -213,6 +213,10 @@ class CargoInfoActivity :
             createForm(it)
         })
 
+        viewModel.getImagesCountState().observe(this, Observer {
+            imagesView?.findViewById<TextView>(R.id.tv_number)?.text = it.toString()
+        })
+
         getFormConfigWithPermissionCheck()
 
         viewModel.printerSettings.observe(this, Observer {
@@ -445,7 +449,14 @@ class CargoInfoActivity :
     fun createForm(wrapper: FormDataWrapper?) {
         Timber.d("From sever: %s", findCargoResponse)
 
-        val newForm = wrapper?.formConfigureDeviceResponse?.data
+        val newForm = wrapper?.formConfigureDeviceResponse?.data?.toMutableList().apply {
+            this?.add(FormConfiguration(0, FormType.IMAGES.type, "Select Images",
+                required = true,
+                editable = false,
+                options = listOf(),
+                dataValidation = ""
+            ))
+        }
 
         formBuilder = FormBuilder(this)
         val formView = formBuilder

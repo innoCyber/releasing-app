@@ -8,12 +8,13 @@ class ImageUploadRepository @Inject constructor(private val imageRestClient: Ima
 
     suspend fun uploadImage(
         cargoTypeId: Int?,
-        cargoCode: String?,
         cargoId: Int?,
-        imageName: String,
-        file: MultipartBody.Part
+        operationStep:Int,
+        fileNames: List<String>,
+        files: List<MultipartBody.Part>
     ): BaseResponse {
+        val data = ImageUploadData(cargoTypeId, operationStep, cargoId, fileNames.map { ImageFileName(it) })
         return imageRestClient.getRemoteCaller()
-            .upload(cargoTypeId, cargoCode, cargoId, imageName, file)
+            .upload(data,  files)
     }
 }
