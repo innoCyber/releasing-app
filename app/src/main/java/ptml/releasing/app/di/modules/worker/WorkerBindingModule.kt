@@ -2,6 +2,7 @@ package ptml.releasing.app.di.modules.worker
 
 
 
+import androidx.work.impl.workers.ConstraintTrackingWorker
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -20,5 +21,11 @@ interface WorkerBindingModule {
     @IntoMap
     @WorkerKey(ImageUploadWorker::class)
     fun bindImageUploadWorker(factory: ImageUploadWorker.Factory): ChildWorkerFactory
+
+
+    @Binds
+    @IntoMap
+    @WorkerKey(ConstraintTrackingWorker::class)
+    fun bindConstraintWorkerFactory(factory: ConstraintWorkerFactory): ChildWorkerFactory
 
 }
