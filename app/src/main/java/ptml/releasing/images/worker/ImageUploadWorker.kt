@@ -24,6 +24,7 @@ import ptml.releasing.app.utils.upload.NotificationHelper
 import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.images.api.ImageUploadRepository
+import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
 
@@ -40,8 +41,6 @@ class ImageUploadWorker @AssistedInject constructor(
 
     private val notificationHelper = NotificationHelper(context)
     private lateinit var notification: NotificationCompat.Builder
-    private val imageBodies = mutableListOf<MultipartBody.Part>()
-    private val fileNames = mutableListOf<String>()
 
     override suspend fun doWork(): Result {
         val cargoCode = inputData.getString(CARGO_CODE_KEY)
@@ -52,6 +51,7 @@ class ImageUploadWorker @AssistedInject constructor(
         var result = Result.retry()
 
         cargoCode?.let { code ->
+            val successResponse = mutableListOf<Boolean>()
             var totalImages = 0
             Timber.d("Starting work")
             try {
@@ -63,18 +63,24 @@ class ImageUploadWorker @AssistedInject constructor(
                 for (i in 0 until totalImages) {
                     val image = imagesList[i]
                     val status = "${i + 1}/$totalImages"
-                    fileNames.add(image.name ?: "image_${i}")
-                    imageBodies.add(createMultipartBody(image.imageUri, cargoCode, status))
-                }
-
-                if (imageBodies.size > 0) {
-                    val response =
-                        uploadImage(cargoType, cargoId, operationStep, fileNames, imageBodies)
+                    val response = uploadImage(image, cargoCode, status, cargoType, cargoId, operationStep)
                     val success = response.isSuccess
                     Timber.d("Success: $success")
-                    imagesList.forEach {
-                        it.uploaded = success
-                        repository.addImage(cargoCode, it)
+                    if(success){
+                        deleteImageLocally(image)
+                    }
+                    successResponse.add(success)
+                    image.uploaded = success
+                    repository.addImage(code, image)
+                    result = Result.success()
+                }
+
+                /*If any upload fails, it should be retried later*/
+                for (success in successResponse) {
+                    if (!success) {
+                        Timber.d("One upload failed so the work should be retried")
+                        result = Result.retry()
+                        break
                     }
                     result = if (success) Result.success() else Result.retry()
                 }
@@ -91,8 +97,10 @@ class ImageUploadWorker @AssistedInject constructor(
                 result = Result.success()
                 Timber.e("Uploaded successfully")
             } else {
-                Timber.e("Failed to upload")
-                showFailureNotification(cargoCode)
+                //show the number of failed
+                val numberOfFailed = successResponse.filter { !it }.size
+                Timber.d("Failed: SIZe: $numberOfFailed")
+                showFailureNotification(cargoCode, numberOfFailed, totalImages)
             }
 
         }
@@ -100,19 +108,24 @@ class ImageUploadWorker @AssistedInject constructor(
         return result
     }
 
+    private fun deleteImageLocally(image: Image): Boolean {
+        val file = File(image.imageUri ?: "")
+        return file.delete()
+    }
+
     private suspend fun uploadImage(
+        image: Image,
+        cargoCode: String,
+        status: String,
         cargoType: Int,
         cargoId: Int,
-        operationStep: Int,
-        fileNames: List<String>,
-        files: List<MultipartBody.Part>
+        operationStep: Int
     ): BaseResponse {
+        val body = createMultipartBody(image.imageUri, cargoCode, status)
+
         return imageUploadRepository.uploadImage(
-            cargoType,
-            cargoId,
-            operationStep,
-            fileNames,
-            files
+            cargoType, cargoId, operationStep,
+            listOf(image.name ?: "image"), body
         )
     }
 
@@ -207,7 +220,7 @@ class ImageUploadWorker @AssistedInject constructor(
         )
     }
 
-    private fun showFailureNotification(cargoCode: String?) {
+    private fun showFailureNotification(cargoCode: String?, totalFailed: Int, totalImages: Int) {
         val activityIntent = Intent(context, DeviceConfigActivity::class.java)
 
         val resultPendingIntent = PendingIntent.getActivity(
@@ -228,9 +241,15 @@ class ImageUploadWorker @AssistedInject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        val contentText = if (totalImages > 0 && totalFailed > 0) {
+            context.getString(R.string.file_upload_failed, totalFailed, totalImages, cargoCode)
+        } else {
+            context.getString(R.string.file_upload_failed_msg)
+        }
+
         notification = notificationHelper.getNotification(
             context.getString(R.string.message_upload_failed),
-            context.getString(R.string.file_upload_failed_msg),
+            contentText,
             resultPendingIntent
         )
 

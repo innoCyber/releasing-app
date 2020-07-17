@@ -79,11 +79,11 @@ android {
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
             variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
-            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
         } else if (name.contains("production")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
             variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
-            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
         }
     }
 

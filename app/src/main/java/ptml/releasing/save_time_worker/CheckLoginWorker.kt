@@ -11,6 +11,7 @@ import ptml.releasing.app.data.domain.usecase.LogOutUseCase
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.di.modules.worker.ChildWorkerFactory
 import ptml.releasing.app.eventbus.EventBus
+import ptml.releasing.app.eventbus.LoginSessionTimeoutEvent
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import timber.log.Timber
 import java.util.*
@@ -33,9 +34,9 @@ class CheckLoginWorker @AssistedInject constructor(
             val lastActiveTime = localDataManager.getLastActiveTime()
             if (isMoreThanAnHour(lastActiveTime)) {
                 Timber.d("Time is more than an hour.. Logging out")
-//                eventBus.send(LoginSessionTimeoutEvent())
-//                //log out
-//                logOutUseCase.execute()
+                eventBus.send(LoginSessionTimeoutEvent())
+                //log out
+                logOutUseCase.execute()
                 withContext(dispatchers.main) {
                     Toast.makeText(
                         applicationContext,
@@ -57,7 +58,7 @@ class CheckLoginWorker @AssistedInject constructor(
     private fun isMoreThanAnHour(time: Long): Boolean {
         val now = Calendar.getInstance().timeInMillis
         val timeDiff = now - time
-        return timeDiff > ONE_HOUR_MILLIS
+        return timeDiff > FIVE_MIN_MILLIS
     }
 
     private fun rescheduleWork() {
@@ -69,7 +70,8 @@ class CheckLoginWorker @AssistedInject constructor(
 
     companion object {
         private const val ONE_HOUR_MILLIS = 3600000L
-        private const val DEFAULT_INTERVAL_SECS = 3600L
+        private const val FIVE_MIN_MILLIS = 5 * 60 * 1000
+        private const val DEFAULT_INTERVAL_SECS = 300L
         private const val CHECK_LOGIN_INTERVAL_TYPE = Calendar.SECOND
         private const val CHECK_LOGIN_TAG = "CHECK_LOGIN_TAG"
         private const val CHECK_LOGIN_NAME = "CHECK_LOGIN_NAME"

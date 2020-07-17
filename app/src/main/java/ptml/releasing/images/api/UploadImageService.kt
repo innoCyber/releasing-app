@@ -9,9 +9,9 @@ import retrofit2.http.Part
 interface UploadImageService {
 
     @Multipart
-    @POST("ImagesUpload")
+    @POST("UploadImage")
     suspend fun upload(
         @Part("jsondata") data: ImageUploadData,
-        @Part files: List<MultipartBody.Part>
+        @Part files: MultipartBody.Part
     ): BaseResponse
 }
