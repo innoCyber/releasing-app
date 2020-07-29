@@ -115,6 +115,7 @@ class AdminConfigViewModel @Inject constructor(
     fun saveServerUrl(url: String?) {
         compositeJob = CoroutineScope(dispatchers.db).launch {
             repository.saveServerUrl(url)
+            reloadMenu()
         }
     }
 

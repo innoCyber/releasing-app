@@ -21,6 +21,7 @@ import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
@@ -40,6 +41,7 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
+import ptml.releasing.app.utils.extensions.observe
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -217,6 +219,10 @@ abstract class BaseActivity<V, D> :
             }
         })
 
+        viewModel.reloadOptionsMenu.observe(this){
+            invalidateOptionsMenu()
+        }
+
         getIMEIWithPermissionCheck()
         hideKeyBoardOnTouchOfNonEditableViews()
     }
@@ -355,6 +361,7 @@ abstract class BaseActivity<V, D> :
         super.onResume()
         viewModel.getOperatorName()
         viewModel.checkToShowUpdateAppDialog()
+        invalidateOptionsMenu()
     }
 
 
@@ -488,6 +495,16 @@ abstract class BaseActivity<V, D> :
         } else {
             networkStateMenuItem?.title = getString(R.string.network_state_offline)
         }
+
+        val serverTypeItem = menu?.findItem(R.id.action_server_type)
+        serverTypeItem?.icon = AppCompatResources.getDrawable(
+            this,
+            if (viewModel.isConnectedToProduction()) {
+                R.drawable.circle_green
+            } else {
+                R.drawable.circle_red
+            }
+        )
         return true
     }
 
@@ -503,8 +520,21 @@ abstract class BaseActivity<V, D> :
         } else if (item.itemId == R.id.action_network_state) {
             notifyUser(binding.root, getMessageByNetworkState(networkStateWrapper))
             return true
+        } else if (item.itemId == R.id.action_server_type) {
+            notifyUser(binding.root, getConnectedServerMessage())
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getConnectedServerMessage(): String {
+        return getString(
+            if (viewModel.isConnectedToProduction()) {
+                R.string.production_server_msg
+            } else {
+                R.string.staging_server_msg
+            }
+        )
     }
 
     private fun getMessageByNetworkState(networkStateWrapper: NetworkStateWrapper?): String {

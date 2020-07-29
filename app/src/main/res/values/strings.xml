@@ -312,4 +312,7 @@
     <string name="upload_in_progress_msg">Files are currently uploaded</string>
     <string name="upload_summary_title">Upload status</string>
     <string name="upload_summary_body">Expand to view status of uploads</string>
+    <string name="production_server_msg">Connected to the production server</string>
+    <string name="server_type_msg">Connected server</string>
+    <string name="staging_server_msg">Not connected to the production server</string>
 </resources>

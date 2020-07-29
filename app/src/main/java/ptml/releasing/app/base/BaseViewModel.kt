@@ -67,6 +67,9 @@ open class BaseViewModel @Inject constructor(
     private val _startQuickRemarksUpdate = SingleLiveEvent<Unit>()
     val startQuickRemarksUpdate: LiveData<Unit> = _startQuickRemarksUpdate
 
+    private val mutableReloadOptionsMenu = SingleLiveEvent<Unit>()
+    val reloadOptionsMenu: LiveData<Unit> = mutableReloadOptionsMenu
+
     var compositeJob: Job = Job()
 
     protected val _openBarCodeScanner = MutableLiveData<Unit>()
@@ -159,6 +162,7 @@ open class BaseViewModel @Inject constructor(
     fun scanForSearch(scanned: String?) {
         _searchScanned.postValue(scanned)
     }
+
 
 
     fun logOutOperator() {
@@ -311,5 +315,14 @@ open class BaseViewModel @Inject constructor(
             Timber.d("Updating last user interaction")
             localDataManager.setLastActiveTime(Calendar.getInstance().timeInMillis)
         }
+    }
+
+    fun isConnectedToProduction(): Boolean {
+        val serverUrl = repository.getServerUrl()
+        return serverUrl == "https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/"
+    }
+
+    fun reloadMenu(){
+        mutableReloadOptionsMenu.postValue(Unit)
     }
 }
