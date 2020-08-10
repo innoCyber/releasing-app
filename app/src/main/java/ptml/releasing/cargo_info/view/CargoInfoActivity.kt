@@ -449,14 +449,7 @@ class CargoInfoActivity :
     fun createForm(wrapper: FormDataWrapper?) {
         Timber.d("From sever: %s", findCargoResponse)
 
-        val newForm = wrapper?.formConfigureDeviceResponse?.data?.toMutableList().apply {
-            this?.add(FormConfiguration(0, FormType.IMAGES.type, "Select Images",
-                required = true,
-                editable = false,
-                options = listOf(),
-                dataValidation = ""
-            ))
-        }
+        val newForm = wrapper?.formConfigureDeviceResponse?.data
 
         formBuilder = FormBuilder(this)
         val formView = formBuilder
