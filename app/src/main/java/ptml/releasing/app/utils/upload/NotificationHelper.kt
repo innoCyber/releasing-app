@@ -145,8 +145,9 @@ class NotificationHelper(mContext: Context) : ContextWrapper(mContext) {
     }
 
     companion object {
-        const val UPLOAD_CHANNEL = "default"
+        const val UPLOAD_CHANNEL = "upload_notification"
         const val SUMMARY_NOTIFICATION_ID = 100
+        const val IMAGE_NOTIFICATION_ID = 221
 
         const val GROUP_KEY = "PROGRESS_GROUP_KEY"
     }

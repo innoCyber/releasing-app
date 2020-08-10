@@ -15,6 +15,6 @@ class ImageUploadRepository @Inject constructor(private val imageRestClient: Ima
     ): BaseResponse {
         val data = ImageUploadData(cargoTypeId, operationStep, cargoId, fileNames.map { ImageFileName(it) })
         return imageRestClient.getRemoteCaller()
-            .upload(data,  files)
+            .upload(cargoId ?: 0, data,  files)
     }
 }

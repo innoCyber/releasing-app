@@ -16,17 +16,21 @@ import ptml.releasing.R
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.di.modules.worker.ChildWorkerFactory
+import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_CARGO_CODE
 import ptml.releasing.app.utils.Constants.UPLOAD_NOTIFICATION_ID
 import ptml.releasing.app.utils.ProgressRequestBody
 import ptml.releasing.app.utils.upload.CancelWorkReceiver
 import ptml.releasing.app.utils.upload.NotificationHelper
+import ptml.releasing.app.utils.upload.NotificationHelper.Companion.IMAGE_NOTIFICATION_ID
 import ptml.releasing.app.utils.upload.NotificationHelper.Companion.SUMMARY_NOTIFICATION_ID
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.images.api.ImageUploadRepository
 import ptml.releasing.images.model.Image
 import timber.log.Timber
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -63,11 +67,11 @@ class ImageUploadWorker @AssistedInject constructor(
                 for (i in 0 until totalImages) {
                     val image = imagesList[i]
                     val status = "${i + 1}/$totalImages"
-                    val response = uploadImage(image, cargoCode, status, cargoType, cargoId, operationStep)
+                    val response = uploadImage(image, cargoCode, status, cargoType, cargoId, operationStep, i)
                     val success = response.isSuccess
                     Timber.d("Success: $success")
                     if(success){
-                        deleteImageLocally(image)
+                        deleteImageLocally(cargoCode, image)
                     }
                     successResponse.add(success)
                     image.uploaded = success
@@ -108,7 +112,8 @@ class ImageUploadWorker @AssistedInject constructor(
         return result
     }
 
-    private fun deleteImageLocally(image: Image): Boolean {
+    private suspend fun deleteImageLocally(cargoCode: String, image: Image): Boolean {
+        repository.removeImage(cargoCode, image)
         val file = File(image.imageUri ?: "")
         return file.delete()
     }
@@ -119,13 +124,14 @@ class ImageUploadWorker @AssistedInject constructor(
         status: String,
         cargoType: Int,
         cargoId: Int,
-        operationStep: Int
+        operationStep: Int,
+        count: Int
     ): BaseResponse {
-        val body = createMultipartBody(image.imageUri, cargoCode, status)
+        val body = createMultipartBody(image.imageUri, cargoCode, status, cargoId, count)
 
         return imageUploadRepository.uploadImage(
             cargoType, cargoId, operationStep,
-            listOf(image.name ?: "image"), body
+            listOf(createImageFileName(cargoId, count) ?: "image"), body
         )
     }
 
@@ -136,16 +142,26 @@ class ImageUploadWorker @AssistedInject constructor(
     private fun createMultipartBody(
         imageUri: String?,
         cargoCode: String,
-        status: String
+        status: String,
+        cargoId: Int,
+        count: Int
     ): MultipartBody.Part {
         val fileUri = Uri.parse(imageUri)
         val file = File(fileUri.path ?: "")
         Timber.d("createMultipartBody")
         return MultipartBody.Part.createFormData(
             "UploadedImage",
-            file.name,
+            createImageFileName(cargoId, count),
             createCountingRequestBody(file, fileUri, cargoCode, status)
         )
+    }
+
+    private fun createImageFileName(cargoId: Int, count: Int): String? {
+        return "${cargoId}_${createTempName()}_${count + 1}.${Constants.IMAGE_EXT}"
+    }
+
+    private fun createTempName(): String {
+        return SimpleDateFormat("MMddyyyyhhmm", Locale.getDefault()).format(Date())
     }
 
     private fun createCountingRequestBody(
@@ -179,7 +195,7 @@ class ImageUploadWorker @AssistedInject constructor(
             context.getString(R.string.in_progress),
             (100 * progress).toInt()
         )
-        notificationHelper.notify(cargoCode.hashCode(), notification)
+        notificationHelper.notify(IMAGE_NOTIFICATION_ID, notification)
         notificationHelper.notify(
             SUMMARY_NOTIFICATION_ID,
             notificationHelper.getSummaryNotification(
@@ -210,7 +226,7 @@ class ImageUploadWorker @AssistedInject constructor(
             context.getString(R.string.file_upload_successful, totalImages),
             resultPendingIntent
         )
-        notificationHelper.notify(cargoCode.hashCode(), notification)
+        notificationHelper.notify(IMAGE_NOTIFICATION_ID, notification)
         notificationHelper.notify(
             SUMMARY_NOTIFICATION_ID,
             notificationHelper.getSummaryNotification(
@@ -257,7 +273,7 @@ class ImageUploadWorker @AssistedInject constructor(
             android.R.drawable.ic_menu_revert,
             context.getString(R.string.cancel_action_text), clearPendingIntent
         )
-        notificationHelper.notify(cargoCode.hashCode(), notification)
+        notificationHelper.notify(IMAGE_NOTIFICATION_ID, notification)
         notificationHelper.notify(
             SUMMARY_NOTIFICATION_ID,
             notificationHelper.getSummaryNotification(
