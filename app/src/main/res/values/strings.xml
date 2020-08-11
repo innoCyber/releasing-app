@@ -316,6 +316,6 @@
     <string name="server_type_msg">Connected server</string>
     <string name="staging_server_msg">Not connected to the production server</string>
     <string name="enter_imei">Enter IMEI</string>
-    <string name="enter_imei_dialog_title">Enter device IMEI</string>
+    <string name="enter_imei_dialog_title">Enter Device IMEI</string>
     <string name="enter_imei_dialog_hint">IMEI</string>
 </resources>

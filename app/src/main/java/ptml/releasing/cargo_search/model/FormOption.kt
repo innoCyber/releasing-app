@@ -11,7 +11,7 @@ data class FormOption(@SerializedName("selected") val selected: List<Int>?) : Ba
     }
 
     constructor(source: Parcel) : this(
-        ArrayList<Int>().apply { source.readList(this, Int::class.java.classLoader) }
+        ArrayList<Int>().apply { source.readList(this as List<*>, Int::class.java.classLoader) }
     ) {
         this.id = source.readInt()
     }

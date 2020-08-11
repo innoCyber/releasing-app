@@ -37,10 +37,17 @@ class ImeiHelper @Inject constructor(
             BuildConfig.IMEI
         } else {
             val telephonyManager = getSystemService(context, TelephonyManager::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                telephonyManager?.imei ?: ""
-            } else {
-                telephonyManager?.deviceId ?: ""
+            when {
+                //return empty IMEI for running on android 10 and greater, the IMEI would be set by the admin
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                    ""
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    telephonyManager?.imei ?: ""
+                }
+                else -> {
+                    telephonyManager?.deviceId ?: ""
+                }
             }
         }
 
