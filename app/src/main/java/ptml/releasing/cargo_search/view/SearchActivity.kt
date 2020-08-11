@@ -18,7 +18,6 @@ import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
 import ptml.releasing.app.dialogs.InfoConfirmDialog
@@ -288,9 +287,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?) {
-        viewModel.findCargo(cargoNumber, (application as ReleasingApplication).provideImei())
-
-
+        viewModel.findCargo(cargoNumber, imei ?: "")
     }
 
 
@@ -453,7 +450,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     private fun showImeiDialog() {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.device_IMEI),
-            message = (application as ReleasingApplication).provideImei(),
+            message = imei ?: "",
             buttonText = getString(R.string.dismiss)
         )
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)

@@ -102,11 +102,7 @@ open class BaseViewModel @Inject constructor(
     val savedConfiguration: LiveData<Configuration> = _configuration
 
 
-    init {
-        subscribeToSessionTimeoutEvent()
-    }
-
-    private fun subscribeToSessionTimeoutEvent() {
+    fun subscribeToSessionTimeoutEvent() {
         viewModelScope.launch {
             Timber.d("Subscribing to login timeout event")
             val channel = eventBus.asChannel<LoginSessionTimeoutEvent>()

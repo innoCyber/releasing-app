@@ -26,10 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
@@ -37,7 +34,6 @@ import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
@@ -86,7 +82,6 @@ abstract class BaseActivity<V, D> :
         const val RC_SEARCH = 113
         const val TIME_WORKER = "time_worker"
         const val DATE_TIME = "date_time"
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -225,6 +220,7 @@ abstract class BaseActivity<V, D> :
 
         getIMEIWithPermissionCheck()
         hideKeyBoardOnTouchOfNonEditableViews()
+        viewModel.subscribeToSessionTimeoutEvent()
     }
 
     override fun onUserInteraction() {
@@ -239,8 +235,7 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateQuickRemarksService() {
-        val imei = (application as ReleasingApplication).provideImei()
-        viewModel.updateQuickRemarks(imei)
+        viewModel.updateQuickRemarks(imei ?: "")
     }
 
     @NeedsPermission(
@@ -250,8 +245,7 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateDamagesService() {
-        val imei = (application as ReleasingApplication).provideImei()
-        viewModel.updateDamages(imei)
+        viewModel.updateDamages(imei ?: "")
     }
 
     @OnShowRationale(
@@ -373,9 +367,11 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun getIMEI() {
-        imei = imeiHelper.getImei()
-        viewModel.imei = imei
-        onImeiGotten(imei)
+        lifecycleScope.launchWhenCreated {
+            imei = imeiHelper.getImei()
+            viewModel.imei = imei
+            onImeiGotten(imei)
+        }
     }
 
     open fun onImeiGotten(imei: String?) {

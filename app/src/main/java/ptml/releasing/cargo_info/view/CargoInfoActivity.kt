@@ -17,7 +17,6 @@ import kotlinx.coroutines.runBlocking
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.LoginRepository
@@ -312,7 +311,7 @@ class CargoInfoActivity :
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getFormConfig() {
         viewModel.getFormConfig(
-            (application as ReleasingApplication).provideImei(),
+            imei ?: "",
             findCargoResponse
         )
     }
@@ -324,7 +323,7 @@ class CargoInfoActivity :
             formSubmission,
             findCargoResponse,
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
-            (application as ReleasingApplication).provideImei()
+            imei ?: ""
         )
     }
 
@@ -347,7 +346,7 @@ class CargoInfoActivity :
                     )
 
 
-                 Timber.e("Printer code: %s", labelCpclData)
+                Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
 

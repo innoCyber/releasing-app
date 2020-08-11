@@ -39,7 +39,7 @@ open class PreferencesManagerImpl @Inject constructor(
     }
 
     override fun getIMEI(): String {
-        return getStringPreference(prefImei)
+        return getStringPreference(prefImei, "")
     }
 
     override fun setIMEI(imei: String) {

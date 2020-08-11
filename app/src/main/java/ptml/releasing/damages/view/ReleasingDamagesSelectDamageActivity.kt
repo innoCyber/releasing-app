@@ -16,7 +16,6 @@ import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
@@ -211,7 +210,7 @@ class ReleasingDamagesSelectDamageActivity :
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getData() {
         viewModel.getDamages(
-            (application as ReleasingApplication).provideImei(),
+            imei ?: "",
             DamagesActivity.typeContainer
         )
     }

@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.ErrorHandler
@@ -133,12 +132,12 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getConfig() {
-        viewModel.getConfig((application as ReleasingApplication).provideImei())
+        viewModel.getConfig(imei ?: "")
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun refreshConfig() {
-        viewModel.refreshConfiguration((application as ReleasingApplication).provideImei())
+        viewModel.refreshConfiguration(imei ?: "")
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
@@ -147,7 +146,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?,
             binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?,
             binding.top.selectCargoSpinner.selectedItem as CargoType?,
-            binding.top.cameraSwitch.isChecked, (application as ReleasingApplication).provideImei()
+            binding.top.cameraSwitch.isChecked, imei ?: ""
         )
     }
 
