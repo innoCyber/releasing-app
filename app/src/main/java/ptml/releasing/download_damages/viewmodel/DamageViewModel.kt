@@ -8,9 +8,9 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.download_damages.model.Damage
 import timber.log.Timber
@@ -32,7 +32,11 @@ class DamageViewModel @Inject constructor(
     fun getDamages(imei:String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
 
@@ -41,16 +45,28 @@ class DamageViewModel @Inject constructor(
                 withContext(dispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
                         this@DamageViewModel.response.postValue(response.data)
-                        networkState.postValue(Event(NetworkState.LOADED))
+                        networkState.postValue(
+                            Event(
+                                NetworkState.LOADED
+                            )
+                        )
                     } else {
-                        networkState.postValue(Event(NetworkState.error(Exception("Response received was unexpected"))))
+                        networkState.postValue(
+                            Event(
+                                NetworkState.error(Exception("Response received was unexpected"))
+                            )
+                        )
                     }
 
                 }
             } catch (it: Throwable) {
 
                 Timber.e(it, "Error occurred")
-                networkState.postValue(Event(NetworkState.error(it)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(it)
+                    )
+                )
             }
         }
 
@@ -61,7 +77,11 @@ class DamageViewModel @Inject constructor(
     fun downloadDamagesFromServer(imei:String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
 
@@ -70,16 +90,28 @@ class DamageViewModel @Inject constructor(
                 withContext(dispatchers.main) {
                     if (response?.data?.isNotEmpty() == true) {
                         this@DamageViewModel.response.postValue(response.data)
-                        networkState.postValue(Event(NetworkState.LOADED))
+                        networkState.postValue(
+                            Event(
+                                NetworkState.LOADED
+                            )
+                        )
                     } else {
-                        networkState.postValue(Event(NetworkState.error(Exception("Response received was unexpected"))))
+                        networkState.postValue(
+                            Event(
+                                NetworkState.error(Exception("Response received was unexpected"))
+                            )
+                        )
                     }
 
                 }
             } catch (it: Throwable) {
 
                 Timber.e(it, "Error occurred")
-                networkState.postValue(Event(NetworkState.error(it)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(it)
+                    )
+                )
             }
         }
 

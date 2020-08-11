@@ -13,8 +13,8 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormDataWrapper
@@ -113,7 +113,11 @@ class CargoInfoViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Timber.e(e)
-                _networkState.postValue(Event(NetworkState.error(e)))
+                _networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
         }
     }
@@ -169,7 +173,11 @@ class CargoInfoViewModel @Inject constructor(
         imei: String?
     ) {
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
-        _networkState.postValue(Event(NetworkState.LOADING))
+        _networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         CoroutineScope(dispatchers.network).launch {
             try {
 
@@ -211,16 +219,32 @@ class CargoInfoViewModel @Inject constructor(
                             )
                         repository.addWorkerId(cargoCode ?: "", workRequest.id.toString())
                         WorkManager.getInstance(context).enqueue(workRequest)
-                        _submitSuccess.postValue(Event(Unit))
+                        _submitSuccess.postValue(
+                            Event(
+                                Unit
+                            )
+                        )
                     } else {
-                        _errorMessage.postValue(Event(result.message))
+                        _errorMessage.postValue(
+                            Event(
+                                result.message
+                            )
+                        )
                     }
-                    _networkState.postValue(Event(NetworkState.LOADED))
+                    _networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
 
                 }
             } catch (e: Exception) {
                 Timber.e(e)
-                _networkState.postValue(Event(NetworkState.error(e)))
+                _networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
         }
     }

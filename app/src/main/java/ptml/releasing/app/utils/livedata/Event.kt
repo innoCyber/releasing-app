@@ -1,4 +1,4 @@
-package ptml.releasing.app.utils
+package ptml.releasing.app.utils.livedata
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.

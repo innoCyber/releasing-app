@@ -41,7 +41,7 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
-import ptml.releasing.app.utils.extensions.observe
+import ptml.releasing.app.utils.livedata.observe
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity

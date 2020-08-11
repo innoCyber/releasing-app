@@ -12,8 +12,8 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
@@ -83,7 +83,8 @@ open class SearchViewModel @Inject constructor(
         }
 
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
-        _networkState.value = Event(NetworkState.LOADING)
+        _networkState.value =
+            Event(NetworkState.LOADING)
 
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
@@ -113,12 +114,16 @@ open class SearchViewModel @Inject constructor(
                         )
                         _errorMessage.value = cargoNotFoundResponse
                     }
-                    _networkState.value = Event(NetworkState.LOADED)
+                    _networkState.value =
+                        Event(NetworkState.LOADED)
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
                 withContext(dispatchers.main) {
-                    _networkState.value = Event(NetworkState.error(e))
+                    _networkState.value =
+                        Event(
+                            NetworkState.error(e)
+                        )
                 }
             }
         }
@@ -171,7 +176,8 @@ open class SearchViewModel @Inject constructor(
 
 
     fun openDeviceConfiguration() {
-        _openDeviceConfiguration.value = Event(Unit)
+        _openDeviceConfiguration.value =
+            Event(Unit)
     }
 
     fun handleNavVoyageClick() {

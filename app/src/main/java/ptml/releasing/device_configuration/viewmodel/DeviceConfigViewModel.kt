@@ -8,9 +8,9 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,23 +34,43 @@ class DeviceConfigViewModel @Inject constructor(
 
     fun verifyDeviceId(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 val response = repository.verifyDeviceIdAsync(imei).await()
                 withContext(dispatchers.main) {
                     if (response.isSuccess) {
-                        openSearchActivity.postValue(Event(Unit))
+                        openSearchActivity.postValue(
+                            Event(
+                                Unit
+                            )
+                        )
                         repository.setImei(imei)
                         repository.setFirst(false)
                     } else {
-                        showDeviceError.postValue(Event(Unit))
+                        showDeviceError.postValue(
+                            Event(
+                                Unit
+                            )
+                        )
                     }
-                    networkState.postValue(Event(NetworkState.LOADED))
+                    networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             } catch (it: Throwable) {
                 Timber.e(it, "Error occurred")
-                networkState.postValue(Event(NetworkState.error(it)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(it)
+                    )
+                )
             }
         }
 

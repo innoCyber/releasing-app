@@ -9,8 +9,8 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.download_damages.model.Damage
@@ -33,7 +33,11 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
     fun getDamages(imei: String, typeContainer:Int?) {
 
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
-        _networkState.postValue(Event(NetworkState.LOADING))
+        _networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
 
         try {
 
@@ -53,12 +57,20 @@ class SelectDamageViewModel @Inject constructor(repository: Repository, appCorou
                 withContext(dispatchers.main) {
                     _damagesListFiltered.postValue(list)
                     _damagesList.value = list
-                    _networkState.postValue(Event(NetworkState.LOADED))
+                    _networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             }
         } catch (e: Throwable) {
             Timber.e(e)
-            _networkState.postValue(Event(NetworkState.error(e)))
+            _networkState.postValue(
+                Event(
+                    NetworkState.error(e)
+                )
+            )
         }
     }
 

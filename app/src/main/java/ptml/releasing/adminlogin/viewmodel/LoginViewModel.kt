@@ -10,8 +10,8 @@ import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
@@ -40,11 +40,13 @@ class LoginViewModel @Inject constructor(
     fun login(username: String?, password: String?) {
         if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
             if (username.isNullOrEmpty()) {
-                usernameValidation.value = Event(R.string.username_empty)
+                usernameValidation.value =
+                    Event(R.string.username_empty)
             }
 
             if (password.isNullOrEmpty()) {
-                passwordValidation.value = Event(R.string.password_empty)
+                passwordValidation.value =
+                    Event(R.string.password_empty)
             }
 
             return
@@ -55,22 +57,42 @@ class LoginViewModel @Inject constructor(
 
         val user = User(username, password)
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 val result = repository.loginAsync(user).await()
                 withContext(dispatchers.main) {
                     Timber.d("Response: %s", result)
                     if (result.isSuccess) {
-                        loadNext.postValue(Event(Unit))
+                        loadNext.postValue(
+                            Event(
+                                Unit
+                            )
+                        )
                     } else {
-                        errorMessage.postValue(Event(result.message))
+                        errorMessage.postValue(
+                            Event(
+                                result.message
+                            )
+                        )
                     }
-                    networkState.postValue(Event(NetworkState.LOADED))
+                    networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             } catch (it: Throwable) {
                 Timber.e(it)
-                networkState.postValue(Event(NetworkState.error(it)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(it)
+                    )
+                )
             }
         }
     }

@@ -8,8 +8,8 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.*
 import timber.log.Timber
@@ -41,7 +41,11 @@ class ConfigViewModel @Inject constructor(
 
     fun getConfig(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 Timber.d("Getting configuration")
@@ -59,12 +63,20 @@ class ConfigViewModel @Inject constructor(
                         configuration.postValue(config)
                     }
                     Timber.e("Loading done: %s", response)
-                    networkState.postValue(Event(NetworkState.LOADED))
+                    networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
                 System.out.println("In here: ${e.localizedMessage}")
-                networkState.postValue(Event(NetworkState.error(e)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
         }
 
@@ -79,7 +91,11 @@ class ConfigViewModel @Inject constructor(
         imei: String
     ) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
 //        operationStep.id = 32 //TODO Remove this in production
         val configuration =
             Configuration(terminal ?: return, operationStep ?: return, cargoType ?: return, checked)
@@ -94,11 +110,23 @@ class ConfigViewModel @Inject constructor(
                 ).await()
                 Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)
-                savedSuccess.postValue(Event(true))
-                networkState.postValue(Event(NetworkState.LOADED))
+                savedSuccess.postValue(
+                    Event(
+                        true
+                    )
+                )
+                networkState.postValue(
+                    Event(
+                        NetworkState.LOADED
+                    )
+                )
             } catch (e: Throwable) {
                 Timber.e(e)
-                networkState.postValue(Event(NetworkState.error(e)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
 
         }
@@ -112,7 +140,11 @@ class ConfigViewModel @Inject constructor(
 
     fun refreshConfiguration(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
 
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
@@ -128,12 +160,20 @@ class ConfigViewModel @Inject constructor(
                         repository.setConfigured(false)
                     }
                     Timber.e("Loading done: %s", response)
-                    networkState.postValue(Event(NetworkState.LOADED))
+                    networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
                 System.out.println("In here: ${e.localizedMessage}")
-                networkState.postValue(Event(NetworkState.error(e)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
         }
 

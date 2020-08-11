@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
@@ -15,6 +14,8 @@ import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.utils.livedata.observe
+import ptml.releasing.app.utils.livedata.observeEvent
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
@@ -32,87 +33,11 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
+        setupObservers()
+        setupClickListeners()
+    }
 
-        viewModel.isConfigured.observe(this, Observer {
-            binding.tvConfigMessageContainer.visibility =
-                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
-        })
-
-        viewModel.getSavedConfig()
-
-        viewModel.openDownloadDamages.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    startNewActivity(DamageActivity::class.java)
-                } else {
-                    showConfigurationErrorDialog()
-                }
-            }
-        })
-
-        viewModel.openQuickRemark.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    startNewActivity(QuickRemarkActivity::class.java)
-                } else {
-                    showConfigurationErrorDialog()
-                }
-
-            }
-        })
-
-        viewModel.openPrinterSettings.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                startNewActivity(PrinterSettingsActivity::class.java)
-
-            }
-        })
-
-        viewModel.openConfig.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                val intent = Intent(this, ConfigActivity::class.java)
-                startActivityForResult(intent, RC_CONFIG)
-            }
-        })
-
-        viewModel.serverUrl.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                showServerUrlDialog(it)
-            }
-        })
-
-        viewModel.openSearch.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                onBackPressed()
-            }
-        })
-
-        viewModel.openErrorLogs.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                startNewActivity(ErrorLogsActivity::class.java)
-            }
-        })
-
-        viewModel.internetErrorEnabled.observe(this, Observer {
-            binding.includeAdminConfig.btnEnableLogs.text = getString(if(it) R.string.disable_logs else R.string.enable_logs)
-        })
-
-        viewModel.openConfirmShowLogs.observe(this, Observer {event->
-            event.getContentIfNotHandled()?.let {
-                val dialogFragment = InfoDialog.newInstance(
-                    title = getString(R.string.confirm_action),
-                    message = getString(if(it) R.string.disable_logs_confirm_message else R.string.enable_logs_confirm_message),
-                    buttonText = getString(android.R.string.ok),
-                    listener = object : InfoDialog.InfoListener {
-                        override fun onConfirm() {
-                    viewModel.handleToggleEnableLogs()
-                        }
-                    })
-                dialogFragment.isCancelable = false
-                dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
-            }
-        })
-
+    private fun setupClickListeners() {
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
             viewModel.openConfig()
         }
@@ -130,7 +55,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         }
 
         binding.includeAdminConfig.btnServer.setOnClickListener {
-            viewModel.openServer()
+            viewModel.openServerUrl()
         }
 
         binding.includeAdminConfig.btnQuickRemarks.setOnClickListener {
@@ -143,6 +68,79 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         binding.includeAdminConfig.btnEnableLogs.setOnClickListener {
             viewModel.handleAskToToggleEnableLogs()
+        }
+
+        binding.includeAdminConfig.btnEnterImei.setOnClickListener {
+            viewModel.openEnterImei()
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.isConfigured.observe(this) {
+            binding.tvConfigMessageContainer.visibility =
+                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+        }
+
+        viewModel.getSavedConfig()
+
+        viewModel.openDownloadDamages.observeEvent(this) {
+            if (it) {
+                startNewActivity(DamageActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+        }
+
+        viewModel.openQuickRemark.observeEvent(this) {
+            if (it) {
+                startNewActivity(QuickRemarkActivity::class.java)
+            } else {
+                showConfigurationErrorDialog()
+            }
+        }
+
+        viewModel.openPrinterSettings.observeEvent(this) {
+            startNewActivity(PrinterSettingsActivity::class.java)
+        }
+
+        viewModel.openConfig.observeEvent(this) {
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivityForResult(intent, RC_CONFIG)
+        }
+
+        viewModel.serverUrl.observeEvent(this) {
+            showServerUrlDialog(it)
+        }
+
+        viewModel.openSearch.observeEvent(this) {
+            onBackPressed()
+        }
+
+        viewModel.openErrorLogs.observeEvent(this) {
+            startNewActivity(ErrorLogsActivity::class.java)
+        }
+
+        viewModel.internetErrorEnabled.observe(this) {
+            binding.includeAdminConfig.btnEnableLogs.text =
+                getString(if (it) R.string.disable_logs else R.string.enable_logs)
+        }
+
+        viewModel.openConfirmShowLogs.observeEvent(this) {
+            val dialogFragment = InfoDialog.newInstance(
+                title = getString(R.string.confirm_action),
+                message = getString(if (it == true) R.string.disable_logs_confirm_message else R.string.enable_logs_confirm_message),
+                buttonText = getString(android.R.string.ok),
+                listener = object : InfoDialog.InfoListener {
+                    override fun onConfirm() {
+                        viewModel.handleToggleEnableLogs()
+                    }
+                })
+            dialogFragment.isCancelable = false
+            dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+        }
+
+        viewModel.imeiNumber.observeEvent(this) {
+            showEnterImeiDialog(it)
         }
     }
 
@@ -202,6 +200,22 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                     viewModel.saveServerUrl(value)
                 }
             })
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
+    }
+
+    private fun showEnterImeiDialog(deviceId: String?) {
+        val imeiNumber = if (imei.isNullOrEmpty()) {
+            imei
+        } else {
+            deviceId
+        }
+        val dialog =
+            EditTextDialog.newInstance(imeiNumber, object : EditTextDialog.EditTextDialogListener {
+                override fun onSave(value: String) {
+                    viewModel.updateImei(value)
+                }
+            }, getString(R.string.enter_imei_dialog_title), getString(R.string.enter_imei_dialog_hint), false)
         dialog.isCancelable = false
         dialog.show(supportFragmentManager, dialog.javaClass.name)
     }

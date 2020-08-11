@@ -9,7 +9,11 @@ import kotlinx.coroutines.launch
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.db.model.InternetErrorLogModel
-import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.CSVWriter
+import ptml.releasing.app.utils.DateTimeUtils
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.internet_error_logs.model.ErrorCache
 import timber.log.Timber
@@ -40,7 +44,11 @@ class ErrorLogsViewModel @Inject constructor(
 
     fun handleExportClick() {
         Timber.d("Export clicked, checking permissions")
-        checkStoragePermission.postValue(Event(Unit))
+        checkStoragePermission.postValue(
+            Event(
+                Unit
+            )
+        )
     }
 
     fun exportLogsToCSV() {
@@ -86,7 +94,11 @@ class ErrorLogsViewModel @Inject constructor(
                     )
                 }
                 csvWrite.close()
-                shareExportedFile.postValue(Event(file))
+                shareExportedFile.postValue(
+                    Event(
+                        file
+                    )
+                )
                 exportLoadingState.postValue(NetworkState.LOADED)
             } catch (sqlEx: Exception) {
                 exportLoadingState.postValue(NetworkState.error(sqlEx.localizedMessage))
