@@ -35,7 +35,6 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES_VERSION = "damages_current_version"
         const val VOYAGE_VERSION = "voyage_current_version"
         const val MUST_UPDATE_APP = "must_update_app"
-        const val IMEI = "imei"
         const val INTERNET_ERROR_LOGGING_ENABLED = "internet_error_logging_enabled"
         const val WORKER_ID = "_workerId"
     }
@@ -157,16 +156,6 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     override fun getAppVersion(): Long {
         return sharedPreferences.getLong(APP_VERSION, Constants.DEFAULT_APP_VERSION)
     }
-
-    override fun setImei(imei: String) {
-        return sharedPreferences.edit().putString(IMEI, imei).apply()
-    }
-
-    override fun getImei(): String? {
-        return sharedPreferences.getString(IMEI, null)
-    }
-
-
 
     override fun mustUpdateApp(): Boolean {
         return sharedPreferences.getBoolean(MUST_UPDATE_APP, false)

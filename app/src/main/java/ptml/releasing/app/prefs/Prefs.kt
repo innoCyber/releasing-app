@@ -1,6 +1,5 @@
 package ptml.releasing.app.prefs
 
-import android.content.SharedPreferences
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -8,7 +7,6 @@ import ptml.releasing.download_damages.model.DamageResponse
 import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
-import java.io.File
 
 interface Prefs {
     fun isFirst(): Boolean
@@ -50,10 +48,6 @@ interface Prefs {
 
     fun setUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
-
-    fun setImei(imei:String)
-    fun getImei():String?
-
 
     fun isInternetErrorLoggingEnabled():Boolean
     fun setInternetErrorLoggingEnabled(enabled:Boolean)

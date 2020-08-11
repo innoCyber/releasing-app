@@ -48,10 +48,6 @@ interface Local {
     fun setAppVersion(version:Long)
     fun getAppVersion():Long
 
-
-    fun setImei(imei:String)
-    fun getImei():String?
-
     fun setMustUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
 

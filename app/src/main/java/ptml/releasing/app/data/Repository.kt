@@ -80,9 +80,6 @@ interface Repository {
     fun setMustUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
 
-    fun setImei(imei:String)
-    fun getImei():String?
-
     fun setDamagesCurrentVersion(currentVersion:Long)
     fun setVoyagesCurrentVersion(currentVersion: Long)
 

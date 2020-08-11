@@ -65,11 +65,6 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getAppVersion(): Long = prefs.getAppVersion()
 
-
-    override fun setImei(imei: String) = prefs.setImei(imei)
-
-    override fun getImei(): String? = prefs.getImei()
-
     override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setUpdateApp(shouldUpdate)
 
     override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()

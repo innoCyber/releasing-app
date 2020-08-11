@@ -49,7 +49,6 @@ class DeviceConfigViewModel @Inject constructor(
                                 Unit
                             )
                         )
-                        repository.setImei(imei)
                         repository.setFirst(false)
                     } else {
                         showDeviceError.postValue(

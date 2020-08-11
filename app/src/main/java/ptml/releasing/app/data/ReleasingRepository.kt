@@ -221,9 +221,6 @@ open class ReleasingRepository @Inject constructor(
         }
     }
 
-    override fun setImei(imei: String) = local.setImei(imei)
-
-    override fun getImei(): String? = local.getImei()
 
     override fun setDamagesCurrentVersion(currentVersion: Long) =
         local.setDamagesCurrentVersion(currentVersion)
