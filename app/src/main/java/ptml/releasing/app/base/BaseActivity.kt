@@ -76,7 +76,6 @@ abstract class BaseActivity<V, D> :
     @Inject
     lateinit var navigator: Navigator
 
-
     companion object {
         const val RC_BARCODE = 112
         const val RC_SEARCH = 113

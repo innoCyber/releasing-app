@@ -22,6 +22,7 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
 import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse

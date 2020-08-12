@@ -5,6 +5,8 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ptml.releasing.BuildConfig
+import ptml.releasing.app.data.remote.interceptor.ConnectivityInterceptor
+import ptml.releasing.app.data.remote.interceptor.ImeiInterceptor
 import ptml.releasing.app.utils.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -39,7 +41,12 @@ class RestClient @Inject constructor(
                 readTimeout(TIMEOUT, TimeUnit.SECONDS)
 
                 addInterceptor(loggingInterceptor)
-                addInterceptor(ConnectivityInterceptor(context))
+                addInterceptor(
+                    ConnectivityInterceptor(
+                        context
+                    )
+                )
+                addInterceptor(ImeiInterceptor())
             }
 
         val client = httpClient.build()

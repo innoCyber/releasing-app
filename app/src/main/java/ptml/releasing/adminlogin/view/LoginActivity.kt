@@ -10,7 +10,7 @@ import ptml.releasing.R
 import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.adminlogin.viewmodel.LoginViewModel
 import ptml.releasing.app.base.BaseActivity
-import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.hideSoftInputFromWindow

@@ -21,8 +21,8 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.bt.BluetoothManager

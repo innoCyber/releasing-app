@@ -1,4 +1,4 @@
-package ptml.releasing.app.utils
+package ptml.releasing.app.data.remote.exception
 
 import java.io.IOException
 

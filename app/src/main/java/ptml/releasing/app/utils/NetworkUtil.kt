@@ -3,6 +3,7 @@ package ptml.releasing.app.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import ptml.releasing.app.data.remote.exception.NoConnectivityException
 import retrofit2.HttpException
 import java.net.ConnectException
 

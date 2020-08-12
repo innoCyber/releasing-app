@@ -7,7 +7,6 @@ import ptml.releasing.cargo_search.model.api.FindCargoService
 import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService
 import ptml.releasing.download_damages.model.api.DamageApiService
-import ptml.releasing.images.api.UploadImageService
 import ptml.releasing.quick_remarks.model.api.QuickRemarkService
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -21,7 +20,6 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
     private val findCargoService = retrofit.create(FindCargoService::class.java)
     private val uploadDataService = retrofit.create(UploadDataService::class.java)
     private val quickRemarkService = retrofit.create(QuickRemarkService::class.java)
-    private val uploadImageService = retrofit.create(UploadImageService::class.java)
 
     override suspend fun loginAsync(username: String?, password: String?) = loginService.loginAsync(username, password)
 

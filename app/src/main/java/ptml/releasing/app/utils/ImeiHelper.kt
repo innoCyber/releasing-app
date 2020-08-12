@@ -29,7 +29,7 @@ class ImeiHelper @Inject constructor(
     @SuppressLint("HardwareIds")
     @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     suspend fun getImei(): String {
-        val imei = if (debug) {
+        val imei = if (false) {
             BuildConfig.IMEI
         } else {
             val telephonyManager = getSystemService(context, TelephonyManager::class.java)

@@ -1,10 +1,10 @@
-package ptml.releasing.app.data.remote
+package ptml.releasing.app.data.remote.interceptor
 
 import android.content.Context
 import okhttp3.Interceptor
 import okhttp3.Response
+import ptml.releasing.app.data.remote.exception.NoConnectivityException
 import ptml.releasing.app.utils.NetworkUtil
-import ptml.releasing.app.utils.NoConnectivityException
 
 
 /**
@@ -15,7 +15,9 @@ class ConnectivityInterceptor(val context: Context) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!NetworkUtil.isOnline(context)) {
-            throw NoConnectivityException("Not connected to internet.")
+            throw NoConnectivityException(
+                "Not connected to internet."
+            )
         }
         val builder = chain.request().newBuilder()
         return chain.proceed(builder.build())

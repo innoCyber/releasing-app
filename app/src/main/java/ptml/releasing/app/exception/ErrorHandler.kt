@@ -1,8 +1,8 @@
-package ptml.releasing.app.utils
+package ptml.releasing.app.exception
 
 import android.content.Context
 import ptml.releasing.R
-import ptml.releasing.app.exception.AppException
+import ptml.releasing.app.data.remote.exception.InvalidImeiException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -21,6 +21,9 @@ class ErrorHandler(private val context: Context) {
         }
         if (e is AppException) {
             return e.message ?: getString(R.string.unknown_exception)
+        }
+        if (e is InvalidImeiException) {
+            return getString(R.string.imei_exception)
         }
         return getString(R.string.unknown_exception)
     }
