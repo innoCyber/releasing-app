@@ -288,14 +288,13 @@ class CargoInfoActivity :
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PrinterSettingsActivity.RC_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 printWithPermissionCheck()
             } else {
                 showTurnBlueToothPrompt()
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

@@ -38,7 +38,7 @@ android {
         release {
             minifyEnabled true
             zipAlignEnabled true
-            debuggable false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

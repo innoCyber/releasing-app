@@ -439,12 +439,10 @@ abstract class BaseActivity<V, D> :
         binding.executePendingBindings()
     }
 
-
     @LayoutRes
     abstract fun getLayoutResourceId(): Int
 
     abstract fun getBindingVariable(): Int
-
 
     fun showUpEnabled(enabled: Boolean) {
         supportActionBar?.setDisplayHomeAsUpEnabled(enabled)
@@ -684,7 +682,6 @@ abstract class BaseActivity<V, D> :
 
 
     protected abstract fun getViewModelClass(): Class<V>
-
 
     protected fun initOperator(operatorName: String) {
         Timber.d("Passed Operator name is %s", operatorName)
