@@ -9,16 +9,16 @@ import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.printer.model.Settings
 import javax.inject.Inject
 
 class PrinterSettingsViewModel @Inject constructor(
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+    dispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) :
-    BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+    BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val printerSettings = MutableLiveData<Settings>()
     fun getPrinterSettings(): LiveData<Settings> = printerSettings
@@ -28,9 +28,9 @@ class PrinterSettingsViewModel @Inject constructor(
 
 
     fun getSettings() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val settings = repository.getPrinterSettings()
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 printerSettings.postValue(settings)
             }
         }
@@ -38,13 +38,13 @@ class PrinterSettingsViewModel @Inject constructor(
 
     fun setSettings(currentPrinter: String?, currentPrinterName: String?, label: String?) {
         val settings = printerSettings.value
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             settings?.currentPrinter = currentPrinter
             settings?.currentPrinterName = currentPrinterName
             settings?.labelCpclData = label
 
             repository.savePrinterSettings(settings)
-            withContext(appCoroutineDispatchers.main) {
+            withContext(dispatchers.main) {
                 close.postValue(Event(Unit))
             }
         }

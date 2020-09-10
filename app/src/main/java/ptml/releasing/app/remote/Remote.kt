@@ -1,14 +1,13 @@
 package ptml.releasing.app.remote
 
 import kotlinx.coroutines.Deferred
-import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
-import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
-import retrofit2.http.Body
 
 interface Remote {
     suspend fun verifyDeviceIdAsync(imei: String): Deferred<BaseResponse>
@@ -32,6 +31,7 @@ interface Remote {
     ): Deferred<FindCargoResponse?>?
 
 
-    suspend fun uploadData(request: FormSubmissionRequest
-                           ): Deferred<BaseResponse>
+    suspend fun uploadData(
+        request: FormSubmissionRequest
+    ): Deferred<BaseResponse>
 }

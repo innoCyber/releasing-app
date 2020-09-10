@@ -10,8 +10,8 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import ptml.releasing.app.exception.AppException
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,15 +35,23 @@ class VoyageViewModel @Inject constructor(
     private fun fetchVoyages() {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         viewModelScope.launch {
             try {
-                withContext(appCoroutineDispatchers.db) {
+                withContext(dispatchers.db) {
                     val result = voyageRepository.getRecentVoyages()
-                    withContext(appCoroutineDispatchers.main) {
+                    withContext(dispatchers.main) {
                         if (result.isNotEmpty()) {
                             this@VoyageViewModel.response.postValue(result)
-                            networkState.postValue(Event(NetworkState.LOADED))
+                            networkState.postValue(
+                                Event(
+                                    NetworkState.LOADED
+                                )
+                            )
                         } else {
                             networkState.postValue(
                                 Event(
@@ -59,7 +67,11 @@ class VoyageViewModel @Inject constructor(
                 }
             } catch (it: Throwable) {
                 Timber.e(it, "Error occurred")
-                networkState.postValue(Event(NetworkState.error(it)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(it)
+                    )
+                )
             }
         }
     }
@@ -67,15 +79,23 @@ class VoyageViewModel @Inject constructor(
     fun downloadVoyages() {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
         viewModelScope.launch {
             try {
-                withContext(appCoroutineDispatchers.network) {
+                withContext(dispatchers.network) {
                     val result = voyageRepository.downloadRecentVoyages()
-                    withContext(appCoroutineDispatchers.main) {
+                    withContext(dispatchers.main) {
                         if (result.isNotEmpty()) {
                             this@VoyageViewModel.response.postValue(result)
-                            networkState.postValue(Event(NetworkState.LOADED))
+                            networkState.postValue(
+                                Event(
+                                    NetworkState.LOADED
+                                )
+                            )
                         } else {
                             networkState.postValue(
                                 Event(
@@ -91,7 +111,11 @@ class VoyageViewModel @Inject constructor(
                 }
             } catch (it: Throwable) {
                 Timber.e(it, "Error occurred")
-                networkState.postValue(Event(NetworkState.error(it)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(it)
+                    )
+                )
             }
         }
     }

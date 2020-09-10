@@ -33,4 +33,5 @@ interface LocalDataManager {
 
     fun getLastActiveTime(): Long
     fun setLastActiveTime(time: Long)
+
 }

@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityQuickRemarkBinding
@@ -82,12 +81,12 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun downloadQuickRemarks() {
-        viewModel.downloadQuickRemarksFromServer((application as ReleasingApplication).provideImei())
+        viewModel.downloadQuickRemarksFromServer(imei ?: "")
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getQuickRemarks() {
-        viewModel.getQuickRemarks((application as ReleasingApplication).provideImei())
+        viewModel.getQuickRemarks(imei ?: "")
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)

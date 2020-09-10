@@ -13,8 +13,8 @@ import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.data.domain.usecase.LoginUseCase
 import ptml.releasing.app.data.domain.usecase.SetLoggedInUseCase
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
-import ptml.releasing.app.utils.extensions.mapFunc
+import ptml.releasing.app.utils.livedata.Event
+import ptml.releasing.app.utils.livedata.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber

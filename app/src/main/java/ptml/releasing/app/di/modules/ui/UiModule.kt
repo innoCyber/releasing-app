@@ -3,8 +3,8 @@ package ptml.releasing.app.di.modules.ui
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import ptml.releasing.admin_config.view.AdminConfigActivity
-import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.utils.remoteconfig.UpdateIntentService
+import ptml.releasing.app.utils.upload.CancelWorkReceiver
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
@@ -12,6 +12,8 @@ import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.damages.view.*
 import ptml.releasing.device_configuration.view.DeviceConfigActivity
 import ptml.releasing.download_damages.view.DamageActivity
+import ptml.releasing.images.upload.UploadImagesActivity
+import ptml.releasing.images.viewer.ImageViewerActivity
 import ptml.releasing.internet_error_logs.view.ErrorLogsActivity
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import ptml.releasing.quick_remarks.view.QuickRemarkActivity
@@ -27,7 +29,7 @@ abstract class UiModule {
 
 
     @ContributesAndroidInjector()
-    abstract fun loginActivity(): LoginActivity
+    abstract fun loginActivity(): ptml.releasing.adminlogin.view.LoginActivity
 
 
     @ContributesAndroidInjector()
@@ -91,5 +93,15 @@ abstract class UiModule {
 
     @ContributesAndroidInjector
     abstract fun voyagesActivity(): VoyageActivity
+
+    @ContributesAndroidInjector
+    abstract fun updateImagesActivity() : UploadImagesActivity
+
+
+    @ContributesAndroidInjector
+    abstract fun updateImageViewerActivity() : ImageViewerActivity
+
+    @ContributesAndroidInjector
+    abstract fun cancelReceiver() : CancelWorkReceiver
 
 }

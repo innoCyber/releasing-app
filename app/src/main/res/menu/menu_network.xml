@@ -8,4 +8,11 @@
         android:title="@string/network_state_mobile"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/action_server_type"
+        android:orderInCategory="2"
+        android:title="@string/server_type_msg"
+        android:icon="@drawable/circle_green"
+        app:showAsAction="always"/>
+
 </menu>

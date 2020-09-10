@@ -7,7 +7,7 @@ import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.utils.extensions.beVisibleIf
-import ptml.releasing.app.utils.extensions.observe
+import ptml.releasing.app.utils.livedata.observe
 import ptml.releasing.databinding.ActivityResetPasswordBinding
 import ptml.releasing.resetpassword.viewmodel.ResetPasswordViewModel
 

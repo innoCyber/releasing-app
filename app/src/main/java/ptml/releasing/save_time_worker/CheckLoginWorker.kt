@@ -25,22 +25,27 @@ class CheckLoginWorker @AssistedInject constructor(
     private val localDataManager: LocalDataManager,
     @Assisted
     private val context: Context,
-    @Assisted private val params: WorkerParameters) : CoroutineWorker(context, params) {
+    @Assisted private val params: WorkerParameters
+) : CoroutineWorker(context, params) {
 
 
     override suspend fun doWork(): Result {
         return try {
             val lastActiveTime = localDataManager.getLastActiveTime()
-            if(isMoreThanAnHour(lastActiveTime)){
+            if (isMoreThanAnHour(lastActiveTime)) {
                 Timber.d("Time is more than an hour.. Logging out")
                 eventBus.send(LoginSessionTimeoutEvent())
                 //log out
                 logOutUseCase.execute()
-                withContext(dispatchers.main){
-                    Toast.makeText(applicationContext, applicationContext.getString(R.string.session_timed_out_msg), Toast.LENGTH_SHORT).show()
+                withContext(dispatchers.main) {
+                    Toast.makeText(
+                        applicationContext,
+                        applicationContext.getString(R.string.session_timed_out_msg),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 Result.success()
-            }else {
+            } else {
                 Timber.d("Time is not more than more than an hour.. Moving on")
                 Result.retry()
             }
@@ -50,10 +55,10 @@ class CheckLoginWorker @AssistedInject constructor(
         }
     }
 
-    private fun isMoreThanAnHour(time:Long):Boolean{
+    private fun isMoreThanAnHour(time: Long): Boolean {
         val now = Calendar.getInstance().timeInMillis
         val timeDiff = now - time
-        return timeDiff > ONE_HOUR_MILLIS
+        return timeDiff > FIVE_MIN_MILLIS
     }
 
     private fun rescheduleWork() {
@@ -65,7 +70,8 @@ class CheckLoginWorker @AssistedInject constructor(
 
     companion object {
         private const val ONE_HOUR_MILLIS = 3600000L
-        private const val DEFAULT_INTERVAL_SECS = 3600L
+        private const val FIVE_MIN_MILLIS = 5 * 60 * 1000
+        private const val DEFAULT_INTERVAL_SECS = 300L
         private const val CHECK_LOGIN_INTERVAL_TYPE = Calendar.SECOND
         private const val CHECK_LOGIN_TAG = "CHECK_LOGIN_TAG"
         private const val CHECK_LOGIN_NAME = "CHECK_LOGIN_NAME"

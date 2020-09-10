@@ -1,5 +1,6 @@
 package ptml.releasing.app.di.modules.main
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,9 @@ import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.remote.ReleasingRemote
 import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.FileUtils
+import ptml.releasing.app.utils.image.ImageLoader
+import ptml.releasing.app.utils.image.ImageLoaderImpl
 import retrofit2.Retrofit
 
 @Module()
@@ -27,9 +31,10 @@ class MainModule {
     fun provideRepository(
         remote: Remote,
         local: Local,
-        appCoroutineDispatchers: AppCoroutineDispatchers
+        appCoroutineDispatchers: AppCoroutineDispatchers,
+        fileUtils: FileUtils
     ): Repository {
-        return ReleasingRepository(remote, local, appCoroutineDispatchers)
+        return ReleasingRepository(remote, local, appCoroutineDispatchers, fileUtils)
     }
 
     @Provides
@@ -47,7 +52,7 @@ class MainModule {
     @ReleasingAppScope
     fun provideDispatchers(): AppCoroutineDispatchers {
         return AppCoroutineDispatchers(
-            db = Dispatchers.Default,
+            db = Dispatchers.IO,
             network = Dispatchers.IO,
             main = Dispatchers.Main
         )
@@ -66,6 +71,13 @@ class MainModule {
         voyageMapper: VoyageMapper
     ): VoyageRepository {
         return VoyageRepositoryImpl(localDataManager, restClient, voyageMapper)
+    }
+
+
+    @Provides
+    @ReleasingAppScope
+    fun provideImageLoader(context: Context) : ImageLoader{
+        return ImageLoaderImpl(context)
     }
 
 

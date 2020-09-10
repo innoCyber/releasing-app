@@ -17,13 +17,12 @@ import kotlinx.coroutines.runBlocking
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.bt.BluetoothManager
@@ -35,6 +34,7 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.*
 import ptml.releasing.form.models.FormConfiguration
+import ptml.releasing.images.upload.UploadImagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
@@ -71,6 +71,7 @@ class CargoInfoActivity :
     var textToPrint: String? = ""
     var isPrintingDamages = false
 
+    var imagesView: View? = null
 
     private var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
@@ -91,7 +92,9 @@ class CargoInfoActivity :
                 }
 
                 FormType.IMAGES -> {
-
+                    imagesView = view
+                    val data = UploadImagesActivity.createUploadExtra(getCargoCode())
+                    startNewActivity(UploadImagesActivity::class.java, data = data)
                 }
 
                 FormType.PRINTER_DAMAGES -> {
@@ -209,6 +212,10 @@ class CargoInfoActivity :
             createForm(it)
         })
 
+        viewModel.getImagesCountState().observe(this, Observer {
+            imagesView?.findViewById<TextView>(R.id.tv_number)?.text = it.toString()
+        })
+
         getFormConfigWithPermissionCheck()
 
         viewModel.printerSettings.observe(this, Observer {
@@ -266,6 +273,8 @@ class CargoInfoActivity :
             if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
         errorView?.visibility =
             if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+
+        viewModel.getImagesCount(getCargoCode())
     }
 
     override fun onRequestPermissionsResult(
@@ -279,14 +288,13 @@ class CargoInfoActivity :
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PrinterSettingsActivity.RC_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 printWithPermissionCheck()
             } else {
                 showTurnBlueToothPrompt()
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -302,7 +310,7 @@ class CargoInfoActivity :
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getFormConfig() {
         viewModel.getFormConfig(
-            (application as ReleasingApplication).provideImei(),
+            imei ?: "",
             findCargoResponse
         )
     }
@@ -314,7 +322,7 @@ class CargoInfoActivity :
             formSubmission,
             findCargoResponse,
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
-            (application as ReleasingApplication).provideImei()
+            imei ?: ""
         )
     }
 
@@ -337,7 +345,7 @@ class CargoInfoActivity :
                     )
 
 
-                 Timber.e("Printer code: %s", labelCpclData)
+                Timber.e("Printer code: %s", labelCpclData)
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 val thePrinterConn = BluetoothConnectionInsecure(macAddress)
 
@@ -585,6 +593,10 @@ class CargoInfoActivity :
     @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
     fun neverAskForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
+    }
+
+    private fun getCargoCode(): String? {
+        return intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
     }
 
 

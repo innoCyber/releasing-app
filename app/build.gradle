@@ -21,8 +21,8 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 27
-        versionName "1.3.18"
+        versionCode 34
+        versionName "1.4.3"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
@@ -75,12 +75,15 @@ android {
         if (name.contains("dev")) {
             variant.buildConfigField("String", "BASE_URL", getLocalProperty("DEV_BASE_URL"))
             variant.buildConfigField("String", "BASE_AUTH_URL", getLocalProperty("DEV_BASE_AUTH_URL"))
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", getLocalProperty("DEV_BASE_URL"))
         } else if (name.contains("staging")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
             variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
         } else if (name.contains("production")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
             variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
         }
     }
 
@@ -123,7 +126,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine"
 
     //Android Kotlin extensions
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     //appcompat
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
@@ -139,10 +143,11 @@ dependencies {
     implementation "com.google.android.material:material:$materialLibVersion"
 
     // architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$archComponentsVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime:$archComponentsVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archComponentsVersion"
-    kapt "androidx.lifecycle:lifecycle-compiler:$archComponentsVersion"
+    def lifeCycleVersion = '2.2.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifeCycleVersion"
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -161,10 +166,10 @@ dependencies {
     //timber for logging
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
-    //leakcanary for detecting memory leaks
+ /*   //leakcanary for detecting memory leaks
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"*/
 
     //permissions
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permission_dispatcher"
@@ -188,6 +193,10 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$testRunner"
     androidTestImplementation "androidx.test.ext:junit:$androidJunit"
 
+    androidTestImplementation "com.google.dagger:dagger:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+
     //zebra sdk
     implementation files('libs/zebra_android_sdk.jar')
 
@@ -208,6 +217,15 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$workerVersion"
 
     def assistedInjectVersion = "0.5.2"
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
+
+    //IMAGES
+    implementation "com.github.bumptech.glide:glide:${glideVersion}"
+    kapt "com.github.bumptech.glide:compiler:${glideVersion}"
+
+    implementation 'id.zelory:compressor:2.1.0'
+
     compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
     kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
 

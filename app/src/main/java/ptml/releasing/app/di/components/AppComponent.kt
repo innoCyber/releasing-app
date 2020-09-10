@@ -1,7 +1,5 @@
 package ptml.releasing.app.di.components
 
-
-
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule

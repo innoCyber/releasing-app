@@ -1,25 +1,26 @@
 package ptml.releasing.internet_error_logs.view_model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import ptml.releasing.app.base.BaseViewModel
-import ptml.releasing.app.data.Repository
-import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
-import ptml.releasing.internet_error_logs.model.ErrorCache
-import javax.inject.Inject
-import android.database.sqlite.SQLiteDatabase
-import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.Environment.getExternalStorageDirectory
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import ptml.releasing.app.base.BaseViewModel
+import ptml.releasing.app.data.Repository
 import ptml.releasing.app.db.model.InternetErrorLogModel
-import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.CSVWriter
+import ptml.releasing.app.utils.DateTimeUtils
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
+import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.internet_error_logs.model.ErrorCache
 import timber.log.Timber
 import java.io.File
 import java.io.FileWriter
 import java.util.*
+import javax.inject.Inject
 
 
 class ErrorLogsViewModel @Inject constructor(
@@ -43,14 +44,18 @@ class ErrorLogsViewModel @Inject constructor(
 
     fun handleExportClick() {
         Timber.d("Export clicked, checking permissions")
-        checkStoragePermission.postValue(Event(Unit))
+        checkStoragePermission.postValue(
+            Event(
+                Unit
+            )
+        )
     }
 
     fun exportLogsToCSV() {
         Timber.d("Permissions granted, exporting logs...")
         exportLoadingState.postValue(NetworkState.LOADING)
 
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val logs = errorCache.getAllLogs()
 
             val exportDir = File(getExternalStorageDirectory(), DIRECTORY_DOWNLOADS)
@@ -89,7 +94,11 @@ class ErrorLogsViewModel @Inject constructor(
                     )
                 }
                 csvWrite.close()
-                shareExportedFile.postValue(Event(file))
+                shareExportedFile.postValue(
+                    Event(
+                        file
+                    )
+                )
                 exportLoadingState.postValue(NetworkState.LOADED)
             } catch (sqlEx: Exception) {
                 exportLoadingState.postValue(NetworkState.error(sqlEx.localizedMessage))

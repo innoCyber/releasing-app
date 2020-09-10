@@ -11,8 +11,8 @@ import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.data.domain.usecase.ResetPasswordUseCase
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
-import ptml.releasing.app.utils.extensions.mapFunc
+import ptml.releasing.app.utils.livedata.Event
+import ptml.releasing.app.utils.livedata.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import timber.log.Timber
 import javax.inject.Inject

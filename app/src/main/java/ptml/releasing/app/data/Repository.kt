@@ -10,8 +10,10 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.Damage
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
+import java.io.File
 
 interface Repository {
 
@@ -78,9 +80,6 @@ interface Repository {
     fun setMustUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
 
-    fun setImei(imei:String)
-    fun getImei():String?
-
     fun setDamagesCurrentVersion(currentVersion:Long)
     fun setVoyagesCurrentVersion(currentVersion: Long)
 
@@ -93,4 +92,25 @@ interface Repository {
 
     fun isInternetErrorLoggingEnabled():Boolean
     fun setInternetErrorLoggingEnabled(enabled:Boolean)
+
+    suspend fun storeImages(cargoCode: String, imageMap: Map<String, Image>)
+    suspend fun addImage(cargoCode: String, image: Image)
+    suspend fun removeImage(cargoCode: String, image: Image)
+    suspend fun getImages(cargoCode: String): Map<String, Image>
+
+    fun createImageFile(cargoCode: String): File
+    fun createImage(imageFile: File): Image
+
+    fun getRootPath(cargoCode: String?):String
+    fun getRootPathCompressed(cargoCode: String?):String
+    suspend fun delete(
+        imageList: List<Image>,
+        cargoCode: String?
+    )
+
+   suspend fun compressImageFile(currentPhotoPath: String?, cargoCode: String?)
+
+    fun addWorkerId(cargoCode: String, workerId:String)
+    fun getWorkerId(cargoCode: String): String?
+
 }

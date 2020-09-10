@@ -39,13 +39,12 @@ open class PreferencesManagerImpl @Inject constructor(
     }
 
     override fun getIMEI(): String {
-        return getStringPreference(prefImei)
+        return getStringPreference(prefImei, "")
     }
 
     override fun setIMEI(imei: String) {
         return setStringPreference(prefImei, imei)
     }
-
 
     override fun getServerBaseUrl(): String {
         return getStringPreference(prefBaseServerUrl, BuildConfig.BASE_URL)

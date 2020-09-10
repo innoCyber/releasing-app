@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
@@ -21,14 +22,12 @@ import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
@@ -36,10 +35,10 @@ import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
+import ptml.releasing.app.utils.livedata.observe
 import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
@@ -68,6 +67,9 @@ abstract class BaseActivity<V, D> :
     @Inject
     lateinit var networkUtils: NetworkUtils
 
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
     private var progressDialog: ProgressDialog? = null
 
     var imei: String? = null
@@ -78,13 +80,11 @@ abstract class BaseActivity<V, D> :
     @Inject
     lateinit var navigator: Navigator
 
-
     companion object {
         const val RC_BARCODE = 112
         const val RC_SEARCH = 113
         const val TIME_WORKER = "time_worker"
         const val DATE_TIME = "date_time"
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -217,8 +217,24 @@ abstract class BaseActivity<V, D> :
             }
         })
 
-        getIMEIWithPermissionCheck()
+        viewModel.reloadOptionsMenu.observe(this){
+            invalidateOptionsMenu()
+        }
+
         hideKeyBoardOnTouchOfNonEditableViews()
+        getIMEIWithPermissionCheck()
+        initImeiListener()
+        viewModel.subscribeToSessionTimeoutEvent()
+    }
+
+    private fun initImeiListener() {
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key->
+            if(key == "prefImei"){
+                val savedImei = sharedPreferences.getString("prefImei", "")
+                Timber.e("Imei changed $savedImei")
+                imei = savedImei
+            }
+        }
     }
 
     override fun onUserInteraction() {
@@ -233,8 +249,7 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateQuickRemarksService() {
-        val imei = (application as ReleasingApplication).provideImei()
-        viewModel.updateQuickRemarks(imei)
+        viewModel.updateQuickRemarks(imei ?: "")
     }
 
     @NeedsPermission(
@@ -244,8 +259,7 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun startUpdateDamagesService() {
-        val imei = (application as ReleasingApplication).provideImei()
-        viewModel.updateDamages(imei)
+        viewModel.updateDamages(imei ?: "")
     }
 
     @OnShowRationale(
@@ -355,6 +369,7 @@ abstract class BaseActivity<V, D> :
         super.onResume()
         viewModel.getOperatorName()
         viewModel.checkToShowUpdateAppDialog()
+        invalidateOptionsMenu()
     }
 
 
@@ -366,9 +381,11 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun getIMEI() {
-        imei = imeiHelper.getImei()
-        viewModel.imei = imei
-        onImeiGotten(imei)
+        lifecycleScope.launchWhenResumed {
+            imei = imeiHelper.getImei()
+            viewModel.imei = imei
+            onImeiGotten(imei)
+        }
     }
 
     open fun onImeiGotten(imei: String?) {
@@ -437,20 +454,19 @@ abstract class BaseActivity<V, D> :
         binding.executePendingBindings()
     }
 
-
     @LayoutRes
     abstract fun getLayoutResourceId(): Int
 
     abstract fun getBindingVariable(): Int
-
 
     fun showUpEnabled(enabled: Boolean) {
         supportActionBar?.setDisplayHomeAsUpEnabled(enabled)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
     }
 
-    fun setActionBarTitle(title: String) {
+    fun setActionBarTitle(title: String?) {
         supportActionBar?.title = title
+
     }
 
     fun setHomeUpDrawable(@DrawableRes drawable: Int) {
@@ -487,6 +503,16 @@ abstract class BaseActivity<V, D> :
         } else {
             networkStateMenuItem?.title = getString(R.string.network_state_offline)
         }
+
+        val serverTypeItem = menu?.findItem(R.id.action_server_type)
+        serverTypeItem?.icon = AppCompatResources.getDrawable(
+            this,
+            if (viewModel.isConnectedToProduction()) {
+                R.drawable.circle_green
+            } else {
+                R.drawable.circle_red
+            }
+        )
         return true
     }
 
@@ -502,8 +528,21 @@ abstract class BaseActivity<V, D> :
         } else if (item.itemId == R.id.action_network_state) {
             notifyUser(binding.root, getMessageByNetworkState(networkStateWrapper))
             return true
+        } else if (item.itemId == R.id.action_server_type) {
+            notifyUser(binding.root, getConnectedServerMessage())
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getConnectedServerMessage(): String {
+        return getString(
+            if (viewModel.isConnectedToProduction()) {
+                R.string.production_server_msg
+            } else {
+                R.string.staging_server_msg
+            }
+        )
     }
 
     private fun getMessageByNetworkState(networkStateWrapper: NetworkStateWrapper?): String {
@@ -538,6 +577,9 @@ abstract class BaseActivity<V, D> :
         }
     }
 
+    fun getDataFromIntent(): Bundle? {
+        return intent.getBundleExtra(Constants.EXTRAS)
+    }
 
     private fun showSnackBarError() {
         snackBar?.dismiss()
@@ -655,7 +697,6 @@ abstract class BaseActivity<V, D> :
 
 
     protected abstract fun getViewModelClass(): Class<V>
-
 
     protected fun initOperator(operatorName: String) {
         Timber.d("Passed Operator name is %s", operatorName)

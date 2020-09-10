@@ -3,14 +3,17 @@ package ptml.releasing.app.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
+import timber.log.Timber
 import javax.inject.Inject
 
 class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences, var gson: Gson, var context: Context) :
@@ -32,8 +35,8 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val DAMAGES_VERSION = "damages_current_version"
         const val VOYAGE_VERSION = "voyage_current_version"
         const val MUST_UPDATE_APP = "must_update_app"
-        const val IMEI = "imei"
         const val INTERNET_ERROR_LOGGING_ENABLED = "internet_error_logging_enabled"
+        const val WORKER_ID = "_workerId"
     }
 
 
@@ -154,16 +157,6 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         return sharedPreferences.getLong(APP_VERSION, Constants.DEFAULT_APP_VERSION)
     }
 
-    override fun setImei(imei: String) {
-        return sharedPreferences.edit().putString(IMEI, imei).apply()
-    }
-
-    override fun getImei(): String? {
-        return sharedPreferences.getString(IMEI, null)
-    }
-
-
-
     override fun mustUpdateApp(): Boolean {
         return sharedPreferences.getBoolean(MUST_UPDATE_APP, false)
     }
@@ -179,5 +172,37 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
 
     override fun setInternetErrorLoggingEnabled(enabled: Boolean) {
         return sharedPreferences.edit().putBoolean(INTERNET_ERROR_LOGGING_ENABLED, enabled).apply()
+    }
+
+    override fun getImages(cargoCode: String):  Map<String, Image> {
+        Timber.w("getImages")
+        return gson.fromJson(
+            sharedPreferences.getString(cargoCode, "[]"),
+           object : TypeToken<Map<String, Image>>(){}.type
+        )
+    }
+
+    override fun storeImages(cargoCode: String, imageMap:  Map<String, Image>) {
+        sharedPreferences.edit().putString(cargoCode, gson.toJson(imageMap)).apply()
+    }
+
+    override fun addImage(cargoCode: String, file: Image) {
+        val images = getImages(cargoCode).toMutableMap()
+        images[file.name ?: return] = file
+        storeImages(cargoCode, images)
+    }
+
+    override fun removeImage(cargoCode: String, file: Image) {
+        val images = getImages(cargoCode).toMutableMap()
+        images.remove(file.name ?: return)
+        storeImages(cargoCode, images)
+    }
+
+    override fun addWorkerId(cargoCode: String, workerId:String) {
+        sharedPreferences.edit().putString("$cargoCode$WORKER_ID", workerId).apply()
+    }
+
+    override fun getWorkerId(cargoCode: String): String? {
+        return sharedPreferences.getString("$cargoCode$WORKER_ID", null)
     }
 }

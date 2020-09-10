@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.ImeiRepository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,6 +16,10 @@ import kotlin.coroutines.CoroutineContext
 class UpdateIntentService : DaggerIntentService(UpdateIntentService::class.java.name), CoroutineScope {
     @Inject
     lateinit var repository: Repository
+
+    @Inject
+    lateinit var imeiRepository: ImeiRepository
+
     @Inject
     lateinit var appCoroutineDispatchers: AppCoroutineDispatchers
     @Inject
@@ -68,7 +73,7 @@ class UpdateIntentService : DaggerIntentService(UpdateIntentService::class.java.
     private fun updateQuickRemarks() {
         launch {
             try {
-                val imei = repository.getImei()
+                val imei = imeiRepository.getIMEI()
                 repository.downloadQuickRemarkAsync(imei ?: return@launch)?.await()
 
                 val quickRemarkVersion = remoteConfigManger.quickRemarkVersion
@@ -83,7 +88,7 @@ class UpdateIntentService : DaggerIntentService(UpdateIntentService::class.java.
     private fun updateDamages() {
         launch {
             try {
-                val imei = repository.getImei()
+                val imei = imeiRepository.getIMEI()
                 repository.downloadDamagesAsync(imei ?: return@launch)?.await()
 
                 val damagesVersion = remoteConfigManger.damagesVersion
