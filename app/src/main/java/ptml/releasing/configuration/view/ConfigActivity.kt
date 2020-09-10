@@ -9,6 +9,7 @@ import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
@@ -31,6 +32,10 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private var terminalAdapter: ConfigSpinnerAdapter<ReleasingTerminal>? = null
 
+    private val errorHandler by lazy {
+        ErrorHandler(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
@@ -40,15 +45,21 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         binding.bottom.root.visibility = View.INVISIBLE
 
 
-        binding.top.selectCargoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                Timber.d("Nothing was selected")
-            }
+        binding.top.selectCargoSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    Timber.d("Nothing was selected")
+                }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewModel.cargoTypeSelected(cargoAdapter?.getItem(position) ?: CargoType())
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.cargoTypeSelected(cargoAdapter?.getItem(position) ?: CargoType())
+                }
             }
-        }
 
         viewModel.getConfigResponse().observe(this, Observer {
             setUpSpinners(it)
@@ -62,7 +73,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         })
 
 
-        viewModel.getNetworkState().observe(this, Observer {event->
+        viewModel.getNetworkState().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it == NetworkState.LOADING) {
                     showLoading(
@@ -77,7 +88,23 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 }
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
+                    val error = errorHandler.getErrorMessage(it.throwable)
+                    binding.includeError.btnReloadLayout.setOnClickListener {
+                        if (errorHandler.isImeiError(error)) {
+                            showEnterImeiDialog()
+                        } else {
+                            getConfigWithPermissionCheck()
+                        }
+                    }
+                    binding.includeError.btnReload.text =
+                        if (errorHandler.isImeiError(error)) getString(R.string.enter_imei) else getString(
+                            R.string.reload
+                        )
+                    showLoading(
+                        binding.includeError.root,
+                        binding.includeError.tvMessage,
+                        error
+                    )
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)
@@ -88,7 +115,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         })
 
 
-        viewModel.getSavedSuccess().observe(this, Observer {event->
+        viewModel.getSavedSuccess().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     notifyUser(getString(R.string.config_saved_success))
@@ -106,8 +133,14 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
             binding.top.cameraSwitch.isChecked = cameraEnabled
             binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?: 0)
-            binding.top.selectOperationSpinner.setSelection(operationStepAdapter?.getPosition(operationStep) ?: 0)
-            binding.top.selectTerminalSpinner.setSelection(terminalAdapter?.getPosition(terminal) ?: 0)
+            binding.top.selectOperationSpinner.setSelection(
+                operationStepAdapter?.getPosition(
+                    operationStep
+                ) ?: 0
+            )
+            binding.top.selectTerminalSpinner.setSelection(
+                terminalAdapter?.getPosition(terminal) ?: 0
+            )
         })
 
 
@@ -123,10 +156,32 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             refreshConfigWithPermissionCheck()
         }
 
+    }
 
+    override fun onImeiGotten(imei: String?) {
+        super.onImeiGotten(imei)
         //begin the request
         getConfigWithPermissionCheck()
+    }
 
+    private fun showEnterImeiDialog() {
+        val imeiNumber = imei
+        val dialog =
+            EditTextDialog.newInstance(
+                imeiNumber,
+                object : EditTextDialog.EditTextDialogListener {
+                    override fun onSave(value: String) {
+                        imei = value
+                        viewModel.updateImei(value)
+                        refreshConfigWithPermissionCheck()
+                    }
+                },
+                getString(R.string.enter_imei_dialog_title),
+                getString(R.string.enter_imei_dialog_hint),
+                false
+            )
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
 
@@ -175,7 +230,11 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
@@ -183,20 +242,27 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private fun setUpSpinners(response: AdminConfigResponse) {
         try {
-            cargoAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList)
+            cargoAdapter =
+                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList)
             binding.top.selectCargoSpinner.adapter = cargoAdapter
 
-            terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList)
+            terminalAdapter =
+                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList)
             binding.top.selectTerminalSpinner.adapter = terminalAdapter
 
         } catch (e: Exception) {
             Timber.e(e)
-            showLoading(binding.includeError.root, binding.includeError.tvMessage, R.string.error_occurred)
+            showLoading(
+                binding.includeError.root,
+                binding.includeError.tvMessage,
+                R.string.error_occurred
+            )
         }
     }
 
     private fun setUpOperationStep(operationStepList: List<ReleasingOperationStep>) {
-        operationStepAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
+        operationStepAdapter =
+            ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
         binding.top.selectOperationSpinner.adapter = operationStepAdapter
     }
 

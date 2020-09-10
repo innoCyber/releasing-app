@@ -29,7 +29,7 @@ class ImeiHelper @Inject constructor(
     @SuppressLint("HardwareIds")
     @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     suspend fun getImei(): String {
-        val imei = if (false) {
+        val imei = if (BuildConfig.DEBUG) {
             BuildConfig.IMEI
         } else {
             val telephonyManager = getSystemService(context, TelephonyManager::class.java)
@@ -50,10 +50,13 @@ class ImeiHelper @Inject constructor(
         return withContext(dispatchers.db) {
             Timber.d("Gotten IMEI: $imei")
             var savedImei = imeiRepository.getIMEI()
+            Timber.d("Saved IMEI: $savedImei")
             if (savedImei.isEmpty()) {
                 imeiRepository.setIMEI(imei)
                 savedImei = imei
             }
+
+            Timber.d("Saved IMEI: $savedImei")
             savedImei
         }
 

@@ -46,7 +46,6 @@ open class PreferencesManagerImpl @Inject constructor(
         return setStringPreference(prefImei, imei)
     }
 
-
     override fun getServerBaseUrl(): String {
         return getStringPreference(prefBaseServerUrl, BuildConfig.BASE_URL)
     }

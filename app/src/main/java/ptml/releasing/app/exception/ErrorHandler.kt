@@ -28,6 +28,10 @@ class ErrorHandler(private val context: Context) {
         return getString(R.string.unknown_exception)
     }
 
+    fun isImeiError(error:String): Boolean {
+        return error == getString(R.string.imei_exception)
+    }
+
     private fun getString(resId: Int): String {
         return context.getString(resId)
     }

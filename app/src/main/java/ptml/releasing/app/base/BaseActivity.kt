@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
@@ -65,6 +66,9 @@ abstract class BaseActivity<V, D> :
 
     @Inject
     lateinit var networkUtils: NetworkUtils
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     private var progressDialog: ProgressDialog? = null
 
@@ -217,9 +221,20 @@ abstract class BaseActivity<V, D> :
             invalidateOptionsMenu()
         }
 
-        getIMEIWithPermissionCheck()
         hideKeyBoardOnTouchOfNonEditableViews()
+        getIMEIWithPermissionCheck()
+        initImeiListener()
         viewModel.subscribeToSessionTimeoutEvent()
+    }
+
+    private fun initImeiListener() {
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key->
+            if(key == "prefImei"){
+                val savedImei = sharedPreferences.getString("prefImei", "")
+                Timber.e("Imei changed $savedImei")
+                imei = savedImei
+            }
+        }
     }
 
     override fun onUserInteraction() {
@@ -366,7 +381,7 @@ abstract class BaseActivity<V, D> :
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     fun getIMEI() {
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenResumed {
             imei = imeiHelper.getImei()
             viewModel.imei = imei
             onImeiGotten(imei)

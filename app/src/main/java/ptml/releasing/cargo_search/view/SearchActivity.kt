@@ -20,6 +20,7 @@ import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
+import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
@@ -43,6 +44,10 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     companion object {
         const val RC_CONFIG = 434
         const val RC_CARGO_INFO = 343
+    }
+
+    private val errorHandler by lazy {
+        ErrorHandler(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +90,15 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.networkState.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
+                    val error = errorHandler.getErrorMessage(it.throwable)
+                    binding.appBarHome.content.includeError.btnReloadLayout.setOnClickListener {
+                        if (errorHandler.isImeiError(error)) {
+                            showEnterImeiDialog()
+                        } else {
+                            search()
+                        }
+                    }
+                    binding.appBarHome.content.includeError.btnReload.text = if(errorHandler.isImeiError(error)) getString(R.string.enter_imei) else getString(R.string.reload)
                     showLoading(
                         binding.appBarHome.content.includeError.root,
                         binding.appBarHome.content.includeError.tvMessage,
@@ -160,10 +173,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             }
         })
 
-        binding.appBarHome.content.includeError.btnReloadLayout.setOnClickListener {
-            search()
-        }
-
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
             it.setBackgroundResource(R.drawable.save_btn_bg_blue)
             viewModel.verify()
@@ -195,6 +204,26 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             binding.navView.layoutParams = params
         }
 
+    }
+
+    private fun showEnterImeiDialog() {
+        val imeiNumber = imei
+        val dialog =
+            EditTextDialog.newInstance(
+                imeiNumber,
+                object : EditTextDialog.EditTextDialogListener {
+                    override fun onSave(value: String) {
+                        imei = value
+                        viewModel.updateImei(value)
+                        search(value)
+                    }
+                },
+                getString(R.string.enter_imei_dialog_title),
+                getString(R.string.enter_imei_dialog_hint),
+                false
+            )
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
 
     private fun animateBadge(it: FindCargoResponse?) {
@@ -281,13 +310,13 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
 
-    private fun search() {
+    private fun search(imei: String? = this.imei) {
         binding.appBarHome.content.includeSearch.btnVerify.hideSoftInputFromWindow()
-        findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString())
+        findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString(), imei ?: "")
     }
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-    fun findCargo(cargoNumber: String?) {
+    fun findCargo(cargoNumber: String?, imei: String?) {
         viewModel.findCargo(cargoNumber, imei ?: "")
     }
 
