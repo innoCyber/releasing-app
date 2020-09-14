@@ -2,11 +2,13 @@ package ptml.releasing.admin_config.view
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
@@ -35,6 +37,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         showUpEnabled(true)
         setupObservers()
         setupClickListeners()
+        binding.includeAdminConfig.btnEnterImei.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
     }
 
     private fun setupClickListeners() {
