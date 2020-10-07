@@ -2,6 +2,7 @@ package ptml.releasing.app.data.remote
 
 
 import ptml.releasing.app.data.remote.request.ResetPasswordRequest
+import ptml.releasing.app.data.remote.request.UpdateAppVersionRequest
 import ptml.releasing.app.data.remote.result.VoyageResult
 import ptml.releasing.app.data.remote.result._Result
 import retrofit2.http.Body
@@ -29,5 +30,9 @@ interface Api {
     suspend fun getRecentVoyages(
         @Query("imei") imei: String?
     ): VoyageResult
+
+
+    @POST(Endpoints.UPDATE_APP_VERSION_INSTALLED)
+    suspend fun updateAppVersion(@Body request: UpdateAppVersionRequest): _Result<Unit>
 
 }

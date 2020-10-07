@@ -2,7 +2,7 @@ package ptml.releasing.login.view
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.runBlocking
+import androidx.lifecycle.lifecycleScope
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
@@ -43,12 +43,10 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
     }
 
     private fun checkIfLoggedIn() {
-        runBlocking {
+        lifecycleScope.launchWhenCreated {
             val loggedIn = loginRepository.getLoggedIn()
             if (loggedIn) {
                 navigator.goToSearch(this@LoginActivity)
-
-
             }
         }
     }

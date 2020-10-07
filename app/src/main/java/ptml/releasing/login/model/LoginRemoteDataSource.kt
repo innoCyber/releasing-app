@@ -2,6 +2,7 @@ package ptml.releasing.login.model
 
 import ptml.releasing.app.data.remote.RestClient
 import ptml.releasing.app.data.remote.request.LoginRequest
+import ptml.releasing.app.data.remote.request.UpdateAppVersionRequest
 import ptml.releasing.app.data.remote.result._Result
 import javax.inject.Inject
 
@@ -19,4 +20,12 @@ class LoginRemoteDataSource @Inject constructor(private val restClient: RestClie
             loginRequest.imei
         )
     }
+
+    override suspend fun updateAppVersion(updateAppVersionRequest: UpdateAppVersionRequest): _Result<Unit> {
+        return restClient.getRemoteCaller().updateAppVersion(
+            updateAppVersionRequest
+        )
+    }
+
+
 }

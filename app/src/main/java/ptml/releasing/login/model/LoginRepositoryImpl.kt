@@ -1,10 +1,12 @@
 package ptml.releasing.login.model
 
 import kotlinx.coroutines.withContext
+import ptml.releasing.BuildConfig
 import ptml.releasing.app.data.domain.model.ApiResult
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.data.remote.mapper.ApiResultMapper
+import ptml.releasing.app.data.remote.request.UpdateAppVersionRequest
 import ptml.releasing.app.data.remote.result._Result
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import javax.inject.Inject
@@ -30,6 +32,16 @@ class LoginRepositoryImpl @Inject constructor(
                 local.setLoginData(LoginEntity(badgeId, password, imei))
             }
             apiMapper.mapFromModel(_Result(true, "", null))
+        }
+    }
+
+    override suspend fun updateAppVersion(): ApiResult {
+        val imei = local.getImei()
+        return withContext(dispatchers.network){
+            apiMapper.mapFromModel(remote.updateAppVersion(UpdateAppVersionRequest(
+                "app releasing ".plus(BuildConfig.VERSION_NAME),
+                imei
+            )))
         }
     }
 

@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.state.DataState
-import ptml.releasing.app.data.domain.usecase.LoginUseCase
-import ptml.releasing.app.data.domain.usecase.SetLoggedInUseCase
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.mapFunc
@@ -24,24 +21,13 @@ import javax.inject.Inject
  * Created by kryptkode on 1/21/2020.
  */
 class LoginViewModel @Inject constructor(
-    private val setLoggedInUseCase: SetLoggedInUseCase,
-    private val loginUseCase: LoginUseCase,
     private val context: Context,
     updateChecker: RemoteConfigUpdateChecker,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-
-    companion object {
-        const val TIME_WORKER = "time_worker"
-    }
-
-    var workManager = WorkManager.getInstance(context)
-
-
     val badgeId = MutableLiveData<String>()
-
 
     private val badgeIdError = MutableLiveData<String>()
     fun getBadgeIdErrorState(): LiveData<String> = badgeIdError
@@ -93,14 +79,12 @@ class LoginViewModel @Inject constructor(
             loginDataState.postValue(DataState.Loading)
             try {
 
-                val response = loginUseCase.execute(
-                    LoginUseCase.Params(
-                        badgeId ?: "",
-                        password ?: "",
-                        imei ?: ""
-                    )
+                val response = loginRepository.authenticate(
+                    badgeId ?: "",
+                    password ?: "",
+                    imei ?: ""
                 )
-                if (response?.success == true) {
+                if (response.success == true) {
                     scheduleCheckLoginWorker()
                     loginUser()
                 } else {
@@ -120,7 +104,7 @@ class LoginViewModel @Inject constructor(
     private fun loginUser() {
         viewModelScope.launch {
             try {
-                setLoggedInUseCase.execute(SetLoggedInUseCase.Params(true))
+                loginRepository.setLoggedIn(true)
                 loginDataState.postValue(DataState.Success(Unit))
                 navigateToNextScreen()
             } catch (e: Exception) {
@@ -162,5 +146,4 @@ class LoginViewModel @Inject constructor(
     private fun scheduleCheckLoginWorker() {
         CheckLoginWorker.scheduleWork(context)
     }
-
 }

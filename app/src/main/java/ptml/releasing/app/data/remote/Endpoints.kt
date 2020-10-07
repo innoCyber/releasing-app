@@ -8,4 +8,5 @@ object Endpoints {
     const val LOGIN = "AndroidAppDriverLogin"
     const val RESET_PASSWORD = "AndroidAppDriverResetPassword"
     const val GET_RECENT_VOYAGES = "setDownloadVoyage"
-}   
+    const val UPDATE_APP_VERSION_INSTALLED = "UpdateAppVersionInstalled"
+}
