@@ -1,5 +1,6 @@
 package ptml.releasing.login.model
 
+import ptml.releasing.app.data.remote.AuthRestClient
 import ptml.releasing.app.data.remote.RestClient
 import ptml.releasing.app.data.remote.request.LoginRequest
 import ptml.releasing.app.data.remote.request.UpdateAppVersionRequest
@@ -10,11 +11,14 @@ import javax.inject.Inject
  * Created by kryptkode on 10/23/2019.
  */
 
-class LoginRemoteDataSource @Inject constructor(private val restClient: RestClient) :
+class LoginRemoteDataSource @Inject constructor(
+    private val authRestClient: AuthRestClient,
+    private val restClient: RestClient
+) :
     LoginDataSource.Remote {
 
     override suspend fun authenticate(loginRequest: LoginRequest): _Result<Unit> {
-        return restClient.getRemoteCaller().login(
+        return authRestClient.getRemoteCaller().login(
             loginRequest.badgeId,
             loginRequest.password,
             loginRequest.imei
@@ -23,7 +27,7 @@ class LoginRemoteDataSource @Inject constructor(private val restClient: RestClie
 
     override suspend fun updateAppVersion(updateAppVersionRequest: UpdateAppVersionRequest): _Result<Unit> {
         return restClient.getRemoteCaller().updateAppVersion(
-            updateAppVersionRequest
+            listOf(updateAppVersionRequest)
         )
     }
 

@@ -33,6 +33,6 @@ interface Api {
 
 
     @POST(Endpoints.UPDATE_APP_VERSION_INSTALLED)
-    suspend fun updateAppVersion(@Body request: UpdateAppVersionRequest): _Result<Unit>
+    suspend fun updateAppVersion(@Body request: List<UpdateAppVersionRequest>): _Result<Unit>
 
 }
