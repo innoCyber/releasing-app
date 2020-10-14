@@ -41,6 +41,8 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
         binding.fab.setOnClickListener {
             viewModel.downloadVoyages()
         }
+
+        viewModel.fetchVoyages()
     }
 
     private fun initObservers() {
