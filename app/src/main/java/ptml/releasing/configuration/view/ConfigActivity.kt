@@ -162,6 +162,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         super.onImeiGotten(imei)
         //begin the request
         getConfigWithPermissionCheck()
+        viewModel.refreshConfiguration(imei ?: "")
     }
 
     private fun showEnterImeiDialog() {
