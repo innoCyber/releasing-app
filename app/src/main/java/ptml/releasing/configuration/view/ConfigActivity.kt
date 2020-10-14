@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -67,6 +68,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
         viewModel.getOperationStepList().observe(this, Observer {
             setUpOperationStep(it)
+            viewModel.getSavedConfig()
         })
         viewModel.getTerminalList().observe(this, Observer {
 //            setUpTerminal(it)
@@ -88,12 +90,16 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 }
 
                 if (it.status == Status.FAILED) {
+                    binding.includeError.imgClose.isVisible = true
+                    binding.includeError.imgClose.setOnClickListener {
+                        hideLoading(binding.includeError.root)
+                    }
                     val error = errorHandler.getErrorMessage(it.throwable)
                     binding.includeError.btnReloadLayout.setOnClickListener {
                         if (errorHandler.isImeiError(error)) {
                             showEnterImeiDialog()
                         } else {
-                            getConfigWithPermissionCheck()
+                            refreshConfigWithPermissionCheck()
                         }
                     }
                     binding.includeError.btnReload.text =
@@ -125,7 +131,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             }
         })
 
-        viewModel.getConfiguration().observe(this, Observer {
+        viewModel.configuration.observe(this, Observer {
             val terminal = it.terminal
             val operationStep = it.operationStep
             val cargoType = it.cargoType
@@ -133,10 +139,11 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
             binding.top.cameraSwitch.isChecked = cameraEnabled
             binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?: 0)
+            val position = operationStepAdapter?.getPosition(
+                operationStep
+            ) ?: 0
             binding.top.selectOperationSpinner.setSelection(
-                operationStepAdapter?.getPosition(
-                    operationStep
-                ) ?: 0
+                position
             )
             binding.top.selectTerminalSpinner.setSelection(
                 terminalAdapter?.getPosition(terminal) ?: 0
@@ -160,9 +167,8 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     override fun onImeiGotten(imei: String?) {
         super.onImeiGotten(imei)
-        //begin the request
-        getConfigWithPermissionCheck()
         viewModel.refreshConfiguration(imei ?: "")
+        viewModel.getConfig(imei ?: "")
     }
 
     private fun showEnterImeiDialog() {
@@ -184,7 +190,6 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         dialog.isCancelable = false
         dialog.show(supportFragmentManager, dialog.javaClass.name)
     }
-
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getConfig() {
