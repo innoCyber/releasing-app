@@ -34,13 +34,12 @@ class ConfigViewModel @Inject constructor(
     fun getTerminalList(): LiveData<List<ReleasingTerminal>> = terminalList
 
     val networkState = MutableLiveData<Event<NetworkState>>()
-    fun getNetworkState(): LiveData<Event<NetworkState>>  = networkState
+    fun getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
     val savedSuccess = MutableLiveData<Event<Boolean>>()
     fun getSavedSuccess(): LiveData<Event<Boolean>> = savedSuccess
 
-    val configuration = MutableLiveData<Configuration>()
-    fun getConfiguration(): LiveData<Configuration> = configuration
+    val configuration  = _configuration
 
     fun getConfig(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
@@ -57,14 +56,9 @@ class ConfigViewModel @Inject constructor(
                 withContext(dispatchers.main) {
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
-                    Timber.d("Checking if there is a saved configuration")
-                    val configured = repository.isConfiguredAsync()
-                    if (configured) {
-                        Timber.d("Configuration was saved before, getting the configuration")
-                        val config = repository.getSavedConfigAsync()
-                        Timber.d("Configuration gotten: %s", config)
-                        configuration.postValue(config)
-                    }
+                    val config = repository.getSavedConfigAsync()
+                    Timber.d("Configuration gotten: %s", config)
+                    _configuration.postValue(config)
                     Timber.e("Loading done: %s", response)
                     networkState.postValue(
                         Event(
@@ -158,10 +152,6 @@ class ConfigViewModel @Inject constructor(
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
                     Timber.d("Checking if there is a saved configuration")
-                    withContext(dispatchers.db) {
-                        Timber.d("Refreshing removes the previous configuration")
-                        repository.setConfigured(false)
-                    }
                     Timber.e("Loading done: %s", response)
                     networkState.postValue(
                         Event(
@@ -171,7 +161,6 @@ class ConfigViewModel @Inject constructor(
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                System.out.println("In here: ${e.localizedMessage}")
                 networkState.postValue(
                     Event(
                         NetworkState.error(e)
