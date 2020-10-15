@@ -11,6 +11,7 @@ import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.ImeiRepository
+import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
@@ -68,6 +69,9 @@ open class SearchViewModel @Inject constructor(
 
     private val mutableImei = MutableLiveData<Event<String?>>()
     val imeiNumber = mutableImei.asLiveData()
+
+    private val mutableUpdateAppVersion = MutableLiveData<DataState<Unit>>()
+    val  updateAppVersion  = mutableUpdateAppVersion.asLiveData()
 
     init {
         scheduleCheckLoginWorker()
@@ -208,6 +212,23 @@ open class SearchViewModel @Inject constructor(
     fun updateImei(imei: String) {
         viewModelScope.launch {
             imeiRepository.setIMEI(imei)
+        }
+    }
+
+    fun updateAppVersion() {
+        viewModelScope.launch {
+            mutableUpdateAppVersion.postValue(DataState.Loading)
+            try {
+                val response = loginRepository.updateAppVersion()
+                if (response.success == true) {
+                    mutableUpdateAppVersion.postValue(DataState.Success(Unit))
+                } else {
+                    mutableUpdateAppVersion.postValue(DataState.Error(response.message))
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Error while updating app version")
+                mutableUpdateAppVersion.postValue(DataState.Error(e.localizedMessage))
+            }
         }
     }
 

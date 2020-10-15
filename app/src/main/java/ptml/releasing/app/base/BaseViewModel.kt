@@ -9,8 +9,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
-import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.eventbus.EventBus
@@ -35,7 +35,7 @@ open class BaseViewModel @Inject constructor(
     var imei: String? = null
 
     @Inject
-    lateinit var getLoginUseCase: GetLoginUseCase
+    lateinit var loginRepository: LoginRepository
 
     @Inject
     lateinit var logOutUseCase: LogOutUseCase
@@ -164,7 +164,6 @@ open class BaseViewModel @Inject constructor(
     }
 
 
-
     fun logOutOperator() {
         viewModelScope.launch {
             logOutUseCase.execute()
@@ -174,7 +173,7 @@ open class BaseViewModel @Inject constructor(
 
     fun getOperatorName() {
         viewModelScope.launch {
-            val loginInfo = getLoginUseCase.execute()
+            val loginInfo = loginRepository.getLoginData()
             _operatorName.postValue(loginInfo.badgeId)
         }
     }
@@ -322,7 +321,7 @@ open class BaseViewModel @Inject constructor(
         return serverUrl == "https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/"
     }
 
-    fun reloadMenu(){
+    fun reloadMenu() {
         mutableReloadOptionsMenu.postValue(Unit)
     }
 }

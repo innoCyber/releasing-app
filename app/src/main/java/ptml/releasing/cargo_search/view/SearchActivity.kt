@@ -204,6 +204,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             binding.navView.layoutParams = params
         }
 
+        updateAppVersion()
+    }
+
+    private fun updateAppVersion() {
+        viewModel.updateAppVersion()
     }
 
     private fun showEnterImeiDialog() {

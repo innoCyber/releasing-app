@@ -26,6 +26,7 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
             notifyUser(binding.root, getString(R.string.quick_remark_click_message, item?.name))
         }
     }
+
     private val adapter = QuickRemarkAdapter(listener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,15 +34,20 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
         showUpEnabled(true)
         binding.recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this)
-        val decorator = DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
+        val decorator =
+            DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.addItemDecoration(decorator)
 
 
-        viewModel.getNetworkState().observe(this, Observer {event->
+        viewModel.getNetworkState().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (NetworkState.LOADING == it) {
-                    showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.downloading_quick_remarks)
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.downloading_quick_remarks
+                    )
                     Timber.e("Loading...")
                 } else {
                     hideLoading(binding.includeProgress.root)
@@ -65,8 +71,6 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
             adapter.notifyDataSetChanged()
         })
 
-
-
         binding.includeError.btnReloadLayout.setOnClickListener {
             downloadQuickRemarksWithPermissionCheck()
         }
@@ -74,8 +78,6 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
         binding.fab.setOnClickListener {
             downloadQuickRemarksWithPermissionCheck()
         }
-
-        getQuickRemarksWithPermissionCheck()
     }
 
 
@@ -84,14 +86,14 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
         viewModel.downloadQuickRemarksFromServer(imei ?: "")
     }
 
-    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-    fun getQuickRemarks() {
+    override fun onImeiGotten(imei: String?) {
+        super.onImeiGotten(imei)
         viewModel.getQuickRemarks(imei ?: "")
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
             buttonText = getString(android.R.string.ok),
@@ -114,11 +116,14 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
-
 
 
     override fun getLayoutResourceId() = R.layout.activity_quick_remark

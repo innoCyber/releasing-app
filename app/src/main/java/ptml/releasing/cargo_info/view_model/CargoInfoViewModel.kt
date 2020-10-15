@@ -181,7 +181,7 @@ class CargoInfoViewModel @Inject constructor(
         CoroutineScope(dispatchers.network).launch {
             try {
 
-                val operator = getLoginUseCase.execute().badgeId
+                val operator = loginRepository.getLoginData().badgeId
 
                 formSubmission.submit()
                 val configuration = repository.getSavedConfigAsync()

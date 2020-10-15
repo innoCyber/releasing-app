@@ -28,11 +28,8 @@ class VoyageViewModel @Inject constructor(
     private val networkState = MutableLiveData<Event<NetworkState>>()
     fun getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
-    init {
-        fetchVoyages()
-    }
 
-    private fun fetchVoyages() {
+    fun fetchVoyages() {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
 
         networkState.postValue(

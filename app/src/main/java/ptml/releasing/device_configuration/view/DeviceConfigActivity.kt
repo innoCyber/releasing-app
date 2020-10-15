@@ -1,7 +1,9 @@
 package ptml.releasing.device_configuration.view
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import ptml.releasing.BR
 import ptml.releasing.R
@@ -74,6 +76,8 @@ class DeviceConfigActivity : BaseActivity<DeviceConfigViewModel, ActivityDeviceC
         binding.includeError.btnReload.setOnClickListener {
             verifyDevice(imei)
         }
+
+        binding.includeDeviceConfigError.btnEnterImei.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 
         binding.includeDeviceConfigError.btnEnterImei.setOnClickListener {
             viewModel.openEnterImei()
