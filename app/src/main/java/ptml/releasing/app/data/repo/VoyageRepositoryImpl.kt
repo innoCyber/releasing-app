@@ -5,6 +5,7 @@ import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.data.remote.AuthRestClient
 import ptml.releasing.app.data.remote.mapper.VoyageMapper
+import timber.log.Timber
 
 /**
  * Created by kryptkode on 4/8/2020.

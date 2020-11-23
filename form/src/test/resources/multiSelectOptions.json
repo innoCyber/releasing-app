@@ -1,0 +1,31 @@
+[
+  {
+    "id": 11,
+    "name": "Everything ",
+    "is_selected": false
+  },
+  {
+    "id": 22,
+    "name": "Some issues"
+  },
+  {
+    "id": 32,
+    "name": "Resoltion in progress"
+  },
+  {
+    "id": 42,
+    "name": "Contact admin"
+  },
+  {
+    "id": 54,
+    "name": "Fraticinidas"
+  },
+  {
+    "id": 65,
+    "name": "Pulchritudines"
+  },
+  {
+    "id": 72,
+    "name": "Ignigenas"
+  }
+]

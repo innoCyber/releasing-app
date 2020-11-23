@@ -38,7 +38,8 @@ android {
         release {
             minifyEnabled true
             zipAlignEnabled true
-            debuggable false
+            debuggable true
+            signingConfig signingConfigs.Releasing
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

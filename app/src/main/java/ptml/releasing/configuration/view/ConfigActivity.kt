@@ -68,7 +68,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
         viewModel.getOperationStepList().observe(this, Observer {
             setUpOperationStep(it)
-            viewModel.getSavedConfig()
+          //  viewModel.getSavedConfig()
         })
         viewModel.getTerminalList().observe(this, Observer {
 //            setUpTerminal(it)

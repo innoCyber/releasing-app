@@ -98,23 +98,20 @@ abstract class BaseActivity<V, D> :
             invalidateOptionsMenu()
             if (it.connected) {
                 handleNetworkConnect()
-            } else {
-                handleNetworkDisconnected()
             }
         })
         lifecycle.addObserver(networkListener)
 
-        viewModel = ViewModelProviders.of(this, viewModeFactory)
-            .get(getViewModelClass())
+        viewModel = ViewModelProviders.of(this, viewModeFactory).get(getViewModelClass())
 
         viewModel.checkToResetAppUpdateValues()
 
         initBeforeView()
 
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        requestedOrientation = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         } else {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         initBinding()
@@ -130,28 +127,14 @@ abstract class BaseActivity<V, D> :
 
         viewModel.operatorName.observe(this, Observer {
             when (this) {
-                /*  is AdminConfigActivity -> {
-                     hideOperator()
-                  }*/
-
-                is SearchActivity -> {
-                    initOperator(it)
-                }
-
-
-                is CargoInfoActivity -> {
-                    initOperator(it)
-                }
-
-                else -> {
-                    hideOperator()
-                }
+                is SearchActivity,
+                is CargoInfoActivity -> it?.let { initOperator(it) }
+                else -> hideOperator()
             }
 
         })
 
         viewModel.logOutDialog.observe(this, Observer {
-
             showLogOutConfirmDialog()
         })
 
@@ -167,7 +150,6 @@ abstract class BaseActivity<V, D> :
 
 
         viewModel.updateLoadingState.observe(this, Observer {
-            Timber.e("$it")
             if (it != NetworkState.LOADING) {
                 viewModel.applyUpdates()
             }
@@ -339,13 +321,11 @@ abstract class BaseActivity<V, D> :
     }
 
 
-    protected fun handleNetworkConnect() {
+    private fun handleNetworkConnect() {
         viewModel.checkForUpdates()
     }
 
-    protected fun handleNetworkDisconnected() {
-        //no implementation
-    }
+
 
 
     private fun showLogOutConfirmDialog() {
@@ -698,11 +678,10 @@ abstract class BaseActivity<V, D> :
 
     protected abstract fun getViewModelClass(): Class<V>
 
-    protected fun initOperator(operatorName: String) {
+    private fun initOperator(operatorName: String) {
         Timber.d("Passed Operator name is %s", operatorName)
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.VISIBLE
-        val operatorIndicator = findViewById<ImageView>(R.id.img_indicator)
-        operatorIndicator.setImageResource(R.drawable.operator_circle)
+        findViewById<ImageView>(R.id.img_indicator).setImageResource(R.drawable.operator_circle)
         val operatorNameTextView = findViewById<TextView>(R.id.tv_operator_name)
         operatorNameTextView?.text =
             if (TextUtils.isEmpty(operatorName)) getString(R.string.no_operator_logged_in) else operatorName
@@ -714,7 +693,7 @@ abstract class BaseActivity<V, D> :
 
     }
 
-    protected fun hideOperator() {
+    private fun hideOperator() {
         findViewById<View>(R.id.include_operator_badge)?.visibility = View.GONE
     }
 

@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
@@ -49,7 +46,7 @@ open class BaseViewModel @Inject constructor(
     @Inject
     lateinit var eventBus: EventBus
 
-    protected val goToLogin = MutableLiveData<Event<Unit>>()
+    private val goToLogin = MutableLiveData<Event<Unit>>()
     fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
 
     val updateLoadingState = updateChecker.updateCheckState
@@ -76,11 +73,11 @@ open class BaseViewModel @Inject constructor(
 
     var compositeJob: Job = Job()
 
-    protected val _openBarCodeScanner = MutableLiveData<Unit>()
-    protected val _searchScanned = MutableLiveData<String>()
+    private val _openBarCodeScanner = MutableLiveData<Unit>()
+    private val _searchScanned = MutableLiveData<String>()
 
-    protected val _isConfigured = MutableLiveData<Boolean>()
-    protected val _operatorName = MutableLiveData<String>()
+    private val _isConfigured = MutableLiveData<Boolean>()
+    private val _operatorName = MutableLiveData<String?>()
 
     val isConfigured: LiveData<Boolean> = _isConfigured
 
@@ -98,7 +95,7 @@ open class BaseViewModel @Inject constructor(
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val searchScanned: LiveData<String> = _searchScanned
 
-    val operatorName: LiveData<String> = _operatorName
+    val operatorName: LiveData<String?> = _operatorName
     val savedConfiguration: LiveData<Configuration> = _configuration
 
 
