@@ -43,8 +43,6 @@
                 android:layout_marginTop="@dimen/login_first_text_input_margin_top"
                 android:hint="@string/login_badge_id_hint"
                 app:errorText="@{viewModel.badgeIdErrorState}"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
                 app:layout_constraintTop_toBottomOf="@id/img_app_icon">
 
                 <com.google.android.material.textfield.TextInputEditText

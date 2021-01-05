@@ -131,15 +131,15 @@ class LoginViewModel @Inject constructor(
         password: String?
     ): Boolean {
 
-        if (badgeId.isNullOrEmpty()) {
-            if (badgeId.isNullOrEmpty()) {
+        when {
+            badgeId.isNullOrEmpty() -> {
                 badgeIdError.postValue(context.getString(R.string.badge_id_required_message))
+                return false
             }
-
-            if (password.isNullOrEmpty()) {
+            password.isNullOrEmpty() -> {
                 passwordError.postValue(context.getString(R.string.password_required_message))
+                return false
             }
-            return false
         }
 
         return true
