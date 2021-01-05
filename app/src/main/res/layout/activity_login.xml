@@ -18,22 +18,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/constraint_default_margin_8dp">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_l"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05" />
-
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_r"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
 
             <ImageView
                 android:id="@+id/img_app_icon"
@@ -50,11 +37,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/badge_id_input"
                 style="@style/Widget.Driver.TextInputLayout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginHorizontal="@dimen/login_text_input_margin"
                 android:layout_marginTop="@dimen/login_first_text_input_margin_top"
-                android:layout_marginEnd="@dimen/login_text_input_margin"
                 android:hint="@string/login_badge_id_hint"
                 app:errorText="@{viewModel.badgeIdErrorState}"
                 app:layout_constraintEnd_toEndOf="@id/guideline_r"
@@ -75,16 +61,12 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password_input"
                 style="@style/Widget.Driver.TextInputLayout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginHorizontal="@dimen/login_text_input_margin"
                 android:layout_marginTop="@dimen/login_text_input_margin"
-                android:layout_marginEnd="@dimen/login_text_input_margin"
                 android:hint="@string/login_password_hint"
-                android:visibility="gone"
                 app:errorText="@{viewModel.passwordErrorState}"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
                 app:layout_constraintTop_toBottomOf="@id/badge_id_input">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -98,39 +80,35 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <Button
-                android:id="@+id/btn_reset"
-                style="@style/Widget.Driver.Button.Outlined"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_btn_margin_top"
-                android:layout_marginEnd="@dimen/login_text_input_margin"
-                android:enabled="@{!viewModel.loading}"
-                android:onClick="@{()->viewModel.handleReset()}"
-                android:text="@string/reset_password"
-                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
-                app:layout_constraintEnd_toStartOf="@id/btn_login"
-                app:layout_constraintStart_toStartOf="@id/guideline_l"
-                app:layout_constraintTop_toBottomOf="@id/password_input" />
-
-
             <Button
                 android:id="@+id/btn_login"
                 style="@style/Widget.Driver.Button"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/login_text_input_margin"
+                android:layout_marginHorizontal="@dimen/login_text_input_margin"
                 android:layout_marginTop="@dimen/login_btn_margin_top"
-                android:layout_marginEnd="@dimen/login_text_input_margin"
                 android:enabled="@{!viewModel.loading}"
                 android:onClick="@{()-> viewModel.handleLogin()}"
                 android:text="@string/login"
                 app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
-                app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                app:layout_constraintStart_toEndOf="@id/btn_reset"
                 app:layout_constraintTop_toBottomOf="@id/password_input" />
+
+
+
+            <Button
+                android:id="@+id/btn_reset"
+                style="@style/Widget.Driver.Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/login_text_input_margin"
+                android:layout_marginTop="@dimen/login_btn_margin_top"
+                android:enabled="@{!viewModel.loading}"
+                android:onClick="@{()->viewModel.handleReset()}"
+                android:text="@string/reset_password"
+                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
             <include
                 android:id="@+id/progress_bar"

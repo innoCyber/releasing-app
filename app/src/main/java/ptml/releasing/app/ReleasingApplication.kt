@@ -50,7 +50,7 @@ open class ReleasingApplication : DaggerApplication() {
     }
 
 
-    protected fun initWorkerFactory() {
+    private fun initWorkerFactory() {
         WorkManager.initialize(
             this,
             Configuration.Builder().setWorkerFactory(appComponent.workerFactory()).build()

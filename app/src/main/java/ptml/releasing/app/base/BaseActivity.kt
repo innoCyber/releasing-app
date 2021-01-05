@@ -166,7 +166,6 @@ abstract class BaseActivity<V, D> :
             Timber.d("Starting intent service to update quick remarks")
             startUpdateQuickRemarksServiceWithPermissionCheck()
         })
-
         viewModel.updateDamagesLoadingState.observe(this, Observer {
             if (it == NetworkState.LOADING) {
                 progressDialog?.setTitle(getString(R.string.update_damages_title))
