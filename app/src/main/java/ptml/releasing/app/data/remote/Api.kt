@@ -18,13 +18,12 @@ interface Api {
 
     @GET(Endpoints.LOGIN)
     suspend fun login(
-        @Query("badgeid") badgeId: String,
-        @Query("password") password: String,
-        @Query("imei") imei: String?
+        @Query("badge_id") badgeId: String,
+        @Query("password") password: String
     ): _Result<Unit>
 
     @POST(Endpoints.RESET_PASSWORD)
-    suspend fun resetPassword(@Body request: ResetPasswordRequest): _Result<Unit>
+    suspend fun resetPassword(@Body request: List<ResetPasswordRequest>): _Result<Unit>
 
     @GET(Endpoints.GET_RECENT_VOYAGES)
     suspend fun getRecentVoyages(

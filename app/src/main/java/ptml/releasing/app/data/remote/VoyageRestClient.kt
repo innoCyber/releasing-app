@@ -18,7 +18,7 @@ import javax.inject.Named
  * Created by kryptkode on 10/23/2019.
  */
 
-class AuthRestClient @Inject constructor(
+class VoyageRestClient @Inject constructor(
     context: Context,
     gson: Gson,
     @Named(Constants.DEBUG)
@@ -51,7 +51,7 @@ class AuthRestClient @Inject constructor(
 
         val client = httpClient.build()
         val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_AUTH_URL)
+            .baseUrl(BuildConfig.BASE_VOYAGE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()

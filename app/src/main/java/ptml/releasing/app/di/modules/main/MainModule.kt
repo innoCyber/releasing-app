@@ -8,7 +8,7 @@ import ptml.releasing.app.data.ReleasingRepository
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.local.LocalDataManager
-import ptml.releasing.app.data.remote.AuthRestClient
+import ptml.releasing.app.data.remote.VoyageRestClient
 import ptml.releasing.app.data.remote.mapper.VoyageMapper
 import ptml.releasing.app.data.repo.VoyageRepositoryImpl
 import ptml.releasing.app.di.scopes.ReleasingAppScope
@@ -67,10 +67,10 @@ class MainModule {
     @Provides
     fun provideVoyageRepository(
         localDataManager: LocalDataManager,
-        authRestClient: AuthRestClient,
+        voyageRestClient: VoyageRestClient,
         voyageMapper: VoyageMapper
     ): VoyageRepository {
-        return VoyageRepositoryImpl(localDataManager, authRestClient, voyageMapper)
+        return VoyageRepositoryImpl(localDataManager, voyageRestClient, voyageMapper)
     }
 
 

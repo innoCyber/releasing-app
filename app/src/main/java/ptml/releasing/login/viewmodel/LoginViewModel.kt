@@ -66,7 +66,6 @@ class LoginViewModel @Inject constructor(
         val password = password.value
 
         if (!meetsAllConditions(badgeId, password)) {
-
             return
         }
         authenticate(badgeId, password)

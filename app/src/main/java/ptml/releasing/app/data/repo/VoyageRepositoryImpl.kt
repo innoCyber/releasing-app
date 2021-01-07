@@ -3,16 +3,15 @@ package ptml.releasing.app.data.repo
 import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.local.LocalDataManager
-import ptml.releasing.app.data.remote.AuthRestClient
+import ptml.releasing.app.data.remote.VoyageRestClient
 import ptml.releasing.app.data.remote.mapper.VoyageMapper
-import timber.log.Timber
 
 /**
  * Created by kryptkode on 4/8/2020.
  */
 class VoyageRepositoryImpl(
     private val local: LocalDataManager,
-    private val remote: AuthRestClient,
+    private val remote: VoyageRestClient,
     private val voyageMapper: VoyageMapper
 ) : VoyageRepository {
 
