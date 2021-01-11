@@ -22,7 +22,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 37
-        versionName "1.4.6"
+        versionName "1.5.0"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
@@ -83,7 +83,7 @@ android {
             variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
         } else if (name.contains("production")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
-            variant.buildConfigField("String", "BASE_AUTH_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
+            variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
             variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
         }
     }

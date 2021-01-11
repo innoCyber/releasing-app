@@ -64,6 +64,7 @@
                 android:layout_marginHorizontal="@dimen/login_text_input_margin"
                 android:layout_marginTop="@dimen/login_text_input_margin"
                 android:hint="@string/login_password_hint"
+                app:passwordToggleEnabled="true"
                 app:errorText="@{viewModel.passwordErrorState}"
                 app:layout_constraintTop_toBottomOf="@id/badge_id_input">
 
