@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryTint">#46FFFFFF</color>
     <color name="colorPrimaryDark">#B6B3B3</color>
     <color name="colorAccent">#008751</color>
     <color name="colorAccentAlpha">#43008751</color>
@@ -31,4 +32,5 @@
     <color name="colorOnSearchBg">#FFFFFF</color>
     <color name="colorSearchBg">#2A2A2A</color>
     <color name="progress_overlay">#92000000</color>
+    <color name="gradient_grey_start">#CC000000</color>
 </resources>

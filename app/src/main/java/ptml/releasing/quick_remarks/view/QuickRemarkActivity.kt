@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityQuickRemarkBinding
@@ -27,6 +26,7 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
             notifyUser(binding.root, getString(R.string.quick_remark_click_message, item?.name))
         }
     }
+
     private val adapter = QuickRemarkAdapter(listener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +34,20 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
         showUpEnabled(true)
         binding.recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this)
-        val decorator = DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
+        val decorator =
+            DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.addItemDecoration(decorator)
 
 
-        viewModel.getNetworkState().observe(this, Observer {event->
+        viewModel.getNetworkState().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (NetworkState.LOADING == it) {
-                    showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.downloading_quick_remarks)
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.downloading_quick_remarks
+                    )
                     Timber.e("Loading...")
                 } else {
                     hideLoading(binding.includeProgress.root)
@@ -52,7 +57,7 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
                 binding.fab.isEnabled = it != NetworkState.LOADING
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)
@@ -66,8 +71,6 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
             adapter.notifyDataSetChanged()
         })
 
-
-
         binding.includeError.btnReloadLayout.setOnClickListener {
             downloadQuickRemarksWithPermissionCheck()
         }
@@ -75,24 +78,22 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
         binding.fab.setOnClickListener {
             downloadQuickRemarksWithPermissionCheck()
         }
-
-        getQuickRemarksWithPermissionCheck()
     }
 
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun downloadQuickRemarks() {
-        viewModel.downloadQuickRemarksFromServer((application as ReleasingApplication).provideImei())
+        viewModel.downloadQuickRemarksFromServer(imei ?: "")
     }
 
-    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-    fun getQuickRemarks() {
-        viewModel.getQuickRemarks((application as ReleasingApplication).provideImei())
+    override fun onImeiGotten(imei: String?) {
+        super.onImeiGotten(imei)
+        viewModel.getQuickRemarks(imei ?: "")
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
             buttonText = getString(android.R.string.ok),
@@ -115,11 +116,14 @@ class QuickRemarkActivity : BaseActivity<QuickRemarkViewModel, ActivityQuickRema
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
-
 
 
     override fun getLayoutResourceId() = R.layout.activity_quick_remark

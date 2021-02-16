@@ -4,17 +4,18 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.state.DataState
-import ptml.releasing.app.data.domain.usecase.LoginUseCase
-import ptml.releasing.app.data.domain.usecase.SetLoggedInUseCase
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
-import ptml.releasing.app.utils.extensions.mapFunc
+import ptml.releasing.app.utils.livedata.Event
+import ptml.releasing.app.utils.livedata.mapFunc
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,17 +23,13 @@ import javax.inject.Inject
  * Created by kryptkode on 1/21/2020.
  */
 class LoginViewModel @Inject constructor(
-    private val setLoggedInUseCase: SetLoggedInUseCase,
-    private val loginUseCase: LoginUseCase,
     private val context: Context,
     updateChecker: RemoteConfigUpdateChecker,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-
     val badgeId = MutableLiveData<String>()
-
 
     private val badgeIdError = MutableLiveData<String>()
     fun getBadgeIdErrorState(): LiveData<String> = badgeIdError
@@ -71,9 +68,7 @@ class LoginViewModel @Inject constructor(
         if (!meetsAllConditions(badgeId, password)) {
             return
         }
-
         authenticate(badgeId, password)
-
     }
 
     @Suppress("NAME_SHADOWING")
@@ -85,14 +80,13 @@ class LoginViewModel @Inject constructor(
             loginDataState.postValue(DataState.Loading)
             try {
 
-                val response = loginUseCase.execute(
-                    LoginUseCase.Params(
-                        badgeId ?: "",
-                        password ?: "",
-                        imei ?: ""
-                    )
+                val response = loginRepository.authenticate(
+                    badgeId ?: "",
+                    password ?: "",
+                    imei ?: ""
                 )
-                if (response?.success == true) {
+                if (response.success == true) {
+                    scheduleCheckLoginWorker()
                     loginUser()
                 } else {
                     loginDataState.postValue(DataState.Error(response?.message))
@@ -111,7 +105,7 @@ class LoginViewModel @Inject constructor(
     private fun loginUser() {
         viewModelScope.launch {
             try {
-                setLoggedInUseCase.execute(SetLoggedInUseCase.Params(true))
+                loginRepository.setLoggedIn(true)
                 loginDataState.postValue(DataState.Success(Unit))
                 navigateToNextScreen()
             } catch (e: Exception) {
@@ -136,19 +130,21 @@ class LoginViewModel @Inject constructor(
         password: String?
     ): Boolean {
 
-        if (badgeId.isNullOrEmpty()) {
-            if (badgeId.isNullOrEmpty()) {
+        when {
+            badgeId.isNullOrEmpty() -> {
                 badgeIdError.postValue(context.getString(R.string.badge_id_required_message))
+                return false
             }
-
-            if (password.isNullOrEmpty()) {
+            password.isNullOrEmpty() -> {
                 passwordError.postValue(context.getString(R.string.password_required_message))
+                return false
             }
-            return false
         }
 
         return true
     }
 
-
+    private fun scheduleCheckLoginWorker() {
+        CheckLoginWorker.scheduleWork(context)
+    }
 }

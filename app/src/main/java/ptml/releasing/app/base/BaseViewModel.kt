@@ -4,30 +4,35 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
-import ptml.releasing.app.data.domain.usecase.GetLoginUseCase
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
-import ptml.releasing.app.utils.*
+import ptml.releasing.app.data.local.LocalDataManager
+import ptml.releasing.app.eventbus.EventBus
+import ptml.releasing.app.eventbus.LoginSessionTimeoutEvent
+import ptml.releasing.app.utils.AppCoroutineDispatchers
+import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.SingleLiveEvent
+import ptml.releasing.app.utils.UpdateHelper
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.Configuration
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor(
     protected val updateChecker: RemoteConfigUpdateChecker,
     protected val repository: Repository,
-    protected val appCoroutineDispatchers: AppCoroutineDispatchers
+    protected val dispatchers: AppCoroutineDispatchers
 ) : ViewModel() {
 
     var imei: String? = null
 
     @Inject
-    lateinit var getLoginUseCase: GetLoginUseCase
+    lateinit var loginRepository: LoginRepository
 
     @Inject
     lateinit var logOutUseCase: LogOutUseCase
@@ -35,7 +40,13 @@ open class BaseViewModel @Inject constructor(
     @Inject
     lateinit var voyageRepository: VoyageRepository
 
-    protected val goToLogin = MutableLiveData<Event<Unit>>()
+    @Inject
+    lateinit var localDataManager: LocalDataManager
+
+    @Inject
+    lateinit var eventBus: EventBus
+
+    private val goToLogin = MutableLiveData<Event<Unit>>()
     fun getGoToLogin(): LiveData<Event<Unit>> = goToLogin
 
     val updateLoadingState = updateChecker.updateCheckState
@@ -57,13 +68,16 @@ open class BaseViewModel @Inject constructor(
     private val _startQuickRemarksUpdate = SingleLiveEvent<Unit>()
     val startQuickRemarksUpdate: LiveData<Unit> = _startQuickRemarksUpdate
 
+    private val mutableReloadOptionsMenu = SingleLiveEvent<Unit>()
+    val reloadOptionsMenu: LiveData<Unit> = mutableReloadOptionsMenu
+
     var compositeJob: Job = Job()
 
-    protected val _openBarCodeScanner = MutableLiveData<Unit>()
-    protected val _searchScanned = MutableLiveData<String>()
+    private val _openBarCodeScanner = MutableLiveData<Unit>()
+    private val _searchScanned = MutableLiveData<String>()
 
-    protected val _isConfigured = MutableLiveData<Boolean>()
-    protected val _operatorName = MutableLiveData<String>()
+    private val _isConfigured = MutableLiveData<Boolean>()
+    private val _operatorName = MutableLiveData<String?>()
 
     val isConfigured: LiveData<Boolean> = _isConfigured
 
@@ -81,8 +95,20 @@ open class BaseViewModel @Inject constructor(
     val openBarCodeScanner: LiveData<Unit> = _openBarCodeScanner
     val searchScanned: LiveData<String> = _searchScanned
 
-    val operatorName: LiveData<String> = _operatorName
+    val operatorName: LiveData<String?> = _operatorName
     val savedConfiguration: LiveData<Configuration> = _configuration
+
+
+    fun subscribeToSessionTimeoutEvent() {
+        viewModelScope.launch {
+            Timber.d("Subscribing to login timeout event")
+            val channel = eventBus.asChannel<LoginSessionTimeoutEvent>()
+            for (event in channel) {
+                Timber.d("Gotten login session event, logging out")
+                logOutOperator()
+            }
+        }
+    }
 
 
     override fun onCleared() {
@@ -109,7 +135,7 @@ open class BaseViewModel @Inject constructor(
             handleDeviceConfigured(configured)
             if (configured) {
                 Timber.d("Configuration was saved before, getting the configuration")
-                val config = repository.getSavedConfigAsync()
+                val config = repository.getSelectedConfigAsync()
                 Timber.d("Configuration gotten: %s", config)
                 _configuration.postValue(config)
             }
@@ -144,7 +170,7 @@ open class BaseViewModel @Inject constructor(
 
     fun getOperatorName() {
         viewModelScope.launch {
-            val loginInfo = getLoginUseCase.execute()
+            val loginInfo = loginRepository.getLoginData()
             _operatorName.postValue(loginInfo.badgeId)
         }
     }
@@ -206,7 +232,7 @@ open class BaseViewModel @Inject constructor(
             return
         }
         _updateQuickRemarkLoadingState.postValue(NetworkState.LOADING)
-        CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
+        CoroutineScope(dispatchers.network + compositeJob).launch {
             try {
                 Timber.d("Updating quick remarks...")
                 repository.downloadQuickRemarkAsync(imei)?.await()
@@ -227,7 +253,7 @@ open class BaseViewModel @Inject constructor(
             return
         }
         _updateDamagesLoadingState.postValue(NetworkState.LOADING)
-        CoroutineScope(appCoroutineDispatchers.network + compositeJob).launch {
+        CoroutineScope(dispatchers.network + compositeJob).launch {
             try {
                 Timber.d("Updating damages...")
                 repository.downloadDamagesAsync(imei)?.await()
@@ -251,7 +277,7 @@ open class BaseViewModel @Inject constructor(
         _updateVoyagesLoadingState.postValue(NetworkState.LOADING)
         viewModelScope.launch {
             try {
-                withContext(appCoroutineDispatchers.db) {
+                withContext(dispatchers.db) {
                     Timber.d("Updating voyages...")
 
                     voyageRepository.downloadRecentVoyages()
@@ -278,5 +304,21 @@ open class BaseViewModel @Inject constructor(
 
     fun updatingQuickRemarks(): Boolean {
         return _updateQuickRemarkLoadingState.value == NetworkState.LOADING
+    }
+
+    fun onUserInteraction() {
+        viewModelScope.launch {
+            Timber.d("Updating last user interaction")
+            localDataManager.setLastActiveTime(Calendar.getInstance().timeInMillis)
+        }
+    }
+
+    fun isConnectedToProduction(): Boolean {
+        val serverUrl = repository.getServerUrl()
+        return serverUrl == "https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/"
+    }
+
+    fun reloadMenu() {
+        mutableReloadOptionsMenu.postValue(Unit)
     }
 }

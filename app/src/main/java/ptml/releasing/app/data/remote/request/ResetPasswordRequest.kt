@@ -7,6 +7,5 @@ import com.google.gson.annotations.SerializedName
  */
 data class ResetPasswordRequest(
     @SerializedName("badge_id") val badgeId: String,
-    @SerializedName("password") val password: String,
-    @SerializedName("imei") val imei: String?
+    @SerializedName("password") val password: String
 )

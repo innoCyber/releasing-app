@@ -12,6 +12,7 @@ import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.damages.view_model.DummyViewModel
 import ptml.releasing.damages.view_model.SelectDamageViewModel
+import ptml.releasing.images.ImagesViewModel
 import ptml.releasing.device_configuration.viewmodel.DeviceConfigViewModel
 import ptml.releasing.download_damages.viewmodel.DamageViewModel
 import ptml.releasing.internet_error_logs.view_model.ErrorLogsViewModel
@@ -85,6 +86,15 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(QuickRemarkViewModel::class)
     abstract fun bindQuickRemarkViewModel(viewModel: QuickRemarkViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ImagesViewModel::class)
+    abstract fun bindUploadImagesViewModel(viewModel: ImagesViewModel): ViewModel
+
+
+
 
     @Binds
     @IntoMap

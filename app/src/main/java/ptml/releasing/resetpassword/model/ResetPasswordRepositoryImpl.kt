@@ -19,7 +19,7 @@ class ResetPasswordRepositoryImpl @Inject constructor(
 
     override suspend fun resetPassword(badgeId: String, password: String, imei: String): ApiResult {
         return withContext(dispatchers.network) {
-            val result = remote.resetPassword(ResetPasswordRequest(badgeId, password, imei))
+            val result = remote.resetPassword(ResetPasswordRequest(badgeId, password))
             apiMapper.mapFromModel(result)
         }
     }

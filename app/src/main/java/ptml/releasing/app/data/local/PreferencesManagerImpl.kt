@@ -39,13 +39,12 @@ open class PreferencesManagerImpl @Inject constructor(
     }
 
     override fun getIMEI(): String {
-        return getStringPreference(prefImei)
+        return getStringPreference(prefImei, "")
     }
 
     override fun setIMEI(imei: String) {
         return setStringPreference(prefImei, imei)
     }
-
 
     override fun getServerBaseUrl(): String {
         return getStringPreference(prefBaseServerUrl, BuildConfig.BASE_URL)
@@ -75,5 +74,13 @@ open class PreferencesManagerImpl @Inject constructor(
 
     override fun setRecentVoyages(voyages: List<ReleasingVoyage>) {
         return setStringPreference(prefRecentVoyages, gson.toJson(voyages))
+    }
+
+    override fun getLastActiveTime(): Long {
+        return getLongPreference(prefLastActiveTime)
+    }
+
+    override fun setLastActiveTime(time: Long) {
+        return setLongPreference(prefLastActiveTime, time)
     }
 }

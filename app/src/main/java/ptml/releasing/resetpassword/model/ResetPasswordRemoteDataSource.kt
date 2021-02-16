@@ -13,6 +13,7 @@ class ResetPasswordRemoteDataSource @Inject constructor(
 ) : ResetPasswordDataSource.Remote {
 
     override suspend fun resetPassword(resetPasswordRequest: ResetPasswordRequest): _Result<Unit> {
-        return restClient.getRemoteCaller().resetPassword(resetPasswordRequest)
+        //Api weirdly expect an Array of @ResetPasswordRequest object
+        return restClient.getRemoteCaller().resetPassword(listOf(resetPasswordRequest))
     }
 }

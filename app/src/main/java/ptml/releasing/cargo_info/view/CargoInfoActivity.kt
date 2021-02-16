@@ -13,14 +13,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
+import kotlinx.coroutines.runBlocking
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.bt.BluetoothManager
@@ -32,15 +34,23 @@ import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.*
 import ptml.releasing.form.models.FormConfiguration
+import ptml.releasing.images.upload.UploadImagesActivity
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.printer.view.PrinterSettingsActivity
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @RuntimePermissions
 class CargoInfoActivity :
     BaseActivity<CargoInfoViewModel, ptml.releasing.databinding.ActivityCargoInfoBinding>() {
 
+    @Inject
+    lateinit var loginRepository: LoginRepository
+
+    @Inject
+    lateinit var repository: Repository
 
     companion object {
         const val RESPONSE = "response"
@@ -52,12 +62,16 @@ class CargoInfoActivity :
         intent?.extras?.getBundle(Constants.EXTRAS)?.getParcelable<FindCargoResponse>(RESPONSE)
     }
 
+    var input: String? = null
     private lateinit var bluetoothManager: BluetoothManager
     private var printerBarcodeSettings: Settings? = null
     var formBuilder: FormBuilder? = null
     var damageView: View? = null
     var printerView: View? = null
-    var textToPrint: String? = null
+    var textToPrint: String? = ""
+    var isPrintingDamages = false
+
+    var imagesView: View? = null
 
     private var validatorListener = object : FormValidator.ValidatorListener {
         override fun onError() {
@@ -71,13 +85,16 @@ class CargoInfoActivity :
         override fun onClickFormButton(type: FormType, view: View) {
             when (type) {
                 FormType.PRINTER -> {
+                    isPrintingDamages = false
                     printerView = view
                     textToPrint = findCargoResponse?.barcode ?: ""
                     viewModel.onPrintBarcode()
                 }
 
                 FormType.IMAGES -> {
-
+                    imagesView = view
+                    val data = UploadImagesActivity.createUploadExtra(getCargoCode())
+                    startNewActivity(UploadImagesActivity::class.java, data = data)
                 }
 
                 FormType.PRINTER_DAMAGES -> {
@@ -85,18 +102,43 @@ class CargoInfoActivity :
                         notifyUser("Please select damages before you can print")
                         return
                     }
-                    printerView = view
-                    val damagesDescriptions = DamagesActivity.currentDamages.mapIndexed {index, damage->
-                        var description = "${index +1}. ${damage.name.trim()}"
-                        if(description.length > 25){
-                            val builder = StringBuilder(description)
-                            builder.insert(25, "\r\n")
-                            description = builder.toString()
-                        }
-                        "${description}\r\n"
 
+                    val damagesDescriptions =
+                        DamagesActivity.currentDamages.map { damage ->
+
+                            val damageName = damage.name.trim()
+                            val description = "${damage.damageCount}x $damageName"
+                            description.replace("(.{30})".toRegex(), "$1\n")
+                        }
+
+
+                    var summaryText = ""
+
+                    runBlocking {
+                        summaryText = summaryText.plus("\r\nCargo Number : ${input}\r\n")
+                        summaryText =
+                            summaryText.plus("Status : ${findCargoResponse?.status}\r\n")
+                        summaryText =
+                            summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
+                        summaryText = summaryText.plus(
+                            "Date : ${SimpleDateFormat(
+                                "dd-MMM-yyyy hh:mm",
+                                Locale.getDefault()
+                            ).format(Calendar.getInstance().time)}\r\n"
+                        )
+                        summaryText =
+                            summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
                     }
-                    textToPrint = damagesDescriptions.joinToString()
+
+                    textToPrint =
+                        summaryText.plus("\r\nList of Damages\r\n-----------------\r\n")
+                    textToPrint =
+                        textToPrint.plus(damagesDescriptions.joinToString(separator = "\n"))
+
+
+                    Timber.d("Printer code: %s", textToPrint)
+                    isPrintingDamages = true
+                    printerView = view
                     viewModel.onPrintDamages()
                 }
 
@@ -144,7 +186,7 @@ class CargoInfoActivity :
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
         DamagesActivity.resetValues() //reset the static values
-        val input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
+        input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
         binding.tvNumber.text = input
 
         bluetoothManager = BluetoothManager(this)
@@ -170,6 +212,10 @@ class CargoInfoActivity :
             createForm(it)
         })
 
+        viewModel.getImagesCountState().observe(this, Observer {
+            imagesView?.findViewById<TextView>(R.id.tv_number)?.text = it.toString()
+        })
+
         getFormConfigWithPermissionCheck()
 
         viewModel.printerSettings.observe(this, Observer {
@@ -190,7 +236,7 @@ class CargoInfoActivity :
                 }
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)
@@ -227,6 +273,8 @@ class CargoInfoActivity :
             if (damageView != null) (damageView?.parent as ViewGroup).findViewById<TextView>(R.id.tv_error) else null
         errorView?.visibility =
             if (DamagesActivity.currentDamages.size > 0) View.INVISIBLE else View.VISIBLE
+
+        viewModel.getImagesCount(getCargoCode())
     }
 
     override fun onRequestPermissionsResult(
@@ -240,14 +288,13 @@ class CargoInfoActivity :
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PrinterSettingsActivity.RC_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 printWithPermissionCheck()
             } else {
                 showTurnBlueToothPrompt()
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -263,7 +310,7 @@ class CargoInfoActivity :
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getFormConfig() {
         viewModel.getFormConfig(
-            (application as ReleasingApplication).provideImei(),
+            imei ?: "",
             findCargoResponse
         )
     }
@@ -275,7 +322,7 @@ class CargoInfoActivity :
             formSubmission,
             findCargoResponse,
             intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE),
-            (application as ReleasingApplication).provideImei()
+            imei ?: ""
         )
     }
 
@@ -290,6 +337,9 @@ class CargoInfoActivity :
                 val macAddress = printerBarcodeSettings?.currentPrinter
                 val labelCpclData =
                     printerBarcodeSettings?.labelCpclData?.replace(
+                        Constants.PRINTER_HEIGHT_TO_REPLACE,
+                        getPrinterPageHeight(textToPrint)
+                    )?.replace(
                         Constants.PRINTER_TEXT_TO_REPLACE,
                         textToPrint ?: "No text set"
                     )
@@ -343,6 +393,19 @@ class CargoInfoActivity :
 
     }
 
+    private fun getPrinterPageHeight(textToPrint: String?): String {
+        val height = if (isPrintingDamages) {
+            val lines = textToPrint?.split("\n")?.size ?: 0
+            val height =
+                lines * (Constants.MULTILINE_LINES_PAGE_HEIGHT / Constants.MULTILINE_LINES_PER_PAGE)
+            height.toString()
+        } else {
+            "400"
+        }
+        Timber.d("Printing with height: $height")
+        return height
+    }
+
     private fun showSuccessDialog() {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.form_submit_success_title),
@@ -357,6 +420,7 @@ class CargoInfoActivity :
         dialogFragment.isCancelable = false
         dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
     }
+
 
     private fun tryToPrintIfPermissionsAreGranted() {
         if (bluetoothManager.bluetoothAdapter == null) {
@@ -385,6 +449,9 @@ class CargoInfoActivity :
 
         val newForm = wrapper?.formConfigureDeviceResponse?.data
 
+            Timber.i(newForm!!.size.toString())
+
+
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
@@ -402,6 +469,7 @@ class CargoInfoActivity :
 
 
     private fun updateTop(it: Configuration) {
+
         binding.includeHome.tvCargoFooter.text = it.cargoType.value
         binding.includeHome.tvOperationStepFooter.text = it.operationStep.value
         binding.includeHome.tvTerminalFooter.text = it.terminal.value
@@ -528,6 +596,10 @@ class CargoInfoActivity :
     @OnNeverAskAgain(android.Manifest.permission.READ_PHONE_STATE)
     fun neverAskForPhoneState() {
         notifyUser(binding.root, getString(R.string.phone_state_permission_never_ask))
+    }
+
+    private fun getCargoCode(): String? {
+        return intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
     }
 
 

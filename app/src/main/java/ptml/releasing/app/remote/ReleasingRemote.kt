@@ -25,7 +25,7 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
 
     override suspend fun verifyDeviceIdAsync(imei: String) = deviceConfigService.verifyDeviceIdAsync(imei)
 
-    override suspend fun setAdminConfigurationAsync(imei: String) = adminConfigService.setAdminConfigurationAsync(imei)
+    override suspend fun getAdminConfigurationAsync(imei: String) = adminConfigService.getAdminConfigurationAsync(imei)
 
     override suspend fun downloadDamagesAsync(imei: String) = damageService.downloadDamagesAsync(imei)
 
@@ -47,5 +47,6 @@ class ReleasingRemote @Inject constructor(retrofit: Retrofit) : Remote {
     ) = findCargoService.findCargo(cargoTypeId, operationStepId, terminal, imei, cargoNumber)
 
     override suspend fun uploadData(request: FormSubmissionRequest) = uploadDataService.uploadData(request)
+
 }
 

@@ -1,5 +1,5 @@
-include ':app'
 include ':form'
+include ':app'
 ext.getLocalProperty = { propertyKey ->
     Properties properties = new Properties()
     File propsFile = new File("local.properties")

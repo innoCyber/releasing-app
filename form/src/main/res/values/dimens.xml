@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="constraint_default_margin_8dp">8dp</dimen>
+    <dimen name="constraint_default_margin_16dp">16dp</dimen>
+    <dimen name="constraint_default_margin_32dp">32dp</dimen>
+    <dimen name="constraint_default_margin_24dp">24dp</dimen>
+    <dimen name="constraint_default_margin_4dp">4dp</dimen>
+    <dimen name="constraint_default_margin_48dp">48dp</dimen>
+    <dimen name="constraint_default_margin_12dp">12dp</dimen>
+    <dimen name="constraint_default_margin_10dp">10dp</dimen>
+    <dimen name="constraint_default_margin_2dp">2dp</dimen>
+
+    <dimen name="constraint_default_margin_64dp">64dp</dimen>
+
+    <dimen name="form_label_text_size">20sp</dimen>
+    <dimen name="form_simple_text_label_size">18sp</dimen>
+    <dimen name="form_simple_text_content_size">16sp</dimen>
+
+
+    <dimen name="damages_delete_icon_size">48dp</dimen>
+    <dimen name="damages_margin">8dp</dimen>
+    <dimen name="damages_button_margin">16dp</dimen>
+    <dimen name="damages_delete_icon_padding">8dp</dimen>
+
+    <dimen name="damages_button_width">40dp</dimen>
+    <dimen name="damages_button_height">40dp</dimen>
+    <dimen name="damages_button_padding">8dp</dimen>
+    <dimen name="nav_version_padding">8dp</dimen>
+
+    <dimen name="home_top_label_min_size">9sp</dimen>
+    <dimen name="home_top_label_max_size">48sp</dimen>
+    <dimen name="home_top_label_step_size">1sp</dimen>
+    <dimen name="bt_item_address_text_size">12sp</dimen>
+    <dimen name="search_label_text_size">14sp</dimen>
+
+
+</resources>

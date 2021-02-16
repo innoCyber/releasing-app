@@ -16,6 +16,11 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import java.io.File
 
 
 /**
@@ -103,6 +108,24 @@ fun EditText.setImeDoneListener(listener: DonePressedListener) {
             return false
         }
     })
+}
+
+fun View.beInvisibleIf(beInvisible: Boolean) = if (beInvisible) beInvisible() else beVisible()
+
+fun View.beVisibleIf(beVisible: Boolean) = if (beVisible) beVisible() else beGone()
+
+fun View.beGoneIf(beGone: Boolean) = beVisibleIf(!beGone)
+
+fun View.beInvisible() {
+    visibility = View.INVISIBLE
+}
+
+fun View.beVisible() {
+    visibility = View.VISIBLE
+}
+
+fun View.beGone() {
+    visibility = View.GONE
 }
 
 interface DonePressedListener {

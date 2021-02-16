@@ -19,5 +19,4 @@ public class NullOnEmptyConverterFactory extends Converter.Factory {
             return delegate.convert(value);
         };
     }
-
 }

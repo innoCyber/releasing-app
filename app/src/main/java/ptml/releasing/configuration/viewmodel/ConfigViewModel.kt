@@ -2,14 +2,16 @@ package ptml.releasing.configuration.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.ImeiRepository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.*
 import timber.log.Timber
@@ -17,6 +19,7 @@ import javax.inject.Inject
 
 
 class ConfigViewModel @Inject constructor(
+    private val imeiRepository: ImeiRepository,
     repository: Repository,
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
@@ -31,40 +34,46 @@ class ConfigViewModel @Inject constructor(
     fun getTerminalList(): LiveData<List<ReleasingTerminal>> = terminalList
 
     val networkState = MutableLiveData<Event<NetworkState>>()
-    fun getNetworkState(): LiveData<Event<NetworkState>>  = networkState
+    fun getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
     val savedSuccess = MutableLiveData<Event<Boolean>>()
     fun getSavedSuccess(): LiveData<Event<Boolean>> = savedSuccess
 
-    val configuration = MutableLiveData<Configuration>()
-    fun getConfiguration(): LiveData<Configuration> = configuration
+    val configuration  = _configuration
 
     fun getConfig(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 Timber.d("Getting configuration")
                 val response = repository.getAdminConfigurationAsync(imei).await()
 
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
-                    Timber.d("Checking if there is a saved configuration")
-                    val configured = repository.isConfiguredAsync()
-                    if (configured) {
-                        Timber.d("Configuration was saved before, getting the configuration")
-                        val config = repository.getSavedConfigAsync()
-                        Timber.d("Configuration gotten: %s", config)
-                        configuration.postValue(config)
-                    }
+                    val config = repository.getSelectedConfigAsync()
+                    Timber.d("Configuration gotten: %s", config)
+                    _configuration.postValue(config)
                     Timber.e("Loading done: %s", response)
-                    networkState.postValue(Event(NetworkState.LOADED))
+                    networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                System.out.println("In here: ${e.localizedMessage}")
-                networkState.postValue(Event(NetworkState.error(e)))
+                println("In here: ${e.localizedMessage}")
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
         }
 
@@ -83,7 +92,7 @@ class ConfigViewModel @Inject constructor(
 //        operationStep.id = 32 //TODO Remove this in production
         val configuration =
             Configuration(terminal ?: return, operationStep ?: return, cargoType ?: return, checked)
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             try {
                 repository.setSavedConfigAsync(configuration)
                 val result = repository.setConfigurationDeviceAsync(
@@ -95,10 +104,12 @@ class ConfigViewModel @Inject constructor(
                 Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)
                 savedSuccess.postValue(Event(true))
-                networkState.postValue(Event(NetworkState.LOADED))
+                networkState.postValue( Event(NetworkState.LOADED))
             } catch (e: Throwable) {
                 Timber.e(e)
-                networkState.postValue(Event(NetworkState.error(e)))
+                networkState.postValue(
+                    Event(NetworkState.error(e))
+                )
             }
 
         }
@@ -112,28 +123,35 @@ class ConfigViewModel @Inject constructor(
 
     fun refreshConfiguration(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
-        networkState.postValue(Event(NetworkState.LOADING))
+        networkState.postValue(
+            Event(
+                NetworkState.LOADING
+            )
+        )
 
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 Timber.d("Refreshing configuration")
                 val response = repository.downloadAdminConfigurationAsync(imei).await()
 
-                withContext(appCoroutineDispatchers.main) {
+                withContext(dispatchers.main) {
                     Timber.d("Configuration gotten: %s", response)
                     configResponse.postValue(response)
                     Timber.d("Checking if there is a saved configuration")
-                    withContext(appCoroutineDispatchers.db) {
-                        Timber.d("Refreshing removes the previous configuration")
-                        repository.setConfigured(false)
-                    }
                     Timber.e("Loading done: %s", response)
-                    networkState.postValue(Event(NetworkState.LOADED))
+                    networkState.postValue(
+                        Event(
+                            NetworkState.LOADED
+                        )
+                    )
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                System.out.println("In here: ${e.localizedMessage}")
-                networkState.postValue(Event(NetworkState.error(e)))
+                networkState.postValue(
+                    Event(
+                        NetworkState.error(e)
+                    )
+                )
             }
         }
 
@@ -168,5 +186,9 @@ class ConfigViewModel @Inject constructor(
         return list
     }
 
-
+    fun updateImei(imei: String) {
+        viewModelScope.launch {
+            imeiRepository.setIMEI(imei)
+        }
+    }
 }

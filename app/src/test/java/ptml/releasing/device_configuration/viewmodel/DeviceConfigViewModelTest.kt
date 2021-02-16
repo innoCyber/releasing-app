@@ -36,11 +36,6 @@ class DeviceConfigViewModelTest : BaseTest() {
             repository.setFirst(any())
         }returns Unit
 
-        every {
-            repository.setImei(any())
-        }returns Unit
-
-
         deviceConfigViewModel.verifyDeviceId(VALID_IMEI)
 
         assertEquals(

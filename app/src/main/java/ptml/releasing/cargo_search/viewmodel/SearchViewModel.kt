@@ -1,33 +1,41 @@
 package ptml.releasing.cargo_search.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.ImeiRepository
+import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.form.FormMappers
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.Constants
-import ptml.releasing.app.utils.Event
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.livedata.Event
+import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.FormOption
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 open class SearchViewModel @Inject constructor(
+    private val imeiRepository: ImeiRepository,
+    private val context: Context,
     private val formMappers: FormMappers,
     repository: Repository,
-    appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
-) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+    dispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
+) : BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val _openAdmin = MutableLiveData<Event<Unit>>()
     val openAdMin: LiveData<Event<Unit>> = _openAdmin
@@ -59,6 +67,15 @@ open class SearchViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<CargoNotFoundResponse>()
     val errorMessage: LiveData<CargoNotFoundResponse> = _errorMessage
 
+    private val mutableImei = MutableLiveData<Event<String?>>()
+    val imeiNumber = mutableImei.asLiveData()
+
+    private val mutableUpdateAppVersion = MutableLiveData<DataState<Unit>>()
+    val  updateAppVersion  = mutableUpdateAppVersion.asLiveData()
+
+    init {
+        scheduleCheckLoginWorker()
+    }
 
     fun openAdmin() {
         _openAdmin.value = Event(Unit)
@@ -77,9 +94,10 @@ open class SearchViewModel @Inject constructor(
         }
 
         if (_networkState.value?.peekContent() == NetworkState.LOADING) return
-        _networkState.value = Event(NetworkState.LOADING)
+        _networkState.value =
+            Event(NetworkState.LOADING)
 
-        compositeJob = CoroutineScope(appCoroutineDispatchers.network).launch {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
 
                 //already configured
@@ -92,8 +110,7 @@ open class SearchViewModel @Inject constructor(
                     cargoNumber.trim()
                 )?.await()
                 val formResponse = addLastSelectedVoyage(findCargoResponse)
-                withContext(appCoroutineDispatchers.main) {
-                    findCargoResponse?.isSuccess= true
+                withContext(dispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
                         Timber.v("findCargoResponse: %s", formResponse)
                         _findCargoResponse.value = formResponse
@@ -102,9 +119,7 @@ open class SearchViewModel @Inject constructor(
                         _findCargoHolder.value = formResponse
                         val cargoNotFoundResponse = CargoNotFoundResponse(
                             formResponse?.message,
-                            Constants.SHIP_SIDE.toLowerCase(Locale.US) == config?.operationStep?.value?.toLowerCase(
-                                Locale.US
-                            )
+                            Constants.SHIP_SIDE.equals(config?.operationStep?.value, ignoreCase = true)
                         )
                         _errorMessage.value = cargoNotFoundResponse
                     }
@@ -112,8 +127,11 @@ open class SearchViewModel @Inject constructor(
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
-                withContext(appCoroutineDispatchers.main) {
-                    _networkState.value = Event(NetworkState.error(e))
+                withContext(dispatchers.main) {
+                    _networkState.value =
+                        Event(
+                            NetworkState.error(e)
+                        )
                 }
             }
         }
@@ -125,10 +143,7 @@ open class SearchViewModel @Inject constructor(
         Timber.d("Last selected voyage: $lastSelectedVoyage")
         return if (lastSelectedVoyage != null) {
             val voyageOption = FormOption(
-                listOf(
-                    formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage)
-                        .id
-                )
+                listOf(formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage).id)
             )
             voyageOption.id = getVoyageId()
             val options =
@@ -143,6 +158,7 @@ open class SearchViewModel @Inject constructor(
 
     private suspend fun getVoyageId(): Int {
         val form = repository.getFormConfigAsync().await()
+
         val voyageForm = form.data.filter {
             it.type == FormType.VOYAGE.type
         }
@@ -166,12 +182,49 @@ open class SearchViewModel @Inject constructor(
 
 
     fun openDeviceConfiguration() {
-        _openDeviceConfiguration.value = Event(Unit)
+        _openDeviceConfiguration.value =
+            Event(Unit)
     }
 
     fun handleNavVoyageClick() {
         _openVoyage.postValue(Event(Unit))
     }
 
+    private fun scheduleCheckLoginWorker() {
+        CheckLoginWorker.scheduleWork(context)
+    }
+
+    fun openEnterImei() {
+        viewModelScope.launch {
+            mutableImei.postValue(
+                Event(
+                    imeiRepository.getIMEI()
+                )
+            )
+        }
+    }
+
+    fun updateImei(imei: String) {
+        viewModelScope.launch {
+            imeiRepository.setIMEI(imei)
+        }
+    }
+
+    fun updateAppVersion() {
+        viewModelScope.launch {
+            mutableUpdateAppVersion.postValue(DataState.Loading)
+            try {
+                val response = loginRepository.updateAppVersion()
+                if (response.success == true) {
+                    mutableUpdateAppVersion.postValue(DataState.Success(Unit))
+                } else {
+                    mutableUpdateAppVersion.postValue(DataState.Error(response.message))
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Error while updating app version")
+                mutableUpdateAppVersion.postValue(DataState.Error(e.localizedMessage))
+            }
+        }
+    }
 
 }

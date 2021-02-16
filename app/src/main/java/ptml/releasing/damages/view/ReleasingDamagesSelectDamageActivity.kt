@@ -16,10 +16,9 @@ import androidx.lifecycle.Observer
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.cargo_info.model.LARGE
@@ -153,7 +152,7 @@ class ReleasingDamagesSelectDamageActivity :
                 }
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)
@@ -211,7 +210,7 @@ class ReleasingDamagesSelectDamageActivity :
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getData() {
         viewModel.getDamages(
-            (application as ReleasingApplication).provideImei(),
+            imei ?: "",
             DamagesActivity.typeContainer
         )
     }

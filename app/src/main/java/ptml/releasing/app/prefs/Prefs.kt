@@ -4,6 +4,7 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
@@ -48,11 +49,17 @@ interface Prefs {
     fun setUpdateApp(shouldUpdate:Boolean)
     fun mustUpdateApp():Boolean
 
-    fun setImei(imei:String)
-    fun getImei():String?
-
     fun isInternetErrorLoggingEnabled():Boolean
     fun setInternetErrorLoggingEnabled(enabled:Boolean)
     fun getVoyageVersion(): Long
     fun setVoyageCurrentVersion(currentVersion: Long)
+
+    fun addImage(cargoCode: String, file: Image)
+    fun removeImage(cargoCode: String, file: Image)
+
+    fun storeImages(cargoCode: String, imageMap: Map<String, Image>)
+    fun getImages(cargoCode: String): Map<String, Image>
+
+    fun addWorkerId(cargoCode: String, workerId:String)
+    fun getWorkerId(cargoCode: String): String?
 }

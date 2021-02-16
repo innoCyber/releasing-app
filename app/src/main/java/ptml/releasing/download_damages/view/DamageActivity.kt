@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
-import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.InfoDialog
-import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityDamageBinding
@@ -33,15 +32,20 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
         showUpEnabled(true)
         binding.recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this)
-        val decorator = DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
+        val decorator =
+            DividerItemDecoration(binding.recyclerView.context, layoutManager.orientation)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.addItemDecoration(decorator)
 
 
-        viewModel.getNetworkState().observe(this, Observer {event->
+        viewModel.getNetworkState().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (NetworkState.LOADING == it) {
-                    showLoading(binding.includeProgress.root, binding.includeProgress.tvMessage, R.string.downloading_damages)
+                    showLoading(
+                        binding.includeProgress.root,
+                        binding.includeProgress.tvMessage,
+                        R.string.downloading_damages
+                    )
                     Timber.e("Loading...")
                 } else {
                     hideLoading(binding.includeProgress.root)
@@ -51,7 +55,7 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
                 binding.fab.isEnabled = it != NetworkState.LOADING
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)
@@ -74,24 +78,21 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
         binding.fab.setOnClickListener {
             downloadDamagesWithPermissionCheck()
         }
-
-        getDamagesWithPermissionCheck()
     }
 
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun downloadDamages() {
-        viewModel.downloadDamagesFromServer((application as ReleasingApplication).provideImei())
+        viewModel.downloadDamagesFromServer(imei ?: "")
     }
 
-    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
-    fun getDamages() {
-        viewModel.getDamages((application as ReleasingApplication).provideImei())
+    override fun onImeiGotten(imei: String?) {
+        viewModel.getDamages(imei ?: "")
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
-        val dialogFragment =  InfoDialog.newInstance(
+        val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.allow_permission),
             message = getString(R.string.allow_phone_state_permission_msg),
             buttonText = getString(android.R.string.ok),
@@ -114,11 +115,14 @@ class DamageActivity : BaseActivity<DamageViewModel, ActivityDamageBinding>() {
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
-
 
 
     override fun getLayoutResourceId() = R.layout.activity_damage

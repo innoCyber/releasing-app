@@ -9,7 +9,7 @@
     <string name="timed_out_exception">Request timed out while trying to connect. Please ensure you have a strong signal
         and try again.
     </string>
-    <string name="unknown_exception">An unexpected error has occurred. Please check your connection, try
+    <string name="unknown_exception">An unexpected error has occurred. Try
         again and contact the administrator
     </string>
     <string name="profiles">Profiles</string>
@@ -283,5 +283,40 @@
     <string name="forgot_confirm_password_hint">Confirm password</string>
     <string name="password_reset_success">Your password was reset successfully</string>
     <string name="voyage_screen_title">Voyages</string>
+    <string name="session_timed_out_msg">Session timed out, logging out</string>
 
+    <string name="change_pic_create_file_error">An error occurred while creating file for image, please try again and
+        contact the admin
+    </string>
+    <string name="cd_cargo_image">Cargo Image</string>
+    <string name="upload_image_title">Images for %s</string>
+    <string name="no_images_text">No images\nClick + to add some</string>
+    <string name="delete">Delete Image</string>
+    <string name="delete_confirm_title">Confirm delete</string>
+    <string name="delete_confirm_msg">Are you sure you want to delete the item</string>
+    <string name="delete_confirm_msgs">Are you sure you want to delete the items</string>
+    <string name="deleting_message">Deleting…</string>
+    <string name="delete_success_message">Items deleted successfully</string>
+    <string name="delete_fail_message">Error occurred while deleting. Please try again and contact the admin</string>
+    <string name="noti_channel_default">Upload Images</string>
+    <string name="default_file_name">Image file</string>
+    <string name="uploading">Uploading image %s</string>
+    <string name="in_progress">File upload in progress</string>
+    <string name="message_upload_success">Upload successful</string>
+    <string name="message_upload_failed">Upload failed</string>
+    <string name="file_upload_successful">%d files uploaded successfully</string>
+    <string name="file_upload_failed">%1$d image files of %2$d for %3$s failed to upload. Upload would be retried again in the background</string>
+    <string name="file_upload_failed_msg">An error occurred during upload, failed uploads will be retried. Please contact the admin</string>
+    <string name="cancel_action_text">Cancel</string>
+    <string name="upload_in_progress">Upload in progress</string>
+    <string name="upload_in_progress_msg">Files are currently uploaded</string>
+    <string name="upload_summary_title">Upload status</string>
+    <string name="upload_summary_body">Expand to view status of uploads</string>
+    <string name="production_server_msg">Connected to the production server</string>
+    <string name="server_type_msg">Connected server</string>
+    <string name="staging_server_msg">Not connected to the production server</string>
+    <string name="enter_imei">Enter IMEI</string>
+    <string name="enter_imei_dialog_title">Enter Device IMEI</string>
+    <string name="enter_imei_dialog_hint">IMEI</string>
+    <string name="imei_exception">Invalid IMEI</string>
 </resources>

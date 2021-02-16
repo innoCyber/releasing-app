@@ -81,4 +81,10 @@
     <!--RESET PASSWORD-->
     <dimen name="forgot_password_btn_max_width">144dp</dimen>
     <dimen name="back_margin_top">14dp</dimen>
+
+    <dimen name="grid_margin">4dp</dimen>
+    <dimen name="default_status_action_height">86dp</dimen>
+    <dimen name="default_navigation_height">64dp</dimen>
+    <dimen name="actionbar_text_size">20sp</dimen>
+    <dimen name="selection_check_size">26dp</dimen>
 </resources>

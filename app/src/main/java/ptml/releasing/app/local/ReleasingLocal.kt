@@ -5,6 +5,7 @@ import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
 import ptml.releasing.download_damages.model.DamageResponse
+import ptml.releasing.images.model.Image
 import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import javax.inject.Inject
@@ -64,16 +65,22 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
 
     override fun getAppVersion(): Long = prefs.getAppVersion()
 
-
-    override fun setImei(imei: String) = prefs.setImei(imei)
-
-    override fun getImei(): String? = prefs.getImei()
-
     override fun setMustUpdateApp(shouldUpdate: Boolean)= prefs.setUpdateApp(shouldUpdate)
 
     override fun mustUpdateApp(): Boolean= prefs.mustUpdateApp()
+    
+    override fun addImage(cargoCode: String, file: Image) = prefs.addImage(cargoCode, file)
 
+    override fun removeImage(cargoCode: String, file: Image) = prefs.removeImage(cargoCode, file)
 
+    override fun getImages(cargoCode: String) = prefs.getImages(cargoCode)
+
+    override fun storeImages(cargoCode: String, imageMap: Map<String, Image>) =
+        prefs.storeImages(cargoCode, imageMap)
+
+    override fun addWorkerId(cargoCode: String, workerId: String)  = prefs.addWorkerId(cargoCode, workerId)
+
+    override fun getWorkerId(cargoCode: String): String? = prefs.getWorkerId(cargoCode)
     override fun isInternetErrorLoggingEnabled() = prefs.isInternetErrorLoggingEnabled()
 
     override fun setInternetErrorLoggingEnabled(enabled: Boolean) = prefs.setInternetErrorLoggingEnabled(enabled)

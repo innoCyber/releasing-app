@@ -2,21 +2,25 @@ package ptml.releasing.admin_config.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.repository.ImeiRepository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
-import ptml.releasing.app.utils.Event
+import ptml.releasing.app.utils.livedata.Event
+import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import javax.inject.Inject
 
 class AdminConfigViewModel @Inject constructor(
-    repository: Repository, appCoroutineDispatchers: AppCoroutineDispatchers,
+    private val imeiRepository: ImeiRepository,
+    repository: Repository, dispatchers: AppCoroutineDispatchers,
     updateChecker: RemoteConfigUpdateChecker
 ) :
-    BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
+    BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val _openConfig = MutableLiveData<Event<Unit>>()
     private val _openPrinterSettings = MutableLiveData<Event<Unit>>()
@@ -26,6 +30,7 @@ class AdminConfigViewModel @Inject constructor(
     private val _openSearch = MutableLiveData<Event<Boolean>>()
     private val _openErrorLogs = MutableLiveData<Event<Unit>>()
     private val _openConfirmShowLogs = MutableLiveData<Event<Boolean?>>()
+
 
     private val _internetErrorEnabled = MutableLiveData<Boolean>()
     private val _firstTimeLogin = MutableLiveData<Boolean>()
@@ -42,13 +47,16 @@ class AdminConfigViewModel @Inject constructor(
     val serverUrl: LiveData<Event<String?>> = _serverUrl
     val openErrorLogs: LiveData<Event<Unit>> = _openErrorLogs
 
+    private val mutableImei = MutableLiveData<Event<String?>>()
+    val imeiNumber = mutableImei.asLiveData()
+
 
     init {
         fetchInternetErrorState()
     }
 
     private fun fetchInternetErrorState() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val enabled = repository.isInternetErrorLoggingEnabled()
             _internetErrorEnabled.postValue(enabled)
         }
@@ -59,23 +67,35 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     fun openPrinterSetting() {
-        _openPrinterSettings.postValue(Event(Unit))
+        _openPrinterSettings.postValue(
+            Event(
+                Unit
+            )
+        )
     }
 
     fun openDownloadDamages() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val configured = repository.isConfiguredAsync()
-            withContext(appCoroutineDispatchers.main) {
-                _openDownloadDamages.postValue(Event(configured))
+            withContext(dispatchers.main) {
+                _openDownloadDamages.postValue(
+                    Event(
+                        configured
+                    )
+                )
             }
         }
     }
 
     fun openQuickRemark() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val configured = repository.isConfiguredAsync()
-            withContext(appCoroutineDispatchers.main) {
-                _openQuickRemark.postValue(Event(configured))
+            withContext(dispatchers.main) {
+                _openQuickRemark.postValue(
+                    Event(
+                        configured
+                    )
+                )
             }
         }
     }
@@ -95,26 +115,45 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     fun openSearch() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val configured = repository.isConfiguredAsync()
-            withContext(appCoroutineDispatchers.main) {
-                _openSearch.postValue(Event(configured))
+            withContext(dispatchers.main) {
+                _openSearch.postValue(
+                    Event(
+                        configured
+                    )
+                )
             }
         }
     }
 
-    fun openServer() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+    fun openServerUrl() {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val serverUrl = repository.getServerUrl()
-            withContext(appCoroutineDispatchers.main) {
-                _serverUrl.postValue(Event(serverUrl))
+            withContext(dispatchers.main) {
+                _serverUrl.postValue(
+                    Event(
+                        serverUrl
+                    )
+                )
             }
+        }
+    }
+
+    fun openEnterImei() {
+        compositeJob = viewModelScope.launch {
+            mutableImei.postValue(
+                Event(
+                    imeiRepository.getIMEI()
+                )
+            )
         }
     }
 
     fun saveServerUrl(url: String?) {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             repository.saveServerUrl(url)
+            reloadMenu()
         }
     }
 
@@ -132,7 +171,7 @@ class AdminConfigViewModel @Inject constructor(
     }
 
     fun handleToggleEnableLogs() {
-        compositeJob = CoroutineScope(appCoroutineDispatchers.db).launch {
+        compositeJob = CoroutineScope(dispatchers.db).launch {
             val enabled = !repository.isInternetErrorLoggingEnabled()
             repository.setInternetErrorLoggingEnabled(enabled)
             _internetErrorEnabled.postValue(enabled)
@@ -141,6 +180,16 @@ class AdminConfigViewModel @Inject constructor(
 
     fun handleAskToToggleEnableLogs() {
         val enabled = internetErrorEnabled.value
-        _openConfirmShowLogs.postValue(Event(enabled))
+        _openConfirmShowLogs.postValue(
+            Event(
+                enabled
+            )
+        )
+    }
+
+    fun updateImei(imei: String) {
+        viewModelScope.launch {
+            imeiRepository.setIMEI(imei)
+        }
     }
 }

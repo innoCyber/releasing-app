@@ -14,6 +14,8 @@ interface LoginRepository {
         imei: String
     ): ApiResult
 
+    suspend fun updateAppVersion(): ApiResult
+
     suspend fun getLoginData(): LoginEntity
     suspend fun setLoggedIn(value: Boolean)
     suspend fun getLoggedIn(): Boolean

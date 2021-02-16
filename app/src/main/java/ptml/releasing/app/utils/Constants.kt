@@ -1,7 +1,7 @@
 package ptml.releasing.app.utils
 
-object Constants {
 
+object Constants {
     const val BAR_CODE: String = "barcode"
     const val EXTRAS = "extras"
     const val OK_HTTP_CACHE: String = "ok_http_cache"
@@ -33,8 +33,10 @@ object Constants {
     const val DEFAULT_QUICK_REMARKS_VERSION = 1L
     const val DEFAULT_APP_VERSION = 1L
 
-
     const val PRINTER_TEXT_TO_REPLACE = "var_text"
+    const val PRINTER_HEIGHT_TO_REPLACE = "var_height"
+    const val MULTILINE_LINES_PER_PAGE= 20
+    const val MULTILINE_LINES_PAGE_HEIGHT= 1050
     const val DEFAULT_BARCODE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
@@ -69,14 +71,16 @@ object Constants {
             "PRINT\r\n"
 */
 
-    const val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 400 1\r\n" +
+
+
+    const  val DEFAULT_MULTILINE_PRINTER_SETTINGS = "! 0 200 200 $PRINTER_HEIGHT_TO_REPLACE 1\r\n" +
             "PW 480\r\n" +
             "TONE 50\r\n" +
             "SPEED 4\r\n" +
             "ON-FEED IGNORE\r\n" +
             "NO-PACE\r\n" +
             "BAR-SENSE\r\n" +
-            "T 4 0 179 20 PTML\r\n" +
+          "T 4 0 179 20 PTML\r\n" +
             "ML 47\r\n" +
             "T 7 0 45 70\r\n" +
             "$PRINTER_TEXT_TO_REPLACE\n" +
@@ -85,13 +89,21 @@ object Constants {
             "PRINT\r\n"
 
 
-
     const val ALPHANUMERIC = "alphanumeric"
     const val NUMERIC = "numeric"
     const val SHIP_SIDE = "Ship Side"
     const val PLAY_STORE_URL_BASE = "https://play.google.com/store/apps/details?id="
     const val MARKET_URI_BASE = "market://details?id="
     const val PLAY_STORE_PACKAGE_NAME = "com.android.vending"
+
+    const val IMAGE_EXT = "jpg"
+    const val VALID_IMAGE_SIZE_THRESHOLD = 1000L
+
+    const val UPLOAD_NOTIFICATION_ID = "notificationId"
+    const val UPLOAD_NOTIFICATION_PROGRESS = "progress"
+    const val UPLOAD_NOTIFICATION_FILE_NAME = "fileName"
+    const val UPLOAD_NOTIFICATION_STATUS = "status"
+    const val UPLOAD_NOTIFICATION_CARGO_CODE = "cargoCode"
 
     const val INVALID_ID = -1
     const val DEBUG = "debug"

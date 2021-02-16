@@ -8,7 +8,7 @@ import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
-import ptml.releasing.app.utils.ErrorHandler
+import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
 import ptml.releasing.databinding.ActivityVoyageBinding
@@ -41,6 +41,8 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
         binding.fab.setOnClickListener {
             viewModel.downloadVoyages()
         }
+
+        viewModel.fetchVoyages()
     }
 
     private fun initObservers() {
@@ -61,7 +63,7 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
                 binding.fab.isEnabled = it != NetworkState.LOADING
 
                 if (it.status == Status.FAILED) {
-                    val error = ErrorHandler().getErrorMessage(it.throwable)
+                    val error = ErrorHandler(this).getErrorMessage(it.throwable)
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
                 } else {
                     hideLoading(binding.includeError.root)

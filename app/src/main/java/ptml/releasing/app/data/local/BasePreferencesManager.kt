@@ -7,7 +7,7 @@ import android.content.SharedPreferences
  */
 
 abstract class BasePreferencesManager(protected val sharedPreferences: SharedPreferences) :
-    LocalDataManager {
+    LocalDataManager{
 
     protected val prefLoginData = "prefLoginData"
     protected val prefLoggedIn = "prefLoggedIn"
@@ -15,6 +15,7 @@ abstract class BasePreferencesManager(protected val sharedPreferences: SharedPre
     protected val prefBaseServerUrl = "server_url"
     protected val prefRecentVoyages = "prefRecentVoyages"
     protected val prefLastSelectedVoyage = "prefLastSelectedVoyage"
+    protected val prefLastActiveTime = "prefLastActiveTime"
     protected val defaultStringValue = "{}"
 
     protected fun setStringPreference(key: String, value: String) {

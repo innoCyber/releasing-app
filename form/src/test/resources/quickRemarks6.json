@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "Cargo not found",
+  "data": [
+    {
+      "id": 5,
+      "value": "Ford"
+    },
+    {
+      "id": 7,
+      "value": "Lexus"
+    },
+    {
+      "id": 9,
+      "value": "Suzuki"
+    },
+    {
+      "id": 11,
+      "value": "Mercedes-Benz"
+    },
+    {
+      "id": 31,
+      "value": "Tankerenz"
+    },
+    {
+      "id": 15,
+      "value": "Ford"
+    },
+    {
+      "id": 2,
+      "value": "Tanner"
+    }
+  ]
+}

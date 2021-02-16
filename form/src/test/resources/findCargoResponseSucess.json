@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "message": "Cargo not found",
+  "values": [
+    {
+      "id": 5,
+      "value": "Ford"
+    },
+    {
+      "id": 7,
+      "value": "Lexus"
+    },
+    {
+      "id": 9,
+      "value": "Suzuki"
+    },
+    {
+      "id": 11,
+      "value": "Mercedes-Benz"
+    },
+    {
+      "id": 15,
+      "value": "Ford"
+    }
+  ],
+  "options": [
+    {
+      "id": 13,
+      "selected": [
+      ]
+    },
+    {
+      "id": 23,
+      "selected": [
+        5,
+        8,
+        12,
+        22
+      ]
+    },
+    {
+      "id": 17,
+      "selected": [
+        72,
+        37
+      ]
+    },
+    {
+      "id": 19,
+      "selected": [
+        4434
+      ]
+    },
+    {
+      "id": 21,
+      "selected": [
+        64343
+      ]
+    }
+  ]
+}

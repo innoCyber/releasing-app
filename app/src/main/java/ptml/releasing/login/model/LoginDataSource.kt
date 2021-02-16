@@ -2,6 +2,7 @@ package ptml.releasing.login.model
 
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.remote.request.LoginRequest
+import ptml.releasing.app.data.remote.request.UpdateAppVersionRequest
 import ptml.releasing.app.data.remote.result._Result
 
 /**
@@ -12,6 +13,7 @@ interface LoginDataSource {
 
     interface Remote {
         suspend fun authenticate(loginRequest: LoginRequest): _Result<Unit>
+        suspend fun updateAppVersion(updateAppVersionRequest: UpdateAppVersionRequest): _Result<Unit>
     }
 
     interface Local {
@@ -20,5 +22,6 @@ interface LoginDataSource {
         suspend fun getLoginData(): LoginEntity
         suspend fun setLoginData(loginEntity: LoginEntity)
         suspend fun logOutUser(): Boolean
+        suspend fun getImei():String
     }
 }

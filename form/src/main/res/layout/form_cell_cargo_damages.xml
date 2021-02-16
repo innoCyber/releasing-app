@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/Damages.ListTitle"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_delete"
+            tools:text="Damage name Eheu. " />
+
+        <ImageButton
+            android:id="@+id/btn_delete"
+            style="@style/Damages.DeleteImage"
+            android:contentDescription="@string/cell_cargo_dsc_remove_damage_button"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_remarks"
+            style="@style/Damages.RemarkTextInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_remarks"
+                style="@style/Damages.RemarkEditText"
+                tools:text="Remarks on damage" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_number_label"
+            style="@style/Damages.NumberLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_remarks" />
+
+
+        <TextView
+            android:id="@+id/tv_number"
+            style="@style/Damages.Number"
+            app:layout_constraintBottom_toBottomOf="@id/btn_remove"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_remove"
+            tools:text="0" />
+
+        <ImageButton
+            android:id="@+id/btn_remove"
+            style="@style/Damages.SubtractButton"
+            android:contentDescription="@string/cell_cargo_damages_btn_decrease_number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_number"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintTop_toBottomOf="@id/tv_number_label" />
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            style="@style/Damages.AddButton"
+            android:contentDescription="@string/cell_cargo_damages_btn_increase_number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/tv_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_number_label" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

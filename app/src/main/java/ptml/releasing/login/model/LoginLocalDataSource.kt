@@ -33,4 +33,8 @@ class LoginLocalDataSource @Inject constructor(private val localDataManager: Loc
         localDataManager.clearLoginData()
         return true
     }
+
+    override suspend fun getImei(): String {
+        return localDataManager.getIMEI()
+    }
 }

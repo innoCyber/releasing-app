@@ -8,17 +8,16 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ConfigApiService {
-    @GET(Urls.SET_ADMIN_CONFIGURATION)
-    fun setAdminConfigurationAsync(
+    @GET(Urls.GET_ADMIN_CONFIGURATION)
+    fun getAdminConfigurationAsync(
         @Query("imei") imei: String
     ): Deferred<AdminConfigResponse>
 
     @GET(Urls.SET_CONFIGURATION_DEVICE)
-    fun
-            setConfigurationDeviceAsync(
+    fun setConfigurationDeviceAsync(
 //        @Query("cargo_type") cargoTypeId: Int,
         @Query("operation_step") operationStepId: Int?,
 //        @Query("terminal") terminal: Int,
         @Query("imei") imei: String
     ): Deferred<ConfigureDeviceResponse>
-}
+}//65

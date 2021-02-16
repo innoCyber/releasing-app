@@ -30,6 +30,7 @@ class NetworkModule {
         ) baseUrl: String
     ): Retrofit {
         val builder = Retrofit.Builder()
+        Timber.e("OKHTTTP: ${client.interceptors()}")
         builder.client(client)
         builder.addCallAdapterFactory(coroutineCallAdapterFactory)
         builder.addConverterFactory(nullOnEmptyConverterFactory)
