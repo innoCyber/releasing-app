@@ -371,11 +371,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
 
     private fun updateTop(it: Configuration) {
-        binding.appBarHome.content.includeHome.tvCargoFooter.text = it.cargoType.value
-        binding.appBarHome.content.includeHome.tvOperationStepFooter.text = it.operationStep.value
+        binding.appBarHome.content.includeHome.tvCargoFooter.text = it.cargoType?.value
+        binding.appBarHome.content.includeHome.tvOperationStepFooter.text = it.operationStep?.value
         binding.appBarHome.content.includeHome.tvTerminalFooter.text = it.terminal.value
 
-        if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
+        if (it.cargoType?.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
                 VectorDrawableCompat.create(
                     resources,
@@ -383,7 +383,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     null
                 )
             )
-        } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
+        } else if (it.cargoType?.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
             binding.appBarHome.content.includeHome.imgCargoType.setImageDrawable(
                 VectorDrawableCompat.create(
                     resources,

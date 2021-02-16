@@ -38,6 +38,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
+        disableTerminalSpinner()
         initErrorDrawable(binding.includeError.imgError)
         binding.bottom.btnDeleteLayout.visibility = View.GONE
         binding.top.root.visibility = View.INVISIBLE
@@ -152,6 +153,15 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             refreshConfigWithPermissionCheck()
         }
 
+    }
+
+    private fun disableTerminalSpinner() {
+        binding.top.selectTerminalSpinner.run {
+            isEnabled = false
+            isClickable = false
+            alpha = 0.3F
+        }
+        binding.top.tvSelectTerminal.alpha = 0.3F
     }
 
     override fun onImeiGotten(imei: String?) {

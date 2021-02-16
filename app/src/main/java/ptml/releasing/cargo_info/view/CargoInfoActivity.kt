@@ -470,11 +470,11 @@ class CargoInfoActivity :
 
     private fun updateTop(it: Configuration) {
 
-        binding.includeHome.tvCargoFooter.text = it.cargoType.value
-        binding.includeHome.tvOperationStepFooter.text = it.operationStep.value
+        binding.includeHome.tvCargoFooter.text = it.cargoType?.value
+        binding.includeHome.tvOperationStepFooter.text = it.operationStep?.value
         binding.includeHome.tvTerminalFooter.text = it.terminal.value
 
-        if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
+        if (it.cargoType?.value?.toLowerCase(Locale.US) == CargoType.VEHICLE) {
             binding.includeHome.imgCargoType.setImageDrawable(
                 VectorDrawableCompat.create(
                     resources,
@@ -482,7 +482,7 @@ class CargoInfoActivity :
                     null
                 )
             )
-        } else if (it.cargoType.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
+        } else if (it.cargoType?.value?.toLowerCase(Locale.US) == CargoType.GENERAL) {
             binding.includeHome.imgCargoType.setImageDrawable(
                 VectorDrawableCompat.create(
                     resources,

@@ -1,5 +1,6 @@
 package ptml.releasing.admin_config.viewmodel
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,8 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
 import javax.inject.Inject
 
 class AdminConfigViewModel @Inject constructor(
@@ -23,13 +26,16 @@ class AdminConfigViewModel @Inject constructor(
     BaseViewModel(updateChecker, repository, dispatchers) {
 
     private val _openConfig = MutableLiveData<Event<Unit>>()
+    private val _selectedTerminal = MutableLiveData<Event<Configuration>>()
     private val _openPrinterSettings = MutableLiveData<Event<Unit>>()
     private val _openDownloadDamages = MutableLiveData<Event<Boolean>>()
     private val _openQuickRemark = MutableLiveData<Event<Boolean>>()
     private val _serverUrl = MutableLiveData<Event<String?>>()
+    private val _terminal = MutableLiveData<Event<AdminConfigResponse>>()
     private val _openSearch = MutableLiveData<Event<Boolean>>()
     private val _openErrorLogs = MutableLiveData<Event<Unit>>()
     private val _openConfirmShowLogs = MutableLiveData<Event<Boolean?>>()
+    private val _adminConfigAsync = MutableLiveData<Event<AdminConfigResponse>>()
 
 
     private val _internetErrorEnabled = MutableLiveData<Boolean>()
@@ -45,7 +51,10 @@ class AdminConfigViewModel @Inject constructor(
     val openPrinterSettings: LiveData<Event<Unit>> = _openPrinterSettings
     val openSearch: LiveData<Event<Boolean>> = _openSearch
     val serverUrl: LiveData<Event<String?>> = _serverUrl
+    val terminal: LiveData<Event<AdminConfigResponse>> = _terminal
+    val selectedTerminal: LiveData<Event<Configuration>> = _selectedTerminal
     val openErrorLogs: LiveData<Event<Unit>> = _openErrorLogs
+    val adminConfigAsync: LiveData<Event<AdminConfigResponse>> = _adminConfigAsync
 
     private val mutableImei = MutableLiveData<Event<String?>>()
     val imeiNumber = mutableImei.asLiveData()
@@ -53,6 +62,18 @@ class AdminConfigViewModel @Inject constructor(
 
     init {
         fetchInternetErrorState()
+        fetchConfiguration()
+    }
+
+    private fun fetchConfiguration() {
+        CoroutineScope(dispatchers.network).launch {
+           _adminConfigAsync.postValue(Event( repository.getAdminConfigurationAsync(imeiRepository.getIMEI()).await()))
+        }
+
+    }
+
+    fun saveSelectedTerminal(configuration: Configuration){
+        repository.setSavedConfigAsync(configuration)
     }
 
     private fun fetchInternetErrorState() {
@@ -65,6 +86,17 @@ class AdminConfigViewModel @Inject constructor(
     fun openConfig() {
         _openConfig.postValue(Event(Unit))
     }
+
+    fun openTerminalSelection(){
+        CoroutineScope(dispatchers.network).launch {
+            val config = repository.getAdminConfigurationAsync(imeiRepository.getIMEI()).await()
+            val selectedConfig = repository.getSelectedConfigAsync()
+            _terminal.postValue(Event(config))
+            _selectedTerminal.postValue(Event(selectedConfig))
+        }
+    }
+
+
 
     fun openPrinterSetting() {
         _openPrinterSettings.postValue(

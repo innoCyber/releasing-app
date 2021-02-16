@@ -144,8 +144,8 @@ data class AdminConfigResponse(
 
 data class Configuration(
     @SerializedName("terminal") val terminal: ReleasingTerminal,
-    @SerializedName("operationStep") val operationStep: ReleasingOperationStep,
-    @SerializedName("cargoType") val cargoType: CargoType,
+    @SerializedName("operationStep") val operationStep: ReleasingOperationStep?,
+    @SerializedName("cargoType") val cargoType: CargoType?,
     @SerializedName("cameraEnabled") val cameraEnabled: Boolean
 ) : AppResponse() {
     override fun equals(other: Any?): Boolean {

@@ -319,4 +319,6 @@
     <string name="enter_imei_dialog_title">Enter Device IMEI</string>
     <string name="enter_imei_dialog_hint">IMEI</string>
     <string name="imei_exception">Invalid IMEI</string>
+    <string name="change_terminal">Change Terminal</string>
+    <string name="select_terminal">Select Terminal</string>
 </resources>

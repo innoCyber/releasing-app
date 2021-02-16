@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
 import ptml.releasing.R
@@ -16,9 +18,14 @@ import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
+import ptml.releasing.app.dialogs.SelectTerminalDialog
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.observe
 import ptml.releasing.app.utils.livedata.observeEvent
 import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.configuration.models.AdminConfigResponse
+import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ReleasingTerminal
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivityAdminConfigBinding
 import ptml.releasing.download_damages.view.DamageActivity
@@ -43,6 +50,9 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
     private fun setupClickListeners() {
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
             viewModel.openConfig()
+        }
+        binding.includeAdminConfig.btnSelectTerminal.setOnClickListener {
+            viewModel.openTerminalSelection()
         }
 
         binding.includeAdminConfig.btnDownload.setOnClickListener {
@@ -113,6 +123,13 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         viewModel.serverUrl.observeEvent(this) {
             showServerUrlDialog(it)
+        }
+
+        viewModel.terminal.observeEvent(this) {adminConfigResponse ->
+            viewModel.selectedTerminal.observe(this, Observer {selectedItem ->
+                showSelectTerminalDialog(adminConfigResponse, selectedItem)
+            })
+
         }
 
         viewModel.openSearch.observeEvent(this) {
@@ -205,6 +222,48 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
             })
         dialog.isCancelable = false
         dialog.show(supportFragmentManager, dialog.javaClass.name)
+    }
+
+    private fun showSelectTerminalDialog(config: AdminConfigResponse, selected: Event<Configuration>) {
+
+        val dialog =
+            config.terminalList?.let {
+                selected.getContentIfNotHandled()?.let { selected ->
+                    SelectTerminalDialog.newInstance(it, selected, object : SelectTerminalDialog.SelectTerminalListener {
+                        override fun onSave(terminal: ReleasingTerminal) {
+                            if(selected.operationStep == null || selected.cargoType == null){
+                                viewModel.adminConfigAsync.observe(this@AdminConfigActivity, Observer {adminConfigResponse ->
+                                    saveConfiguration(terminal, adminConfigResponse.getContentIfNotHandled())
+                                })
+                            }else{
+                                saveConfiguration(terminal, null)
+                            }
+                        }
+
+                        private fun saveConfiguration(terminal: ReleasingTerminal, config: AdminConfigResponse?) {
+                            val configuration =
+                                Configuration(
+                                    terminal,
+                                    selected.operationStep ?: config!!.operationStepList!!.first(),
+                                    selected.cargoType ?: config!!.cargoTypeList!!.first(),
+                                    false
+                                )
+                            viewModel.saveSelectedTerminal(configuration)
+                            Toast.makeText(
+                                this@AdminConfigActivity,
+                                "Terminal is now set to ${terminal.value}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    })
+                }
+            }
+        if (dialog != null) {
+            dialog.isCancelable = false
+            dialog.show(supportFragmentManager, dialog.javaClass.name)
+        }
+
     }
 
     private fun showEnterImeiDialog(deviceId: String?) {

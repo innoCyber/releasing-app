@@ -199,8 +199,8 @@ class CargoInfoViewModel @Inject constructor(
                         formMappers.formSelectionMapper.mapToModel(it)
                     },
                     getDamages(),
-                    configuration.cargoType.id,
-                    configuration.operationStep.id,
+                    configuration.cargoType?.id,
+                    configuration.operationStep?.id,
                     configuration.terminal.id,
                     operator,
                     cargoCode,
@@ -220,9 +220,9 @@ class CargoInfoViewModel @Inject constructor(
                         val workRequest =
                             ImageUploadWorker.createWorkRequest(
                                 cargoCode ?: "",
-                                configuration.operationStep.id ?: return@withContext,
+                                configuration.operationStep?.id ?: return@withContext,
                                 findCargoResponse?.cargoId ?: 0,
-                                configuration.cargoType.id ?: 0
+                                configuration.cargoType?.id ?: 0
                             )
                         repository.addWorkerId(cargoCode ?: "", workRequest.id.toString())
                         WorkManager.getInstance(context).enqueue(workRequest)
