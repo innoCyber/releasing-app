@@ -449,6 +449,9 @@ class CargoInfoActivity :
 
         val newForm = wrapper?.formConfigureDeviceResponse?.data
 
+            Timber.i(newForm!!.size.toString())
+
+
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)

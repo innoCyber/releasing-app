@@ -253,9 +253,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.imgOk.startAnimation(anim)
         anim.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-
-            }
+            override fun onAnimationStart(animation: Animation) { }
 
             override fun onAnimationEnd(animation: Animation) {
                 binding.appBarHome.content.imgOk.visibility = View.GONE
@@ -263,9 +261,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
             }
 
-            override fun onAnimationRepeat(animation: Animation) {
-
-            }
+            override fun onAnimationRepeat(animation: Animation) { }
         })
     }
 

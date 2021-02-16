@@ -21,7 +21,7 @@ android {
         applicationId "ptml.releasing"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 37
+        versionCode 39
         versionName "1.5.1"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
@@ -38,7 +38,6 @@ android {
         release {
             minifyEnabled true
             zipAlignEnabled true
-            debuggable true
             signingConfig signingConfigs.Releasing
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

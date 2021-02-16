@@ -135,7 +135,7 @@ open class BaseViewModel @Inject constructor(
             handleDeviceConfigured(configured)
             if (configured) {
                 Timber.d("Configuration was saved before, getting the configuration")
-                val config = repository.getSavedConfigAsync()
+                val config = repository.getSelectedConfigAsync()
                 Timber.d("Configuration gotten: %s", config)
                 _configuration.postValue(config)
             }

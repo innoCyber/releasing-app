@@ -45,7 +45,7 @@ interface Repository {
         cargoNumber: String
     ): Deferred<FindCargoResponse?>?
 
-    fun getSavedConfigAsync(): Configuration
+    fun getSelectedConfigAsync(): Configuration
     fun setSavedConfigAsync(configuration: Configuration)
 
     fun isFirst(): Boolean

@@ -139,10 +139,8 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         //iterate over the list to get each config
         for (i in 0 until (data?.size ?: mutableListOf<FormConfiguration>().size)) {
             //create and add the view gotten based on the config
+
             val configureDeviceData = data?.get(i)
-
-
-
 
             val formView = createViewFromConfig(configureDeviceData, i)
             formListener?.onFormAdded(configureDeviceData)
@@ -450,9 +448,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
                 val adapter = FormSelectAdapter(context, formConfiguration?.options)
                 spinner.adapter = adapter
                 spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                    }
+                    override fun onNothingSelected(p0: AdapterView<*>?) {}
 
                     override fun onItemSelected(
                         parent: AdapterView<*>?,
