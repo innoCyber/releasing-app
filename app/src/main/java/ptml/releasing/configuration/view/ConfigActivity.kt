@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import permissions.dispatcher.*
@@ -15,10 +16,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
-import ptml.releasing.configuration.models.AdminConfigResponse
-import ptml.releasing.configuration.models.CargoType
-import ptml.releasing.configuration.models.ReleasingOperationStep
-import ptml.releasing.configuration.models.ReleasingTerminal
+import ptml.releasing.configuration.models.*
 import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.databinding.ActivityConfigBinding
@@ -46,32 +44,23 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         binding.bottom.root.visibility = View.INVISIBLE
 
 
-        binding.top.selectCargoSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    Timber.d("Nothing was selected")
-                }
 
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    viewModel.cargoTypeSelected(cargoAdapter?.getItem(position) ?: CargoType())
-                }
-            }
 
-        viewModel.getConfigResponse().observe(this, Observer {
-            setUpSpinners(it)
+        viewModel.cargoTypes.observe(this, Observer { cargoTypes ->
+            viewModel.configuration.observe(this, Observer {selectedItem ->
+                setUpCargoType(cargoTypes, selectedItem)
+            })
+
         })
 
-        viewModel.getOperationStepList().observe(this, Observer {
-            setUpOperationStep(it)
-          //  viewModel.getSavedConfig()
+        viewModel.getOperationStepList().observe(this, Observer {operationSteps ->
+            viewModel.configuration.observe(this, Observer {selectedOperation ->
+                setUpOperationStep(operationSteps, selectedOperation)
+            })
+
         })
         viewModel.getTerminalList().observe(this, Observer {
-//            setUpTerminal(it)
+            setUpTerminal(it)
         })
 
 
@@ -246,15 +235,31 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     }
 
 
-    private fun setUpSpinners(response: AdminConfigResponse) {
+    private fun setUpCargoType(cargoTypes: List<CargoType>, selected: Configuration) {
         try {
-            cargoAdapter =
-                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.cargoTypeList)
-            binding.top.selectCargoSpinner.adapter = cargoAdapter
+            binding.top.selectCargoSpinner.run {
+                cargoAdapter =
+                    ConfigSpinnerAdapter(applicationContext, R.id.tv_category, cargoTypes)
+                adapter = cargoAdapter
+                val selectedItem = cargoTypes.indexOf(selected.cargoType)
+                setSelection(if(selectedItem == -1 ) 0 else selectedItem)
+                onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                            Timber.d("Nothing was selected")
+                        }
 
-            terminalAdapter =
-                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, response.terminalList)
-            binding.top.selectTerminalSpinner.adapter = terminalAdapter
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            viewModel.cargoTypeSelected(cargoAdapter?.getItem(position) ?: CargoType())
+                        }
+                    }
+            }
+
 
         } catch (e: Exception) {
             Timber.e(e)
@@ -266,10 +271,15 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         }
     }
 
-    private fun setUpOperationStep(operationStepList: List<ReleasingOperationStep>) {
-        operationStepAdapter =
-            ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
-        binding.top.selectOperationSpinner.adapter = operationStepAdapter
+    private fun setUpOperationStep(operationStepList: List<ReleasingOperationStep>, selected: Configuration) {
+
+        binding.top.selectOperationSpinner.run {
+            operationStepAdapter =
+                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
+            adapter = operationStepAdapter
+            val selectedItem = operationStepList.indexOf(selected.operationStep)
+            setSelection(if(selectedItem == -1) 0 else selectedItem)
+        }
     }
 
     private fun setUpTerminal(terminalList: List<ReleasingTerminal>) {

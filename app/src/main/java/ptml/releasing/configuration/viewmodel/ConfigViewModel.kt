@@ -24,8 +24,8 @@ class ConfigViewModel @Inject constructor(
     appCoroutineDispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
-    val configResponse = MutableLiveData<AdminConfigResponse>()
-    fun getConfigResponse(): LiveData<AdminConfigResponse> = configResponse
+    private val _cargoTypes = MutableLiveData<List<CargoType>>()
+    val cargoTypes: LiveData<List<CargoType>> = _cargoTypes
 
     private val operationStepList = MutableLiveData<List<ReleasingOperationStep>>()
     fun getOperationStepList(): LiveData<List<ReleasingOperationStep>> = operationStepList
@@ -41,6 +41,8 @@ class ConfigViewModel @Inject constructor(
 
     val configuration  = _configuration
 
+    lateinit var adminConfigResponse: AdminConfigResponse
+
     fun getConfig(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(
@@ -50,25 +52,17 @@ class ConfigViewModel @Inject constructor(
         )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
-                Timber.d("Getting configuration")
-                val response = repository.getAdminConfigurationAsync(imei).await()
+                adminConfigResponse = repository.getAdminConfigurationAsync(imei).await()
+                val config = repository.getSelectedConfigAsync()
 
                 withContext(dispatchers.main) {
-                    Timber.d("Configuration gotten: %s", response)
-                    configResponse.postValue(response)
-                    val config = repository.getSelectedConfigAsync()
-                    Timber.d("Configuration gotten: %s", config)
+                    _cargoTypes.postValue(adminConfigResponse.cargoTypeList)
+                    terminalList.postValue(adminConfigResponse.terminalList)
+                    operationStepList.postValue(adminConfigResponse.operationStepList)
                     _configuration.postValue(config)
-                    Timber.e("Loading done: %s", response)
-                    networkState.postValue(
-                        Event(
-                            NetworkState.LOADED
-                        )
-                    )
+                    networkState.postValue(Event(NetworkState.LOADED))
                 }
             } catch (e: Throwable) {
-                Timber.e(e)
-                println("In here: ${e.localizedMessage}")
                 networkState.postValue(
                     Event(
                         NetworkState.error(e)
@@ -89,7 +83,6 @@ class ConfigViewModel @Inject constructor(
     ) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(Event(NetworkState.LOADING))
-//        operationStep.id = 32 //TODO Remove this in production
         val configuration =
             Configuration(terminal ?: return, operationStep ?: return, cargoType ?: return, checked)
         compositeJob = CoroutineScope(dispatchers.db).launch {
@@ -116,9 +109,10 @@ class ConfigViewModel @Inject constructor(
     }
 
     fun cargoTypeSelected(cargoType: CargoType) {
-        //populate
-        operationStepList.postValue(getOperationStepForCargo(cargoType))
-        terminalList.postValue(getTerminalsCargo(cargoType))
+        if(this::adminConfigResponse.isInitialized) {
+            operationStepList.postValue(getOperationStepForCargo(cargoType))
+        }
+
     }
 
     fun refreshConfiguration(imei: String) {
@@ -136,7 +130,7 @@ class ConfigViewModel @Inject constructor(
 
                 withContext(dispatchers.main) {
                     Timber.d("Configuration gotten: %s", response)
-                    configResponse.postValue(response)
+                    _cargoTypes.postValue(response.cargoTypeList)
                     Timber.d("Checking if there is a saved configuration")
                     Timber.e("Loading done: %s", response)
                     networkState.postValue(
@@ -161,30 +155,14 @@ class ConfigViewModel @Inject constructor(
 
     private fun getOperationStepForCargo(cargoType: CargoType): MutableList<ReleasingOperationStep> {
         val list = mutableListOf<ReleasingOperationStep>()
-        for (operationStep in configResponse.value?.operationStepList ?: mutableListOf()) {
+        for (operationStep in adminConfigResponse.operationStepList ?: mutableListOf()) {
             if (operationStep.cargo_type == cargoType.id) {
-                Timber.d("Operation step has  a category_id: %s", cargoType.id)
                 list.add(operationStep)
-            } else {
-                Timber.d("Operation step is does not have a category_id: %s", cargoType.id)
             }
         }
         return list
     }
 
-
-    private fun getTerminalsCargo(cargoType: CargoType): MutableList<ReleasingTerminal> {
-        val list = mutableListOf<ReleasingTerminal>()
-        for (terminal in configResponse.value?.terminalList ?: mutableListOf()) {
-            if (terminal.categoryTypeId == cargoType.id) {
-                Timber.d("terminal has  a category_id: %s", cargoType.id)
-                list.add(terminal)
-            } else {
-                Timber.d("terminal  does not have a category_id: %s", cargoType.id)
-            }
-        }
-        return list
-    }
 
     fun updateImei(imei: String) {
         viewModelScope.launch {
