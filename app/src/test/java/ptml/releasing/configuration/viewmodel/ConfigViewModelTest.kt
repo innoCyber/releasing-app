@@ -38,7 +38,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "the response should return a success",
-            this.viewModel.configResponse.value,
+            this.viewModel._cargoTypes.value,
             `is`(getAdminConfigurationSuccess())
         )
 
@@ -66,7 +66,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "the response should return a failure",
-            this.viewModel.configResponse.value, `is`(getAdminConfigurationFail())
+            this.viewModel._cargoTypes.value, `is`(getAdminConfigurationFail())
         )
 
         assertThat(
@@ -95,7 +95,7 @@ class ConfigViewModelTest : BaseTest() {
 
         assertThat(
             "the response should return a success",
-            this.viewModel.configResponse.value,
+            this.viewModel._cargoTypes.value,
             `is`(getAdminConfigurationSuccess())
         )
 
