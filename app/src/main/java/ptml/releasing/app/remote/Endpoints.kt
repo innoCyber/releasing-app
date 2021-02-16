@@ -1,7 +1,6 @@
 package ptml.releasing.app.remote
 
 import java.net.URI
-import java.net.URISyntaxException
 
 enum class Endpoint(
     val url: String,
@@ -10,7 +9,7 @@ enum class Endpoint(
     VERIFY_DEVICE(Urls.VERIFY_DEVICE, "Verification of the device IMEI"),
     LOGIN(Urls.LOGIN, "Admin login"),
     SET_ADMIN_CONFIGURATION(
-        Urls.SET_ADMIN_CONFIGURATION,
+        Urls.GET_ADMIN_CONFIGURATION,
         "Get the admin configuration for operation step, terminal and cargo type"
     ),
     SET_CONFIGURATION_DEVICE(
@@ -30,7 +29,7 @@ enum class Endpoint(
             return when (path) {
                 Urls.VERIFY_DEVICE -> VERIFY_DEVICE
                 Urls.LOGIN -> LOGIN
-                Urls.SET_ADMIN_CONFIGURATION -> SET_ADMIN_CONFIGURATION
+                Urls.GET_ADMIN_CONFIGURATION -> SET_ADMIN_CONFIGURATION
                 Urls.SET_CONFIGURATION_DEVICE -> SET_CONFIGURATION_DEVICE
                 Urls.DOWNLOAD_DAMAGES -> DOWNLOAD_DAMAGES
                 Urls.FIND_CARGO -> FIND_CARGO
@@ -46,7 +45,7 @@ enum class Endpoint(
 object Urls {
     const val VERIFY_DEVICE = "verifyDeviceId"
     const val LOGIN = "login"
-    const val SET_ADMIN_CONFIGURATION = "setAdminConfiguration"
+    const val GET_ADMIN_CONFIGURATION = "setAdminConfiguration"
     const val SET_CONFIGURATION_DEVICE = "setConfigurationDevice"
     const val DOWNLOAD_DAMAGES = "downloadDamages"
     const val FIND_CARGO = "findCargo"

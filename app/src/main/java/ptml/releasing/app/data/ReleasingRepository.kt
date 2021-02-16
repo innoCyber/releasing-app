@@ -49,7 +49,7 @@ open class ReleasingRepository @Inject constructor(
 
     override suspend fun downloadAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse> {
         return withContext(appCoroutineDispatchers.network) {
-            val remoteResponse = remote.setAdminConfigurationAsync(imei)
+            val remoteResponse = remote.getAdminConfigurationAsync(imei)
             withContext(appCoroutineDispatchers.db) {
                 local.saveConfig(remoteResponse.await())
             }
@@ -88,7 +88,7 @@ open class ReleasingRepository @Inject constructor(
     }
 
 
-    override fun getSavedConfigAsync(): Configuration {
+    override fun getSelectedConfigAsync(): Configuration {
         return local.getSavedConfig()
 
     }

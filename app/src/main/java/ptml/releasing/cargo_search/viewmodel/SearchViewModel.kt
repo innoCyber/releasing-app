@@ -119,14 +119,11 @@ open class SearchViewModel @Inject constructor(
                         _findCargoHolder.value = formResponse
                         val cargoNotFoundResponse = CargoNotFoundResponse(
                             formResponse?.message,
-                            Constants.SHIP_SIDE.toLowerCase(Locale.US) == config?.operationStep?.value?.toLowerCase(
-                                Locale.US
-                            )
+                            Constants.SHIP_SIDE.equals(config?.operationStep?.value, ignoreCase = true)
                         )
                         _errorMessage.value = cargoNotFoundResponse
                     }
-                    _networkState.value =
-                        Event(NetworkState.LOADED)
+                    _networkState.value = Event(NetworkState.LOADED)
                 }
             } catch (e: Throwable) {
                 Timber.e(e)
@@ -146,10 +143,7 @@ open class SearchViewModel @Inject constructor(
         Timber.d("Last selected voyage: $lastSelectedVoyage")
         return if (lastSelectedVoyage != null) {
             val voyageOption = FormOption(
-                listOf(
-                    formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage)
-                        .id
-                )
+                listOf(formMappers.voyagesMapper.mapFromModel(lastSelectedVoyage).id)
             )
             voyageOption.id = getVoyageId()
             val options =
@@ -164,6 +158,7 @@ open class SearchViewModel @Inject constructor(
 
     private suspend fun getVoyageId(): Int {
         val form = repository.getFormConfigAsync().await()
+
         val voyageForm = form.data.filter {
             it.type == FormType.VOYAGE.type
         }

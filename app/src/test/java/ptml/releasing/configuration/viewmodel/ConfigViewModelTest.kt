@@ -88,7 +88,7 @@ class ConfigViewModelTest : BaseTest() {
 
 
         coEvery {
-            repository.getSavedConfigAsync()
+            repository.getSelectedConfigAsync()
         } returns getSavedConfig()
 
         viewModel.getConfig("")
