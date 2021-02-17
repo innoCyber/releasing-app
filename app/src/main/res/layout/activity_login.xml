@@ -11,108 +11,178 @@
         <import type="ptml.releasing.app.data.domain.state.DataState" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/constraint_default_margin_8dp">
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_terminal" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorOverlay" />
 
-            <ImageView
-                android:id="@+id/img_app_icon"
-                android:layout_width="@dimen/app_icon_width"
-                android:layout_height="@dimen/app_icon_height"
-                android:layout_marginTop="@dimen/app_icon_margin_top"
-                android:contentDescription="@string/app_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/ic_launcher" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/badge_id_input"
-                style="@style/Widget.Driver.TextInputLayout"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_first_text_input_margin_top"
-                android:hint="@string/login_badge_id_hint"
-                app:errorText="@{viewModel.badgeIdErrorState}"
-                app:layout_constraintTop_toBottomOf="@id/img_app_icon">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/badge_edit_text"
-                    android:layout_width="match_parent"
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_l"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="@={viewModel.badgeId}"
-                    app:hideKeyboardOnInputDone="@{true}" />
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.05" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_input"
-                style="@style/Widget.Driver.TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_text_input_margin"
-                android:hint="@string/login_password_hint"
-                app:passwordToggleEnabled="true"
-                app:errorText="@{viewModel.passwordErrorState}"
-                app:layout_constraintTop_toBottomOf="@id/badge_id_input">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password_edit_text"
-                    android:layout_width="match_parent"
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_r"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"
-                    android:text="@={viewModel.password}"
-                    app:hideKeyboardOnInputDone="@{true}" />
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.95" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <ImageView
+                    android:id="@+id/img_app_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/app_icon_margin_top"
+                    android:contentDescription="@string/app_name"
+                    app:layout_constraintBottom_toTopOf="@id/login_form"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.3"
+                    app:layout_constraintVertical_chainStyle="spread"
+                    app:layout_constraintWidth_max="300dp"
+                    app:srcCompat="@drawable/ic_ptml_logo" />
 
-            <Button
-                android:id="@+id/btn_login"
-                style="@style/Widget.Driver.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/login_btn_margin_top"
-                android:enabled="@{!viewModel.loading}"
-                android:onClick="@{()-> viewModel.handleLogin()}"
-                android:text="@string/login"
-                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
-                app:layout_constraintTop_toBottomOf="@id/password_input" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/login_form"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                    app:layout_constraintStart_toStartOf="@id/guideline_l"
+                    app:layout_constraintTop_toBottomOf="@id/img_app_icon">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/badge_id_input"
+                        style="@style/Widget.App.TextInputLayout.Login"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/login_text_input_margin"
+                        android:layout_marginTop="@dimen/login_first_text_input_margin_top"
+                        android:layout_marginEnd="@dimen/login_text_input_margin"
+                        android:hint="@string/login_badge_id_hint"
+                        app:errorText="@{viewModel.badgeIdErrorState}"
+                        app:layout_constraintBottom_toTopOf="@id/password_input"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        app:layout_constraintWidth_max="400dp"
+                        app:startIconDrawable="@drawable/ic_user">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/badge_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:text="@={viewModel.badgeId}"
+                            app:hideKeyboardOnInputDone="@{true}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/password_input"
+                        style="@style/Widget.App.TextInputLayout.Login"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/login_text_input_margin"
+                        android:layout_marginEnd="@dimen/login_text_input_margin"
+                        android:hint="@string/login_password_hint"
+                        app:errorText="@{viewModel.passwordErrorState}"
+                        app:layout_constraintBottom_toTopOf="@id/btn_login"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/badge_id_input"
+                        app:layout_constraintWidth_max="400dp"
+                        app:passwordToggleEnabled="true"
+                        app:startIconDrawable="@drawable/ic_password">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/password_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPassword"
+                            android:text="@={viewModel.password}"
+                            app:hideKeyboardOnInputDone="@{true}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btn_login"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/login_text_input_margin"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="@dimen/login_text_input_margin"
+                        android:background="@drawable/btn_bg_accent"
+                        android:enabled="@{!viewModel.loading}"
+                        android:onClick="@{()-> viewModel.handleLogin()}"
+                        android:text="@string/login"
+                        android:textColor="@color/colorWhite"
+                        app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/password_input"
+                        app:layout_constraintWidth_max="400dp" />
 
 
+                    <Button
+                        android:id="@+id/btn_reset"
+                        style="@style/Widget.Driver.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:enabled="@{!viewModel.loading}"
+                        android:onClick="@{()->viewModel.handleReset()}"
+                        android:text="@string/forgot_password"
+                        android:textColor="@color/colorGray"
+                        app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
-            <Button
-                android:id="@+id/btn_reset"
-                style="@style/Widget.Driver.Button.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/login_text_input_margin"
-                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
-                android:enabled="@{!viewModel.loading}"
-                android:onClick="@{()->viewModel.handleReset()}"
-                android:text="@string/reset_password"
-                app:hideKeyboardOnInputDone="@{viewModel.hideKeyBoard}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <include
-                android:id="@+id/progress_bar"
-                layout="@layout/progress_bar_layout"
-                android:visibility="gone" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/progress_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

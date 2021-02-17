@@ -622,6 +622,16 @@
         <item name="boxBackgroundColor">@color/colorOnSearchBg</item>
     </style>
 
+    <style name="TextAppearance.App.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">?colorOnSurface</item>
+    </style>
+
+    <style name="Widget.App.TextInputLayout.Login" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="hintTextAppearance">@style/TextAppearance.App.TextInputLayout.HintText</item>
+        <item name="hintTextColor">?colorOnSurface</item>
+        <item name="boxBackgroundColor">?colorSurface</item>
+    </style>
+
     <style name="Widget.Driver.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textAppearance">@style/TextAppearance.Driver.Button</item>
     </style>

@@ -26,18 +26,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkIfLoggedIn()
-        binding.progressBar.progressRoot.setBackgroundColor(
-            ContextCompat.getColor(
-                this,
-                R.color.progress_overlay
-            )
-        )
-        binding.progressBar.cardView.setCardBackgroundColor(
-            ContextCompat.getColor(
-                this,
-                R.color.progress_overlay
-            )
-        )
         binding.viewModel = viewModel
         setupObservers()
     }
