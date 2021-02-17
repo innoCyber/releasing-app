@@ -1,6 +1,7 @@
 package ptml.releasing.configuration.view
 
 import android.app.Activity
+import android.media.AudioRecordingConfiguration
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -60,8 +61,11 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             })
 
         })
-        viewModel.getTerminalList().observe(this, Observer {
-            setUpTerminal(it)
+        viewModel.getTerminalList().observe(this, Observer {terminals ->
+            viewModel.configuration.observe(this, Observer {selectedTerminal ->
+                setUpTerminal(terminals, selectedTerminal)
+            })
+
         })
 
 
@@ -202,12 +206,24 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun setConfig() {
-        viewModel.setConfig(
-            binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?,
-            binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?,
-            binding.top.selectCargoSpinner.selectedItem as CargoType?,
-            binding.top.cameraSwitch.isChecked, imei ?: ""
-        )
+        if((binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?)?.categoryTypeId == -1){
+            val dialogFragment = InfoDialog.newInstance(
+                title = getString(R.string.no_terminal_assigned_header),
+                message = getString(R.string.no_terminal_assigned_text),
+                buttonText = getString(android.R.string.ok),
+                listener = object : InfoDialog.InfoListener {
+                    override fun onConfirm() {}
+                })
+            dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+        }else{
+            viewModel.setConfig(
+                binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?,
+                binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?,
+                binding.top.selectCargoSpinner.selectedItem as CargoType?,
+                binding.top.cameraSwitch.isChecked, imei ?: ""
+            )
+        }
+
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
@@ -292,9 +308,13 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         }
     }
 
-    private fun setUpTerminal(terminalList: List<ReleasingTerminal>) {
+    private fun setUpTerminal(terminalList: List<ReleasingTerminal>, selected: Configuration) {
         terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, terminalList)
-        binding.top.selectTerminalSpinner.adapter = terminalAdapter
+        binding.top.selectTerminalSpinner.run{
+            adapter = terminalAdapter
+            val selectedItem = terminalList.indexOf(selected.terminal)
+            setSelection(if(selectedItem == -1) 0 else selectedItem)
+        }
     }
 
 

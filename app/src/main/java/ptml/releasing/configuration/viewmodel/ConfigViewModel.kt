@@ -57,7 +57,8 @@ class ConfigViewModel @Inject constructor(
 
                 withContext(dispatchers.main) {
                     _cargoTypes.postValue(adminConfigResponse.cargoTypeList)
-                    terminalList.postValue(adminConfigResponse.terminalList)
+                    val modifiedTerminal = modifyTerminal()
+                    terminalList.postValue(modifiedTerminal)
                     operationStepList.postValue(adminConfigResponse.operationStepList)
                     _configuration.postValue(config)
                     networkState.postValue(Event(NetworkState.LOADED))
@@ -72,6 +73,16 @@ class ConfigViewModel @Inject constructor(
         }
 
 
+    }
+
+    private fun modifyTerminal(): MutableList<ReleasingTerminal>? {
+        val modifiedTerminal = adminConfigResponse.terminalList
+            ?.toMutableList()
+        modifiedTerminal?.add(0, ReleasingTerminal(-1)
+            .apply {
+                value = "No terminal assigned"
+            })
+        return modifiedTerminal
     }
 
     fun setConfig(
