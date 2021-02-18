@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "ptml.releasing.staging",
+  "variantName": "processStagingReleaseResources",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 6,
+      "versionName": "1.6.0-staging--b20210217",
+      "outputFile": "app-staging-release.apk"
+    }
+  ]
+}
