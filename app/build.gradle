@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.appdistribution'
 
 android {
     signingConfigs {
@@ -40,6 +41,11 @@ android {
             zipAlignEnabled true
             signingConfig signingConfigs.Releasing
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseAppDistribution {
+                releaseNotesFile="C:\\Users\\Idris\\AndroidStudioProjects\\releasing-app\\app\\app-distribution\\release-note"
+                testersFile="C:\\Users\\Idris\\AndroidStudioProjects\\releasing-app\\app\\app-distribution\\testers.txt"
+                apkPath="C:\\Users\\Idris\\AndroidStudioProjects\\releasing-app\\app\\staging\\release\\app-staging-release.apk"
+            }
         }
     }
     flavorDimensions 'server'
@@ -56,8 +62,12 @@ android {
             dimension 'server'
             applicationIdSuffix '.staging'
             versionNameSuffix "-staging-" + "-b" + getDate()
-            versionCode 6
             signingConfig signingConfigs.Releasing
+            firebaseAppDistribution {
+                releaseNotesFile="C:\\Users\\Idris\\AndroidStudioProjects\\releasing-app\\app\\app-distribution\\release-note"
+                testersFile="C:\\Users\\Idris\\AndroidStudioProjects\\releasing-app\\app\\app-distribution\\testers.txt"
+                apkPath="C:\\Users\\Idris\\AndroidStudioProjects\\releasing-app\\app\\staging\\release\\app-staging-release.apk"
+            }
         }
 
         production {
