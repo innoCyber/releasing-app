@@ -38,7 +38,7 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
         binding.includeError.btnReloadLayout.setOnClickListener {
             viewModel.downloadVoyages()
         }
-        binding.fab.setOnClickListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.downloadVoyages()
         }
 
@@ -59,8 +59,7 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
                     hideLoading(binding.includeProgress.root)
                 }
 
-                //disable the fab when data is loading
-                binding.fab.isEnabled = it != NetworkState.LOADING
+
 
                 if (it.status == Status.FAILED) {
                     val error = ErrorHandler(this).getErrorMessage(it.throwable)
@@ -72,6 +71,7 @@ class VoyageActivity : BaseActivity<VoyageViewModel, ActivityVoyageBinding>() {
         })
 
         viewModel.getResponse().observe(this, Observer {
+            binding.swipeRefreshLayout.isRefreshing = false
             adapter.setItems(it)
         })
     }

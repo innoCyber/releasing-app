@@ -1,6 +1,7 @@
 package ptml.releasing.app.data.local
 
 import android.content.SharedPreferences
+import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
@@ -36,6 +37,23 @@ open class PreferencesManagerImpl @Inject constructor(
 
     override fun setLoggedIn(value: Boolean) {
         return setBooleanPreference(prefLoggedIn, value)
+    }
+
+    override fun getAuthKey(): String {
+        val loginData = gson.fromJson(getStringPreference(prefLoginData), LoginEntity::class.java)
+         val authPayload = "${loginData.badgeId}:${loginData.password}"
+        val data = authPayload.toByteArray()
+         val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
+        return "Basic $base64".trim()
+    }
+
+    override fun getStaticAuth(): String {
+        val username = "admin"
+        val password = "Passw2021"
+        val authPayload = "$username:$password"
+        val data = authPayload.toByteArray()
+        val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
+        return "Basic $base64".trim()
     }
 
     override fun getIMEI(): String {

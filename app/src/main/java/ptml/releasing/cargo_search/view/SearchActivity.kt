@@ -120,8 +120,13 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         viewModel.findCargoResponse.observe(this, Observer {
             //pass it on to the cargo info activity
-            Timber.e("Gotten response: %s", it)
-            animateBadge(it)
+            Timber.e("Gotten  response: %s", it)
+            //Map selected vessel for a particular value id to form response
+//            viewModel.mapSelectedVesselToFindCargoResponse(it).observe(this, Observer {
+//                Timber.e("Gotten modified response: %s", it)
+                animateBadge(it)
+           // })
+
         })
 
         viewModel.scan.observe(this, Observer { event ->
@@ -135,6 +140,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             event.getContentIfNotHandled()?.let {
                 val intent = Intent(this, ConfigActivity::class.java)
                 startActivityForResult(intent, RC_CONFIG)
+                finish()
             }
         })
 
@@ -174,7 +180,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
-            it.setBackgroundResource(R.drawable.save_btn_bg_blue)
             viewModel.verify()
         }
 
@@ -435,7 +440,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     override fun initBeforeView() {
         super.initBeforeView()
         if (!viewModel.isConfigured()) {
-            startNewActivity(LoginActivity::class.java)
+            //startNewActivity(LoginActivity::class.java)
         }
     }
 

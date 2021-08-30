@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
@@ -30,6 +31,8 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel(updateChecker, repository, appCoroutineDispatchers) {
 
     val badgeId = MutableLiveData<String>()
+
+    val version = context.getString(R.string.version_text, BuildConfig.VERSION_NAME)
 
     private val badgeIdError = MutableLiveData<String>()
     fun getBadgeIdErrorState(): LiveData<String> = badgeIdError

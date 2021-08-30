@@ -41,6 +41,8 @@ interface Repository {
         cargoTypeId: Int?,
         operationStepId: Int?,
         terminal: Int?,
+        shippingLine: String?,
+        voyage: Int?,
         imei: String,
         cargoNumber: String
     ): Deferred<FindCargoResponse?>?

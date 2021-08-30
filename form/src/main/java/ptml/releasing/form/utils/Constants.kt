@@ -29,7 +29,7 @@ object Constants {
     const val SIMPLE_TEXT = "simple_text"
     const val VOYAGE = "voyage"
     const val UNKNOWN = "unknown"
-    const val ITEM_TO_EXPAND = 6
+    const val ITEM_TO_EXPAND = 5
 
 
     const val DEFAULT_DAMAGES_VERSION = 1L

@@ -9,7 +9,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
+import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import ptml.releasing.app.data.domain.repository.ImeiRepository
+import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.asLiveData
@@ -20,7 +22,9 @@ import javax.inject.Inject
 
 class AdminConfigViewModel @Inject constructor(
     private val imeiRepository: ImeiRepository,
-    repository: Repository, dispatchers: AppCoroutineDispatchers,
+    repository: Repository,
+    voyageRepository: VoyageRepository,
+    dispatchers: AppCoroutineDispatchers,
     updateChecker: RemoteConfigUpdateChecker
 ) :
     BaseViewModel(updateChecker, repository, dispatchers) {
@@ -67,12 +71,16 @@ class AdminConfigViewModel @Inject constructor(
 
     private fun fetchConfiguration() {
         CoroutineScope(dispatchers.network).launch {
-           _adminConfigAsync.postValue(Event( repository.getAdminConfigurationAsync(imeiRepository.getIMEI()).await()))
+            _adminConfigAsync.postValue(
+                Event(
+                    repository.getAdminConfigurationAsync(imeiRepository.getIMEI()).await()
+                )
+            )
         }
 
     }
 
-    fun saveSelectedTerminal(configuration: Configuration){
+    fun saveSelectedTerminal(configuration: Configuration) {
         repository.setSavedConfigAsync(configuration)
     }
 
@@ -87,7 +95,7 @@ class AdminConfigViewModel @Inject constructor(
         _openConfig.postValue(Event(Unit))
     }
 
-    fun openTerminalSelection(){
+    fun openTerminalSelection() {
         CoroutineScope(dispatchers.network).launch {
             val config = repository.getAdminConfigurationAsync(imeiRepository.getIMEI()).await()
             val selectedConfig = repository.getSelectedConfigAsync()
@@ -95,6 +103,7 @@ class AdminConfigViewModel @Inject constructor(
             _selectedTerminal.postValue(Event(selectedConfig))
         }
     }
+
 
 
 
@@ -224,4 +233,6 @@ class AdminConfigViewModel @Inject constructor(
             imeiRepository.setIMEI(imei)
         }
     }
+
+
 }

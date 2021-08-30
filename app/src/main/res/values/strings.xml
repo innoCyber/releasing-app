@@ -52,7 +52,6 @@
     <string name="admin_id">Admin ID</string>
     <string name="logining_in">Logging in…</string>
     <string name="admin_configuration">Admin Configuration</string>
-    <string name="configuration">Configuration</string>
     <string name="drop_down">Drop down</string>
 
     <string name="loading">Loading…</string>
@@ -79,7 +78,7 @@
     <string name="scan_barcode">Scan Barcode</string>
     <string name="verify">Verify</string>
     <string name="search_hint_label">Cargo Number</string>
-    <string name="search_hint">Enter Cargo Number</string>
+    <string name="search_hint">Enter cargo number</string>
     <string name="config_saved_success">Configuration saved successfully</string>
     <string name="saved_successful">Success</string>
     <string name="config_error">Configuration Error</string>
@@ -322,6 +321,19 @@
     <string name="change_terminal">Change Terminal</string>
     <string name="select_terminal">Select Terminal</string>
     <string name="forgot_password"><u>Forgot Password?</u></string>
-    <string name="no_terminal_assigned_text">No terminal has been assigned to this device, please refer to <u>helpdesk.eramp@ptml-ng.com</u> to configure your terminal.</string>
+    <string name="no_terminal_assigned_text">No terminal has been assigned to this device, please refer to <u>helpdesk.eramp@ptml-ng.com</u> to configure your device.</string>
+    <string name="no_voyage_assigned_text">No voyage has been selected for this operation, please refer to <u>helpdesk.eramp@ptml-ng.com</u> to configure your device.</string>
     <string name="no_terminal_assigned_header">No Terminal Assigned</string>
+    <string name="no_voyage_assigned_header">No Voyage Selected</string>
+    <string name="al_rights_reserved_design_by_ptml">&#169; All rights reserved, design by <b>PTML</b></string>
+    <string name="releasing_mobile">Releasing Mobile</string>
+    <string name="eramp_terminal">eRamp Terminal</string>
+    <string name="set_voyage">Set Voyage</string>
+    <string name="select_voyage">Select Voyage</string>
+    <string name="shipping_line">Shipping Line</string>
+    <string name="voyage">Voyage</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="configuration">Configuration</string>
+    <string name="settings">Settings</string>
+    <string name="others">Others</string>
 </resources>

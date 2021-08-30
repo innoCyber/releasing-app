@@ -1,12 +1,14 @@
 package ptml.releasing.app.data.remote
 
 import android.content.Context
+import android.text.TextUtils
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.data.remote.interceptor.ConnectivityInterceptor
 import ptml.releasing.app.data.remote.interceptor.ImeiInterceptor
+import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.utils.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,7 +24,8 @@ class VoyageRestClient @Inject constructor(
     context: Context,
     gson: Gson,
     @Named(Constants.DEBUG)
-    debug: Boolean
+    debug: Boolean,
+    var prefs: Prefs
 ) {
 
     companion object {
@@ -49,9 +52,10 @@ class VoyageRestClient @Inject constructor(
                 addInterceptor(ImeiInterceptor())
             }
 
+        val serverUrl = prefs.getServerUrl()
         val client = httpClient.build()
         val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_VOYAGE_URL)
+            .baseUrl(if(serverUrl.isNullOrEmpty()) BuildConfig.BASE_VOYAGE_URL else serverUrl)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()

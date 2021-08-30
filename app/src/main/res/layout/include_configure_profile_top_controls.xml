@@ -3,7 +3,100 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_select_cargo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cargo_type"
+            android:textSize="16sp" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab"
+            style="@style/AppTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tab_background"
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
+
+        <TextView
+            android:id="@+id/tv_select_operation_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/operation_step"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/select_operation_spinner"
+            style="@style/SpinnerStyle"
+            android:layout_marginTop="6dp"
+            android:entries="@array/sample" />
+
+        <TextView
+            android:id="@+id/tv_select_shipping_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/shipping_line"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/select_shipping_line_spinner"
+            style="@style/SpinnerStyle"
+            android:layout_marginTop="6dp"
+            android:entries="@array/sample" />
+
+        <TextView
+            android:id="@+id/tv_select_voyage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/voyage"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/select_voyage_spinner"
+            style="@style/SpinnerStyle"
+            android:layout_marginTop="6dp"
+            android:entries="@array/sample" />
+
+
+        <TextView
+            android:id="@+id/tv_select_terminal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/terminal"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical" />
+
+
+        <TextView
+            android:id="@+id/terminal_text"
+            tools:text="Main"
+            android:textSize="16sp"
+            android:background="@drawable/spinner_background"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+
+
+
+    </LinearLayout>
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/constraint_default_margin_8dp">
@@ -61,7 +154,6 @@
         <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_operation_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
-            app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/tv_select_operation">
@@ -74,16 +166,60 @@
 
 
         <TextView
-            android:id="@+id/tv_select_terminal"
+            android:id="@+id/tv_select_shipping_line"
             style="@style/LabelStyle"
-            android:text="@string/terminal"
+            android:text="@string/shipping_line"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/guideline_ll"
             app:layout_constraintTop_toBottomOf="@id/select_operation_spinner_layout" />
 
         <ptml.releasing.app.views.MaterialRippleLayout
+            android:id="@+id/select_shipping_line_spinner_layout"
+            style="@style/RippleLayoutStyle.Configure.Spinner"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_shipping_line">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/select_shipping_line_spinner"
+                style="@style/SpinnerStyle"
+                android:entries="@array/sample" />
+        </ptml.releasing.app.views.MaterialRippleLayout>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_select_voyage"
+            style="@style/LabelStyle"
+            android:text="@string/voyage"
+            app:layout_constraintStart_toStartOf="@id/guideline_ll"
+            app:layout_constraintTop_toBottomOf="@id/select_shipping_line_spinner_layout" />
+
+        <ptml.releasing.app.views.MaterialRippleLayout
+            android:visibility="gone"
+            android:id="@+id/select_voyage_spinner_layout"
+            style="@style/RippleLayoutStyle.Configure.Spinner"
+            app:layout_constraintEnd_toEndOf="@id/guideline_r"
+            app:layout_constraintStart_toStartOf="@id/guideline_l"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_voyage">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/select_voyage_spinner"
+                style="@style/SpinnerStyle"
+                android:entries="@array/sample" />
+        </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+        <TextView
+            android:id="@+id/tv_select_terminal"
+            style="@style/LabelStyle"
+            android:text="@string/terminal"
+            app:layout_constraintStart_toStartOf="@id/guideline_ll"
+            app:layout_constraintTop_toBottomOf="@id/select_voyage_spinner_layout" />
+
+        <ptml.releasing.app.views.MaterialRippleLayout
             android:id="@+id/select_terminal_spinner_layout"
             style="@style/RippleLayoutStyle.Configure.Spinner"
-            app:layout_constraintBottom_toTopOf="@id/btn_delete_layout"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
             app:layout_constraintTop_toBottomOf="@id/tv_select_terminal">
@@ -95,22 +231,18 @@
         </ptml.releasing.app.views.MaterialRippleLayout>
 
 
-
-
-
         <Switch
             android:id="@+id/camera_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/constraint_default_margin_24dp"
             android:padding="@dimen/constraint_default_margin_10dp"
             android:switchPadding="@dimen/constraint_default_margin_16dp"
             android:text="@string/enable_camera_scan"
-            android:layout_marginTop="@dimen/constraint_default_margin_24dp"
             app:layout_constraintEnd_toEndOf="@id/guideline_r"
             app:layout_constraintStart_toStartOf="@id/guideline_l"
-            app:layout_constraintTop_toBottomOf="@id/select_terminal_spinner_layout"/>
+            app:layout_constraintTop_toBottomOf="@id/select_terminal_spinner_layout" />
 
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </layout>

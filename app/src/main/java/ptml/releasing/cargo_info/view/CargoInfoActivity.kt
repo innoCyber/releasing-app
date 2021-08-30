@@ -449,13 +449,21 @@ class CargoInfoActivity :
 
         val newForm = wrapper?.formConfigureDeviceResponse?.data
 
-            Timber.i(newForm!!.size.toString())
-
+        //RemovedTypeForNonGimaldi containers
+        var modifiedList = newForm
+            if(findCargoResponse?.grimaldiContainer != "No"){
+              modifiedList =  newForm!!.filterNot{
+                   it.title == "Type"
+               }
+                modifiedList =  modifiedList!!.filterNot{
+                   it.title == "Shipping Line"
+               }
+            }
 
         formBuilder = FormBuilder(this)
         val formView = formBuilder
             ?.setListener(formListener)
-            ?.build(newForm, wrapper?.remarks, wrapper?.voyages)
+            ?.build(modifiedList, wrapper?.remarks, null)
 
         formBuilder
             ?.init(viewModel.formMappers.formPrefillMapper.mapFromModel(findCargoResponse!!))

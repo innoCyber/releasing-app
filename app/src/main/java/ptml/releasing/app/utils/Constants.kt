@@ -6,6 +6,7 @@ object Constants {
     const val EXTRAS = "extras"
     const val OK_HTTP_CACHE: String = "ok_http_cache"
     const val CONNECT_TIME_OUT = 60L
+    const val READ_TIME_OUT = 20L
     const val WRITE_TIME_OUT = 60L
     const val DATABASE_NAME = "releasing.db"
     const val PREFS = "prefs"

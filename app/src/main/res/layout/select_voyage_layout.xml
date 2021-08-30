@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/constraint_default_margin_12dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_select_terminal"
+        style="@style/LabelStyle"
+        android:text="@string/select_voyage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ptml.releasing.app.views.MaterialRippleLayout
+        android:id="@+id/select_voyage_spinner_layout"
+        style="@style/RippleLayoutStyle.Configure.Spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_select_terminal">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/select_voyage_spinner"
+            style="@style/SpinnerStyle"
+            android:entries="@array/sample" />
+    </ptml.releasing.app.views.MaterialRippleLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

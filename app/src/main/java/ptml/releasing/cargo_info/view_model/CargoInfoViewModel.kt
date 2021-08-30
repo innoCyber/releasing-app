@@ -1,6 +1,7 @@
 package ptml.releasing.cargo_info.view_model
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -114,9 +115,9 @@ class CargoInfoViewModel @Inject constructor(
                     )
 
                 withContext(dispatchers.main) {
-                    Timber.i(wrapper.toString())
                     _formConfig.postValue(wrapper)
                 }
+
             } catch (e: Exception) {
                 Timber.e(e)
                 _networkState.postValue(
@@ -208,12 +209,12 @@ class CargoInfoViewModel @Inject constructor(
                     findCargoResponse?.grimaldiContainer,
                     findCargoResponse?.cargoId,
                     getPhotoNames(cargoCode),
-                    formSubmission.selectedVoyage?.id,
+                    configuration.voyage?.id?: -1,
+                    configuration.shippingLine?.id?: -1,
                     imei,
                     badgeId = loginRepository.getLoginData().badgeId
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()
-
                 withContext(dispatchers.main) {
                     if (result.isSuccess) {
                         //schedule upload images

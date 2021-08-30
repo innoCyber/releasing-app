@@ -2,6 +2,7 @@ package ptml.releasing.save_time_worker
 
 import android.content.Context
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -11,7 +12,6 @@ import ptml.releasing.app.data.domain.usecase.LogOutUseCase
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.di.modules.worker.ChildWorkerFactory
 import ptml.releasing.app.eventbus.EventBus
-import ptml.releasing.app.eventbus.LoginSessionTimeoutEvent
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import timber.log.Timber
 import java.util.*
@@ -31,81 +31,54 @@ class CheckLoginWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            val lastActiveTime = localDataManager.getLastActiveTime()
-            if (isMoreThanAnHour(lastActiveTime)) {
-                Timber.d("Time is more than an hour.. Logging out")
-                eventBus.send(LoginSessionTimeoutEvent())
-                //log out
-                logOutUseCase.execute()
-                withContext(dispatchers.main) {
-                    Toast.makeText(
-                        applicationContext,
-                        applicationContext.getString(R.string.session_timed_out_msg),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                Result.success()
-            } else {
-                Timber.d("Time is not more than more than an hour.. Moving on")
-                Result.retry()
+
+            withContext(dispatchers.main) {
+                //eventBus.send(LoginSessionTimeoutEvent())
+                event.postValue(System.currentTimeMillis())
+                Toast.makeText(
+                    applicationContext,
+                    applicationContext.getString(R.string.session_timed_out_msg),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+            Result.success()
         } catch (throwable: Throwable) {
             Timber.e(throwable, "Error occurred while executing ${this::class.java.simpleName}")
             Result.retry()
         }
     }
 
-    private fun isMoreThanAnHour(time: Long): Boolean {
-        val now = Calendar.getInstance().timeInMillis
-        val timeDiff = now - time
-        return timeDiff > FIVE_MIN_MILLIS
-    }
-
-    private fun rescheduleWork() {
-        scheduleWork(applicationContext)
-    }
 
     @AssistedInject.Factory
     interface Factory : ChildWorkerFactory
 
     companion object {
-        private const val ONE_HOUR_MILLIS = 3600000L
-        private const val FIVE_MIN_MILLIS = 5 * 60 * 1000
-        private const val DEFAULT_INTERVAL_SECS = 300L
-        private const val CHECK_LOGIN_INTERVAL_TYPE = Calendar.SECOND
-        private const val CHECK_LOGIN_TAG = "CHECK_LOGIN_TAG"
+        const val CHECK_LOGIN_TAG = "CHECK_LOGIN_TAG"
         private const val CHECK_LOGIN_NAME = "CHECK_LOGIN_NAME"
+        private const val TEN_MIN_MILLIS = 10 * 60 * 1000L
+        val event: MutableLiveData<Long> = MutableLiveData(0L)
 
-        fun scheduleWork(
-            context: Context,
-            intervalInSecs: Long = DEFAULT_INTERVAL_SECS
-        ): UUID {
-            val currentDate = Calendar.getInstance()
-            val dueDate = Calendar.getInstance()
-            dueDate.add(CHECK_LOGIN_INTERVAL_TYPE, intervalInSecs.toInt())
-
-            val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
-            Timber.d("Work scheduled..., to be executed in ${timeDiff / 1000} seconds")
-            return scheduleWorkInternal(context, timeDiff)
+        fun isMoreThan5Min(time: Long): Boolean {
+            val now = Calendar.getInstance().timeInMillis
+            val timeDiff = now - time
+            return timeDiff > TEN_MIN_MILLIS
         }
 
-        private fun scheduleWorkInternal(context: Context, delayInMillis: Long): UUID {
-            Timber.d("scheduling CheckLoginWorker worker...")
-
+        fun scheduleWork(context: Context): UUID {
             val workRequest = OneTimeWorkRequestBuilder<CheckLoginWorker>()
+                .setInitialDelay(TEN_MIN_MILLIS, TimeUnit.MILLISECONDS)
                 .addTag(CHECK_LOGIN_TAG)
-                .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
                 .build()
 
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(CHECK_LOGIN_NAME, ExistingWorkPolicy.KEEP, workRequest)
+            WorkManager.getInstance(context).enqueueUniqueWork(CHECK_LOGIN_NAME,
+                ExistingWorkPolicy.REPLACE, workRequest)
 
             Timber.d("scheduling CheckLoginWorker work done.")
             return workRequest.id
         }
 
-        fun cancelWork(context: Context): Operation {
-            return WorkManager.getInstance(context).cancelAllWorkByTag(CHECK_LOGIN_TAG)
-        }
+
+
+
     }
 }

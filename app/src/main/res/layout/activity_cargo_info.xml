@@ -90,30 +90,38 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/include_operator_badge" />
 
+                <LinearLayout
+                    android:id="@+id/cargo_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    android:padding="14dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/cargo_bg_color"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/include_home">
 
-                <TextView
-                    android:id="@+id/tv_number_label"
-                    style="@style/LabelStyle.FindCargo"
-                    android:text="@string/search_hint_label"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tv_number"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_number"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toTopOf="@id/tv_number" />
+                    <TextView
+                        android:id="@+id/tv_number_label"
+                        android:text="@string/search_hint_label"
+                        android:layout_width="0dp"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"/>
 
+                    <TextView
+                        android:id="@+id/tv_number"
+                        style="@style/CargoNumber"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:textSize="22sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        tools:text="XXXB005643" />
 
-                <TextView
-                    android:id="@+id/tv_number"
-                    style="@style/CargoNumber"
-                    android:layout_marginStart="@dimen/constraint_default_margin_8dp"
-                    android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
-                    android:text="XXXB005643"
-                    app:layout_constraintBottom_toTopOf="@+id/divider"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                    app:layout_constraintHorizontal_bias="0.2"
-                    app:layout_constraintStart_toEndOf="@id/tv_number_label"
-                    app:layout_constraintTop_toBottomOf="@id/include_home" />
-
+                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_badge"
@@ -131,7 +139,7 @@
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintHorizontal_bias="0.2"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/tv_number">
+                    app:layout_constraintTop_toBottomOf="@id/cargo_view">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_badge"
@@ -144,18 +152,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/constraint_default_margin_16dp"
-                    android:background="@color/colorBlueGray"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/til_badge" />
-
-
                 <FrameLayout
                     android:id="@+id/form_container"
                     android:layout_width="match_parent"
@@ -164,7 +160,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/guideline_r"
                     app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/divider"
+                    app:layout_constraintTop_toBottomOf="@id/til_badge"
                     app:layout_constraintVertical_bias="0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

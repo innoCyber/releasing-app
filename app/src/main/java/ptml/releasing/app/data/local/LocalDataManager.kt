@@ -15,6 +15,8 @@ interface LocalDataManager {
 
     fun loggedIn(): Boolean
     fun setLoggedIn(value: Boolean)
+    fun getAuthKey(): String
+    fun getStaticAuth(): String
 
     fun resetPreferences(): Boolean
     fun removePreference(key: String)

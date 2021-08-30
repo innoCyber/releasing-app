@@ -38,8 +38,8 @@ class MainModule {
     }
 
     @Provides
-    fun provideRemote(retrofit: Retrofit): Remote {
-        return ReleasingRemote(retrofit)
+    fun provideRemote(retrofit: Retrofit, localDataManager: LocalDataManager): Remote {
+        return ReleasingRemote(retrofit, localDataManager)
     }
 
     @Provides

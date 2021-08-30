@@ -44,6 +44,8 @@ class CargoType : BaseConfig() {
 
 }
 
+class ReleasingVoyage : BaseConfig()
+
 data class ReleasingTerminal(
         @SerializedName("cargo_type")
         val categoryTypeId: Int
@@ -97,6 +99,10 @@ data class ReleasingOperationStep(
     override fun toString(): String {
         return "OperationStep(cargo_type=$cargo_type) ${super.toString()}"
     }
+}
+
+
+class ShippingLine : BaseConfig() {
 
 
 }
@@ -107,12 +113,16 @@ data class AdminConfigResponse(
         val cargoTypeList: List<CargoType>?,
     @SerializedName("operation_step")
     val operationStepList: List<ReleasingOperationStep>?,
+    @SerializedName("shipping_line")
+    val shippingLineList: List<ShippingLine>?,
+    @SerializedName("voyage")
+    val voyage: List<ReleasingVoyage>?,
     @SerializedName("terminal")
     val terminalList: List<ReleasingTerminal>?
 ) : AppResponse() {
 
 
-    constructor() : this(mutableListOf(), mutableListOf(), mutableListOf())
+    constructor() : this(mutableListOf(), mutableListOf(),mutableListOf(), mutableListOf(), mutableListOf())
 
 
     /**
@@ -146,6 +156,8 @@ data class Configuration(
     @SerializedName("terminal") val terminal: ReleasingTerminal,
     @SerializedName("operationStep") val operationStep: ReleasingOperationStep?,
     @SerializedName("cargoType") val cargoType: CargoType?,
+    @SerializedName("shippingLine") val shippingLine: ShippingLine?,
+    @SerializedName("voyage") val voyage: ReleasingVoyage?,
     @SerializedName("cameraEnabled") val cameraEnabled: Boolean
 ) : AppResponse() {
     override fun equals(other: Any?): Boolean {
@@ -155,6 +167,8 @@ data class Configuration(
         if (terminal != other.terminal) return false
         if (operationStep != other.operationStep) return false
         if (cargoType != other.cargoType) return false
+        if (shippingLine != other.shippingLine) return false
+        if (voyage != other.voyage) return false
         if (cameraEnabled != other.cameraEnabled) return false
 
         return true
@@ -164,12 +178,14 @@ data class Configuration(
         var result = terminal.hashCode()
         result = 31 * result + operationStep.hashCode()
         result = 31 * result + cargoType.hashCode()
+        result = 31 * result + shippingLine.hashCode()
+        result = 31 * result + voyage.hashCode()
         result = 31 * result + cameraEnabled.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Configuration(terminal=$terminal, operationStep=$operationStep, cargoType=$cargoType, cameraEnabled=$cameraEnabled)"
+        return "Configuration(terminal=$terminal, operationStep=$operationStep, cargoType=$cargoType, shippingLine=$shippingLine, voyage=$voyage, cameraEnabled=$cameraEnabled)"
     }
 
 

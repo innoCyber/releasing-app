@@ -24,17 +24,14 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.*
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
-import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
@@ -44,6 +41,7 @@ import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -120,9 +118,9 @@ abstract class BaseActivity<V, D> :
             openBarCodeScannerWithPermissionCheck(RC_BARCODE)
         })
 
-        viewModel.openConfiguration.observe(this, Observer {
-            startNewActivity(LoginActivity::class.java)
-        })
+//        viewModel.openConfiguration.observe(this, Observer {
+//            startNewActivity(LoginActivity::class.java)
+//        })
 
 
         viewModel.operatorName.observe(this, Observer {
@@ -198,7 +196,7 @@ abstract class BaseActivity<V, D> :
             }
         })
 
-        viewModel.reloadOptionsMenu.observe(this){
+        viewModel.reloadOptionsMenu.observe(this) {
             invalidateOptionsMenu()
         }
 
@@ -208,9 +206,10 @@ abstract class BaseActivity<V, D> :
         viewModel.subscribeToSessionTimeoutEvent()
     }
 
+
     private fun initImeiListener() {
-        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key->
-            if(key == "prefImei"){
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            if (key == "prefImei") {
                 val savedImei = sharedPreferences.getString("prefImei", "")
                 Timber.e("Imei changed $savedImei")
                 imei = savedImei
@@ -221,6 +220,7 @@ abstract class BaseActivity<V, D> :
     override fun onUserInteraction() {
         super.onUserInteraction()
         viewModel.onUserInteraction()
+        CheckLoginWorker.scheduleWork(this)
     }
 
     @NeedsPermission(
@@ -325,8 +325,6 @@ abstract class BaseActivity<V, D> :
     }
 
 
-
-
     private fun showLogOutConfirmDialog() {
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.confirm_action),
@@ -348,6 +346,7 @@ abstract class BaseActivity<V, D> :
         super.onResume()
         viewModel.getOperatorName()
         viewModel.checkToShowUpdateAppDialog()
+        viewModel.checkIsLogin()
         invalidateOptionsMenu()
     }
 
@@ -667,10 +666,10 @@ abstract class BaseActivity<V, D> :
 
 
     fun initErrorDrawable(imageView: ImageView) {
-        val drawable = VectorDrawableCompat.create(resources, R.drawable.ic_error, null)
-        val mutatedDrawable = drawable?.mutate()
-        DrawableCompat.setTint(mutatedDrawable!!, ContextCompat.getColor(this, R.color.colorRed))
-        imageView.setImageDrawable(mutatedDrawable)
+//        val drawable = VectorDrawableCompat.create(resources, R.drawable.error_icon, null)
+//        val mutatedDrawable = drawable?.mutate()
+//        DrawableCompat.setTint(mutatedDrawable!!, ContextCompat.getColor(this, R.color.colorRed))
+//        imageView.setImageDrawable(mutatedDrawable)
     }
 //    abstract fun observeNetworkChanges(connectivityObservable: Observable<Boolean>)
 

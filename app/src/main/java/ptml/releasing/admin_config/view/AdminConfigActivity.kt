@@ -16,9 +16,11 @@ import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.admin_config.viewmodel.AdminConfigViewModel
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.dialogs.SelectTerminalDialog
+import ptml.releasing.app.dialogs.SelectVoyageDialog
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.observe
 import ptml.releasing.app.utils.livedata.observeEvent
@@ -51,6 +53,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         binding.includeAdminConfig.btnConfiguration.setOnClickListener {
             viewModel.openConfig()
         }
+
+
         binding.includeAdminConfig.btnSelectTerminal.setOnClickListener {
             viewModel.openTerminalSelection()
         }
@@ -132,6 +136,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
 
         }
 
+
+
         viewModel.openSearch.observeEvent(this) {
             onBackPressed()
         }
@@ -141,7 +147,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         }
 
         viewModel.internetErrorEnabled.observe(this) {
-            binding.includeAdminConfig.btnEnableLogs.text =
+            binding.includeAdminConfig.textEnableLogs.text =
                 getString(if (it) R.string.disable_logs else R.string.enable_logs)
         }
 
@@ -236,7 +242,7 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                                     saveConfiguration(terminal, adminConfigResponse.getContentIfNotHandled())
                                 })
                             }else{
-                                saveConfiguration(terminal, null)
+                                saveConfiguration(terminal, config)
                             }
                         }
 
@@ -244,8 +250,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                             val configuration =
                                 Configuration(
                                     terminal,
-                                    selected.operationStep ?: config!!.operationStepList!!.first(),
-                                    selected.cargoType ?: config!!.cargoTypeList!!.first(),
+                                    selected.operationStep ?: config?.operationStepList?.firstOrNull(),
+                                    selected.cargoType ?: config?.cargoTypeList?.firstOrNull(),
+                                    selected.shippingLine?: config!!.shippingLineList?.firstOrNull(),
+                                    selected.voyage?: config!!.voyage?.firstOrNull(),
                                     false
                                 )
                             viewModel.saveSelectedTerminal(configuration)
@@ -265,6 +273,8 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
         }
 
     }
+
+
 
     private fun showEnterImeiDialog(deviceId: String?) {
         val imeiNumber = if (imei.isNullOrEmpty()) {

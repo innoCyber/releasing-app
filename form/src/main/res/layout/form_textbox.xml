@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ptml.releasing.form.views.ReleasingTextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.textfield.TextInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:boxStrokeColor="@color/colorBlack"
     app:errorEnabled="true"
+    app:hintTextColor="@color/colorAccent"
     app:errorTextAppearance="@style/TextLimitError"
-    app:hintEnabled="true"
-    app:hintTextColor="@color/colorBlack">
+    app:endIconTint="@color/colorGray"
+    app:endIconMode="clear_text"
+    app:hintEnabled="false">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/edit"
-        style="@style/Form.TextBox"
-        android:maxLines="1"
-        android:textCursorDrawable="@null"
-        tools:text="@tools:sample/full_names" />
 
-</ptml.releasing.form.views.ReleasingTextInputLayout>
+
+<com.google.android.material.textfield.TextInputEditText
+    android:id="@+id/edit"
+    android:layout_width="match_parent"
+    android:maxLines="1"
+    android:layout_height="wrap_content"
+    android:background="@drawable/input_background"
+    android:imeActionLabel="@string/verify"
+    android:inputType="text"
+    android:textColorHint="@color/colorGray"
+    android:textColor="@color/colorGray"
+    android:drawablePadding="8dp"
+    android:textCursorDrawable="@drawable/bg_search_cursor" />
+
+</com.google.android.material.textfield.TextInputLayout>

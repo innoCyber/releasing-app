@@ -11,8 +11,25 @@
         <item name="colorSearchBg">@color/colorSearchBg</item>
         <item name="colorOnSearchBg">@color/colorOnSearchBg</item>
         <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="fontFamily">@font/poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
+    <style name="AppTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">50dp</item>
+        <item name="tabPaddingStart">6dp</item>
+        <item name="tabPaddingEnd">6dp</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="tabTextAppearance">@style/AppTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/colorWhite</item>
+    </style>
+
+    <!-- for text -->
+    <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
 
 
     <style name="AppTheme.NoActionBar">
@@ -68,6 +85,7 @@
 
     <style name="ButtonStyle.Save">
         <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/save_btn_bg</item>
     </style>
 
@@ -149,7 +167,14 @@
     <style name="SpinnerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/spinner_bg</item>
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
+    </style>
+
+    <style name="SpinnerStyle_Disabled">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/btn_outline</item>
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
     </style>
 
@@ -175,7 +200,6 @@
     </style>
 
     <style name="LabelStyle.Search">
-        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">@dimen/search_label_text_size</item>
     </style>
 
@@ -263,38 +287,38 @@
 
 
     <style name="HomeTopTextStyle.Header">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">@dimen/home_top_btn_label_text_size</item>
         <item name="android:layout_marginTop">@dimen/constraint_default_margin_4dp</item>
     </style>
 
     <style name="HomeTopTextStyle.Footer">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">12sp</item>
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginBottom">@dimen/constraint_default_margin_4dp</item>
-        <item name="android:textStyle">bold</item>
+
 
     </style>
 
 
     <style name="HomeTopImageStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:layout_marginTop">5dp</item>
 
     </style>
 
     <style name="LabelStyle.FindCargo">
         <item name="android:textColor">@color/colorGray</item>
-        <item name="android:textSize">@dimen/search_label_text_size</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="CargoNumber">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:layout_marginTop">@dimen/constraint_default_margin_16dp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?android:textAppearanceLarge</item>
     </style>
 
@@ -337,21 +361,32 @@
     </style>
 
     <style name="Form.Multiline" parent="Form.TextBox">
-        <item name="android:minLines">4</item>
-        <item name="android:inputType">textMultiLine</item>
-        <item name="android:gravity">start</item>
+        <item name="android:minLines">3</item>
+        <item name="android:inputType">textMultiLine|textCapSentences</item>
+        <item name="android:gravity">top|left</item>
     </style>
 
 
     <style name="Form.SingleSelect">
         <item name="android:background">@drawable/spinner_bg</item>
+        <item name="android:textColor">@drawable/spinner_bg</item>
         <item name="android:padding">@dimen/constraint_default_margin_4dp</item>
     </style>
 
     <style name="Form.MultiSelect" parent="Form.SingleSelect" />
 
     <style name="Form.Check">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/radio_background</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingRight">@dimen/constraint_default_margin_24dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:tint">@color/colorGrayAlpha</item>
+        <item name="android:textColor">@color/colorGray</item>
+        <item name="android:minWidth">120dp</item>
+        <item name="android:layout_marginRight">8dp</item>
     </style>
 
     <style name="Form.Button">
@@ -369,12 +404,16 @@
         <item name="android:background">@drawable/btn_bg_save</item>
         <item name="android:text">@string/save</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Form.ResetButton" parent="Form.Button">
         <item name="android:background">@drawable/btn_bg_reset</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:text">@string/reset</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 
@@ -525,7 +564,7 @@
         <item name="android:gravity">center</item>
         <item name="android:text">@string/back</item>
         <item name="android:padding">2dp</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:background">@drawable/btn_bg_reset</item>
 
     </style>
@@ -541,7 +580,7 @@
         <item name="android:gravity">center</item>
         <item name="android:padding">2dp</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:background">@drawable/btn_bg_accent</item>
+        <item name="android:background">@drawable/btn_bg_save</item>
     </style>
 
 

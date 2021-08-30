@@ -30,14 +30,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             app:headerLayout="@layout/nav_view_header"
-            app:itemIconTint="@color/colorBlack"
-            app:itemTextColor="@color/colorBlack"
             app:itemTextAppearance="@style/NavItemTextAppearance"
             app:menu="@menu/activity_main_drawer">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent">
 
 
@@ -46,27 +43,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/version_text"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    app:layout_constraintBottom_toTopOf="@id/img_ptml"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
 
-                <ImageView
-                    android:id="@+id/img_ptml"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/img_bottom"
-                    app:srcCompat="@drawable/ptml_logo" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/img_ptml"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintBottom_toTopOf="@id/img_bottom"-->
+<!--                    app:srcCompat="@drawable/ptml_logo" />-->
 
-                <ImageView
-                    android:id="@+id/img_bottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/logo_terminal" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/img_bottom"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:srcCompat="@drawable/logo_terminal" />-->
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

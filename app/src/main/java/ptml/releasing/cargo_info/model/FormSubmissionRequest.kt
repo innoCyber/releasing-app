@@ -17,6 +17,7 @@ data class FormSubmissionRequest(
     @SerializedName("cargo_id") val cargoId: Int?,
     @SerializedName("photoNames") val photoNames: List<String>?,
     @SerializedName("voyage") val voyageId: Int?,
+    @SerializedName("shipping_line") val shippingLine: Int?,
     @SerializedName("imei") val imei: String?,
     @SerializedName("badge_id") val badgeId: String?
 )

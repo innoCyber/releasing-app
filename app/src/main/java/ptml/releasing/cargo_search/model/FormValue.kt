@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import ptml.releasing.app.base.BaseModel
 
-data class FormValue(@SerializedName("value") val value: String?) : BaseModel(), Parcelable {
+data class FormValue(@SerializedName("value") var value: String?) : BaseModel(), Parcelable {
     override fun toString(): String {
         return "Value(value=$value) ${super.toString()}"
     }

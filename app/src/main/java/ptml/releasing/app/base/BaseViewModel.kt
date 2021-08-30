@@ -4,14 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptml.releasing.app.data.Repository
 import ptml.releasing.app.data.domain.repository.LoginRepository
 import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.domain.usecase.LogOutUseCase
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.eventbus.EventBus
-import ptml.releasing.app.eventbus.LoginSessionTimeoutEvent
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.SingleLiveEvent
@@ -19,6 +21,7 @@ import ptml.releasing.app.utils.UpdateHelper
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -100,14 +103,20 @@ open class BaseViewModel @Inject constructor(
 
 
     fun subscribeToSessionTimeoutEvent() {
-        viewModelScope.launch {
-            Timber.d("Subscribing to login timeout event")
-            val channel = eventBus.asChannel<LoginSessionTimeoutEvent>()
-            for (event in channel) {
-                Timber.d("Gotten login session event, logging out")
+        //  viewModelScope.launch {
+//            val channel = eventBus.asChannel<LoginSessionTimeoutEvent>()
+//            for (event in channel) {
+//                Timber.d("Gotten login session event, logging out")
+//                logOutOperator()
+//            }
+        CheckLoginWorker.event.observeForever {
+            if(it != 0L) {
+                Timber.d("Listening to login timeout event")
                 logOutOperator()
+                CheckLoginWorker.event.postValue(0L)
             }
         }
+        //   }
     }
 
 
@@ -252,9 +261,9 @@ open class BaseViewModel @Inject constructor(
             Timber.d("Already updating damages...")
             return
         }
-        _updateDamagesLoadingState.postValue(NetworkState.LOADING)
         CoroutineScope(dispatchers.network + compositeJob).launch {
             try {
+                _updateDamagesLoadingState.postValue(NetworkState.LOADING)
                 Timber.d("Updating damages...")
                 repository.downloadDamagesAsync(imei)?.await()
 
@@ -320,5 +329,12 @@ open class BaseViewModel @Inject constructor(
 
     fun reloadMenu() {
         mutableReloadOptionsMenu.postValue(Unit)
+    }
+
+    fun checkIsLogin() {
+        val lastActive = localDataManager.getLastActiveTime()
+        if (CheckLoginWorker.isMoreThan5Min(lastActive) && lastActive != -1L) {
+            logOutOperator()
+        }
     }
 }

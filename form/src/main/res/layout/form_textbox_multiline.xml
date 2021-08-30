@@ -1,19 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    app:boxStrokeColor="@color/colorBlack"-->
+<!--    app:errorEnabled="true"-->
+<!--    app:errorTextAppearance="@style/TextLimitError"-->
+<!--    app:hintTextColor="@color/colorBlack">-->
+
+<!--    <com.google.android.material.textfield.TextInputEditText-->
+<!--        android:id="@+id/edit"-->
+<!--        style="@style/Form.Multiline"-->
+<!--        android:textCursorDrawable="@null"-->
+<!--        tools:text="@tools:sample/full_names" />-->
+
+<!--</com.google.android.material.textfield.TextInputLayout>-->
+
+<com.google.android.material.textfield.TextInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:boxStrokeColor="@color/colorBlack"
     app:errorEnabled="true"
     app:errorTextAppearance="@style/TextLimitError"
-    app:hintTextColor="@color/colorBlack">
+    app:hintEnabled="false"
+    app:hintTextColor="@color/colorAccent"
+    app:endIconTint="@color/colorGray"
+    app:endIconMode="clear_text">
+
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit"
         style="@style/Form.Multiline"
-        android:textCursorDrawable="@null"
-        tools:text="@tools:sample/full_names" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_background"
+        android:drawablePadding="8dp"
+        android:textColor="@color/colorGray"
+        android:textColorHint="@color/colorGray"
+        android:textCursorDrawable="@drawable/bg_search_cursor" />
 
 </com.google.android.material.textfield.TextInputLayout>

@@ -15,6 +15,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import ptml.releasing.R
 
 import ptml.releasing.configuration.models.BaseConfig
+import java.util.*
 
 class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<T>?)
     : ArrayAdapter<T>(context, id, list ?: mutableListOf()) where T : BaseConfig {
@@ -31,7 +32,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, drawable, null)
 
-        textView.text = list?.get(position)?.value
+        textView.text = list?.get(position)?.value?.toLowerCase(Locale.ROOT)?.capitalize()
         return view
     }
 
@@ -48,7 +49,7 @@ class ConfigSpinnerAdapter<T>(context: Context, id: Int, private val list: List<
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, null, null)
 
-        textView?.text = list?.get(position)?.value
+        textView?.text = list?.get(position)?.value?.capitalize()
         return view
     }
 }

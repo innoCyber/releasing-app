@@ -25,7 +25,7 @@ class VoyageRepositoryImpl(
 
     override suspend fun downloadRecentVoyages(): List<ReleasingVoyage> {
         val deviceId = local.getIMEI()
-        val result = remote.getRemoteCaller().getRecentVoyages(deviceId)
+        val result = remote.getRemoteCaller().getRecentVoyages(local.getStaticAuth(), deviceId)
         val data = result.data?.map {
             voyageMapper.mapFromModel(it)
         } ?: listOf()

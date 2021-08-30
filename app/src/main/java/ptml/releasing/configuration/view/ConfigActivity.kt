@@ -1,13 +1,14 @@
 package ptml.releasing.configuration.view
 
-import android.app.Activity
-import android.media.AudioRecordingConfiguration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
+import com.google.android.material.tabs.TabLayout
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
@@ -23,47 +24,69 @@ import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.databinding.ActivityConfigBinding
 import timber.log.Timber
 
+
 @RuntimePermissions
 class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
-    private var cargoAdapter: ConfigSpinnerAdapter<CargoType>? = null
+    private var cargoTypes: List<CargoType>? = null
 
     private var operationStepAdapter: ConfigSpinnerAdapter<ReleasingOperationStep>? = null
 
-    private var terminalAdapter: ConfigSpinnerAdapter<ReleasingTerminal>? = null
+    private var shippingLineAdapter: ConfigSpinnerAdapter<ShippingLine>? = null
+
+    private var voyageAdapter: ConfigSpinnerAdapter<ReleasingVoyage>? = null
 
     private val errorHandler by lazy {
         ErrorHandler(this)
     }
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        navigator.goToSearch(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
-        disableTerminalSpinner()
         initErrorDrawable(binding.includeError.imgError)
         binding.bottom.btnDeleteLayout.visibility = View.GONE
         binding.top.root.visibility = View.INVISIBLE
         binding.bottom.root.visibility = View.INVISIBLE
+        binding.scrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
+            binding.swipeRefreshLayout.isEnabled = scrollY == 0
+        }
 
 
 
 
         viewModel.cargoTypes.observe(this, Observer { cargoTypes ->
-            viewModel.configuration.observe(this, Observer {selectedItem ->
+            viewModel.configuration.observe(this, Observer { selectedItem ->
                 setUpCargoType(cargoTypes, selectedItem)
+                binding.swipeRefreshLayout.isRefreshing = false
             })
 
         })
 
-        viewModel.getOperationStepList().observe(this, Observer {operationSteps ->
-            viewModel.configuration.observe(this, Observer {selectedOperation ->
+        viewModel.getOperationStepList().observe(this, Observer { operationSteps ->
+            viewModel.configuration.observe(this, Observer { selectedOperation ->
                 setUpOperationStep(operationSteps, selectedOperation)
             })
 
         })
-        viewModel.getTerminalList().observe(this, Observer {terminals ->
-            viewModel.configuration.observe(this, Observer {selectedTerminal ->
-                setUpTerminal(terminals, selectedTerminal)
+
+        viewModel.getShippingLine().observe(this, Observer { shippingLines ->
+            viewModel.configuration.observe(this, Observer { configuration ->
+                setUpShippingLine(shippingLines, configuration)
+            })
+
+        })
+
+
+
+        viewModel.getVoyageList().observe(this, Observer { voyages ->
+            viewModel.configuration.observe(this, Observer { _ ->
+                setUpVoyages(voyages)
             })
 
         })
@@ -72,46 +95,46 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         viewModel.getNetworkState().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it == NetworkState.LOADING) {
-                    showLoading(
-                        binding.includeProgress.root,
-                        binding.includeProgress.tvMessage,
-                        R.string.getting_configuration
-                    )
-                } else {
-                    hideLoading(binding.includeProgress.root)
+                    binding.swipeRefreshLayout.isRefreshing = true
+                    binding.top.root.visibility = View.GONE
+                    binding.bottom.root.visibility = View.GONE
+//                    showLoading(
+//                        binding.includeProgress.root,
+//                        binding.includeProgress.tvMessage,
+//                        R.string.getting_configuration
+//                    )
+                } else if (it == NetworkState.LOADED) {
+                    binding.swipeRefreshLayout.isRefreshing = false
+                  //  hideLoading(binding.includeProgress.root)
                     binding.top.root.visibility = View.VISIBLE
                     binding.bottom.root.visibility = View.VISIBLE
                 }
 
                 if (it.status == Status.FAILED) {
-                    binding.includeError.imgClose.isVisible = true
-                    binding.includeError.imgClose.setOnClickListener {
-                        hideLoading(binding.includeError.root)
-                    }
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    binding.top.root.visibility = View.GONE
+                    binding.bottom.root.visibility = View.GONE
+
                     val error = errorHandler.getErrorMessage(it.throwable)
                     binding.includeError.btnReloadLayout.setOnClickListener {
                         if (errorHandler.isImeiError(error)) {
                             showEnterImeiDialog()
                         } else {
-                            refreshConfigWithPermissionCheck()
+                            getConfigWithPermissionCheck()
+                           // refreshConfigWithPermissionCheck()
                         }
                     }
                     binding.includeError.btnReload.text =
                         if (errorHandler.isImeiError(error)) getString(R.string.enter_imei) else getString(
                             R.string.reload
                         )
-                    showLoading(
-                        binding.includeError.root,
-                        binding.includeError.tvMessage,
-                        error
-                    )
+
                     showLoading(binding.includeError.root, binding.includeError.tvMessage, error)
+                    hideLoading(binding.includeProgress.root)
                 } else {
                     hideLoading(binding.includeError.root)
                 }
             }
-
-
         })
 
 
@@ -119,33 +142,26 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     notifyUser(getString(R.string.config_saved_success))
-                    setResult(Activity.RESULT_OK)
-                    finish()
+//                    setResult(Activity.RESULT_OK)
+//                    finish()
+                    navigator.goToSearch(this)
                 }
             }
         })
 
         viewModel.configuration.observe(this, Observer {
-            val terminal = it.terminal
-            val operationStep = it.operationStep
-            val cargoType = it.cargoType
-            val cameraEnabled = it.cameraEnabled
+            val terminal = it?.terminal
 
-            binding.top.cameraSwitch.isChecked = cameraEnabled
-            binding.top.selectCargoSpinner.setSelection(cargoAdapter?.getPosition(cargoType) ?: 0)
-            val position = operationStepAdapter?.getPosition(
-                operationStep
-            ) ?: 0
-            binding.top.selectOperationSpinner.setSelection(
-                position
-            )
-            binding.top.selectTerminalSpinner.setSelection(
-                terminalAdapter?.getPosition(terminal) ?: 0
-            )
+
+            if(terminal == null){
+                binding.top.terminalText.setTextColor(Color.RED)
+            }
+            binding.top.terminalText.text = terminal?.value?: "No terminal assigned"
+            binding.top.terminalText.tag = terminal?: ReleasingTerminal(categoryTypeId = -1)
         })
 
 
-        binding.bottom.btnProfilesLayout.setOnClickListener {
+        binding.bottom.btnProfiles.setOnClickListener {
             setConfigWithPermissionCheck()
         }
 
@@ -153,23 +169,22 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
             getConfigWithPermissionCheck()
         }
 
-        binding.fab.setOnClickListener {
-            refreshConfigWithPermissionCheck()
+//        binding.fab.setOnClickListener {
+//            refreshConfigWithPermissionCheck()
+//        }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+           // refreshConfigWithPermissionCheck()
+            getConfigWithPermissionCheck()
         }
 
     }
 
-    private fun disableTerminalSpinner() {
-        binding.top.selectTerminalSpinner.run {
-            isEnabled = false
-            isClickable = false
-            alpha = 0.3F
-        }
-        binding.top.tvSelectTerminal.alpha = 0.3F
-    }
+
 
     override fun onImeiGotten(imei: String?) {
         super.onImeiGotten(imei)
+
+        binding.swipeRefreshLayout.isRefreshing = true
         viewModel.refreshConfiguration(imei ?: "")
         viewModel.getConfig(imei ?: "")
     }
@@ -206,7 +221,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun setConfig() {
-        if((binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?)?.categoryTypeId == -1){
+        val operationStep =
+            binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?
+        if ((binding.top.terminalText.tag as ReleasingTerminal?)?.categoryTypeId == -1) {
             val dialogFragment = InfoDialog.newInstance(
                 title = getString(R.string.no_terminal_assigned_header),
                 message = getString(R.string.no_terminal_assigned_text),
@@ -215,16 +232,31 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     override fun onConfirm() {}
                 })
             dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
-        }else{
-            viewModel.setConfig(
-                binding.top.selectTerminalSpinner.selectedItem as ReleasingTerminal?,
-                binding.top.selectOperationSpinner.selectedItem as ReleasingOperationStep?,
-                binding.top.selectCargoSpinner.selectedItem as CargoType?,
-                binding.top.cameraSwitch.isChecked, imei ?: ""
-            )
+        } else {
+                setConfig(operationStep)
         }
 
     }
+
+    private fun setConfig(operationStep: ReleasingOperationStep?) {
+        val selectedVoyage = binding.top.selectVoyageSpinner.selectedItem as ReleasingVoyage
+        if(selectedVoyage.id == -1 && operationStep?.id == 20){
+           showErrorDialog("No voyage is available for this operation, " +
+                   "please refer to helpdesk.eramp@ptml-ng.com.")
+        }else {
+            viewModel.setConfig(
+                binding.top.terminalText.tag as ReleasingTerminal?,
+                operationStep,
+                cargoTypes?.get(binding.top.tab.selectedTabPosition),
+                binding.top.selectShippingLineSpinner.selectedItem as ShippingLine,
+                selectedVoyage,
+               false,// binding.top.cameraSwitch.isChecked,
+                imei ?: ""
+            )
+        }
+    }
+
+
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
@@ -263,28 +295,26 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private fun setUpCargoType(cargoTypes: List<CargoType>, selected: Configuration) {
         try {
-            binding.top.selectCargoSpinner.run {
-                cargoAdapter =
-                    ConfigSpinnerAdapter(applicationContext, R.id.tv_category, cargoTypes)
-                adapter = cargoAdapter
-                val selectedItem = cargoTypes.indexOf(selected.cargoType)
-                setSelection(if(selectedItem == -1 ) 0 else selectedItem)
-                onItemSelectedListener =
-                    object : AdapterView.OnItemSelectedListener {
-                        override fun onNothingSelected(parent: AdapterView<*>?) {
-                            Timber.d("Nothing was selected")
-                        }
-
-                        override fun onItemSelected(
-                            parent: AdapterView<*>?,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            viewModel.cargoTypeSelected(cargoAdapter?.getItem(position) ?: CargoType())
-                        }
-                    }
+            this.cargoTypes = cargoTypes
+            binding.top.tab.removeAllTabs()
+            cargoTypes.forEach {
+                binding.top.tab.addTab(binding.top.tab.newTab().apply {
+                    text = it.value
+                    tag = it
+                })
             }
+            binding.top.tab.selectTab( binding.top.tab.getTabAt(cargoTypes.indexOf(selected.cargoType) ?: 0) ,true)
+
+
+            binding.top.tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    viewModel.cargoTypeSelected(cargoTypes[binding.top.tab.selectedTabPosition] ?: CargoType())
+
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+            })
 
 
         } catch (e: Exception) {
@@ -297,25 +327,80 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         }
     }
 
-    private fun setUpOperationStep(operationStepList: List<ReleasingOperationStep>, selected: Configuration) {
+    private fun setUpOperationStep(
+        operationStepList: List<ReleasingOperationStep>,
+        selected: Configuration
+    ) {
 
         binding.top.selectOperationSpinner.run {
             operationStepAdapter =
                 ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
             adapter = operationStepAdapter
             val selectedItem = operationStepList.indexOf(selected.operationStep)
-            setSelection(if(selectedItem == -1) 0 else selectedItem)
+            setSelection(if (selectedItem == -1) 0 else selectedItem)
+            onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        when (operationStepList[position].id) {
+                            29 -> {
+                                binding.top.tvSelectShippingLine.visibility = View.VISIBLE
+                                binding.top.selectShippingLineSpinner.visibility = View.VISIBLE
+                                binding.top.tvSelectVoyage.visibility = View.GONE
+                                binding.top.selectVoyageSpinner.visibility = View.GONE
+                            }
+                            20 -> {
+                                binding.top.tvSelectShippingLine.visibility = View.VISIBLE
+                                binding.top.selectShippingLineSpinner.visibility = View.VISIBLE
+                                binding.top.tvSelectVoyage.visibility = View.VISIBLE
+                                binding.top.selectVoyageSpinner.visibility = View.VISIBLE
+                            }
+                            else -> {
+                                binding.top.tvSelectShippingLine.visibility = View.GONE
+                                binding.top.selectShippingLineSpinner.visibility = View.GONE
+                                binding.top.tvSelectVoyage.visibility = View.GONE
+                                binding.top.selectVoyageSpinner.visibility = View.GONE
+                            }
+                        }
+
+
+                    }
+                }
+        }
+
+
+    }
+
+    private fun setUpShippingLine(shippingLines: List<ShippingLine>, selected: Configuration) {
+        binding.top.selectShippingLineSpinner.run {
+            shippingLineAdapter =
+                ConfigSpinnerAdapter(applicationContext, R.id.tv_category, shippingLines)
+            adapter = shippingLineAdapter
+            val selectedItem = shippingLines.indexOf(selected.shippingLine)
+            setSelection(if (selectedItem == -1) 0 else selectedItem)
         }
     }
 
-    private fun setUpTerminal(terminalList: List<ReleasingTerminal>, selected: Configuration) {
-        terminalAdapter = ConfigSpinnerAdapter(applicationContext, R.id.tv_category, terminalList)
-        binding.top.selectTerminalSpinner.run{
-            adapter = terminalAdapter
-            val selectedItem = terminalList.indexOf(selected.terminal)
-            setSelection(if(selectedItem == -1) 0 else selectedItem)
+    private fun setUpVoyages(voyages: List<ReleasingVoyage>) {
+        binding.top.selectVoyageSpinner.run {
+            voyageAdapter =
+                ConfigSpinnerAdapter(applicationContext,
+                    R.id.tv_category,
+                    if (voyages.isEmpty()) listOf(
+                        ReleasingVoyage().apply { id = -1; value = "No voyages" }) else voyages
+                )
+            adapter = voyageAdapter
         }
+
+
     }
+
+
 
 
     override fun getViewModelClass() = ConfigViewModel::class.java

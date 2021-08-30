@@ -13,7 +13,7 @@ data class FindCargoResponse(
     @SerializedName("barcode") var barcode: String?,
     @SerializedName("mrkno") var mrkNumber: String?,
     @SerializedName("GrimandiContainer") var grimaldiContainer: String?,
-    @SerializedName("values") val values: List<FormValue>?,
+    @SerializedName("values") var values: List<FormValue>?,
     @SerializedName("options") val options: List<FormOption>?,
     @SerializedName ("status") var status: String?,
     @SerializedName("bl_number") var bl_number: String?

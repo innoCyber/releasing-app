@@ -16,7 +16,7 @@ class SingleSelectAdapter<T> :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleSelectViewHolder<T> {
         return SingleSelectViewHolder(
             this,
-            FormItemCheckboxBinding.inflate(LayoutInflater.from(parent.context), null, false),
+            FormItemCheckboxBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             listener
         )
     }

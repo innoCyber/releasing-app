@@ -34,7 +34,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         lifecycleScope.launchWhenCreated {
             val loggedIn = loginRepository.getLoggedIn()
             if (loggedIn) {
-                navigator.goToSearch(this@LoginActivity)
+                navigator.goToConfiguration(this@LoginActivity)
             }
         }
     }
@@ -60,7 +60,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
         viewModel.getGoToSearchEvent().observe(this) { event ->
             event?.getContentIfNotHandled()?.let {
-                navigator.goToSearch(this)
+                navigator.goToConfiguration(this)
             }
         }
 

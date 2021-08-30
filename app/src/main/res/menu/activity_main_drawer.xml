@@ -1,34 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/configuration"
+        android:title="@string/configuration">
+        <menu>
+            <item
+                android:id="@+id/nav_admin_settings"
+                android:icon="@drawable/ic_admin_icon"
+                android:title="@string/nav_preferences"
+                android:visible="true"/>
+
+            <item
+                android:id="@+id/nav_device_configuration"
+                android:icon="@drawable/ic_config"
+                android:title="@string/device_configuration"
+                android:visible="true" />
+        </menu>
+    </item>
 
     <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_info_white"
-            android:title="@string/nav_about"
-            android:visible="true"/>
+        android:id="@+id/settings"
+        android:title="@string/others">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_info_white"
+                android:title="@string/nav_about"
+                android:visible="true"/>
 
-    <item
-            android:id="@+id/nav_scan_operator"
-            android:icon="@drawable/ic_qr_scanner"
-            android:title="@string/scan_operator_badge"
-            android:visible="true"/>
+            <item
+                android:id="@+id/nav_scan_operator"
+                android:icon="@drawable/ic_qr_scanner"
+                android:title="@string/scan_operator_badge"
+                android:visible="true"/>
 
-    <item
-        android:id="@+id/nav_admin_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/nav_preferences"
-        android:visible="true"/>
+            <item
+                android:id="@+id/nav_voyage"
+                android:icon="@drawable/ic_voyage"
+                android:title="@string/voyage_screen_title"
+                android:visible="true"/>
+        </menu>
+    </item>
 
-    <item
-        android:id="@+id/nav_device_configuration"
-        android:icon="@drawable/ic_config"
-        android:title="@string/device_configuration"
-        android:visible="true" />
 
-    <item
-        android:id="@+id/nav_voyage"
-        android:icon="@drawable/ic_voyage"
-        android:title="@string/voyage_screen_title"
-        android:visible="true"/>
+
 </menu>

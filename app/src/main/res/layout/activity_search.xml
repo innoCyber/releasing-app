@@ -14,8 +14,7 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:openDrawer="start"
-        >
+        tools:openDrawer="start">
 
         <include
             android:id="@+id/app_bar_home"
@@ -47,7 +46,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/version_text"
                     android:padding="@dimen/nav_version_padding"
-                    android:textAppearance="?android:textAppearanceMedium"
                     app:layout_constraintBottom_toTopOf="@id/img_ptml"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

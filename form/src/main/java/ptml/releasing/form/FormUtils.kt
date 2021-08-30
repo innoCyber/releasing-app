@@ -67,7 +67,7 @@ internal object FormUtils {
 
         params.setMargins(
             SizeUtils.dp2px(view.context, 16f),
-            SizeUtils.dp2px(view.context, 4f),
+            SizeUtils.dp2px(view.context, 16f),
             SizeUtils.dp2px(view.context, 16f),
             0
         )

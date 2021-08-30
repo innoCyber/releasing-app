@@ -5,10 +5,10 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ptml.releasing.form.FormUtils.applyBottomParams
@@ -34,12 +34,16 @@ import ptml.releasing.form.views.MultiSpinner
 import ptml.releasing.form.views.MultiSpinnerListener
 import timber.log.Timber
 import java.util.*
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.text.InputType
+
 
 class FormBuilder constructor(val context: Context) : BuilderView {
     private var quickRemarks: Map<Int, QuickRemark>? = null
     private var voyages: Map<Int, Voyage>? = null
     var data: List<FormConfiguration>? = null
-    var damageData:List<FormDamage>? = null
+    var damageData: List<FormDamage>? = null
     private val rootLayout = LinearLayout(context)
     private var formListener: FormListener? = null
     var error = false
@@ -135,6 +139,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         val positionComparator =
             Comparator<FormConfiguration> { o1, o2 -> o1.position.compareTo(o2.position) }
         Collections.sort(data ?: mutableListOf(), positionComparator)
+        data = (data ?: mutableListOf()).categorizeView()
 
         //iterate over the list to get each config
         for (i in 0 until (data?.size ?: mutableListOf<FormConfiguration>().size)) {
@@ -146,6 +151,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
             formListener?.onFormAdded(configureDeviceData)
             if (formView != null) {
                 rootLayout.addView(formView)
+
             } else {
                 Timber.e("Form view is null")
             }
@@ -160,7 +166,90 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         formListener?.onEndLoad()
         return rootLayout
     }
-    
+
+
+    fun List<FormConfiguration>.categorizeView(): List<FormConfiguration> {
+        val labels = mutableListOf<FormConfiguration>()
+        val textboxes = mutableListOf<FormConfiguration>()
+        val multilineTextboxs = mutableListOf<FormConfiguration>()
+        val images = mutableListOf<FormConfiguration>()
+        val printers = mutableListOf<FormConfiguration>()
+        val printerDamages = mutableListOf<FormConfiguration>()
+        val damages = mutableListOf<FormConfiguration>()
+        val singleSelect = mutableListOf<FormConfiguration>()
+        val multiSelects = mutableListOf<FormConfiguration>()
+        val quickRemarks = mutableListOf<FormConfiguration>()
+        val checkboxes = mutableListOf<FormConfiguration>()
+        val simpleTexts = mutableListOf<FormConfiguration>()
+        val voyages = mutableListOf<FormConfiguration>()
+        val unknowns = mutableListOf<FormConfiguration>()
+        forEach {
+            when (FormType.fromType(it?.type)) {
+                FormType.LABEL -> {
+                    labels.add(it)
+                }
+
+                FormType.TEXTBOX -> {
+                    textboxes.add(it)
+                }
+
+                FormType.MULTI_LINE_TEXTBOX -> {
+                    multilineTextboxs.add(it)
+                }
+                FormType.IMAGES -> {
+                    images.add(it)
+                }
+
+                FormType.PRINTER -> {
+                    printers.add(it)
+                }
+
+                FormType.PRINTER_DAMAGES -> {
+                    printerDamages.add(it)
+                }
+
+
+                FormType.DAMAGES -> {
+                    damages.add(it)
+                }
+
+
+                FormType.SINGLE_SELECT -> {
+                    singleSelect.add(it)
+                }
+
+
+                FormType.MULTI_SELECT -> {
+                    multiSelects.add(it)
+                }
+
+                FormType.QUICK_REMARK -> {
+                    quickRemarks.add(it)
+                }
+
+
+                FormType.CHECK_BOX -> {
+                    checkboxes.add(it)
+                }
+
+                //create simple text
+                FormType.SIMPLE_TEXT -> {
+                    simpleTexts.add(it)
+                }
+
+                FormType.VOYAGE -> {
+                    voyages.add(it)
+                }
+
+                else -> {
+                    unknowns.add(it)
+                }
+            }
+        }
+        return simpleTexts + labels + voyages + checkboxes + singleSelect + textboxes +
+                multilineTextboxs + damages + printerDamages + printers + multiSelects + quickRemarks +
+                images + unknowns
+    }
 
 
     override fun createViewFromConfig(data: FormConfiguration?, i: Int): View? {
@@ -181,7 +270,6 @@ class FormBuilder constructor(val context: Context) : BuilderView {
                     return createMultilineTextBox(data, i)
                 }
                 FormType.IMAGES -> {
-                    //todo: Handle the initialization
                     return createButton(data, i)
                 }
 
@@ -189,13 +277,12 @@ class FormBuilder constructor(val context: Context) : BuilderView {
                     return createButton(data, i)
                 }
 
-                FormType.PRINTER_DAMAGES->{
-                    return createButton(data , i)
+                FormType.PRINTER_DAMAGES -> {
+                    return createButton(data, i)
                 }
 
 
                 FormType.DAMAGES -> {
-                    //todo: Handle the initialization
                     return createButton(data, i)
                 }
 
@@ -250,16 +337,18 @@ class FormBuilder constructor(val context: Context) : BuilderView {
      *  @param data the config
      * @return TextView
      * */
-    private fun createLabel(data: FormConfiguration?, i: Int): TextView {
-        val textView = inflateView(context, R.layout.form_label) as TextView
-        textView.tag = data?.id
-        textView.text = data?.title
-        if (i == 0) {
-            applyTopParams(textView)
-        } else {
-            applyLabelParams(textView)
-        }
-        return textView
+    private fun createLabel(data: FormConfiguration?, i: Int): LinearLayout {
+        val linearLayout = inflateView(context, R.layout.form_label) as LinearLayout
+        val label = linearLayout.findViewById<TextView>(R.id.label)
+        val title = linearLayout.findViewById<TextView>(R.id.title)
+        title.tag = data?.id
+        label.text = data?.title
+//        if (i == 0) {
+//            applyTopParams(linearLayout)
+//        } else {
+//            applyLabelParams(linearLayout)
+//        }
+        return linearLayout
     }
 
     private fun createSimpleText(data: FormConfiguration?, position: Int): TextView {
@@ -284,7 +373,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         val inputLayout = inflateView(context, R.layout.form_textbox) as TextInputLayout
         inputLayout.tag = data?.id
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        inputLayout.hint = data?.title
+        editText.hint = data?.title
         editText.setValidation(data?.dataValidation)
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
@@ -320,7 +409,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
     override fun getTextBoxText(data: FormConfiguration?): String {
         val inputLayout = rootLayout.findViewWithTag<TextInputLayout>(data?.id)
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        return editText.text.toString()
+        return editText.text.trim().toString()
     }
 
     override fun getTextBoxValue(data: FormConfiguration?): Value? {
@@ -338,8 +427,8 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         val inputLayout = inflateView(context, R.layout.form_textbox_multiline) as TextInputLayout
         inputLayout.tag = data?.id
         val editText = inputLayout.findViewById<EditText>(R.id.edit)
-        inputLayout.hint = data?.title
-        editText.setValidation(data?.dataValidation)
+        editText.hint = data?.title
+        //editText.setValidation(data?.dataValidation)
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
                 formListener?.onDataChange(data, text?.toString())
@@ -365,9 +454,6 @@ class FormBuilder constructor(val context: Context) : BuilderView {
     }
 
 
-
-
-
     /**
      * Creates a Button for the form
      *  Applies the necessary styles. Form Types expected are
@@ -385,7 +471,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         val imageView = view.findViewById<ImageView>(R.id.img)
         numberView.visibility =
             if (data?.type == FormType.PRINTER.type || data?.type == FormType.PRINTER_DAMAGES.type) View.INVISIBLE else View.VISIBLE
-         //   if(data?.type == FormType.PRINTER_DAMAGES.type) View.INVISIBLE else View.VISIBLE
+        //   if(data?.type == FormType.PRINTER_DAMAGES.type) View.INVISIBLE else View.VISIBLE
 
         titleView.text = data?.title
         imageView.setImageResource(getImageResourceByType(data?.type))
@@ -408,7 +494,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
     }
 
     override fun getButtonNumber(data: FormConfiguration?): String {
-        if (data?.type != FormType.PRINTER.type ) {
+        if (data?.type != FormType.PRINTER.type) {
 
             val view = rootLayout.findViewWithTag<ViewGroup>(data?.id)
             Timber.d("Getting url text view for buttons ")
@@ -485,7 +571,8 @@ class FormBuilder constructor(val context: Context) : BuilderView {
                 }
                 errorTextView.visibility = View.INVISIBLE
                 recyclerView.adapter = adapter
-                recyclerView.layoutManager = GridLayoutManager(context, 2)
+                recyclerView.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 view.tag = formConfiguration?.id
                 if (i == 0) {
                     applyTopParams(view)
@@ -631,7 +718,7 @@ class FormBuilder constructor(val context: Context) : BuilderView {
         Timber.d("VOYAGES:  $voyages --- VOYAGE_SIZE = ${voyages?.size}")
         if (voyages?.isNotEmpty() == true) {
             Timber.d("Not empty")
-            if (voyages?.size ?: 0  > Constants.ITEM_TO_EXPAND) {
+            if (voyages?.size ?: 0 > Constants.ITEM_TO_EXPAND) {
                 Timber.d("Spinner voyage")
                 val view = inflateView(context, R.layout.form_single_select)
                 view.findViewById<TextView>(R.id.tv_error).visibility = View.INVISIBLE

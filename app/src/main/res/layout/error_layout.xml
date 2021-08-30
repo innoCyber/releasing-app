@@ -46,7 +46,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1"
-                app:srcCompat="@drawable/ic_error_red" />
+                android:layout_margin="32dp"
+                android:src="@drawable/error_icon"
+                app:srcCompat="@drawable/error_icon" />
 
             <TextView
                 android:id="@+id/tv_message"
@@ -56,8 +58,6 @@
                 android:layout_marginTop="@dimen/constraint_default_margin_8dp"
                 android:layout_marginEnd="@dimen/constraint_default_margin_8dp"
                 android:gravity="center"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/colorBlack"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,9 +68,9 @@
             <ptml.releasing.app.views.MaterialRippleLayout
                 android:id="@+id/btn_reload_layout"
                 style="@style/RippleLayoutStyle.Configure"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                android:layout_margin="@dimen/constraint_default_margin_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_message">
@@ -78,9 +78,11 @@
                 <Button
                     android:id="@+id/btn_reload"
                     style="@style/ButtonStyle.Error"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/reload" />
             </ptml.releasing.app.views.MaterialRippleLayout>
 

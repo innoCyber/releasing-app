@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBox
+    <RadioButton
         android:id="@+id/check_box"
-        style="@style/Form.Check" />
+        style="@style/Form.Check"
+        android:scaleX="1.0"
+        android:scaleY="1.0"/>
 </layout>

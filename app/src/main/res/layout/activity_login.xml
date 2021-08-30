@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,14 +14,10 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_terminal" />
+
 
         <View
             android:layout_width="match_parent"
@@ -36,43 +33,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_l"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.05" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_r"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.95" />
-
                 <ImageView
-                    android:id="@+id/img_app_icon"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/app_icon_margin_top"
-                    android:contentDescription="@string/app_name"
-                    app:layout_constraintBottom_toTopOf="@id/login_form"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ptml_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ptml_logo"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.3"
-                    app:layout_constraintVertical_chainStyle="spread"
-                    app:layout_constraintWidth_max="300dp"
-                    app:srcCompat="@drawable/ic_ptml_logo" />
+                    app:layout_constraintBottom_toTopOf="@+id/login_form"
+                    android:layout_margin="@dimen/app_icon_margin_top"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eramp_terminal"
+                    android:textSize="20sp"
+                    android:layout_margin="12dp"
+                    android:textColor="@color/colorAccent"
+                    app:layout_constraintTop_toBottomOf="@id/ptml_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/login_form"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_r"
-                    app:layout_constraintStart_toStartOf="@id/guideline_l"
-                    app:layout_constraintTop_toBottomOf="@id/img_app_icon">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/badge_id_input"
@@ -80,7 +71,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/login_text_input_margin"
-                        android:layout_marginTop="@dimen/login_first_text_input_margin_top"
                         android:layout_marginEnd="@dimen/login_text_input_margin"
                         android:hint="@string/login_badge_id_hint"
                         app:errorText="@{viewModel.badgeIdErrorState}"
@@ -166,6 +156,32 @@
                         app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/login_form"
+                    app:layout_constraintStart_toStartOf="@id/login_form"
+                    app:layout_constraintEnd_toEndOf="@id/login_form"
+                    android:layout_margin="16dp"
+                    android:textAlignment="center"
+                    android:text="@{viewModel.version}"
+                    tools:text="v.1.2.3"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/login_form"
+                    app:layout_constraintEnd_toEndOf="@id/login_form"
+                    android:layout_margin="16dp"
+                    android:textStyle="italic"
+                    android:textSize="12sp"
+                    android:text="@string/al_rights_reserved_design_by_ptml"/>
+
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
