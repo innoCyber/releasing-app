@@ -48,8 +48,8 @@ open class PreferencesManagerImpl @Inject constructor(
     }
 
     override fun getStaticAuth(): String {
-        val username = "admin"
-        val password = "Passw2021"
+        val username = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin"
+        val password = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021"
         val authPayload = "$username:$password"
         val data = authPayload.toByteArray()
         val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
