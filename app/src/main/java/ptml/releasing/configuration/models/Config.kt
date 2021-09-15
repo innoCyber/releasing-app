@@ -75,7 +75,6 @@ data class ReleasingTerminal(
 
 }
 
-
 data class ReleasingOperationStep(
         @SerializedName("cargo_type")
         val cargo_type: Int
@@ -101,7 +100,6 @@ data class ReleasingOperationStep(
     }
 }
 
-
 class ShippingLine : BaseConfig() {
 
 
@@ -112,7 +110,7 @@ data class AdminConfigResponse(
     @SerializedName("cargo_type")
         val cargoTypeList: List<CargoType>?,
     @SerializedName("operation_step")
-    val operationStepList: List<ReleasingOperationStep>?,
+    val operationStepList: MutableList<ReleasingOperationStep>?,
     @SerializedName("shipping_line")
     val shippingLineList: List<ShippingLine>?,
     @SerializedName("voyage")

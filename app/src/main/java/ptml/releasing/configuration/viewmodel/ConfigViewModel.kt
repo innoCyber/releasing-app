@@ -28,8 +28,8 @@ class ConfigViewModel @Inject constructor(
     private val _cargoTypes = MutableLiveData<List<CargoType>>()
     val cargoTypes: LiveData<List<CargoType>> = _cargoTypes
 
-    private val operationStepList = MutableLiveData<List<ReleasingOperationStep>>()
-    fun getOperationStepList(): LiveData<List<ReleasingOperationStep>> = operationStepList
+    private val operationStepList = MutableLiveData<MutableList<ReleasingOperationStep>>()
+    fun getOperationStepList(): LiveData<MutableList<ReleasingOperationStep>> = operationStepList
 
     private val voyageList = MutableLiveData<List<ptml.releasing.configuration.models.ReleasingVoyage>>()
     fun getVoyageList(): LiveData<List<ptml.releasing.configuration.models.ReleasingVoyage>> = voyageList

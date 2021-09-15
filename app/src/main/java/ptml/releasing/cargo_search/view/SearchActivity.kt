@@ -326,7 +326,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.findCargo(cargoNumber, imei ?: "")
     }
 
-
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showPhoneStateRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(

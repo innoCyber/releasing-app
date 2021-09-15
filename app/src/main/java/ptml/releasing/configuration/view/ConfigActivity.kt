@@ -2,6 +2,7 @@ package ptml.releasing.configuration.view
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
@@ -56,9 +57,6 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         binding.scrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
             binding.swipeRefreshLayout.isEnabled = scrollY == 0
         }
-
-
-
 
         viewModel.cargoTypes.observe(this, Observer { cargoTypes ->
             viewModel.configuration.observe(this, Observer { selectedItem ->
@@ -303,12 +301,14 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     tag = it
                 })
             }
-            binding.top.tab.selectTab( binding.top.tab.getTabAt(cargoTypes.indexOf(selected.cargoType) ?: 0) ,true)
 
+            binding.top.tab.removeTabAt(0)
+
+            //binding.top.tab.selectTab( binding.top.tab.getTabAt(cargoTypes.indexOf(selected.cargoType) ?: 0) ,true)
 
             binding.top.tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.cargoTypeSelected(cargoTypes[binding.top.tab.selectedTabPosition] ?: CargoType())
+                    viewModel.cargoTypeSelected(cargoTypes[binding.top.tab.selectedTabPosition+1] ?: CargoType())
 
                 }
 
@@ -328,7 +328,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     }
 
     private fun setUpOperationStep(
-        operationStepList: List<ReleasingOperationStep>,
+        operationStepList: MutableList<ReleasingOperationStep>,
         selected: Configuration
     ) {
 
@@ -337,7 +337,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
             adapter = operationStepAdapter
             val selectedItem = operationStepList.indexOf(selected.operationStep)
-            setSelection(if (selectedItem == -1) 0 else selectedItem)
+                setSelection(if (selectedItem == -1) {0} else {selectedItem})
             onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -368,11 +368,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                             }
                         }
 
-
                     }
                 }
         }
-
 
     }
 

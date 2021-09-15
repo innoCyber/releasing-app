@@ -21,11 +21,13 @@
             android:id="@+id/tab"
             style="@style/AppTabLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/tab_background"
             app:tabGravity="fill"
-            app:tabMode="fixed" />
+            android:focusedByDefault="false"
+            android:defaultFocusHighlightEnabled="false"
+            app:tabMode="fixed"/>
 
         <TextView
             android:id="@+id/tv_select_operation_step"
