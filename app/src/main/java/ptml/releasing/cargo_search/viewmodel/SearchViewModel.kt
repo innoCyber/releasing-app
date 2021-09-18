@@ -20,10 +20,7 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
-import ptml.releasing.cargo_search.model.CargoNotFoundResponse
-import ptml.releasing.cargo_search.model.FindCargoResponse
-import ptml.releasing.cargo_search.model.FormOption
-import ptml.releasing.cargo_search.model.FormValue
+import ptml.releasing.cargo_search.model.*
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import ptml.releasing.save_time_worker.CheckLoginWorker
@@ -103,13 +100,15 @@ open class SearchViewModel @Inject constructor(
                 //already configured
                 val config = _configuration.value
                 val findCargoResponse = repository.findCargo(
-                    config?.cargoType?.id ?: 0,
+                    config?.cargoType?.value ?: "",
                     config?.operationStep?.id ?: 0,
                     config?.terminal?.id ?: 0,
-                 config?.shippingLine?.value?: "",
+                    config?.shippingLine?.value?: "",
                     config?.voyage?.id?: -1,
                     imei,
-                    cargoNumber.trim()
+                    cargoNumber.trim(),
+                    config?.id_voyage?: 0
+
                 )?.await()
 
                 Timber.v("fiy: %s", findCargoResponse)

@@ -140,15 +140,15 @@ open class ReleasingRepository @Inject constructor(
 
 
     override suspend fun findCargo(
-        cargoTypeId: Int?,
+        cargoTypeId: String?,
         operationStepId: Int?,
         terminal: Int?,
         shippingLine: String?,
         voyage: Int?,
         imei: String,
-        cargoNumber: String
-    ) = remote.findCargo(cargoTypeId, operationStepId, terminal, shippingLine, voyage,  imei, cargoNumber)
-
+        cargoNumber: String,
+        id_voyage: Int
+    ) = remote.findCargo(cargoTypeId,operationStepId,terminal,shippingLine,voyage,imei,cargoNumber,id_voyage)
 
     override suspend fun getDamagesByPosition(
         imei: String,

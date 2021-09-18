@@ -23,7 +23,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 51
-        versionName "1.9.8"
+        versionName "1.9.9"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
@@ -84,17 +84,17 @@ android {
 
         // Specific values
        if (name.contains("dev")) {
-            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/\"")
             variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
-            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/UploadImage/\"")
         }else if (name.contains("staging")) {
-            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidAppReleasing/\"")
             variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidAppDriver/\"")
-            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidZebra/UploadImage/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidAppReleasing/UploadImage/\"")
         } else if (name.contains("production")) {
-            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/\"")
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppReleasing/\"")
             variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")
-            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidZebra/UploadImage/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/UploadImage/\"")
         }
     }
 

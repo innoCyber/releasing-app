@@ -254,7 +254,10 @@ class AdminConfigActivity : BaseActivity<AdminConfigViewModel, ActivityAdminConf
                                     selected.cargoType ?: config?.cargoTypeList?.firstOrNull(),
                                     selected.shippingLine?: config!!.shippingLineList?.firstOrNull(),
                                     selected.voyage?: config!!.voyage?.firstOrNull(),
-                                    false
+                                    false,
+                                    "",
+                                    0,
+                                    ""
                                 )
                             viewModel.saveSelectedTerminal(configuration)
                             Toast.makeText(

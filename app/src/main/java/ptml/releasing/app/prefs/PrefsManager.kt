@@ -39,7 +39,6 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
         const val WORKER_ID = "_workerId"
     }
 
-
     override fun isFirst(): Boolean {
         return sharedPreferences.getBoolean(FIRST, true)
     }

@@ -5,6 +5,7 @@ package ptml.releasing.app.base
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
@@ -19,6 +20,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -32,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import permissions.dispatcher.*
 import ptml.releasing.R
+import ptml.releasing.app.data.local.BasePreferencesManager
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.utils.*
 import ptml.releasing.app.utils.extensions.hideKeyBoardOnTouchOfNonEditableViews
@@ -41,6 +44,7 @@ import ptml.releasing.app.utils.network.NetworkStateWrapper
 import ptml.releasing.barcode_scan.BarcodeScanActivity
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.view.SearchActivity
+import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import javax.inject.Inject
@@ -326,6 +330,7 @@ abstract class BaseActivity<V, D> :
 
 
     private fun showLogOutConfirmDialog() {
+        val viewmodel: SearchViewModel by viewModels()
         val dialogFragment = InfoDialog.newInstance(
             title = getString(R.string.confirm_action),
             message = getString(R.string.log_out_confirm_message),

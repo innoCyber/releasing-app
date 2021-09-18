@@ -73,6 +73,7 @@ class ConfigViewModel @Inject constructor(
                     networkState.postValue(Event(NetworkState.LOADED))
                 }
             } catch (e: Throwable) {
+
                 networkState.postValue(
                     Event(
                         NetworkState.error(e)
@@ -115,7 +116,10 @@ class ConfigViewModel @Inject constructor(
                 cargoType ?: return,
                 shippingLine ?: return,
                 voyage?: return,
-                checked
+                checked,
+                "",
+                0,
+                ""
             )
         compositeJob = CoroutineScope(dispatchers.db).launch {
             try {

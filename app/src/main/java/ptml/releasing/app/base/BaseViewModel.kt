@@ -324,7 +324,7 @@ open class BaseViewModel @Inject constructor(
 
     fun isConnectedToProduction(): Boolean {
         val serverUrl = repository.getServerUrl()
-        return serverUrl == "https://billing.grimaldi-nigeria.com:1448/api/AndroidZebra/"
+        return serverUrl == "https://billing.grimaldi-nigeria.com:1448/api/AndroidAppReleasing/"
     }
 
     fun reloadMenu() {

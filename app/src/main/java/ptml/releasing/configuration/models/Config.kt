@@ -156,7 +156,8 @@ data class Configuration(
     @SerializedName("cargoType") val cargoType: CargoType?,
     @SerializedName("shippingLine") val shippingLine: ShippingLine?,
     @SerializedName("voyage") val voyage: ReleasingVoyage?,
-    @SerializedName("cameraEnabled") val cameraEnabled: Boolean
+    @SerializedName("cameraEnabled") val cameraEnabled: Boolean,
+    @SerializedName("id_voyage") val id_voyage: Int?
 ) : AppResponse() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -2,22 +2,17 @@ package ptml.releasing.cargo_search.model.api
 
 import kotlinx.coroutines.Deferred
 import ptml.releasing.app.remote.Urls
+import ptml.releasing.cargo_search.model.FindCargoItems
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.ShippingLine
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface FindCargoService {
-    @GET(Urls.FIND_CARGO)
+    //@GET(Urls.FIND_CARGO)
+    @HTTP(method = "POST", path = Urls.FIND_CARGO, hasBody = true)
     fun findCargo(
         @Header("Authorization") authorization: String,
-        @Query("cargo_type") cargoTypeId: Int?,
-        @Query("operation_step") operationStepId: Int?,
-        @Query("terminal") terminal: Int?,
-        @Query("shipping_line") shippingLine: String?,
-        @Query("voyage") voyage: Int?,
-        @Query("imei") imei: String,
-        @Query("cargo_code")cargoNumber:String
+        @Body findCargoItems: FindCargoItems
     ): Deferred<FindCargoResponse?>?
+
 }

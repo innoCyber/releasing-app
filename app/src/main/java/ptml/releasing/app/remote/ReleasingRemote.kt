@@ -1,9 +1,13 @@
 package ptml.releasing.app.remote
 
+import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.Deferred
 import ptml.releasing.adminlogin.model.api.LoginApiService
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_info.model.api.UploadDataService
+import ptml.releasing.cargo_search.model.FindCargoItems
+import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.api.FindCargoService
 import ptml.releasing.configuration.models.ShippingLine
 import ptml.releasing.configuration.models.api.ConfigApiService
@@ -49,19 +53,24 @@ class ReleasingRemote @Inject constructor(
         imei: String
     ) = adminConfigService.setConfigurationDeviceAsync(localDataManager.getStaticAuth(), operationStepId, imei)
 
-
     override suspend fun findCargo(
-        cargoTypeId: Int?,
+        cargoTypeId: String?,
         operationStepId: Int?,
         terminal: Int?,
         shippingLine: String?,
         voyage: Int?,
         imei: String,
-        cargoNumber: String
-    ) = findCargoService.findCargo(localDataManager.getStaticAuth(), cargoTypeId, operationStepId, terminal, shippingLine, voyage, imei, cargoNumber)
+        cargoNumber: String,
+        id_voyage: Int
+    ): Deferred<FindCargoResponse?>? {
+        val findCargoItems = FindCargoItems(cargoTypeId,operationStepId,terminal,shippingLine,voyage,imei,cargoNumber,id_voyage)
+        return findCargoService.findCargo(
+            localDataManager.getStaticAuth(),
+            findCargoItems
+        )
+    }
 
     override suspend fun uploadData(request: FormSubmissionRequest) =
         uploadDataService.uploadData(localDataManager.getStaticAuth(), request)
-
 }
 

@@ -1,10 +1,10 @@
 package ptml.releasing.app.utils
 
 import android.content.Intent
+import android.os.Bundle
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.view.ConfigActivity
-import ptml.releasing.login.view.LoginActivity
 import ptml.releasing.resetpassword.view.ResetPasswordActivity
 import javax.inject.Inject
 
@@ -24,8 +24,16 @@ class Navigator @Inject constructor() {
     }
 
     fun goToLogin(baseActivity: BaseActivity<*, *>) {
-        baseActivity.startActivity(Intent(baseActivity, LoginActivity::class.java))
+        baseActivity.startActivity(Intent(baseActivity, ptml.releasing.login.view.LoginActivity::class.java))
         baseActivity.finishAffinity()
+    }
+
+    fun goToSearchWithBundle(baseActivity: BaseActivity<*, *>) {
+        val send = Intent(baseActivity, SearchActivity::class.java)
+        val b = Bundle()
+        b.putBoolean("fromSavedConfigButton", true)
+        send.putExtras(b)
+        baseActivity.startActivity(send)
     }
 
     fun goToReset(baseActivity: BaseActivity<*, *>) {

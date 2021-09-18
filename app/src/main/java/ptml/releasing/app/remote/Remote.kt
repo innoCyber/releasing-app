@@ -23,15 +23,15 @@ interface Remote {
     ): Deferred<ConfigureDeviceResponse>
 
     suspend fun findCargo(
-        cargoTypeId: Int?,
+        cargoTypeId: String?,
         operationStepId: Int?,
         terminal: Int?,
         shippingLine: String?,
         voyage: Int?,
         imei: String,
-        cargoNumber: String
+        cargoNumber: String,
+        id_voyage: Int
     ): Deferred<FindCargoResponse?>?
-
 
     suspend fun uploadData(
         request: FormSubmissionRequest

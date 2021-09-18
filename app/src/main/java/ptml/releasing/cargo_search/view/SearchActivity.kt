@@ -1,9 +1,11 @@
 package ptml.releasing.cargo_search.view
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
@@ -52,15 +54,19 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val bundle = intent.extras
+        val fromSavedConfigButton:Boolean = bundle?.getBoolean("fromSavedConfigButton")?: false
+
         initErrorDrawable(binding.appBarHome.content.includeError.imgError)
         viewModel.getSavedConfig()
         viewModel.isConfigured.observe(this, Observer {
             binding.appBarHome.content.tvConfigMessageContainer.visibility =
-                if (it) View.GONE else View.VISIBLE //hide or show the not configured message
+                if (it&&fromSavedConfigButton) View.GONE else View.VISIBLE //hide or show the not configured message
             binding.appBarHome.content.includeHome.root.visibility =
-                if (it) View.VISIBLE else View.GONE
+                if (it&&fromSavedConfigButton) View.VISIBLE else View.GONE
             binding.appBarHome.content.includeSearch.root.visibility =
-                if (it) View.VISIBLE else View.GONE
+                if (it&&fromSavedConfigButton) View.VISIBLE else View.GONE
 
 //            binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
         })

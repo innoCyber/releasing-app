@@ -1,11 +1,13 @@
 package ptml.releasing.configuration.view
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
@@ -36,6 +38,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     private var shippingLineAdapter: ConfigSpinnerAdapter<ShippingLine>? = null
 
     private var voyageAdapter: ConfigSpinnerAdapter<ReleasingVoyage>? = null
+
 
     private val errorHandler by lazy {
         ErrorHandler(this)
@@ -142,7 +145,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     notifyUser(getString(R.string.config_saved_success))
 //                    setResult(Activity.RESULT_OK)
 //                    finish()
-                    navigator.goToSearch(this)
+                    navigator.goToSearchWithBundle(this)
                 }
             }
         })
@@ -230,7 +233,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     override fun onConfirm() {}
                 })
             dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
-        } else {
+        } else  if (operationStep?.value==" " || operationStep?.value.isNullOrBlank()){
+                showAlertDialog()
+            }else{
                 setConfig(operationStep)
         }
 
@@ -302,13 +307,14 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 })
             }
 
-            binding.top.tab.removeTabAt(0)
+            //binding.top.tab.removeTabAt(0)
+            binding.top.tab.getTabAt(0)?.view?.visibility = View.GONE
 
-            //binding.top.tab.selectTab( binding.top.tab.getTabAt(cargoTypes.indexOf(selected.cargoType) ?: 0) ,true)
+            binding.top.tab.selectTab( binding.top.tab.getTabAt(1) ,true)
 
             binding.top.tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.cargoTypeSelected(cargoTypes[binding.top.tab.selectedTabPosition+1] ?: CargoType())
+                    viewModel.cargoTypeSelected(cargoTypes[binding.top.tab.selectedTabPosition] ?: CargoType())
 
                 }
 
@@ -327,6 +333,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         }
     }
 
+
     private fun setUpOperationStep(
         operationStepList: MutableList<ReleasingOperationStep>,
         selected: Configuration
@@ -337,7 +344,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 ConfigSpinnerAdapter(applicationContext, R.id.tv_category, operationStepList)
             adapter = operationStepAdapter
             val selectedItem = operationStepList.indexOf(selected.operationStep)
-                setSelection(if (selectedItem == -1) {0} else {selectedItem})
+               // setSelection(if (selectedItem == -1) 0 else selectedItem)
             onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -398,6 +405,18 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     }
 
+    private fun showAlertDialog() {
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@ConfigActivity)
+        alertDialog.setTitle("No Operation step selected")
+        alertDialog.setMessage("Select one to proceed")
+        alertDialog.setIcon(R.drawable.ic_baseline_warning_24)
+        alertDialog.setNegativeButton(
+            "Ok"
+        ) { _, _ -> }
+        val alert: AlertDialog = alertDialog.create()
+        alert.setCanceledOnTouchOutside(false)
+        alert.show()
+    }
 
 
 

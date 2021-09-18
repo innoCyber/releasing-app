@@ -1,5 +1,6 @@
 package ptml.releasing.adminlogin.view
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.hideSoftInputFromWindow
 import ptml.releasing.databinding.ActivityAdminLoginBinding
 
+
 class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() {
 
 
@@ -27,7 +29,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
             .get(LoginViewModel::class.java)
 
-        viewModel.getNetworkState().observe(this, Observer {event->
+        viewModel.getNetworkState().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (it == NetworkState.LOADING) {
                     showLoading(
@@ -48,20 +50,20 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
 
         })
 
-        viewModel.getLoadNext().observe(this, Observer {event->
+        viewModel.getLoadNext().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 startNewActivity(AdminConfigActivity::class.java, true)
             }
         })
 
-        viewModel.getErrorMessage().observe(this, Observer {event->
+        viewModel.getErrorMessage().observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 showErrorDialog(it)
             }
         })
 
 
-        viewModel.getPasswordValidation().observe(this, Observer {event->
+        viewModel.getPasswordValidation().observe(this, Observer { event ->
             event.getContentIfNotHandled().let {
                 if (it != null) {
                     binding.tilPassword.error = getString(it)
@@ -72,7 +74,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
             }
         })
 
-        viewModel.getUsernameValidation().observe(this, Observer {event->
+        viewModel.getUsernameValidation().observe(this, Observer { event ->
             event.getContentIfNotHandled().let {
                 if (it != null) {
                     binding.tilAdminId.error = getString(it)
@@ -132,4 +134,9 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
     override fun getBindingVariable() = BR._all
 
     override fun getLayoutResourceId() = R.layout.activity_admin_login
+
+    override fun onBackPressed() {
+        navigator.goToSearch(this)
+        super.onBackPressed()
+    }
 }
