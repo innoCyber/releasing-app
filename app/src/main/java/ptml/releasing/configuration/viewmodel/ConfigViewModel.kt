@@ -103,7 +103,8 @@ class ConfigViewModel @Inject constructor(
         shippingLine: ShippingLine?,
         voyage: ptml.releasing.configuration.models.ReleasingVoyage?,
         checked: Boolean,
-        imei: String
+        imei: String,
+        id_voyage: Int?
     ) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(Event(NetworkState.LOADING))
@@ -117,9 +118,7 @@ class ConfigViewModel @Inject constructor(
                 shippingLine ?: return,
                 voyage?: return,
                 checked,
-                "",
-                0,
-                ""
+                id_voyage?: return
             )
         compositeJob = CoroutineScope(dispatchers.db).launch {
             try {
@@ -129,7 +128,8 @@ class ConfigViewModel @Inject constructor(
                     cargoTypeId = cargoType.id,
                     terminal = terminal.id,
                     operationStepId = operationStep.id,
-                    imei = imei
+                    imei = imei,
+                    id_voyage = id_voyage
                 ).await()
                 Timber.d("Result gotten: %s", result)
                 repository.setConfigured(true)

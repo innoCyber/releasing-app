@@ -37,7 +37,7 @@ class LoginViewModel @Inject constructor(
     private val networkState = MutableLiveData<Event<NetworkState>>()
     fun getNetworkState():LiveData<Event<NetworkState>> = networkState
 
-    fun login(username: String?, password: String?) {
+    fun login(endpoint: String, authentication: String, username: String?, password: String?) {
         if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
             if (username.isNullOrEmpty()) {
                 usernameValidation.value =
@@ -64,7 +64,7 @@ class LoginViewModel @Inject constructor(
         )
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
-                val result = repository.loginAsync(user).await()
+                val result = repository.loginAsync(endpoint,authentication,user).await()
                 withContext(dispatchers.main) {
                     Timber.d("Response: %s", result)
                     if (result.isSuccess) {

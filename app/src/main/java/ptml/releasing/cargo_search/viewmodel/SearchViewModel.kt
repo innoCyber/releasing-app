@@ -100,14 +100,14 @@ open class SearchViewModel @Inject constructor(
                 //already configured
                 val config = _configuration.value
                 val findCargoResponse = repository.findCargo(
-                    config?.cargoType?.value ?: "",
+                    config?.cargoType?.id?.toString() ?: "",
                     config?.operationStep?.id ?: 0,
                     config?.terminal?.id ?: 0,
                     config?.shippingLine?.value?: "",
                     config?.voyage?.id?: -1,
                     imei,
                     cargoNumber.trim(),
-                    config?.id_voyage?: 0
+                    config?.voyage?.id?: 0
 
                 )?.await()
 

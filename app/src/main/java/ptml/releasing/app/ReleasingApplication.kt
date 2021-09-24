@@ -35,6 +35,7 @@ open class ReleasingApplication : DaggerApplication() {
     }
 
     override fun onCreate() {
+        appContext = applicationContext
         super.onCreate()
         initLogger()
         initWorkerFactory()
@@ -72,6 +73,12 @@ open class ReleasingApplication : DaggerApplication() {
                 }
             }
         }
+    }
+
+    companion object {
+
+        lateinit var appContext: Context
+
     }
 
 }

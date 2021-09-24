@@ -336,4 +336,8 @@
     <string name="configuration">Configuration</string>
     <string name="settings">Settings</string>
     <string name="others">Others</string>
+    <string name="user">User ID</string>
+    <string name="url">URL</string>
+    <string name="close_dialog_text">Close</string>
+    <string name="confirm">Confirm</string>
 </resources>

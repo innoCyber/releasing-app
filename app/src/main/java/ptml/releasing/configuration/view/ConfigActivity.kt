@@ -12,6 +12,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.include_configure_profile_top_controls.*
+import kotlinx.android.synthetic.main.include_configure_profile_top_controls.select_voyage_spinner
+import kotlinx.android.synthetic.main.select_voyage_layout.*
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.R
@@ -38,6 +41,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     private var shippingLineAdapter: ConfigSpinnerAdapter<ShippingLine>? = null
 
     private var voyageAdapter: ConfigSpinnerAdapter<ReleasingVoyage>? = null
+
+    lateinit var shippingLineValue: String
+    lateinit var voyageValue: String
 
 
     private val errorHandler by lazy {
@@ -247,6 +253,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
            showErrorDialog("No voyage is available for this operation, " +
                    "please refer to helpdesk.eramp@ptml-ng.com.")
         }else {
+
             viewModel.setConfig(
                 binding.top.terminalText.tag as ReleasingTerminal?,
                 operationStep,
@@ -254,7 +261,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 binding.top.selectShippingLineSpinner.selectedItem as ShippingLine,
                 selectedVoyage,
                false,// binding.top.cameraSwitch.isChecked,
-                imei ?: ""
+                imei ?: "",
+                selectedVoyage.id
+
             )
         }
     }
@@ -387,7 +396,8 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 ConfigSpinnerAdapter(applicationContext, R.id.tv_category, shippingLines)
             adapter = shippingLineAdapter
             val selectedItem = shippingLines.indexOf(selected.shippingLine)
-            setSelection(if (selectedItem == -1) 0 else selectedItem)
+            //setSelection(if (selectedItem == -1) 0 else selectedItem)
+            setSelection(if (selectedItem == -1) 0 else 0)
         }
     }
 

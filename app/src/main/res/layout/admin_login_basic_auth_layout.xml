@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
+
+
+            <TextView
+                android:id="@+id/URL"
+                style="@style/LabelStyle"
+                android:layout_marginTop="@dimen/constraint_default_margin_32dp"
+                android:text="@string/url"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/url_edittext_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/TextLimitError"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@+id/URL">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/url_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_background"
+                    android:inputType="textPersonName"
+                    android:textColorHint="@color/colorGray"
+                    android:textColor="@color/colorGray"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@drawable/bg_search_cursor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/tv_username"
+                style="@style/LabelStyle"
+                android:layout_marginTop="@dimen/constraint_default_margin_12dp"
+                android:text="@string/user"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/url_edittext_layout" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username_edittext_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:errorTextAppearance="@style/TextLimitError"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@+id/tv_username"
+                app:passwordToggleContentDescription="@string/app_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@drawable/bg_search_cursor"
+                    android:background="@drawable/input_background"
+                    android:textColorHint="@color/colorGray"
+                    android:textColor="@color/colorGray"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_password"
+                style="@style/LabelStyle"
+                android:layout_marginTop="@dimen/constraint_default_margin_12dp"
+                android:text="@string/password"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@id/username_edittext_layout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/constraint_default_margin_8dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:errorTextAppearance="@style/TextLimitError"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toStartOf="@id/guideline_r"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                app:layout_constraintTop_toBottomOf="@+id/tv_password"
+                app:passwordToggleContentDescription="@string/app_name"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@drawable/bg_search_cursor"
+                    android:background="@drawable/input_background"
+                    android:textColorHint="@color/colorGray"
+                    android:textColor="@color/colorGray"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_close_layout"
+                style="@style/RippleLayoutStyle.Configure"
+                android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                app:layout_constraintEnd_toStartOf="@id/btn_login_layout"
+                app:layout_constraintStart_toStartOf="@id/guideline_l"
+                android:padding="@dimen/constraint_default_margin_10dp"
+                app:layout_constraintTop_toBottomOf="@id/til_password">
+
+                <ptml.releasing.app.views.SupportVectorDrawablesButton
+                    android:id="@+id/btn_close"
+                    style="@style/ButtonStyle.Save"
+                    android:text="@string/close_dialog_text" />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+            <ptml.releasing.app.views.MaterialRippleLayout
+                android:id="@+id/btn_login_layout"
+                style="@style/RippleLayoutStyle.Configure"
+                android:padding="@dimen/constraint_default_margin_10dp"
+                android:layout_marginTop="@dimen/constraint_default_margin_16dp"
+                app:layout_constraintEnd_toEndOf="@id/guideline_r"
+                app:layout_constraintStart_toEndOf="@id/btn_close_layout"
+                app:layout_constraintTop_toBottomOf="@id/til_password">
+
+                <ptml.releasing.app.views.SupportVectorDrawablesButton
+                    android:id="@+id/btn_login"
+                    style="@style/ButtonStyle.Save"
+                    android:text="@string/confirm" />
+            </ptml.releasing.app.views.MaterialRippleLayout>
+
+
+            <include
+                android:id="@+id/include_progress"
+                layout="@layout/progress_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+
+            <include
+                android:id="@+id/include_error"
+                layout="@layout/error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

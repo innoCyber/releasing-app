@@ -31,8 +31,8 @@ class ReleasingRemote @Inject constructor(
     private val uploadDataService = retrofit.create(UploadDataService::class.java)
     private val quickRemarkService = retrofit.create(QuickRemarkService::class.java)
 
-    override suspend fun loginAsync(username: String?, password: String?) =
-        loginService.loginAsync(localDataManager.getStaticAuth(),username, password)
+    override suspend fun loginAsync(endpoint: String, authentication: String, username: String?, password: String?) =
+        loginService.loginAsync(endpoint, authentication ,username, password)
 
     override suspend fun verifyDeviceIdAsync(imei: String) =
         deviceConfigService.verifyDeviceIdAsync(localDataManager.getStaticAuth(), imei)

@@ -1,11 +1,17 @@
 package ptml.releasing.adminlogin.view
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.admin_login_basic_auth_layout.view.*
 import ptml.releasing.BR
 import ptml.releasing.R
 import ptml.releasing.admin_config.view.AdminConfigActivity
@@ -13,17 +19,26 @@ import ptml.releasing.adminlogin.viewmodel.LoginViewModel
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
+import ptml.releasing.app.utils.StaticBasicAuth.saveAdminLoginDetails
+import ptml.releasing.app.utils.StaticBasicAuth.getAdminPassword
+import ptml.releasing.app.utils.StaticBasicAuth.getAdminUsername
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.hideSoftInputFromWindow
+import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.databinding.ActivityAdminLoginBinding
+import ptml.releasing.BuildConfig
 
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() {
 
 
+    lateinit var mDialogViewc: View
+    lateinit var mBuilder: AlertDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showUpEnabled(true)
+        setupInputBasicAuthDialog()
         initErrorDrawable(binding.includeError.imgError)
 
         viewModel = ViewModelProviders.of(this, viewModeFactory)
@@ -86,7 +101,8 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
         })
 
         binding.btnLoginLayout.setOnClickListener {
-            login()
+            //login()
+            verifyLoginCredentialsAndShowBasicDialog(binding.editName.text.toString(), binding.editPassword.text.toString())
         }
 
         binding.editName.addTextChangedListener(object : TextWatcher {
@@ -118,15 +134,69 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
         })
 
         binding.includeError.btnReloadLayout.setOnClickListener {
-            login()
+            //login()
+            verifyLoginCredentialsAndShowBasicDialog(binding.editName.text.toString(), binding.editPassword.text.toString())
         }
     }
 
     private fun login() {
-        viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
+        viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString(),"","")
         binding.editPassword.clearFocus()
         binding.editName.clearFocus()
         binding.btnLogin.hideSoftInputFromWindow()
+
+    }
+
+    private fun verifyLoginCredentialsAndShowBasicDialog(username: String, password: String){
+
+        if (username.isEmpty() || password.isEmpty()) {
+            if (username.isEmpty()) {
+                binding.editName.error = "Enter ID to proceed"
+            }
+
+            if (password.isEmpty()) {
+                binding.editPassword.error = "Enter password to proceed"
+            }
+
+            return
+        }
+
+        saveAdminLoginDetails(username,password)
+        mBuilder = AlertDialog.Builder(this).create()
+        if (mDialogViewc.parent != null) {
+            (mDialogViewc.parent as ViewGroup).removeView(mDialogViewc)
+        }
+        mBuilder.setView(mDialogViewc)
+        mBuilder.setTitle("Basic Auth Credentials Dialog")
+        mBuilder.show()
+
+        populateBasicAuthDialogEntries()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun populateBasicAuthDialogEntries(){
+
+        if(BuildConfig.FLAVOR == "production"){
+            mDialogViewc.url_edittext.setText("https://billing.grimaldi-nigeria.com:1448/api/AndroidAppReleasing/")
+        }
+        if(BuildConfig.FLAVOR == "staging"){
+            mDialogViewc.url_edittext.setText("https://billing.grimaldi-nigeria.com:8085/api/AndroidAppReleasing/")
+        }
+        if(BuildConfig.FLAVOR == "dev"){
+            mDialogViewc.url_edittext.setText("https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/")
+        }
+
+        mDialogViewc.username_edittext.setText(if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin")
+        mDialogViewc.edit_password.setText(if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021")
+    }
+
+    private fun setupInputBasicAuthDialog() {
+        mDialogViewc = LayoutInflater.from(this).inflate(
+            R.layout.admin_login_basic_auth_layout,
+            null
+        )
+
+        mBuilder = AlertDialog.Builder(this).create()
     }
 
     override fun getViewModelClass() = LoginViewModel::class.java
