@@ -1,0 +1,38 @@
+package ptml.releasing.cargo_search.data.data_source
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import ptml.releasing.app.ReleasingApplication
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
+
+@Database(entities = [ChassisNumber::class], version = 1)
+abstract class ChassisDatabase : RoomDatabase(){
+    abstract fun chassisNumberDao(): ChassisNumberDao
+
+    companion object{
+        val CONTEXT =  ReleasingApplication.appContext
+        const val DATABASE_NAME = "chassisnumber_db"
+
+            // Singleton prevents multiple instances of database opening at the
+            // same time.
+            @Volatile
+            private var INSTANCE: ChassisDatabase? = null
+
+            fun getDatabase(context: Context): ChassisDatabase {
+                // if the INSTANCE is not null, then return it,
+                // if it is, then create the database
+                return INSTANCE ?: synchronized(this) {
+                    val instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        ChassisDatabase::class.java,
+                        "chassis_number_database"
+                    ).build()
+                    INSTANCE = instance
+                    // return instance
+                    instance
+                }
+            }
+    }
+}

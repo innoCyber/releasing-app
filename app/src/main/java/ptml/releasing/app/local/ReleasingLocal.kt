@@ -1,6 +1,10 @@
 package ptml.releasing.app.local
 
+import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import ptml.releasing.app.prefs.Prefs
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
+import ptml.releasing.cargo_search.domain.repository.ChassisNumberRepository
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -10,7 +14,15 @@ import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import javax.inject.Inject
 
-class ReleasingLocal @Inject constructor(var prefs: Prefs) : Local {
+class ReleasingLocal @Inject constructor(var prefs: Prefs,var chassisNumberRepository: ChassisNumberRepository) : Local {
+    override suspend fun saveChassisNumber(chassisNumber: ChassisNumber) {
+        chassisNumberRepository.saveChassisNumber(chassisNumber)
+    }
+
+    override fun getChassisNumber(): LiveData<List<ChassisNumber>> {
+        return chassisNumberRepository.getChassisNumbers()
+    }
+
     override fun saveConfig(response: AdminConfigResponse?) = prefs.saveConfig(response)
     override fun getConfig() = prefs.getConfig()
     override fun getDamages() = prefs.getDamages()

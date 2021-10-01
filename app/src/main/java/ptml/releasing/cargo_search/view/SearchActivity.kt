@@ -15,6 +15,8 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
@@ -186,6 +188,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         })
 
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
+            //if no internet do this
+            viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
+            //if there is internet do this
             viewModel.verify()
         }
 
@@ -326,6 +331,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.appBarHome.content.includeSearch.btnVerify.hideSoftInputFromWindow()
         findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString(), imei ?: "")
     }
+
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?, imei: String?) {

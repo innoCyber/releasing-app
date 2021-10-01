@@ -16,6 +16,7 @@ import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.prefs.PrefsManager
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.app.utils.Constants.PREFS
+import ptml.releasing.cargo_search.data.data_source.ChassisDatabase
 import ptml.releasing.internet_error_logs.model.ErrorCache
 import javax.inject.Named
 
@@ -43,6 +44,11 @@ class LocalModule {
         return ReleasingDb.getInstance(context)
     }
 
+    @Provides
+    @ReleasingAppScope
+    fun provideChassisNumberDb(context: Context):ChassisDatabase{
+        return ChassisDatabase.getDatabase(context)
+    }
 
     @ReleasingAppScope
     @Provides

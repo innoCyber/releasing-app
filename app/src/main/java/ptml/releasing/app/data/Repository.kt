@@ -1,9 +1,12 @@
 package ptml.releasing.app.data
 
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import ptml.releasing.adminlogin.model.User
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
@@ -16,7 +19,8 @@ import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 import java.io.File
 
 interface Repository {
-
+    suspend fun saveChassisNumber(chassisNumber: ChassisNumber)
+    fun getChassisNumber(): LiveData<List<ChassisNumber>>
     suspend fun verifyDeviceIdAsync(imei: String): Deferred<BaseResponse>
 
     suspend fun loginAsync( user: User): Deferred<BaseResponse>

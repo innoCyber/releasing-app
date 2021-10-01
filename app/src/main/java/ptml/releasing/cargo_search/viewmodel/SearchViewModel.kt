@@ -5,12 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.R
 import ptml.releasing.app.base.BaseViewModel
 import ptml.releasing.app.data.Repository
-import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import ptml.releasing.app.data.domain.repository.ImeiRepository
 import ptml.releasing.app.data.domain.state.DataState
 import ptml.releasing.app.form.FormMappers
@@ -20,6 +20,7 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.*
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
@@ -35,6 +36,8 @@ open class SearchViewModel @Inject constructor(
     repository: Repository,
     dispatchers: AppCoroutineDispatchers, updateChecker: RemoteConfigUpdateChecker
 ) : BaseViewModel(updateChecker, repository, dispatchers) {
+
+    val chassisNumbers: LiveData<List<ChassisNumber>> = repository.getChassisNumber()
 
     private val _openAdmin = MutableLiveData<Event<Unit>>()
     val openAdMin: LiveData<Event<Unit>> = _openAdmin
@@ -85,8 +88,13 @@ open class SearchViewModel @Inject constructor(
         _verify.value = Event(Unit)
     }
 
+     fun saveChassisNumber(cargoNumber: String?){
+        viewModelScope.launch {
+        repository.saveChassisNumber(ChassisNumber(0, cargoNumber))}
+    }
 
-    fun findCargo(cargoNumber: String?, imei: String) {
+
+      fun findCargo(cargoNumber: String?, imei: String) {
         //validate
         if (cargoNumber.isNullOrEmpty()) {
             _cargoNumberValidation.value = R.string.cargo_number_invalid_message

@@ -22,6 +22,10 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.FileUtils
 import ptml.releasing.app.utils.image.ImageLoader
 import ptml.releasing.app.utils.image.ImageLoaderImpl
+import ptml.releasing.cargo_search.data.data_source.ChassisDatabase
+import ptml.releasing.cargo_search.data.data_source.ChassisNumberDao
+import ptml.releasing.cargo_search.data.repository.ChassisNumberRepositoryImpl
+import ptml.releasing.cargo_search.domain.repository.ChassisNumberRepository
 import retrofit2.Retrofit
 
 @Module()
@@ -44,8 +48,20 @@ class MainModule {
 
     @Provides
     @ReleasingAppScope
-    fun provideLocal(prefs: Prefs): Local {
-        return ReleasingLocal(prefs)
+    fun provideLocal(prefs: Prefs,chassisNumberRepository: ChassisNumberRepository): Local {
+        return ReleasingLocal(prefs,chassisNumberRepository)
+    }
+
+    @Provides
+    @ReleasingAppScope
+    fun provideChassisNumberRepository(chassisNumberDao: ChassisNumberDao): ChassisNumberRepository {
+        return ChassisNumberRepositoryImpl(chassisNumberDao)
+    }
+
+    @Provides
+    @ReleasingAppScope
+    fun provideChassisNumberDao(chassisDatabase: ChassisDatabase): ChassisNumberDao {
+        return chassisDatabase.chassisNumberDao()
     }
 
     @Provides

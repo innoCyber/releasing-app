@@ -1,7 +1,9 @@
 package ptml.releasing.app.data
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import ptml.releasing.BuildConfig
 import ptml.releasing.adminlogin.model.User
@@ -10,6 +12,7 @@ import ptml.releasing.app.remote.Remote
 import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.FileUtils
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -29,6 +32,11 @@ open class ReleasingRepository @Inject constructor(
     var appCoroutineDispatchers: AppCoroutineDispatchers,
     private val fileUtils: FileUtils
 ) : Repository {
+    override suspend fun saveChassisNumber(chassisNumber: ChassisNumber) {
+        local.saveChassisNumber(chassisNumber)
+    }
+
+    override fun getChassisNumber(): LiveData<List<ChassisNumber>> = local.getChassisNumber()
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
 

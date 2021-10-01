@@ -1,5 +1,8 @@
 package ptml.releasing.app.local
 
+import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -9,6 +12,8 @@ import ptml.releasing.printer.model.Settings
 import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 
 interface Local {
+    suspend fun saveChassisNumber(chassisNumber: ChassisNumber)
+    fun getChassisNumber(): LiveData<List<ChassisNumber>>
     fun saveConfig(response: AdminConfigResponse?)
     fun getConfig(): AdminConfigResponse?
     fun getDamages():DamageResponse?
