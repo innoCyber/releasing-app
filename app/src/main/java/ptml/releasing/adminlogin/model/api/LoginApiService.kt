@@ -9,8 +9,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LoginApiService {
-    @GET("{endPoint}")
-    fun loginAsync( @Path("endPoint") endPoint: String, @Header("Authorization") authorization: String, @Query("username") username:String?, @Query("password") password:String?) : Deferred<BaseResponse>
+    @GET(Urls.LOGIN)
+    fun loginAsync(@Header("Authorization") authorization: String, @Query("username") username:String?, @Query("password") password:String?) : Deferred<BaseResponse>
+
 }
 
 

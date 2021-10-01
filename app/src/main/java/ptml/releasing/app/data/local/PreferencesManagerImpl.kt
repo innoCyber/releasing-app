@@ -1,10 +1,13 @@
 package ptml.releasing.app.data.local
 
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.util.Base64
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
 import javax.inject.Inject
@@ -47,14 +50,49 @@ open class PreferencesManagerImpl @Inject constructor(
         return "Basic $base64".trim()
     }
 
-    override fun getStaticAuth(): String {
-        val username = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin"
-        val password = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021"
+    override fun getStaticAuth(): String{
+        val _mPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(ReleasingApplication.appContext)
+        val BASEURL = _mPreferences.getString("BASE_URL_RELEASING", "")
+        var username: String? = null
+        var password : String? = null
+        var baseurl = BASEURL
+
+        if (baseurl.isNullOrEmpty()|| baseurl.isNullOrBlank() || baseurl == null) {
+            baseurl = BuildConfig.BASE_URL
+        }
+
+        if (baseurl.contains("1448")) {
+            username = "Ptml01R1"
+            password = "SPtml0309!!"
+        }
+
+        if (baseurl.contains("8085")) {
+            username = "Ptml01R1"
+            password = "SPtml0309!!"
+        }
+
+        if (baseurl.contains("1449")) {
+            username = "admin"
+            password = "Passw2021"
+
+        }
+
         val authPayload = "$username:$password"
         val data = authPayload.toByteArray()
         val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
+
         return "Basic $base64".trim()
+
     }
+//
+//    override fun getStaticAuth(): String {
+//        val username = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin"
+//        val password = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021"
+//        val authPayload = "$username:$password"
+//        val data = authPayload.toByteArray()
+//        val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
+//        return "Basic $base64".trim()
+//    }
 
     override fun getIMEI(): String {
         return getStringPreference(prefImei, "")

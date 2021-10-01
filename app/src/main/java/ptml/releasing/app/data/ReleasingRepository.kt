@@ -32,7 +32,7 @@ open class ReleasingRepository @Inject constructor(
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
 
-    override suspend fun loginAsync(endpoint: String, authentication: String, user: User) = remote.loginAsync(endpoint,authentication, user.username, user.password)
+    override suspend fun loginAsync(user: User) = remote.loginAsync(user.username, user.password)
 
     override suspend fun getAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse> {
         return withContext(appCoroutineDispatchers.db) {

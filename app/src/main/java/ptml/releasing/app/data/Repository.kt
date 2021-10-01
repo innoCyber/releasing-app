@@ -19,7 +19,7 @@ interface Repository {
 
     suspend fun verifyDeviceIdAsync(imei: String): Deferred<BaseResponse>
 
-    suspend fun loginAsync(endpoint: String, authentication: String, user: User): Deferred<BaseResponse>
+    suspend fun loginAsync( user: User): Deferred<BaseResponse>
 
     suspend fun getAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse>
     suspend fun downloadAdminConfigurationAsync(imei: String): Deferred<AdminConfigResponse>

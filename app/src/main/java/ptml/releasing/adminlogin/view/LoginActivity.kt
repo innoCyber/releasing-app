@@ -101,8 +101,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
         })
 
         binding.btnLoginLayout.setOnClickListener {
-            //login()
-            verifyLoginCredentialsAndShowBasicDialog(binding.editName.text.toString(), binding.editPassword.text.toString())
+            login()
         }
 
         binding.editName.addTextChangedListener(object : TextWatcher {
@@ -134,13 +133,12 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
         })
 
         binding.includeError.btnReloadLayout.setOnClickListener {
-            //login()
-            verifyLoginCredentialsAndShowBasicDialog(binding.editName.text.toString(), binding.editPassword.text.toString())
+            login()
         }
     }
 
     private fun login() {
-        viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString(),"","")
+        viewModel.login(binding.editName.text.toString(), binding.editPassword.text.toString())
         binding.editPassword.clearFocus()
         binding.editName.clearFocus()
         binding.btnLogin.hideSoftInputFromWindow()
@@ -186,8 +184,8 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
             mDialogViewc.url_edittext.setText("https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/")
         }
 
-        mDialogViewc.username_edittext.setText(if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin")
-        mDialogViewc.edit_password.setText(if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021")
+        mDialogViewc.username_edittext.setText(BASIC_AUTH_USERNAME)
+        mDialogViewc.edit_password.setText(BASIC_AUTH_PASSWORD)
     }
 
     private fun setupInputBasicAuthDialog() {
@@ -208,5 +206,10 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
     override fun onBackPressed() {
         navigator.goToSearch(this)
         super.onBackPressed()
+    }
+
+    companion object{
+        val BASIC_AUTH_USERNAME = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin"
+        val BASIC_AUTH_PASSWORD = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021"
     }
 }

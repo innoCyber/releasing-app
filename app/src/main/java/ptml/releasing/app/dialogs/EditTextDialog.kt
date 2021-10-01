@@ -2,7 +2,9 @@ package ptml.releasing.app.dialogs
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ptml.releasing.R
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.utils.Validation
 import ptml.releasing.databinding.DialogEdittextBinding
 
@@ -83,6 +86,13 @@ class EditTextDialog : DialogFragment() {
             binding.tilServerUrl.error = getString(R.string.enter_operator_name)
             return
         }
+
+        val prefs = PreferenceManager
+            .getDefaultSharedPreferences(ReleasingApplication.appContext)
+        val edit: SharedPreferences.Editor = prefs.edit()
+        edit.putString("BASE_URL_RELEASING", text)
+        edit.commit()
+
         listener?.onSave(text)
         dialog?.dismiss()
     }
