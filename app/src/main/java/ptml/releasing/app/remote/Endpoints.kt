@@ -51,6 +51,7 @@ object Urls {
     const val FIND_CARGO = "findCargo"
     const val UPLOAD_DATA = "uploadData"
     const val QUICK_REMARK = "downloadQuickRemarksCar"
+    const val SETDOWNLOADPOD = "setDownloadPod"
 
 
     fun getUrlWithoutParameters(url: String): String {

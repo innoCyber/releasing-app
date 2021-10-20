@@ -3,6 +3,7 @@ package ptml.releasing.app.remote
 import kotlinx.coroutines.Deferred
 import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_search.model.PODResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -36,4 +37,6 @@ interface Remote {
     suspend fun uploadData(
         request: FormSubmissionRequest
     ): Deferred<BaseResponse>
+
+    suspend fun downloadPOD(idVoyage: Int): PODResponse
 }

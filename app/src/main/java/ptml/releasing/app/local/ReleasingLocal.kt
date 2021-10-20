@@ -23,6 +23,10 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs,var chassisNumberRepos
         return chassisNumberRepository.getChassisNumbers()
     }
 
+    override suspend fun deleteChassisNumber(chassisNumber: String?) {
+        return chassisNumberRepository.deleteChassisNumber(chassisNumber)
+    }
+
     override fun saveConfig(response: AdminConfigResponse?) = prefs.saveConfig(response)
     override fun getConfig() = prefs.getConfig()
     override fun getDamages() = prefs.getDamages()

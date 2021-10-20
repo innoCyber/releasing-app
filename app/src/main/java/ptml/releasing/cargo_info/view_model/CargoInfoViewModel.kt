@@ -73,6 +73,11 @@ class CargoInfoViewModel @Inject constructor(
         _goBack.postValue(Event(true))
     }
 
+    fun downloadPOD(idVoyage: Int){
+        viewModelScope.launch {
+            repository.downloadPOD(idVoyage)
+        }
+    }
 
     fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
         compositeJob = CoroutineScope(dispatchers.db).launch {
@@ -80,7 +85,6 @@ class CargoInfoViewModel @Inject constructor(
             try {
                 val remarksMap = mutableMapOf<Int, QuickRemark>()
                 val formConfig = repository.getFormConfigAsync().await()
-
                 val remarks = repository.getQuickRemarkAsync(imei)?.await()
                 for (remark in remarks?.data ?: mutableListOf()) {
                     remarksMap[remark.id ?: return@launch] =
@@ -91,6 +95,7 @@ class CargoInfoViewModel @Inject constructor(
                     //add voyage form
                     val formData = formConfig.data.toMutableList()
                     formData.add(getVoyageForm())
+
                     formConfig.copy(data = formData)
                 } else {
                     formConfig

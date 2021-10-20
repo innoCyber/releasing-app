@@ -10,5 +10,5 @@ interface ChassisNumberRepository{
 
     suspend fun saveChassisNumber(chassisNumber: ChassisNumber)
 
-    suspend fun deleteChassisNumber(chassisNumber: ChassisNumber)
+    suspend fun deleteChassisNumber(chassisNumber: String?)
 }

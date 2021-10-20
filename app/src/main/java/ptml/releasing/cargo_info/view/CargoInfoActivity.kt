@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -55,6 +56,7 @@ class CargoInfoActivity :
     companion object {
         const val RESPONSE = "response"
         const val CARGO_CODE = "query"
+        const val ID_VOYAGE = "grimaldiContainerVoyageID"
         const val DAMAGES_RC = 1234
     }
 
@@ -121,10 +123,12 @@ class CargoInfoActivity :
                         summaryText =
                             summaryText.plus("BL Number : ${findCargoResponse?.bl_number}\r\n")
                         summaryText = summaryText.plus(
-                            "Date : ${SimpleDateFormat(
-                                "dd-MMM-yyyy hh:mm",
-                                Locale.getDefault()
-                            ).format(Calendar.getInstance().time)}\r\n"
+                            "Date : ${
+                                SimpleDateFormat(
+                                    "dd-MMM-yyyy hh:mm",
+                                    Locale.getDefault()
+                                ).format(Calendar.getInstance().time)
+                            }\r\n"
                         )
                         summaryText =
                             summaryText.plus("Operator : ${loginRepository.getLoginData().badgeId}\r\n")
@@ -189,6 +193,8 @@ class CargoInfoActivity :
         input = intent?.extras?.getBundle(Constants.EXTRAS)?.getString(CARGO_CODE)
         binding.tvNumber.text = input
 
+        val idVoyage = intent?.extras?.getBundle(Constants.EXTRAS)?.getInt(ID_VOYAGE)
+        //viewModel.downloadPOD(idVoyage!!)
         bluetoothManager = BluetoothManager(this)
         bluetoothManager.adapterListener = object : BluetoothManager.AdapterListener {
             override fun onAdapterError() {

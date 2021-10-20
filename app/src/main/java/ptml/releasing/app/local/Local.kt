@@ -14,6 +14,7 @@ import ptml.releasing.quick_remarks.model.QuickRemarkResponse
 interface Local {
     suspend fun saveChassisNumber(chassisNumber: ChassisNumber)
     fun getChassisNumber(): LiveData<List<ChassisNumber>>
+    suspend fun deleteChassisNumber(chassisNumber: String?)
     fun saveConfig(response: AdminConfigResponse?)
     fun getConfig(): AdminConfigResponse?
     fun getDamages():DamageResponse?

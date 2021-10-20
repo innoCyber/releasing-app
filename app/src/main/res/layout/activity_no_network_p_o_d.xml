@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".cargo_search.view.NoNetworkPODActivity">
+
+    <TextView
+        android:id="@+id/container_number_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textSize="22sp"
+        style="@style/CargoNumber"
+        android:text="@string/cargo_number"
+        android:gravity="center_horizontal"
+        />
+
+    <TextView
+        android:id="@+id/container_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        style="@style/CargoNumber"
+        android:layout_below="@+id/container_number_text"
+        android:gravity="center_horizontal"
+        />
+
+    <Spinner
+        android:id="@+id/pod_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/SpinnerStyle"
+        android:entries="@array/sample"
+        android:layout_marginStart="@dimen/constraint_default_margin_10dp"
+        android:layout_marginEnd="@dimen/constraint_default_margin_10dp"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
