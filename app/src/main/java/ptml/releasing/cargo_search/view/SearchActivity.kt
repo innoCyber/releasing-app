@@ -1,5 +1,6 @@
 package ptml.releasing.cargo_search.view
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -24,6 +25,7 @@ import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
+import ptml.releasing.app.data.remote.exception.NoConnectivityException
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
@@ -39,6 +41,7 @@ import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
 import ptml.releasing.voyage.view.VoyageActivity
 import timber.log.Timber
+import java.nio.channels.NetworkChannel
 import java.util.*
 
 
@@ -59,6 +62,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         val bundle = intent.extras
         val fromSavedConfigButton:Boolean = bundle?.getBoolean("fromSavedConfigButton")?: false
+        val isGrimaldiContainer:Boolean = bundle?.getBoolean("isGrimaldiContainer")?: false
+        val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID")?: 0
+        Log.d("grimaldiContain", "onCreate: $grimaldiContainerVoyageID")
 
         initErrorDrawable(binding.appBarHome.content.includeError.imgError)
         viewModel.getSavedConfig()
@@ -112,7 +118,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                         binding.appBarHome.content.includeError.tvMessage,
                         error
                     )
-                } else {
+                } else {this@SearchActivity.getSystemService(Context.CONNECTIVITY_SERVICE)
                     hideLoading(binding.appBarHome.content.includeError.root)
                 }
             }
@@ -189,9 +195,13 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
             //if no internet do this
-            viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
-            //if there is internet do this
-            viewModel.verify()
+            if (!NetworkUtil.isOnline(this) && isGrimaldiContainer) {
+                viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
+
+            }else{
+                //if there is internet do this
+                viewModel.verify()
+            }
         }
 
         binding.appBarHome.content.includeSearch.imgQrCode.setOnClickListener {

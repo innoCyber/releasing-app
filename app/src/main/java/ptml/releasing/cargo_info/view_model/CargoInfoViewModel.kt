@@ -80,7 +80,6 @@ class CargoInfoViewModel @Inject constructor(
             try {
                 val remarksMap = mutableMapOf<Int, QuickRemark>()
                 val formConfig = repository.getFormConfigAsync().await()
-
                 val remarks = repository.getQuickRemarkAsync(imei)?.await()
                 for (remark in remarks?.data ?: mutableListOf()) {
                     remarksMap[remark.id ?: return@launch] =
@@ -91,6 +90,7 @@ class CargoInfoViewModel @Inject constructor(
                     //add voyage form
                     val formData = formConfig.data.toMutableList()
                     formData.add(getVoyageForm())
+
                     formConfig.copy(data = formData)
                 } else {
                     formConfig

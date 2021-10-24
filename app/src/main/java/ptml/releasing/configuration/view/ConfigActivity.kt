@@ -29,6 +29,7 @@ import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
 import ptml.releasing.databinding.ActivityConfigBinding
 import timber.log.Timber
+import java.util.*
 
 
 @RuntimePermissions
@@ -42,13 +43,12 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private var voyageAdapter: ConfigSpinnerAdapter<ReleasingVoyage>? = null
 
-    lateinit var shippingLineValue: String
-    lateinit var voyageValue: String
-
-
     private val errorHandler by lazy {
         ErrorHandler(this)
     }
+
+    var isGrimaldiContainer: Boolean = false
+    var grimaldiContainerVoyageID: Int = 0
 
 
     override fun onBackPressed() {
@@ -151,7 +151,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     notifyUser(getString(R.string.config_saved_success))
 //                    setResult(Activity.RESULT_OK)
 //                    finish()
-                    navigator.goToSearchWithBundle(this)
+                    navigator.goToSearchWithBundle(this,isGrimaldiContainer,grimaldiContainerVoyageID)
                 }
             }
         })
@@ -238,10 +238,12 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 listener = object : InfoDialog.InfoListener {
                     override fun onConfirm() {}
                 })
-            dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
-        } else  if (operationStep?.value==" " || operationStep?.value.isNullOrBlank()){
-                showAlertDialog()
-            }else{
+            dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name) }
+
+        else if (operationStep?.value==" " || operationStep?.value.isNullOrBlank()){
+                showAlertDialog("No Operation step selected","Select one to proceed")
+            }
+        else{
                 setConfig(operationStep)
         }
 
@@ -249,7 +251,21 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     private fun setConfig(operationStep: ReleasingOperationStep?) {
         val selectedVoyage = binding.top.selectVoyageSpinner.selectedItem as ReleasingVoyage
-        if(selectedVoyage.id == -1 && operationStep?.id == 20){
+        val shippingLine = binding.top.selectShippingLineSpinner.selectedItem as ShippingLine?
+        if (operationStep?.id == 20 && (shippingLine?.value?.contains("Grimaldi") == true)){
+            isGrimaldiContainer = true
+            grimaldiContainerVoyageID = selectedVoyage.id ?: 0
+        }
+
+        if (operationStep?.id == 20 && (selectedVoyage.value == " " || shippingLine?.value == " " || selectedVoyage.value.isNullOrBlank() || shippingLine?.value.isNullOrBlank())) {
+            showAlertDialog("No values selected for Shipping Line/ Voyage","Select one to proceed")
+        }
+
+        else if (operationStep?.id == 29 && (shippingLine?.value == " " || shippingLine?.value.isNullOrBlank())) {
+            showAlertDialog("No values selected for Shipping Line","Select one to proceed")
+        }
+
+        else if(selectedVoyage.id == -1 && operationStep?.id == 20){
            showErrorDialog("No voyage is available for this operation, " +
                    "please refer to helpdesk.eramp@ptml-ng.com.")
         }else {
@@ -415,10 +431,10 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 
     }
 
-    private fun showAlertDialog() {
+    private fun showAlertDialog(title: String, message: String) {
         val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@ConfigActivity)
-        alertDialog.setTitle("No Operation step selected")
-        alertDialog.setMessage("Select one to proceed")
+        alertDialog.setTitle(title)
+        alertDialog.setMessage(message)
         alertDialog.setIcon(R.drawable.ic_baseline_warning_24)
         alertDialog.setNegativeButton(
             "Ok"
