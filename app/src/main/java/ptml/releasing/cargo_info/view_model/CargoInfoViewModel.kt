@@ -73,6 +73,11 @@ class CargoInfoViewModel @Inject constructor(
         _goBack.postValue(Event(true))
     }
 
+    fun downloadPOD(idVoyage: Int){
+        viewModelScope.launch {
+            repository.downloadPOD(idVoyage)
+        }
+    }
 
     fun getFormConfig(imei: String, findCargoResponse: FindCargoResponse?) {
         compositeJob = CoroutineScope(dispatchers.db).launch {

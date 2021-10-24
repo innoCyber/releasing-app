@@ -48,6 +48,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     }
 
     var isGrimaldiContainer: Boolean = false
+    var isLoadOnBoard: Boolean = false
     var grimaldiContainerVoyageID: Int = 0
 
 
@@ -151,7 +152,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     notifyUser(getString(R.string.config_saved_success))
 //                    setResult(Activity.RESULT_OK)
 //                    finish()
-                    navigator.goToSearchWithBundle(this,isGrimaldiContainer,grimaldiContainerVoyageID)
+                    navigator.goToSearchWithBundle(this,isGrimaldiContainer,isLoadOnBoard, grimaldiContainerVoyageID)
                 }
             }
         })
@@ -252,8 +253,10 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     private fun setConfig(operationStep: ReleasingOperationStep?) {
         val selectedVoyage = binding.top.selectVoyageSpinner.selectedItem as ReleasingVoyage
         val shippingLine = binding.top.selectShippingLineSpinner.selectedItem as ShippingLine?
-        if (operationStep?.id == 20 && (shippingLine?.value?.contains("Grimaldi") == true)){
+
+        if (operationStep?.id == 20 && shippingLine?.value?.toLowerCase(Locale.ROOT)!!.contains("Grimaldi")){
             isGrimaldiContainer = true
+            isLoadOnBoard = true
             grimaldiContainerVoyageID = selectedVoyage.id ?: 0
         }
 

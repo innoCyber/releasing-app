@@ -1,6 +1,5 @@
 package ptml.releasing.app.remote
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Deferred
 import ptml.releasing.adminlogin.model.api.LoginApiService
 import ptml.releasing.app.data.local.LocalDataManager
@@ -9,7 +8,6 @@ import ptml.releasing.cargo_info.model.api.UploadDataService
 import ptml.releasing.cargo_search.model.FindCargoItems
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.model.api.FindCargoService
-import ptml.releasing.configuration.models.ShippingLine
 import ptml.releasing.configuration.models.api.ConfigApiService
 import ptml.releasing.device_configuration.model.api.DeviceConfigApiService
 import ptml.releasing.download_damages.model.api.DamageApiService
@@ -18,8 +16,6 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class ReleasingRemote @Inject constructor(
-
-
     retrofit: Retrofit,
     val localDataManager: LocalDataManager) : Remote {
 
@@ -72,5 +68,9 @@ class ReleasingRemote @Inject constructor(
 
     override suspend fun uploadData(request: FormSubmissionRequest) =
         uploadDataService.uploadData(localDataManager.getStaticAuth(), request)
+
+    override suspend fun downloadPOD(idVoyage: Int) =
+        findCargoService.downloadPOD(localDataManager.getStaticAuth(),idVoyage)
+
 }
 

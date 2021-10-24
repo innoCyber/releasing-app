@@ -5,7 +5,7 @@ import ptml.releasing.cargo_search.domain.repository.ChassisNumberRepository
 
 class DeleteChassisNumberUseCase(private val chassisNumberRepository: ChassisNumberRepository) {
 
-    suspend operator fun invoke(chassisNumber: ChassisNumber){
+    suspend operator fun invoke(chassisNumber: String){
         chassisNumberRepository.deleteChassisNumber(chassisNumber)
     }
 }

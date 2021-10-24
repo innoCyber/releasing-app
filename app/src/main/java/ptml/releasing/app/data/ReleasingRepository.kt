@@ -3,7 +3,6 @@ package ptml.releasing.app.data
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import ptml.releasing.BuildConfig
 import ptml.releasing.adminlogin.model.User
@@ -32,8 +31,14 @@ open class ReleasingRepository @Inject constructor(
     var appCoroutineDispatchers: AppCoroutineDispatchers,
     private val fileUtils: FileUtils
 ) : Repository {
+    override suspend fun downloadPOD(idVoyage: Int) = remote.downloadPOD(idVoyage)
+
     override suspend fun saveChassisNumber(chassisNumber: ChassisNumber) {
         local.saveChassisNumber(chassisNumber)
+    }
+
+    override suspend fun deleteChassisNumber(chassisNumber: String?) {
+        local.deleteChassisNumber(chassisNumber)
     }
 
     override fun getChassisNumber(): LiveData<List<ChassisNumber>> = local.getChassisNumber()

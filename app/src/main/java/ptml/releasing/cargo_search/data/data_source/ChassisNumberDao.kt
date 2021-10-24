@@ -11,9 +11,9 @@ interface ChassisNumberDao {
     @Query("SELECT * FROM chassisnumber")
     fun getChassisNumbers(): LiveData<List<ChassisNumber>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveChassisNumber(chassisNumber: ChassisNumber)
 
-    @Delete
-    suspend fun deleteChassisNumber(chassisNumber: ChassisNumber)
+    @Query("DELETE FROM chassisnumber WHERE chasisNumber = :chassisNumber")
+    suspend fun deleteChassisNumber(chassisNumber: String?)
 }

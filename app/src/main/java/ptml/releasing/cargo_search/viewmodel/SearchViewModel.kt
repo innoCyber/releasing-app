@@ -1,6 +1,7 @@
 package ptml.releasing.cargo_search.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -28,6 +29,7 @@ import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 open class SearchViewModel @Inject constructor(
     private val imeiRepository: ImeiRepository,
@@ -61,8 +63,15 @@ open class SearchViewModel @Inject constructor(
     private val _cargoNumberValidation = MutableLiveData<Int>()
     val cargoNumberValidation: LiveData<Int> = _cargoNumberValidation
 
+    private val _chassisNumber = MutableLiveData<String?>()
+    val chassisNumber: LiveData<String?> = _chassisNumber
+
+    private val _podSpinnerItems = MutableLiveData<ArrayList<PODOperationStep>>()
+    val podSpinnerItems: LiveData<ArrayList<PODOperationStep>> = _podSpinnerItems
+
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
+
 
     private val _findCargoHolder = MutableLiveData<FindCargoResponse>()
 
@@ -73,7 +82,7 @@ open class SearchViewModel @Inject constructor(
     val imeiNumber = mutableImei.asLiveData()
 
     private val mutableUpdateAppVersion = MutableLiveData<DataState<Unit>>()
-    val  updateAppVersion  = mutableUpdateAppVersion.asLiveData()
+    val updateAppVersion = mutableUpdateAppVersion.asLiveData()
 
     init {
         scheduleCheckLoginWorker()
@@ -88,13 +97,72 @@ open class SearchViewModel @Inject constructor(
         _verify.value = Event(Unit)
     }
 
-     fun saveChassisNumber(cargoNumber: String?){
+    fun deleteChassisNumber(chassisNumber: String?) {
         viewModelScope.launch {
-        repository.saveChassisNumber(ChassisNumber(0, cargoNumber))}
+            repository.deleteChassisNumber(chassisNumber)
+        }
     }
 
+    fun saveChassisNumber(cargoNumber: String?) {
+        viewModelScope.launch {
+            repository.saveChassisNumber(ChassisNumber(0, cargoNumber))
+        }
+    }
 
-      fun findCargo(cargoNumber: String?, imei: String) {
+//    fun downloadPOD(idVoyage: Int){
+//        viewModelScope.launch {
+//            try {
+//                val setDownloadPODResponse = repository.downloadPOD(idVoyage)
+//                if (setDownloadPODResponse.success) {
+//                    _podSpinnerItems.value = setDownloadPODResponse.operation_step as ArrayList<PODOperationStep>
+//                    for (items in setDownloadPODResponse.operation_step){
+//                        _id_pod.value = items.ID_POD
+//                    }
+//                }
+//            } catch (e: Throwable) {}
+//        }
+//    }
+
+    fun findCargoLocal(cargoNumber: String?, imei: String) {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
+            try {
+                //already configured
+                val config = _configuration.value
+                val findCargoResponse = cargoNumber?.let {
+                    repository.findCargo(
+                        config?.cargoType?.id?.toString() ?: "",
+                        config?.operationStep?.id ?: 0,
+                        config?.terminal?.id ?: 0,
+                        config?.shippingLine?.value ?: "",
+                        config?.voyage?.id ?: -1,
+                        imei,
+                        it.trim(),
+                        config?.voyage?.id ?: 0
+
+                    )?.await()
+                }
+
+                Timber.v("fiy: %s", findCargoResponse)
+                //addLastSelectedVoyage(findCargoResponse
+                val formResponse = addSelectedShippingLine(addSelectedVoyage(findCargoResponse))
+                println("Aminu $formResponse")
+                withContext(dispatchers.main) {
+                    if (findCargoResponse?.isSuccess == true) {
+                        _findCargoResponse.value = formResponse
+                        deleteChassisNumber(cargoNumber)
+                        Timber.v("findCargoResponse: %s", formResponse)
+                    } else {
+                        Timber.e("Find Cargo failed with message =%s", formResponse?.message)
+                        _findCargoHolder.value = formResponse
+                    }
+                }
+            } catch (e: Throwable) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun findCargo(cargoNumber: String?, imei: String) {
         //validate
         if (cargoNumber.isNullOrEmpty()) {
             _cargoNumberValidation.value = R.string.cargo_number_invalid_message
@@ -111,11 +179,11 @@ open class SearchViewModel @Inject constructor(
                     config?.cargoType?.id?.toString() ?: "",
                     config?.operationStep?.id ?: 0,
                     config?.terminal?.id ?: 0,
-                    config?.shippingLine?.value?: "",
-                    config?.voyage?.id?: -1,
+                    config?.shippingLine?.value ?: "",
+                    config?.voyage?.id ?: -1,
                     imei,
                     cargoNumber.trim(),
-                    config?.voyage?.id?: 0
+                    config?.voyage?.id ?: 0
 
                 )?.await()
 
@@ -132,7 +200,10 @@ open class SearchViewModel @Inject constructor(
                         _findCargoHolder.value = formResponse
                         val cargoNotFoundResponse = CargoNotFoundResponse(
                             formResponse?.message,
-                            Constants.SHIP_SIDE.equals(config?.operationStep?.value, ignoreCase = true)
+                            Constants.SHIP_SIDE.equals(
+                                config?.operationStep?.value,
+                                ignoreCase = true
+                            )
                         )
                         _errorMessage.value = cargoNotFoundResponse
                     }
@@ -157,19 +228,19 @@ open class SearchViewModel @Inject constructor(
             val newValue = findCargoResponse?.values?.toMutableList()
             newValue?.add(FormValue(value = it.value)
                 .apply { id = 73 })
-            newResponse =  findCargoResponse?.copy(values = newValue)
+            newResponse = findCargoResponse?.copy(values = newValue)
         }
         return newResponse
     }
 
     private fun addSelectedVoyage(findCargoResponse: FindCargoResponse?): FindCargoResponse? {
-       val voyage = repository.getSelectedConfigAsync().voyage
+        val voyage = repository.getSelectedConfigAsync().voyage
         var newResponse = findCargoResponse
         voyage?.let {
             val newValue = findCargoResponse?.values?.toMutableList()
             newValue?.add(FormValue(value = it.value)
                 .apply { id = 58 })
-            newResponse =  findCargoResponse?.copy(values = newValue)
+            newResponse = findCargoResponse?.copy(values = newValue)
         }
         return newResponse
     }
@@ -245,32 +316,32 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
-   /* fun mapSelectedVesselToFindCargoResponse(it: FindCargoResponse?): LiveData<FindCargoResponse?> {
-        val result = MutableLiveData<FindCargoResponse?>()
-        viewModelScope.launch {
-            val selectedVoyage = voyageRepository.getLastSelectedVoyage()
-           val voyage = it?.values?.firstOrNull { it.id == 58 }
-            if(voyage == null){
-                val newValue = it?.values?.toMutableList()
-                    newValue?.add(
-                    FormValue("Voyage: ${selectedVoyage?.vesselName}").apply {
-                        id = 58
-                    }
-                )
-                result.value = it?.copy(values = newValue)
-            } else {
-                val modifiedValues = it.values.map {
-                    if(it.id == 58){
-                        it.value = "Voyage: ${selectedVoyage?.vesselName}"
-                    }
-                    it
-                }
-                result.value = it.copy(values = modifiedValues)
-            }
+    /* fun mapSelectedVesselToFindCargoResponse(it: FindCargoResponse?): LiveData<FindCargoResponse?> {
+         val result = MutableLiveData<FindCargoResponse?>()
+         viewModelScope.launch {
+             val selectedVoyage = voyageRepository.getLastSelectedVoyage()
+            val voyage = it?.values?.firstOrNull { it.id == 58 }
+             if(voyage == null){
+                 val newValue = it?.values?.toMutableList()
+                     newValue?.add(
+                     FormValue("Voyage: ${selectedVoyage?.vesselName}").apply {
+                         id = 58
+                     }
+                 )
+                 result.value = it?.copy(values = newValue)
+             } else {
+                 val modifiedValues = it.values.map {
+                     if(it.id == 58){
+                         it.value = "Voyage: ${selectedVoyage?.vesselName}"
+                     }
+                     it
+                 }
+                 result.value = it.copy(values = modifiedValues)
+             }
 
 
-        }
-       return result
-    }
-*/
+         }
+        return result
+     }
+ */
 }

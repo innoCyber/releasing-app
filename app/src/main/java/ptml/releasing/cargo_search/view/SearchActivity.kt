@@ -11,6 +11,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.ScaleAnimation
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -32,6 +33,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
+import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
@@ -51,30 +53,47 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     companion object {
         const val RC_CONFIG = 434
         const val RC_CARGO_INFO = 343
+
     }
 
     private val errorHandler by lazy {
         ErrorHandler(this)
     }
 
+    var _grimaldiContainerVoyageID: Int = 0
+    var _chassisNumber = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val bundle = intent.extras
-        val fromSavedConfigButton:Boolean = bundle?.getBoolean("fromSavedConfigButton")?: false
-        val isGrimaldiContainer:Boolean = bundle?.getBoolean("isGrimaldiContainer")?: false
-        val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID")?: 0
-        Log.d("grimaldiContain", "onCreate: $grimaldiContainerVoyageID")
+        val fromSavedConfigButton: Boolean = bundle?.getBoolean("fromSavedConfigButton") ?: false
+        val isGrimaldiContainer: Boolean = bundle?.getBoolean("isGrimaldiContainer") ?: false
+        val isLoadOnBoard: Boolean = bundle?.getBoolean("isLoadOnBoard") ?: false
+        val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID") ?: 0
+        _grimaldiContainerVoyageID = grimaldiContainerVoyageID
 
+        viewModel.chassisNumbers.observe(this, Observer {
+            for (items in it) {
+                val chassisnumber = listOf(items.chasisNumber)[0]
+                _chassisNumber = chassisnumber.toString()
+            }
+            Toast.makeText(this@SearchActivity, _chassisNumber, Toast.LENGTH_LONG).show()
+           //findCargoLocal(_chassisNumber,imei)
+           //viewModel.deleteChassisNumber(_chassisNumber)
+        })
+
+
+        //downloadPOD()
         initErrorDrawable(binding.appBarHome.content.includeError.imgError)
         viewModel.getSavedConfig()
         viewModel.isConfigured.observe(this, Observer {
             binding.appBarHome.content.tvConfigMessageContainer.visibility =
-                if (it&&fromSavedConfigButton) View.GONE else View.VISIBLE //hide or show the not configured message
+                if (it && fromSavedConfigButton) View.GONE else View.VISIBLE //hide or show the not configured message
             binding.appBarHome.content.includeHome.root.visibility =
-                if (it&&fromSavedConfigButton) View.VISIBLE else View.GONE
+                if (it && fromSavedConfigButton) View.VISIBLE else View.GONE
             binding.appBarHome.content.includeSearch.root.visibility =
-                if (it&&fromSavedConfigButton) View.VISIBLE else View.GONE
+                if (it && fromSavedConfigButton) View.VISIBLE else View.GONE
 
 //            binding.appBarHome.content.includeHome.root.visibility = if (it) View.VISIBLE else View.GONE //hide or show the home buttons
         })
@@ -112,13 +131,17 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                             search()
                         }
                     }
-                    binding.appBarHome.content.includeError.btnReload.text = if(errorHandler.isImeiError(error)) getString(R.string.enter_imei) else getString(R.string.reload)
+                    binding.appBarHome.content.includeError.btnReload.text =
+                        if (errorHandler.isImeiError(error)) getString(R.string.enter_imei) else getString(
+                            R.string.reload
+                        )
                     showLoading(
                         binding.appBarHome.content.includeError.root,
                         binding.appBarHome.content.includeError.tvMessage,
                         error
                     )
-                } else {this@SearchActivity.getSystemService(Context.CONNECTIVITY_SERVICE)
+                } else {
+                    this@SearchActivity.getSystemService(Context.CONNECTIVITY_SERVICE)
                     hideLoading(binding.appBarHome.content.includeError.root)
                 }
             }
@@ -138,8 +161,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             //Map selected vessel for a particular value id to form response
 //            viewModel.mapSelectedVesselToFindCargoResponse(it).observe(this, Observer {
 //                Timber.e("Gotten modified response: %s", it)
-                animateBadge(it)
-           // })
+            animateBadge(it)
+            // })
 
         })
 
@@ -195,10 +218,30 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
             //if no internet do this
-            if (!NetworkUtil.isOnline(this) && isGrimaldiContainer) {
+            if (!NetworkUtil.isOnline(this) && isGrimaldiContainer && isLoadOnBoard) {
+
+                Log.d("isLoadOnBoard1", "onCreate: $isGrimaldiContainer $isLoadOnBoard")
                 viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
 
-            }else{
+//                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
+//                    binding.appBarHome.content.includeSearch.tilInput.error =
+//                        "Please enter a valid cargo number"
+//                } else {
+//                    viewModel.podSpinnerItems.observe(this, Observer {
+//                        val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
+//                        val bundle: Bundle = Bundle()
+//                        bundle.putParcelableArrayList("podSpinnerItems", it)
+//                        bundle.putString(
+//                            "containerNumber",
+//                            binding.appBarHome.content.includeSearch.editInput.text.toString()
+//                        )
+//                        intent.putExtras(bundle)
+//                        startActivity(intent)
+//                    })
+//                }
+
+            } else {
+                Log.d("isLoadOnBoard2", "onCreate: $isGrimaldiContainer $isLoadOnBoard")
                 //if there is internet do this
                 viewModel.verify()
             }
@@ -232,6 +275,12 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         updateAppVersion()
     }
+
+//    private fun downloadPOD() {
+//        if (_grimaldiContainerVoyageID != 0) {
+//            viewModel.downloadPOD(_grimaldiContainerVoyageID)
+//        }
+//    }
 
     private fun updateAppVersion() {
         viewModel.updateAppVersion()
@@ -279,7 +328,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.imgOk.startAnimation(anim)
         anim.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) { }
+            override fun onAnimationStart(animation: Animation) {}
 
             override fun onAnimationEnd(animation: Animation) {
                 binding.appBarHome.content.imgOk.visibility = View.GONE
@@ -287,7 +336,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
             }
 
-            override fun onAnimationRepeat(animation: Animation) { }
+            override fun onAnimationRepeat(animation: Animation) {}
         })
     }
 
@@ -299,6 +348,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             CargoInfoActivity.CARGO_CODE,
             binding.appBarHome.content.includeSearch.editInput.text.toString()
         )
+        bundle.putInt(CargoInfoActivity.ID_VOYAGE, _grimaldiContainerVoyageID)
         val intent = Intent(this@SearchActivity, CargoInfoActivity::class.java)
         intent.putExtra(Constants.EXTRAS, bundle)
         startActivityForResult(intent, RC_CARGO_INFO)
@@ -339,13 +389,22 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     private fun search(imei: String? = this.imei) {
         binding.appBarHome.content.includeSearch.btnVerify.hideSoftInputFromWindow()
-        findCargoWithPermissionCheck(binding.appBarHome.content.includeSearch.editInput.text.toString(), imei ?: "")
+        findCargoWithPermissionCheck(
+            binding.appBarHome.content.includeSearch.editInput.text.toString(),
+            imei ?: ""
+        )
     }
 
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargo(cargoNumber: String?, imei: String?) {
         viewModel.findCargo(cargoNumber, imei ?: "")
+    }
+
+
+    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
+    fun findCargoLocal(cargoNumber: String?, imei: String?) {
+        viewModel.findCargoLocal(cargoNumber, imei ?: "")
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)

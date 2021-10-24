@@ -12,7 +12,6 @@ abstract class ChassisDatabase : RoomDatabase(){
     abstract fun chassisNumberDao(): ChassisNumberDao
 
     companion object{
-        val CONTEXT =  ReleasingApplication.appContext
         const val DATABASE_NAME = "chassisnumber_db"
 
             // Singleton prevents multiple instances of database opening at the
@@ -27,7 +26,7 @@ abstract class ChassisDatabase : RoomDatabase(){
                     val instance = Room.databaseBuilder(
                         context.applicationContext,
                         ChassisDatabase::class.java,
-                        "chassis_number_database"
+                        DATABASE_NAME
                     ).build()
                     INSTANCE = instance
                     // return instance

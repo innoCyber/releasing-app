@@ -99,7 +99,13 @@
 
     <string name="chip_ellipsis">&#8230;</string>
     <string name="cargo_number_invalid_message">Please enter a valid cargo number</string>
+    <string name="earth">Earth</string>
+    <string name="moon">Moon</string>
 
+    <string-array name="system">
+        <item>@string/earth</item>
+        <item>@string/moon</item>
+    </string-array>
 
     <!--OLD-->
     <string name="releasing_damages_list_header">Summary Damages</string>
@@ -340,4 +346,5 @@
     <string name="url">URL</string>
     <string name="close_dialog_text">Close</string>
     <string name="confirm">Confirm</string>
+    <string name="cargo_number">Cargo Number:</string>
 </resources>

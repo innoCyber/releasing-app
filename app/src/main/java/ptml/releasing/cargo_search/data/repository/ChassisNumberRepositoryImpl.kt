@@ -19,7 +19,7 @@ class ChassisNumberRepositoryImpl (private val chassisNumberDao: ChassisNumberDa
         chassisNumberDao.saveChassisNumber(chassisNumber)
     }
 
-    override suspend fun deleteChassisNumber(chassisNumber: ChassisNumber) {
+    override suspend fun deleteChassisNumber(chassisNumber: String?) {
         chassisNumberDao.deleteChassisNumber(chassisNumber)
     }
 }
