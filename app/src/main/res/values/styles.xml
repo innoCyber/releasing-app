@@ -25,6 +25,16 @@
         <item name="tabSelectedTextColor">@color/colorWhite</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <!-- No backgrounds, titles or window float -->
+        <item name="android:windowBackground">#ffffff</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <!-- for text -->
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>

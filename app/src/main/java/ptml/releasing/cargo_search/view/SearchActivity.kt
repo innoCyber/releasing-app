@@ -1,13 +1,17 @@
 package ptml.releasing.cargo_search.view
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.ScaleAnimation
@@ -17,8 +21,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.android.synthetic.main.activity_no_network_p_o_d.view.*
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
@@ -26,24 +29,23 @@ import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
-import ptml.releasing.app.data.remote.exception.NoConnectivityException
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
-import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.adapters.PODAdapter
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
+import ptml.releasing.configuration.models.ReleasingOptions
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
 import ptml.releasing.voyage.view.VoyageActivity
 import timber.log.Timber
-import java.nio.channels.NetworkChannel
 import java.util.*
 
 
@@ -63,6 +65,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     var _grimaldiContainerVoyageID: Int = 0
     var _chassisNumber = ""
 
+    lateinit var mDialogViewc: View
+    lateinit var mBuilder: AlertDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,15 +77,20 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         val isLoadOnBoard: Boolean = bundle?.getBoolean("isLoadOnBoard") ?: false
         val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID") ?: 0
         _grimaldiContainerVoyageID = grimaldiContainerVoyageID
-
+        viewModel.getFormConfig()
+        setUpPODLayout()
         viewModel.chassisNumbers.observe(this, Observer {
             for (items in it) {
                 val chassisnumber = listOf(items.chasisNumber)[0]
                 _chassisNumber = chassisnumber.toString()
             }
+
+            if (NetworkUtil.isOnline(this@SearchActivity)) {
+                findCargoLocal(_chassisNumber, imei)
+            }
             Toast.makeText(this@SearchActivity, _chassisNumber, Toast.LENGTH_LONG).show()
-           //findCargoLocal(_chassisNumber,imei)
-           //viewModel.deleteChassisNumber(_chassisNumber)
+            //findCargoLocal(_chassisNumber,imei)
+            //viewModel.deleteChassisNumber(_chassisNumber)
         })
 
 
@@ -220,17 +230,38 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             //if no internet do this
             if (!NetworkUtil.isOnline(this) && isGrimaldiContainer && isLoadOnBoard) {
 
-                Log.d("isLoadOnBoard1", "onCreate: $isGrimaldiContainer $isLoadOnBoard")
                 viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
 
-//                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
-//                    binding.appBarHome.content.includeSearch.tilInput.error =
-//                        "Please enter a valid cargo number"
-//                } else {
+                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
+                    binding.appBarHome.content.includeSearch.tilInput.error =
+                        "Please enter a valid cargo number"
+                }
+                viewModel.podSpinnerItems.observe(this, Observer {
+                    mBuilder = AlertDialog.Builder(
+                        this,
+                        android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen
+                    ).create()
+                    if (mDialogViewc.parent != null) {
+                        (mDialogViewc.parent as ViewGroup).removeView(mDialogViewc)
+                    }
+                    mBuilder.setView(mDialogViewc)
+                    mBuilder.setTitle("")
+
+                    val width = (resources.displayMetrics.widthPixels * 0.99).toInt()
+                    val height = (resources.displayMetrics.heightPixels * 0.98).toInt()
+
+                    mBuilder.window?.setLayout(width, height)
+                    mBuilder.window?.attributes?.gravity   = Gravity.CENTER_VERTICAL
+                    mBuilder.show()
+                    setUpPODLayoutDialog(it)
+                })
+
+//                else {
 //                    viewModel.podSpinnerItems.observe(this, Observer {
 //                        val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
 //                        val bundle: Bundle = Bundle()
-//                        bundle.putParcelableArrayList("podSpinnerItems", it)
+//                        if (!it.isNullOrEmpty()){
+//                        bundle.putParcelableArrayList("podItems", it)}
 //                        bundle.putString(
 //                            "containerNumber",
 //                            binding.appBarHome.content.includeSearch.editInput.text.toString()
@@ -241,7 +272,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 //                }
 
             } else {
-                Log.d("isLoadOnBoard2", "onCreate: $isGrimaldiContainer $isLoadOnBoard")
                 //if there is internet do this
                 viewModel.verify()
             }
@@ -276,11 +306,29 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         updateAppVersion()
     }
 
+    private fun setUpPODLayoutDialog(podItems: ArrayList<ReleasingOptions>) {
+        mDialogViewc.container_number.text = binding.appBarHome.content.includeSearch.editInput.text.toString()
+        val customDropDownAdapter = PODAdapter(this, podItems)
+
+        mDialogViewc.pod_spinner.adapter = customDropDownAdapter
+    }
+
+    private fun setUpPODLayout() {
+        mDialogViewc = LayoutInflater.from(this).inflate(
+            R.layout.activity_no_network_p_o_d,
+            null
+        )
+
+
+        mBuilder = AlertDialog.Builder(this).create()
+    }
+
 //    private fun downloadPOD() {
 //        if (_grimaldiContainerVoyageID != 0) {
 //            viewModel.downloadPOD(_grimaldiContainerVoyageID)
 //        }
 //    }
+
 
     private fun updateAppVersion() {
         viewModel.updateAppVersion()
@@ -401,10 +449,18 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.findCargo(cargoNumber, imei ?: "")
     }
 
-
-    @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun findCargoLocal(cargoNumber: String?, imei: String?) {
-        viewModel.findCargoLocal(cargoNumber, imei ?: "")
+
+        val mainHandler = Handler(Looper.getMainLooper())
+
+        mainHandler.post(object : Runnable {
+            override fun run() {
+                viewModel.findCargoLocal(cargoNumber, imei ?: "")
+                //every 1mins
+                mainHandler.postDelayed(this, 60000)
+            }
+        })
+
     }
 
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)

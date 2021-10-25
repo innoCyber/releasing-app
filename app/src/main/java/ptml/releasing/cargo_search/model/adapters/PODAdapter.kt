@@ -12,10 +12,11 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import ptml.releasing.R
 import ptml.releasing.cargo_search.model.PODOperationStep
 import ptml.releasing.configuration.models.BaseConfig
+import ptml.releasing.configuration.models.ReleasingOptions
 import java.util.*
 
 
-class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) : BaseAdapter() {
+class PODAdapter(val context: Context, var dataSource: List<ReleasingOptions>) : BaseAdapter() {
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -31,7 +32,7 @@ class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) :
             view = convertView
             vh = view.tag as ItemHolder
         }
-        vh.label.text = dataSource[position].DESCRIPTION
+        vh.label.text = dataSource[position].name
         val textView = view.findViewById<TextView>(R.id.tv_category)
         val drawable =   VectorDrawableCompat.create(
             context.resources, R.drawable.ic_arrow_drop_down, null)

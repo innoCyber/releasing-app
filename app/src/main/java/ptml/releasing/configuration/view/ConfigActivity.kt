@@ -254,7 +254,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         val selectedVoyage = binding.top.selectVoyageSpinner.selectedItem as ReleasingVoyage
         val shippingLine = binding.top.selectShippingLineSpinner.selectedItem as ShippingLine?
 
-        if (operationStep?.id == 20 && shippingLine?.value?.toLowerCase(Locale.ROOT)!!.contains("Grimaldi")){
+        if (operationStep?.id == 20 && shippingLine?.value?.toLowerCase(Locale.ROOT)!!.contains("grimaldi")){
             isGrimaldiContainer = true
             isLoadOnBoard = true
             grimaldiContainerVoyageID = selectedVoyage.id ?: 0

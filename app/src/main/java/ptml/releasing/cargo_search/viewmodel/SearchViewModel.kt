@@ -21,8 +21,12 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.cargo_info.model.FormDamage
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.*
+import ptml.releasing.configuration.models.ReleasingOptions
+import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import ptml.releasing.save_time_worker.CheckLoginWorker
@@ -66,8 +70,8 @@ open class SearchViewModel @Inject constructor(
     private val _chassisNumber = MutableLiveData<String?>()
     val chassisNumber: LiveData<String?> = _chassisNumber
 
-    private val _podSpinnerItems = MutableLiveData<ArrayList<PODOperationStep>>()
-    val podSpinnerItems: LiveData<ArrayList<PODOperationStep>> = _podSpinnerItems
+    private val _podSpinnerItems = MutableLiveData<ArrayList<ReleasingOptions>>()
+    val podSpinnerItems: LiveData<ArrayList<ReleasingOptions>> = _podSpinnerItems
 
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
@@ -123,6 +127,84 @@ open class SearchViewModel @Inject constructor(
 //        }
 //    }
 
+    fun getFormConfig(){
+        viewModelScope.launch {
+            val result = repository.getFormConfigAsync().await()
+           // _podSpinnerItems.value = result.data as ArrayList<PODOperationStep>
+            if (result.data !=null){
+            for (i in result.data){
+                if (i.title.toLowerCase(Locale.ROOT).contains("pod")){
+                    _podSpinnerItems.value = i.options as ArrayList<ReleasingOptions>
+//                    for(items in i.options){
+//                        //.value = items.name
+//                        Log.d("dgrgrw", "getFormConfig: ${items.name}")
+//                    }
+               }
+            }}
+        }
+    }
+
+    fun submitForm(
+        findCargoResponse: FindCargoResponse?,
+        cargoCode: String?,
+        imei: String?
+    ) {
+
+        CoroutineScope(dispatchers.network).launch {
+            try {
+
+                val operator = loginRepository.getLoginData().badgeId
+
+                val configuration = repository.getSelectedConfigAsync()
+                val values = FormValue(value = "Ok")
+                val formSubmissionRequest = FormSubmissionRequest(
+                    listOf(values),
+                    emptyList(),
+                    getDamages(),
+                    configuration.cargoType?.id,
+                    configuration.operationStep?.id,
+                    configuration.terminal.id,
+                    operator,
+                    cargoCode,
+                    findCargoResponse?.mrkNumber,
+                    findCargoResponse?.grimaldiContainer,
+                    findCargoResponse?.cargoId,
+                    getPhotoNames(cargoCode),
+                    configuration.voyage?.id?: -1,
+                    configuration.shippingLine?.id?: -1,
+                    imei,
+                    badgeId = loginRepository.getLoginData().badgeId
+                )
+                val result = repository.uploadData(formSubmissionRequest).await()
+                withContext(dispatchers.main) {
+                    if (result.isSuccess) {
+
+                    } else {
+
+                    }
+
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    private fun getDamages(): List<FormDamage>? {
+        val formDamageList = mutableListOf<FormDamage>()
+        for (damage in DamagesActivity.currentDamages) {
+            formDamageList.add(damage.toFormDamage())
+        }
+        return formDamageList
+    }
+
+    private suspend fun getPhotoNames(cargoCode: String?): List<String> {
+        return repository.getImages(cargoCode ?: return emptyList()).values.map {
+            it.name ?: ""
+        }
+    }
+
+
     fun findCargoLocal(cargoNumber: String?, imei: String) {
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
@@ -148,8 +230,12 @@ open class SearchViewModel @Inject constructor(
                 println("Aminu $formResponse")
                 withContext(dispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
-                        _findCargoResponse.value = formResponse
+                        //_findCargoResponse.value = formResponse
+                        submitForm(findCargoResponse,cargoNumber,imei)
                         deleteChassisNumber(cargoNumber)
+                        Log.d("deleteChassisNumber", "findCargoLocal: Deleted")
+                        return@withContext
+
                         Timber.v("findCargoResponse: %s", formResponse)
                     } else {
                         Timber.e("Find Cargo failed with message =%s", formResponse?.message)
