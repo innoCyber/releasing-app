@@ -35,7 +35,6 @@
                 app:layout_constraintGuide_percent="0.9" />
 
 
-
             <include
                 android:id="@+id/include_operator_badge"
                 layout="@layout/include_operator_badge"

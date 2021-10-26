@@ -240,6 +240,8 @@ open class SearchViewModel @Inject constructor(
                     } else {
                         Timber.e("Find Cargo failed with message =%s", formResponse?.message)
                         _findCargoHolder.value = formResponse
+                        deleteChassisNumber(cargoNumber)
+                        return@withContext
                     }
                 }
             } catch (e: Throwable) {

@@ -23,7 +23,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 52
-        versionName "1.9.13"
+        versionName "1.9.14"
         testInstrumentationRunner "ptml.releasing.ReleasingTestRunner"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
@@ -80,7 +80,7 @@ android {
     applicationVariants.all { variant ->
         def name = variant.getName()
         //default values
-        variant.buildConfigField("String", "IMEI", getLocalProperty("TEST_IMEI"))
+       // variant.buildConfigField("String", "IMEI", getLocalProperty("TEST_IMEI"))
 
         // Specific values
        if (name.contains("dev")) {
@@ -88,9 +88,9 @@ android {
             variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
             variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/UploadImage/\"")
         }else if (name.contains("staging")) {
-            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidAppReleasing/\"")
-            variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidAppDriver/\"")
-            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:8085/api/AndroidAppReleasing/UploadImage/\"")
+            variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/\"")
+            variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppDriver/\"")
+            variant.buildConfigField("String", "BASE_IMAGE_UPLOAD_URL", "\"https://billing.grimaldi-nigeria.com:1449/api/AndroidAppReleasing/UploadImage/\"")
         } else if (name.contains("production")) {
             variant.buildConfigField("String", "BASE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppReleasing/\"")
             variant.buildConfigField("String", "BASE_VOYAGE_URL", "\"https://billing.grimaldi-nigeria.com:1448/api/AndroidAppDriver/\"")

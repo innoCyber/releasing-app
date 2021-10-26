@@ -87,11 +87,13 @@ class EditTextDialog : DialogFragment() {
             return
         }
 
+        if (text.contains("billing.grimaldi")){
         val prefs = PreferenceManager
             .getDefaultSharedPreferences(ReleasingApplication.appContext)
         val edit: SharedPreferences.Editor = prefs.edit()
         edit.putString("BASE_URL_RELEASING", text)
         edit.commit()
+        }
 
         listener?.onSave(text)
         dialog?.dismiss()

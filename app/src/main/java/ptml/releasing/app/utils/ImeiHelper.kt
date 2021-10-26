@@ -30,7 +30,19 @@ class ImeiHelper @Inject constructor(
     @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     suspend fun getImei(): String {
         val imei = if (BuildConfig.DEBUG) {
-            BuildConfig.IMEI
+            val telephonyManager = getSystemService(context, TelephonyManager::class.java)
+            when {
+                //return empty IMEI for running on android 10 and greater, the IMEI would be set by the admin
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                    ""
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    telephonyManager?.imei ?: ""
+                }
+                else -> {
+                    telephonyManager?.deviceId ?: ""
+                }
+            }
         } else {
             val telephonyManager = getSystemService(context, TelephonyManager::class.java)
             when {

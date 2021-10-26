@@ -38,7 +38,6 @@ class NoNetworkPODActivity : AppCompatActivity() {
         setContentView(R.layout.activity_no_network_p_o_d)
         viewModel = ViewModelProvider(this).get(NoNetworkPODViewModel::class.java)
 
-        viewModel.getFormConfig()
         val bundle = intent.extras
         val containerNumber: String = bundle?.getString("containerNumber") ?: ""
         val podSpinner = findViewById<Spinner>(R.id.pod_spinner)

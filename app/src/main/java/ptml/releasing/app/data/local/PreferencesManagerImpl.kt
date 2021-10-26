@@ -55,7 +55,7 @@ open class PreferencesManagerImpl @Inject constructor(
         val BASEURL = _mPreferences.getString("BASE_URL_RELEASING", "")
         var username: String? = null
         var password : String? = null
-        var baseurl = BASEURL
+        var baseurl = BASEURL?: BuildConfig.BASE_URL
 
         if (baseurl.isNullOrEmpty()|| baseurl.isNullOrBlank() || baseurl == null) {
             baseurl = BuildConfig.BASE_URL
