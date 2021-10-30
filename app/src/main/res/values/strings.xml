@@ -347,4 +347,6 @@
     <string name="close_dialog_text">Close</string>
     <string name="confirm">Confirm</string>
     <string name="cargo_number">Cargo Number:</string>
+    <string name="refresh">Refresh</string>
+    <string name="next">Next</string>
 </resources>

@@ -2,10 +2,13 @@ package ptml.releasing.app.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.StaticBasicAuth.getURL
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -113,7 +116,7 @@ class PrefsManager @Inject constructor(var sharedPreferences: SharedPreferences,
     }
 
     override fun getServerUrl(): String? {
-        return sharedPreferences.getString(SERVER_URL, BuildConfig.BASE_URL)
+        return sharedPreferences.getString(SERVER_URL, getURL())
     }
 
     override fun saveQuickRemarks(response: QuickRemarkResponse?) {

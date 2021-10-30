@@ -5,6 +5,9 @@ import ptml.releasing.app.data.domain.repository.VoyageRepository
 import ptml.releasing.app.data.local.LocalDataManager
 import ptml.releasing.app.data.remote.VoyageRestClient
 import ptml.releasing.app.data.remote.mapper.VoyageMapper
+import ptml.releasing.app.data.remote.result.VoyageResult
+import ptml.releasing.cargo_search.model.DownloadVoyageResponse
+import ptml.releasing.cargo_search.model.PODOperationStep
 
 /**
  * Created by kryptkode on 4/8/2020.
@@ -31,6 +34,11 @@ class VoyageRepositoryImpl(
         } ?: listOf()
         local.setRecentVoyages(data)
         return data
+    }
+
+    override suspend fun downloadAllVoyages(): DownloadVoyageResponse {
+        val deviceId = local.getIMEI()
+        return remote.getRemoteCaller().getAllVoyages(local.getStaticAuth(), deviceId)
     }
 
     override suspend fun storeRecentVoyages(voyages: List<ReleasingVoyage>) {

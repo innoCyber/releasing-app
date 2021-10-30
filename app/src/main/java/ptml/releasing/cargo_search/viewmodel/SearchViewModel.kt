@@ -70,8 +70,8 @@ open class SearchViewModel @Inject constructor(
     private val _chassisNumber = MutableLiveData<String?>()
     val chassisNumber: LiveData<String?> = _chassisNumber
 
-    private val _podSpinnerItems = MutableLiveData<ArrayList<ReleasingOptions>>()
-    val podSpinnerItems: LiveData<ArrayList<ReleasingOptions>> = _podSpinnerItems
+    private val _podSpinnerItems = MutableLiveData<DownloadVoyageResponse>()
+    val podSpinnerItems: LiveData<DownloadVoyageResponse> = _podSpinnerItems
 
     private val _findCargoResponse = MutableLiveData<FindCargoResponse>()
     val findCargoResponse: LiveData<FindCargoResponse> = _findCargoResponse
@@ -131,10 +131,10 @@ open class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val result = repository.getFormConfigAsync().await()
            // _podSpinnerItems.value = result.data as ArrayList<PODOperationStep>
-            if (result.data !=null){
+            if (!result.data.isNullOrEmpty()){
             for (i in result.data){
                 if (i.title.toLowerCase(Locale.ROOT).contains("pod")){
-                    _podSpinnerItems.value = i.options as ArrayList<ReleasingOptions>
+                   // _podSpinnerItems.value = i.options as ArrayList<ReleasingOptions>
 //                    for(items in i.options){
 //                        //.value = items.name
 //                        Log.d("dgrgrw", "getFormConfig: ${items.name}")
@@ -201,6 +201,14 @@ open class SearchViewModel @Inject constructor(
     private suspend fun getPhotoNames(cargoCode: String?): List<String> {
         return repository.getImages(cargoCode ?: return emptyList()).values.map {
             it.name ?: ""
+        }
+    }
+
+    fun getVoyages(){
+        viewModelScope.launch {
+            val result = voyageRepository.downloadAllVoyages()
+            _podSpinnerItems.value = result
+
         }
     }
 

@@ -118,6 +118,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     binding.bottom.root.visibility = View.VISIBLE
                 }
 
+                //disable the fab when data is loading
+                binding.fab.isEnabled = it != NetworkState.LOADING
+
                 if (it.status == Status.FAILED) {
                     binding.swipeRefreshLayout.isRefreshing = false
                     binding.top.root.visibility = View.GONE
@@ -182,6 +185,10 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
 //        }
         binding.swipeRefreshLayout.setOnRefreshListener {
            // refreshConfigWithPermissionCheck()
+            getConfigWithPermissionCheck()
+        }
+
+        binding.fab.setOnClickListener {
             getConfigWithPermissionCheck()
         }
 

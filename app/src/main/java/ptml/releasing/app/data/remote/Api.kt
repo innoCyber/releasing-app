@@ -5,6 +5,8 @@ import ptml.releasing.app.data.remote.request.ResetPasswordRequest
 import ptml.releasing.app.data.remote.request.UpdateAppVersionRequest
 import ptml.releasing.app.data.remote.result.VoyageResult
 import ptml.releasing.app.data.remote.result._Result
+import ptml.releasing.cargo_search.model.DownloadVoyageResponse
+import ptml.releasing.cargo_search.model.PODOperationStep
 import retrofit2.http.*
 
 /**
@@ -29,6 +31,12 @@ interface Api {
         @Header("Authorization") authorization: String,
         @Query("imei") imei: String?
     ): VoyageResult
+
+    @GET(Endpoints.GET_RECENT_VOYAGES)
+    suspend fun getAllVoyages(
+        @Header("Authorization") authorization: String,
+        @Query("imei") imei: String?
+    ): DownloadVoyageResponse
 
 
     @POST(Endpoints.UPDATE_APP_VERSION_INSTALLED)

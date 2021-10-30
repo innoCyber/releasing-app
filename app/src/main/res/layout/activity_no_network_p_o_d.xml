@@ -5,12 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
-
         <TextView
             android:id="@+id/container_number_text"
             android:layout_width="match_parent"
@@ -26,10 +20,11 @@
             android:id="@+id/container_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:textSize="22sp"
-            style="@style/CargoNumber"
             android:gravity="center_horizontal"
+            style="@style/CargoNumber"
+            android:layout_below="@id/container_number_text"
             />
 
         <Spinner
@@ -40,8 +35,16 @@
             android:entries="@array/sample"
             android:layout_marginStart="@dimen/constraint_default_margin_10dp"
             android:layout_marginEnd="@dimen/constraint_default_margin_10dp"
+            android:layout_centerInParent="true"
            />
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/ButtonStyle.Save"
+            android:layout_margin="20dp"
+            android:onClick="goTOSearchActivity"
+            android:layout_alignParentBottom="true"
+            android:text="@string/confirm" />
 
 
 

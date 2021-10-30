@@ -77,10 +77,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         val isLoadOnBoard: Boolean = bundle?.getBoolean("isLoadOnBoard") ?: false
         val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID") ?: 0
         _grimaldiContainerVoyageID = grimaldiContainerVoyageID
-        viewModel.getFormConfig()
+        viewModel.getVoyages()
+        removeEditTextValues()
         setUpPODLayout()
-
-
 
 
         //downloadPOD()
@@ -223,51 +222,54 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
                     binding.appBarHome.content.includeSearch.tilInput.error =
                         "Please enter a valid cargo number"
-                }else{
+                } else {
 
                     viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
 
                 }
 
-                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isNotEmpty()){
+                if (binding.appBarHome.content.includeSearch.editInput.text.toString()
+                        .isNotEmpty()
+                ) {
 
-                    viewModel.podSpinnerItems.observe(this, Observer {
-                        mBuilder = AlertDialog.Builder(
-                            this,
-                            android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen
-                        ).create()
-                        if (mDialogViewc.parent != null) {
-                            (mDialogViewc.parent as ViewGroup).removeView(mDialogViewc)
-                        }
-                        mBuilder.setView(mDialogViewc)
-                        mBuilder.setTitle("")
-
-                        val width = (resources.displayMetrics.widthPixels * 0.99).toInt()
-                        val height = (resources.displayMetrics.heightPixels * 0.98).toInt()
-
-                        mBuilder.window?.setLayout(width, height)
-                        mBuilder.window?.attributes?.gravity   = Gravity.CENTER_VERTICAL
-                        mBuilder.show()
-                        setUpPODLayoutDialog(it)
-                    })
+//                    viewModel.podSpinnerItems.observe(this, Observer {
+//                        mBuilder = AlertDialog.Builder(
+//                            this,
+//                            android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen
+//                        ).create()
+//                        if (mDialogViewc.parent != null) {
+//                            (mDialogViewc.parent as ViewGroup).removeView(mDialogViewc)
+//                        }
+//                        mBuilder.setView(mDialogViewc)
+//                        mBuilder.setTitle("")
+//
+//                        val width = (resources.displayMetrics.widthPixels * 0.99).toInt()
+//                        val height = (resources.displayMetrics.heightPixels * 0.98).toInt()
+//
+//                        mBuilder.window?.setLayout(width, height)
+//                        mBuilder.window?.attributes?.gravity   = Gravity.CENTER_VERTICAL
+//                        mBuilder.show()
+//                        setUpPODLayoutDialog(it)
+//                    })
                 }
 
 
 
-//                else {
-//                    viewModel.podSpinnerItems.observe(this, Observer {
-//                        val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
-//                        val bundle: Bundle = Bundle()
-//                        if (!it.isNullOrEmpty()){
-//                        bundle.putParcelableArrayList("podItems", it)}
-//                        bundle.putString(
-//                            "containerNumber",
-//                            binding.appBarHome.content.includeSearch.editInput.text.toString()
-//                        )
-//                        intent.putExtras(bundle)
-//                        startActivity(intent)
-//                    })
-//                }
+
+                viewModel.podSpinnerItems.observe(this, Observer {
+                    val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
+                    val bundle: Bundle = Bundle()
+                    if (it != null) {
+                        bundle.putParcelable("podItems", it)
+                    }
+                    bundle.putString(
+                        "containerNumber",
+                        binding.appBarHome.content.includeSearch.editInput.text.toString()
+                    )
+                    intent.putExtras(bundle)
+                    startActivity(intent)
+                })
+
 
             } else {
                 //if there is internet do this
@@ -304,11 +306,20 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         updateAppVersion()
     }
 
-    private fun setUpPODLayoutDialog(podItems: ArrayList<ReleasingOptions>) {
-        mDialogViewc.container_number.text = binding.appBarHome.content.includeSearch.editInput.text.toString()
-        val customDropDownAdapter = PODAdapter(this, podItems)
+    private fun removeEditTextValues() {
+        binding.appBarHome.content.includeSearch.editInput.setText("")
+    }
 
-        mDialogViewc.pod_spinner.adapter = customDropDownAdapter
+    private fun setUpPODLayoutDialog(podItems: ArrayList<ReleasingOptions>) {
+        mDialogViewc.container_number.text =
+            binding.appBarHome.content.includeSearch.editInput.text.toString()
+        mDialogViewc.btn_next.setOnClickListener {
+            mBuilder.dismiss()
+            binding.appBarHome.content.includeSearch.editInput.setText("")
+        }
+        //val customDropDownAdapter = PODAdapter(this, podItems)
+
+        // mDialogViewc.pod_spinner.adapter = customDropDownAdapter
     }
 
     private fun setUpPODLayout() {
@@ -449,28 +460,30 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     fun findCargoLocal() {
 
-        val mainHandler = Handler(Looper.getMainLooper())
-
-        mainHandler.post(object : Runnable {
-            override fun run() {
-
-
-                viewModel.chassisNumbers.observe(this@SearchActivity, Observer {
-                    for (items in it) {
-                        val chassisnumber = listOf(items.chasisNumber)[0]
-                        _chassisNumber = chassisnumber.toString()
-                    }
-
-                    if (NetworkUtil.isOnline(this@SearchActivity)) {
-                        viewModel.findCargoLocal(_chassisNumber, imei ?: "")
-                    }
-                    //Toast.makeText(this@SearchActivity, _chassisNumber, Toast.LENGTH_LONG).show()
-                    //findCargoLocal(_chassisNumber,imei)
-                    //viewModel.deleteChassisNumber(_chassisNumber)
-                })
-                //every 1mins
-                mainHandler.postDelayed(this, 60000)
+        viewModel.chassisNumbers.observe(this@SearchActivity, Observer {
+            for (items in it) {
+                val chassisnumber = listOf(items.chasisNumber)[0]
+                _chassisNumber = chassisnumber.toString()
             }
+
+            if (NetworkUtil.isOnline(this@SearchActivity)) {
+                viewModel.findCargoLocal(_chassisNumber, imei ?: "")
+            }
+
+//        val mainHandler = Handler(Looper.getMainLooper())
+//
+//        mainHandler.post(object : Runnable {
+//            override fun run() {
+//
+//                    //Toast.makeText(this@SearchActivity, _chassisNumber, Toast.LENGTH_LONG).show()
+//                    //findCargoLocal(_chassisNumber,imei)
+//                    //viewModel.deleteChassisNumber(_chassisNumber)
+//                })
+////                //every 1mins
+////                mainHandler.postDelayed(this, 60000)
+//                //every 15mins
+//                mainHandler.postDelayed(this, 900000)
+//            }
         })
 
     }
@@ -581,7 +594,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun onResume() {
         super.onResume()
-
+        removeEditTextValues()
         findCargoLocal()
         viewModel.getSavedConfig()
         binding.appBarHome.content.includeSearch.btnVerify.setBackgroundResource(R.drawable.save_btn_bg)

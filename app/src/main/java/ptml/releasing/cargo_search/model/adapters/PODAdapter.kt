@@ -16,7 +16,7 @@ import ptml.releasing.configuration.models.ReleasingOptions
 import java.util.*
 
 
-class PODAdapter(val context: Context, var dataSource: List<ReleasingOptions>) : BaseAdapter() {
+class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) : BaseAdapter() {
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -33,11 +33,11 @@ class PODAdapter(val context: Context, var dataSource: List<ReleasingOptions>) :
             vh = view.tag as ItemHolder
         }
         vh.label.text = dataSource[position].name
-        val textView = view.findViewById<TextView>(R.id.tv_category)
-        val drawable =   VectorDrawableCompat.create(
-            context.resources, R.drawable.ic_arrow_drop_down, null)
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            textView, null, null, drawable, null)
+//        val textView = view.findViewById<TextView>(R.id.tv_category)
+//        val drawable =   VectorDrawableCompat.create(
+//            context.resources, R.drawable.ic_arrow_drop_down, null)
+//        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+//            textView, null, null, drawable, null)
 
         return view
     }

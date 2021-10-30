@@ -2,6 +2,7 @@ package ptml.releasing.app.data.local
 
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
+import ptml.releasing.app.data.remote.result.VoyageResult
 
 /**
  * Created by kryptkode on 10/23/2019.

@@ -315,8 +315,9 @@ class CargoInfoActivity :
 
     @NeedsPermission(android.Manifest.permission.READ_PHONE_STATE)
     fun getFormConfig() {
+        val savedImei = sharedPreferences.getString("prefImei", "")
         viewModel.getFormConfig(
-            imei ?: "",
+            savedImei ?: "",
             findCargoResponse
         )
     }

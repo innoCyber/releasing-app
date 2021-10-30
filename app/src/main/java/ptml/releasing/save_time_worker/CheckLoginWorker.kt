@@ -77,8 +77,5 @@ class CheckLoginWorker @AssistedInject constructor(
             return workRequest.id
         }
 
-
-
-
     }
 }

@@ -1,13 +1,19 @@
 package ptml.releasing.app.data.remote
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import android.util.Log
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ptml.releasing.BuildConfig
+import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.data.remote.interceptor.ConnectivityInterceptor
 import ptml.releasing.app.data.remote.interceptor.ImeiInterceptor
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.StaticBasicAuth
+import ptml.releasing.app.utils.StaticBasicAuth.getURL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -51,7 +57,7 @@ class RestClient @Inject constructor(
 
         val client = httpClient.build()
         val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(getURL())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()

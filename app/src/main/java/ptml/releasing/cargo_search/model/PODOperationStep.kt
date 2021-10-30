@@ -3,34 +3,13 @@ package ptml.releasing.cargo_search.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+import ptml.releasing.app.data.remote.result.VoyageRemote
 
+@Parcelize
 data class PODOperationStep(
+     @SerializedName("id") val id: Int?,
+     @SerializedName("id_type_voyage") val id_type_voyage: Int?,
      @SerializedName("name") val name: String?
-):Parcelable {
-     constructor(parcel: Parcel) : this(
-         parcel.readString()
-     ) {
-     }
-
-     override fun writeToParcel(parcel: Parcel, flags: Int) {
-         parcel.writeString(name)
-     }
-
-     override fun describeContents(): Int {
-         return 0
-     }
-
-     companion object CREATOR : Parcelable.Creator<PODOperationStep> {
-         override fun createFromParcel(parcel: Parcel): PODOperationStep {
-             return PODOperationStep(parcel)
-         }
-
-         override fun newArray(size: Int): Array<PODOperationStep?> {
-             return arrayOfNulls(size)
-         }
-     }
-
-    override fun toString(): String {
-        return name?: ""
-    }
- }
+): Parcelable

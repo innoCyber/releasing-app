@@ -10,6 +10,7 @@ import ptml.releasing.BuildConfig
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.app.data.domain.model.login.LoginEntity
 import ptml.releasing.app.data.domain.model.voyage.ReleasingVoyage
+import ptml.releasing.app.data.remote.result.VoyageResult
 import javax.inject.Inject
 
 /**
@@ -51,13 +52,14 @@ open class PreferencesManagerImpl @Inject constructor(
     }
 
     override fun getStaticAuth(): String{
-        val _mPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(ReleasingApplication.appContext)
-        val BASEURL = _mPreferences.getString("BASE_URL_RELEASING", "")
+        val _mPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+            ReleasingApplication.appContext)
+        var baseurl = _mPreferences.getString("BASE_URL_RELEASING", "")
         var username: String? = null
         var password : String? = null
-        var baseurl = BASEURL?: BuildConfig.BASE_URL
+        //var baseurl = getStringPreference(prefBaseServerUrl)
 
-        if (baseurl.isNullOrEmpty()|| baseurl.isNullOrBlank() || baseurl == null) {
+        if ( baseurl.isNullOrEmpty()|| baseurl.isNullOrBlank() || baseurl == null ) {
             baseurl = BuildConfig.BASE_URL
         }
 
@@ -81,9 +83,12 @@ open class PreferencesManagerImpl @Inject constructor(
         val data = authPayload.toByteArray()
         val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
 
+
+
         return "Basic $base64".trim()
 
     }
+
 //
 //    override fun getStaticAuth(): String {
 //        val username = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin"

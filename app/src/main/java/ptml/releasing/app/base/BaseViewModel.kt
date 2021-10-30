@@ -64,7 +64,6 @@ open class BaseViewModel @Inject constructor(
     private val _showUpdateApp = SingleLiveEvent<Unit>()
     val showUpdateApp: LiveData<Unit> = _showUpdateApp
 
-
     private val _startDamagesUpdate = SingleLiveEvent<Unit>()
     val startDamagesUpdate: LiveData<Unit> = _startDamagesUpdate
 

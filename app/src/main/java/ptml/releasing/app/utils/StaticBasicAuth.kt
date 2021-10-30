@@ -3,6 +3,7 @@ package ptml.releasing.app.utils
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Base64
+import ptml.releasing.BuildConfig
 import ptml.releasing.app.ReleasingApplication
 
 object StaticBasicAuth {
@@ -17,6 +18,19 @@ object StaticBasicAuth {
         edit.putString("username", username)
         edit.putString("password", password)
         edit.commit()
+    }
+
+    fun getURL():String{
+        val _mPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+            ReleasingApplication.appContext)
+        var baseurl = _mPreferences.getString("BASE_URL_RELEASING", "")
+
+        if ( baseurl.isNullOrEmpty()|| baseurl.isNullOrBlank() || baseurl == null){
+            baseurl = BuildConfig.BASE_URL
+        }
+
+        return baseurl
+
     }
     
     fun getAdminPassword(): String?{
