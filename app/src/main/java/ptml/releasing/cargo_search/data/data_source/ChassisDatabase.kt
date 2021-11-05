@@ -6,12 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
+import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 
-@Database(entities = [ChassisNumber::class], version = 1)
+@Database(entities = [ChassisNumber::class, ShipSideChassisNumbers::class], version = 2)
 abstract class ChassisDatabase : RoomDatabase(){
     abstract fun chassisNumberDao(): ChassisNumberDao
 
-    companion object{
+    companion object {
         const val DATABASE_NAME = "chassisnumber_db"
 
             // Singleton prevents multiple instances of database opening at the

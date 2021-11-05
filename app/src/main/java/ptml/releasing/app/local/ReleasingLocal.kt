@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
+import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 import ptml.releasing.cargo_search.domain.repository.ChassisNumberRepository
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
@@ -25,6 +26,18 @@ class ReleasingLocal @Inject constructor(var prefs: Prefs,var chassisNumberRepos
 
     override suspend fun deleteChassisNumber(chassisNumber: String?) {
         return chassisNumberRepository.deleteChassisNumber(chassisNumber)
+    }
+
+    override suspend fun saveShipSideChassisNumber(shipSideChassisNumbers: ShipSideChassisNumbers) {
+        chassisNumberRepository.saveShipSideChassisNumber(shipSideChassisNumbers)
+    }
+
+    override fun getShipSideChassisNumber(): LiveData<List<ShipSideChassisNumbers>> {
+        return  chassisNumberRepository.getShipSideChassisNumbers()
+    }
+
+    override suspend fun deleteShipSideChassisNumber(shipSideChassisNumbers: String?) {
+        chassisNumberRepository.deleteShipSideChassisNumber(shipSideChassisNumbers)
     }
 
     override fun saveConfig(response: AdminConfigResponse?) = prefs.saveConfig(response)

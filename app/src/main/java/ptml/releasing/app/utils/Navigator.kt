@@ -28,12 +28,13 @@ class Navigator @Inject constructor() {
         baseActivity.finishAffinity()
     }
 
-    fun goToSearchWithBundle(baseActivity: BaseActivity<*, *>,isGrimaldiContainer : Boolean,isLoadOnBoard : Boolean,grimaldiContainerVoyageID : Int) {
+    fun goToSearchWithBundle(baseActivity: BaseActivity<*, *>,isGrimaldiContainer : Boolean,isLoadOnBoard : Boolean,isShipSide : Boolean,grimaldiContainerVoyageID : Int) {
         val send = Intent(baseActivity, SearchActivity::class.java)
         val b = Bundle()
         b.putBoolean("fromSavedConfigButton", true)
         b.putBoolean("isGrimaldiContainer", isGrimaldiContainer)
         b.putBoolean("isLoadOnBoard", isLoadOnBoard)
+        b.putBoolean("isShipSide", isShipSide)
         b.putInt("grimaldiContainerVoyageID",grimaldiContainerVoyageID)
         send.putExtras(b)
         baseActivity.startActivity(send)

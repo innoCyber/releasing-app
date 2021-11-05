@@ -23,7 +23,9 @@ import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
 import ptml.releasing.cargo_info.model.FormDamage
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
+import ptml.releasing.cargo_info.model.ReleasingFormSelection
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
+import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 import ptml.releasing.cargo_search.model.*
 import ptml.releasing.configuration.models.ReleasingOptions
 import ptml.releasing.damages.view.DamagesActivity
@@ -44,6 +46,7 @@ open class SearchViewModel @Inject constructor(
 ) : BaseViewModel(updateChecker, repository, dispatchers) {
 
     val chassisNumbers: LiveData<List<ChassisNumber>> = repository.getChassisNumber()
+    val shipSideChassisNumbers: LiveData<List<ShipSideChassisNumbers>> = repository.getShipSideChassisNumber()
 
     private val _openAdmin = MutableLiveData<Event<Unit>>()
     val openAdMin: LiveData<Event<Unit>> = _openAdmin
@@ -107,9 +110,21 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
+    fun deleteShipSideChassisNumber(chassisNumber: String?) {
+        viewModelScope.launch {
+            repository.deleteShipSideChassisNumber(chassisNumber)
+        }
+    }
+
     fun saveChassisNumber(cargoNumber: String?) {
         viewModelScope.launch {
             repository.saveChassisNumber(ChassisNumber(0, cargoNumber))
+        }
+    }
+
+    fun saveShipSideChassisNumber(cargoNumber: String?) {
+        viewModelScope.launch {
+            repository.saveShipSideChassisNumber(ShipSideChassisNumbers(0, cargoNumber))
         }
     }
 
@@ -190,6 +205,54 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
+    fun submitShipSideVehicleForm(
+        findCargoResponse: FindCargoResponse?,
+        cargoCode: String?,
+        imei: String?
+    ) {
+
+        CoroutineScope(dispatchers.network).launch {
+            try {
+
+                val operator = loginRepository.getLoginData().badgeId
+
+                val configuration = repository.getSelectedConfigAsync()
+                val values =  listOf<FormValue>(FormValue("0").apply { id = 21 },FormValue("Ok").apply { id = 22 })
+                val selection = listOf<Int>(1)
+                val selections = ReleasingFormSelection(selectedOptions = selection).apply { id = 40}
+                    val formSubmissionRequest = FormSubmissionRequest(
+                    values,
+                    listOf(selections),
+                    getDamages(),
+                    configuration.cargoType?.id,
+                    configuration.operationStep?.id,
+                    configuration.terminal.id,
+                    operator,
+                    cargoCode,
+                    findCargoResponse?.mrkNumber,
+                    findCargoResponse?.grimaldiContainer,
+                    findCargoResponse?.cargoId,
+                    getPhotoNames(cargoCode),
+                    configuration.voyage?.id?: -1,
+                    configuration.shippingLine?.id?: -1,
+                    imei,
+                    badgeId = loginRepository.getLoginData().badgeId
+                )
+                val result = repository.uploadData(formSubmissionRequest).await()
+                withContext(dispatchers.main) {
+                    if (result.isSuccess) {
+
+                    } else {
+
+                    }
+
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
     private fun getDamages(): List<FormDamage>? {
         val formDamageList = mutableListOf<FormDamage>()
         for (damage in DamagesActivity.currentDamages) {
@@ -213,7 +276,7 @@ open class SearchViewModel @Inject constructor(
     }
 
 
-    fun findCargoLocal(cargoNumber: String?, imei: String) {
+    fun findCargoLocalLoadOnBoardGrimaldi(cargoNumber: String?, imei: String) {
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 //already configured
@@ -258,6 +321,52 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
+
+    fun findCargoLocalShipSide(cargoNumber: String?, imei: String) {
+        compositeJob = CoroutineScope(dispatchers.network).launch {
+            try {
+                //already configured
+                val config = _configuration.value
+                val findCargoResponse = cargoNumber?.let {
+                    repository.findCargo(
+                        config?.cargoType?.id?.toString() ?: "",
+                        config?.operationStep?.id ?: 0,
+                        config?.terminal?.id ?: 0,
+                        config?.shippingLine?.value ?: "",
+                        config?.voyage?.id ?: -1,
+                        imei,
+                        it.trim(),
+                        config?.voyage?.id ?: 0
+
+                    )?.await()
+                }
+
+                Timber.v("fiy: %s", findCargoResponse)
+                //addLastSelectedVoyage(findCargoResponse
+                val formResponse = addSelectedShippingLine(addSelectedVoyage(findCargoResponse))
+                println("Aminu $formResponse")
+                withContext(dispatchers.main) {
+                    if (findCargoResponse?.isSuccess == true) {
+                        //_findCargoResponse.value = formResponse
+                        submitShipSideVehicleForm(findCargoResponse,cargoNumber,imei)
+                        deleteShipSideChassisNumber(cargoNumber)
+                        Log.d("deleteshipside", "findCargoLocal: Deleted")
+                        return@withContext
+
+                        Timber.v("findCargoResponse: %s", formResponse)
+                    } else {
+                        Timber.e("Find Cargo failed with message =%s", formResponse?.message)
+                        _findCargoHolder.value = formResponse
+                        deleteShipSideChassisNumber(cargoNumber)
+                        return@withContext
+                    }
+                }
+            } catch (e: Throwable) {
+                Timber.e(e)
+            }
+        }
+    }
+
     fun findCargo(cargoNumber: String?, imei: String) {
         //validate
         if (cargoNumber.isNullOrEmpty()) {
@@ -269,6 +378,7 @@ open class SearchViewModel @Inject constructor(
 
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
+
                 //already configured
                 val config = _configuration.value
                 val findCargoResponse = repository.findCargo(

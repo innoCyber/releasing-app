@@ -56,7 +56,7 @@ abstract class BaseActivity<V, D> :
     private lateinit var receiver: BroadcastReceiver
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
 
-    private var networkStateWrapper: NetworkStateWrapper? = null
+     var networkStateWrapper: NetworkStateWrapper? = null
     private var snackBar: Snackbar? = null
     private var firstTime = true
 

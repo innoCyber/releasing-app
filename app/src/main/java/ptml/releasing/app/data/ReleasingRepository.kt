@@ -13,6 +13,7 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.FileUtils
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
+import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
 import ptml.releasing.configuration.models.ConfigureDeviceResponse
@@ -43,6 +44,15 @@ open class ReleasingRepository @Inject constructor(
     }
 
     override fun getChassisNumber(): LiveData<List<ChassisNumber>> = local.getChassisNumber()
+    override suspend fun saveShipSideChassisNumber(shipSideChassisNumbers: ShipSideChassisNumbers) {
+        local.saveShipSideChassisNumber(shipSideChassisNumbers)
+    }
+
+    override suspend fun deleteShipSideChassisNumber(shipSideChassisNumbers: String?) {
+       local.deleteShipSideChassisNumber(shipSideChassisNumbers)
+    }
+
+    override fun getShipSideChassisNumber(): LiveData<List<ShipSideChassisNumbers>> = local.getShipSideChassisNumber()
 
     override suspend fun verifyDeviceIdAsync(imei: String) = remote.verifyDeviceIdAsync(imei)
 

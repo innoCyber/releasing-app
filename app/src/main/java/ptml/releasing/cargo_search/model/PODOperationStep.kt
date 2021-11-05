@@ -11,5 +11,6 @@ import ptml.releasing.app.data.remote.result.VoyageRemote
 data class PODOperationStep(
      @SerializedName("id") val id: Int?,
      @SerializedName("id_type_voyage") val id_type_voyage: Int?,
-     @SerializedName("name") val name: String?
+     @SerializedName("name") val name: String,
+     @SerializedName("id_voyage") val id_voyage: Int?
 ): Parcelable

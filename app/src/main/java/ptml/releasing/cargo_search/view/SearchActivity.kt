@@ -3,19 +3,20 @@ package ptml.releasing.cargo_search.view
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.ScaleAnimation
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -34,10 +35,11 @@ import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.*
+import ptml.releasing.app.utils.network.NetworkListener
 import ptml.releasing.cargo_info.view.CargoInfoActivity
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
+import ptml.releasing.cargo_search.model.DownloadVoyageResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
-import ptml.releasing.cargo_search.model.adapters.PODAdapter
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
@@ -64,6 +66,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     var _grimaldiContainerVoyageID: Int = 0
     var _chassisNumber = ""
+    var shipSideChassisNumber = ""
 
     lateinit var mDialogViewc: View
     lateinit var mBuilder: AlertDialog
@@ -75,13 +78,22 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         val fromSavedConfigButton: Boolean = bundle?.getBoolean("fromSavedConfigButton") ?: false
         val isGrimaldiContainer: Boolean = bundle?.getBoolean("isGrimaldiContainer") ?: false
         val isLoadOnBoard: Boolean = bundle?.getBoolean("isLoadOnBoard") ?: false
+        val isShipSide: Boolean = bundle?.getBoolean("isShipSide") ?: false
         val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID") ?: 0
         _grimaldiContainerVoyageID = grimaldiContainerVoyageID
         viewModel.getVoyages()
         removeEditTextValues()
         setUpPODLayout()
-
-
+        val networkListener = NetworkListener(this)
+        networkListener.networkInfoLive.observe(this, Observer {
+            networkStateWrapper = it
+            invalidateOptionsMenu()
+            if (it.connected) {
+                findCargoLocalLoadOnBoardGrimaldi()
+                findCargoLocalShipSide()
+            }
+        })
+        lifecycle.addObserver(networkListener)
         //downloadPOD()
         initErrorDrawable(binding.appBarHome.content.includeError.imgError)
         viewModel.getSavedConfig()
@@ -216,7 +228,32 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         binding.appBarHome.content.includeSearch.btnVerify.setOnClickListener {
             //if no internet do this
-            if (!NetworkUtil.isOnline(this) && isGrimaldiContainer && isLoadOnBoard) {
+            if (!NetworkUtil.isOnline(this) && isShipSide) {
+
+
+                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
+                    binding.appBarHome.content.includeSearch.tilInput.error =
+                        "Please enter a valid cargo number"
+                } else {
+
+                    viewModel.saveShipSideChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
+
+                }
+
+
+                val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
+                val bundle: Bundle = Bundle()
+
+                bundle.putParcelable("podItems", DownloadVoyageResponse(true,"", emptyList()))
+                bundle.putString(
+                    "containerNumber",
+                    binding.appBarHome.content.includeSearch.editInput.text.toString()
+                )
+                bundle.putBoolean("isShipSide", isShipSide)
+                intent.putExtras(bundle)
+                startActivity(intent)
+
+            }else if (!NetworkUtil.isOnline(this) && isGrimaldiContainer && isLoadOnBoard) {
 
 
                 if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
@@ -305,6 +342,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         updateAppVersion()
     }
+
 
     private fun removeEditTextValues() {
         binding.appBarHome.content.includeSearch.editInput.setText("")
@@ -458,7 +496,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         viewModel.findCargo(cargoNumber, imei ?: "")
     }
 
-    fun findCargoLocal() {
+    private fun findCargoLocalLoadOnBoardGrimaldi() {
 
         viewModel.chassisNumbers.observe(this@SearchActivity, Observer {
             for (items in it) {
@@ -467,7 +505,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             }
 
             if (NetworkUtil.isOnline(this@SearchActivity)) {
-                viewModel.findCargoLocal(_chassisNumber, imei ?: "")
+                viewModel.findCargoLocalLoadOnBoardGrimaldi(_chassisNumber, imei ?: "")
             }
 
 //        val mainHandler = Handler(Looper.getMainLooper())
@@ -484,6 +522,21 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 //                //every 15mins
 //                mainHandler.postDelayed(this, 900000)
 //            }
+        })
+
+    }
+
+    private fun findCargoLocalShipSide() {
+
+        viewModel.shipSideChassisNumbers.observe(this@SearchActivity, Observer {
+            for (items in it) {
+                val chassisnumber = listOf(items.shipSideChassisNumbers)[0]
+                shipSideChassisNumber = chassisnumber.toString()
+            }
+
+            if (NetworkUtil.isOnline(this@SearchActivity)) {
+                viewModel.findCargoLocalShipSide(shipSideChassisNumber, imei ?: "")
+            }
         })
 
     }
@@ -595,7 +648,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     override fun onResume() {
         super.onResume()
         removeEditTextValues()
-        findCargoLocal()
         viewModel.getSavedConfig()
         binding.appBarHome.content.includeSearch.btnVerify.setBackgroundResource(R.drawable.save_btn_bg)
     }
@@ -645,6 +697,20 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+    private fun showNoNetworkDialog() {
+        val dialogFragment = InfoDialog.newInstance(
+            title = getString(R.string.no_network),
+            message = getString(R.string.network_not_available),
+            buttonText = getString(android.R.string.ok),
+            listener = object : InfoDialog.InfoListener {
+                override fun onConfirm() {
+                    supportFinishAfterTransition()
+                }
+            })
+        dialogFragment.isCancelable = false
+        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
+    }
 
     private fun showImeiDialog() {
         val dialogFragment = InfoDialog.newInstance(

@@ -25,7 +25,7 @@ class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) :
         val view: View
         val vh: ItemHolder
         if (convertView == null) {
-            view = inflater.inflate(R.layout.item_spinner, parent, false)
+            view = inflater.inflate(R.layout.pod_spinner, parent, false)
             vh = ItemHolder(view)
             view?.tag = vh
         } else {
@@ -33,11 +33,14 @@ class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) :
             vh = view.tag as ItemHolder
         }
         vh.label.text = dataSource[position].name
+
 //        val textView = view.findViewById<TextView>(R.id.tv_category)
 //        val drawable =   VectorDrawableCompat.create(
 //            context.resources, R.drawable.ic_arrow_drop_down, null)
 //        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
 //            textView, null, null, drawable, null)
+//
+//
 
         return view
     }

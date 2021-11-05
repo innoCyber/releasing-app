@@ -7,6 +7,7 @@ import ptml.releasing.app.base.BaseResponse
 import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.model.PODResponse
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
+import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 import ptml.releasing.cargo_search.model.FindCargoResponse
 import ptml.releasing.configuration.models.AdminConfigResponse
 import ptml.releasing.configuration.models.Configuration
@@ -23,6 +24,9 @@ interface Repository {
     suspend fun saveChassisNumber(chassisNumber: ChassisNumber)
     suspend fun deleteChassisNumber(chassisNumber: String?)
     fun getChassisNumber(): LiveData<List<ChassisNumber>>
+    suspend fun saveShipSideChassisNumber(shipSideChassisNumbers: ShipSideChassisNumbers)
+    suspend fun deleteShipSideChassisNumber(shipSideChassisNumbers: String?)
+    fun getShipSideChassisNumber(): LiveData<List<ShipSideChassisNumbers>>
     suspend fun verifyDeviceIdAsync(imei: String): Deferred<BaseResponse>
 
     suspend fun loginAsync( user: User): Deferred<BaseResponse>

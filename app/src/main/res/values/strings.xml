@@ -290,6 +290,10 @@
     <string name="voyage_screen_title">Voyages</string>
     <string name="session_timed_out_msg">Session timed out, logging out</string>
 
+
+    <string name="no_network">No Network</string>
+    <string name="network_not_available">Network not available</string>
+
     <string name="change_pic_create_file_error">An error occurred while creating file for image, please try again and
         contact the admin
     </string>
