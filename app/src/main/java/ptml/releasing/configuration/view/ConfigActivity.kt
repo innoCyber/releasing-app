@@ -300,7 +300,6 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     }
 
 
-
     @OnShowRationale(android.Manifest.permission.READ_PHONE_STATE)
     fun showInitRecognizerRationale(request: PermissionRequest) {
         val dialogFragment = InfoDialog.newInstance(

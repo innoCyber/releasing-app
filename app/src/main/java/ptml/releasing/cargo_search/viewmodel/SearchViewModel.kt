@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.R
@@ -27,7 +26,6 @@ import ptml.releasing.cargo_info.model.ReleasingFormSelection
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 import ptml.releasing.cargo_search.model.*
-import ptml.releasing.configuration.models.ReleasingOptions
 import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
@@ -35,7 +33,6 @@ import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 open class SearchViewModel @Inject constructor(
     private val imeiRepository: ImeiRepository,
@@ -110,7 +107,7 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
-    fun deleteShipSideChassisNumber(chassisNumber: String?) {
+    private fun deleteShipSideChassisNumber(chassisNumber: String?) {
         viewModelScope.launch {
             repository.deleteShipSideChassisNumber(chassisNumber)
         }
@@ -128,38 +125,7 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
-//    fun downloadPOD(idVoyage: Int){
-//        viewModelScope.launch {
-//            try {
-//                val setDownloadPODResponse = repository.downloadPOD(idVoyage)
-//                if (setDownloadPODResponse.success) {
-//                    _podSpinnerItems.value = setDownloadPODResponse.operation_step as ArrayList<PODOperationStep>
-//                    for (items in setDownloadPODResponse.operation_step){
-//                        _id_pod.value = items.ID_POD
-//                    }
-//                }
-//            } catch (e: Throwable) {}
-//        }
-//    }
-
-    fun getFormConfig(){
-        viewModelScope.launch {
-            val result = repository.getFormConfigAsync().await()
-           // _podSpinnerItems.value = result.data as ArrayList<PODOperationStep>
-            if (!result.data.isNullOrEmpty()){
-            for (i in result.data){
-                if (i.title.toLowerCase(Locale.ROOT).contains("pod")){
-                   // _podSpinnerItems.value = i.options as ArrayList<ReleasingOptions>
-//                    for(items in i.options){
-//                        //.value = items.name
-//                        Log.d("dgrgrw", "getFormConfig: ${items.name}")
-//                    }
-               }
-            }}
-        }
-    }
-
-    fun submitForm(
+    private fun submitForm(
         findCargoResponse: FindCargoResponse?,
         cargoCode: String?,
         imei: String?
@@ -205,7 +171,7 @@ open class SearchViewModel @Inject constructor(
         }
     }
 
-    fun submitShipSideVehicleForm(
+    private fun submitShipSideForm(
         findCargoResponse: FindCargoResponse?,
         cargoCode: String?,
         imei: String?
@@ -304,10 +270,7 @@ open class SearchViewModel @Inject constructor(
                         //_findCargoResponse.value = formResponse
                         submitForm(findCargoResponse,cargoNumber,imei)
                         deleteChassisNumber(cargoNumber)
-                        Log.d("deleteChassisNumber", "findCargoLocal: Deleted")
                         return@withContext
-
-                        Timber.v("findCargoResponse: %s", formResponse)
                     } else {
                         Timber.e("Find Cargo failed with message =%s", formResponse?.message)
                         _findCargoHolder.value = formResponse
@@ -348,13 +311,13 @@ open class SearchViewModel @Inject constructor(
                 withContext(dispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
                         //_findCargoResponse.value = formResponse
-                        submitShipSideVehicleForm(findCargoResponse,cargoNumber,imei)
+                        Log.d("call shipside findcargo", "findCargoLocalShipSide: ${findCargoResponse?.isSuccess}")
+                        submitShipSideForm(findCargoResponse,cargoNumber,imei)
                         deleteShipSideChassisNumber(cargoNumber)
-                        Log.d("deleteshipside", "findCargoLocal: Deleted")
                         return@withContext
 
-                        Timber.v("findCargoResponse: %s", formResponse)
                     } else {
+                        Log.d("call shipside findcargo", "findCargoLocalShipSide: ${findCargoResponse?.isSuccess}")
                         Timber.e("Find Cargo failed with message =%s", formResponse?.message)
                         _findCargoHolder.value = formResponse
                         deleteShipSideChassisNumber(cargoNumber)

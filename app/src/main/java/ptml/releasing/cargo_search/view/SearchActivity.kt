@@ -230,7 +230,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             //if no internet do this
             if (!NetworkUtil.isOnline(this) && isShipSide) {
 
-
                 if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
                     binding.appBarHome.content.includeSearch.tilInput.error =
                         "Please enter a valid cargo number"
@@ -239,7 +238,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     viewModel.saveShipSideChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
 
                 }
-
 
                 val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
                 val bundle: Bundle = Bundle()
@@ -255,7 +253,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
             }else if (!NetworkUtil.isOnline(this) && isGrimaldiContainer && isLoadOnBoard) {
 
-
                 if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
                     binding.appBarHome.content.includeSearch.tilInput.error =
                         "Please enter a valid cargo number"
@@ -264,34 +261,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                     viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
 
                 }
-
-                if (binding.appBarHome.content.includeSearch.editInput.text.toString()
-                        .isNotEmpty()
-                ) {
-
-//                    viewModel.podSpinnerItems.observe(this, Observer {
-//                        mBuilder = AlertDialog.Builder(
-//                            this,
-//                            android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen
-//                        ).create()
-//                        if (mDialogViewc.parent != null) {
-//                            (mDialogViewc.parent as ViewGroup).removeView(mDialogViewc)
-//                        }
-//                        mBuilder.setView(mDialogViewc)
-//                        mBuilder.setTitle("")
-//
-//                        val width = (resources.displayMetrics.widthPixels * 0.99).toInt()
-//                        val height = (resources.displayMetrics.heightPixels * 0.98).toInt()
-//
-//                        mBuilder.window?.setLayout(width, height)
-//                        mBuilder.window?.attributes?.gravity   = Gravity.CENTER_VERTICAL
-//                        mBuilder.show()
-//                        setUpPODLayoutDialog(it)
-//                    })
-                }
-
-
-
 
                 viewModel.podSpinnerItems.observe(this, Observer {
                     val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
@@ -348,18 +317,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         binding.appBarHome.content.includeSearch.editInput.setText("")
     }
 
-    private fun setUpPODLayoutDialog(podItems: ArrayList<ReleasingOptions>) {
-        mDialogViewc.container_number.text =
-            binding.appBarHome.content.includeSearch.editInput.text.toString()
-        mDialogViewc.btn_next.setOnClickListener {
-            mBuilder.dismiss()
-            binding.appBarHome.content.includeSearch.editInput.setText("")
-        }
-        //val customDropDownAdapter = PODAdapter(this, podItems)
-
-        // mDialogViewc.pod_spinner.adapter = customDropDownAdapter
-    }
-
     private fun setUpPODLayout() {
         mDialogViewc = LayoutInflater.from(this).inflate(
             R.layout.activity_no_network_p_o_d,
@@ -369,13 +326,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         mBuilder = AlertDialog.Builder(this).create()
     }
-
-//    private fun downloadPOD() {
-//        if (_grimaldiContainerVoyageID != 0) {
-//            viewModel.downloadPOD(_grimaldiContainerVoyageID)
-//        }
-//    }
-
 
     private fun updateAppVersion() {
         viewModel.updateAppVersion()
@@ -508,20 +458,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 viewModel.findCargoLocalLoadOnBoardGrimaldi(_chassisNumber, imei ?: "")
             }
 
-//        val mainHandler = Handler(Looper.getMainLooper())
-//
-//        mainHandler.post(object : Runnable {
-//            override fun run() {
-//
-//                    //Toast.makeText(this@SearchActivity, _chassisNumber, Toast.LENGTH_LONG).show()
-//                    //findCargoLocal(_chassisNumber,imei)
-//                    //viewModel.deleteChassisNumber(_chassisNumber)
-//                })
-////                //every 1mins
-////                mainHandler.postDelayed(this, 60000)
-//                //every 15mins
-//                mainHandler.postDelayed(this, 900000)
-//            }
         })
 
     }
@@ -698,19 +634,6 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
             true
         }
 
-    private fun showNoNetworkDialog() {
-        val dialogFragment = InfoDialog.newInstance(
-            title = getString(R.string.no_network),
-            message = getString(R.string.network_not_available),
-            buttonText = getString(android.R.string.ok),
-            listener = object : InfoDialog.InfoListener {
-                override fun onConfirm() {
-                    supportFinishAfterTransition()
-                }
-            })
-        dialogFragment.isCancelable = false
-        dialogFragment.show(supportFragmentManager, dialogFragment.javaClass.name)
-    }
 
     private fun showImeiDialog() {
         val dialogFragment = InfoDialog.newInstance(

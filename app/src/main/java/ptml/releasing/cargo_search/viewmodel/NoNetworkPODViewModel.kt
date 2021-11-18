@@ -24,6 +24,4 @@ import kotlin.collections.ArrayList
 
     private val _podSpinnerItems = MutableLiveData<ArrayList<PODOperationStep>>()
     val podSpinnerItems: LiveData<ArrayList<PODOperationStep>> = _podSpinnerItems
-
-
 }

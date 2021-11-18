@@ -20,28 +20,29 @@ object StaticBasicAuth {
         edit.commit()
     }
 
-    fun getURL():String{
+    fun getURL(): String {
         val _mPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-            ReleasingApplication.appContext)
+            ReleasingApplication.appContext
+        )
         var baseurl = _mPreferences.getString("BASE_URL_RELEASING", "")
 
-        if ( baseurl.isNullOrEmpty()|| baseurl.isNullOrBlank() || baseurl == null){
+        if (baseurl.isNullOrEmpty() || baseurl.isNullOrBlank() || baseurl == null) {
             baseurl = BuildConfig.BASE_URL
         }
 
         return baseurl
 
     }
-    
-    fun getAdminPassword(): String?{
+
+    fun getAdminPassword(): String? {
         return mPreferences.getString("password", "")
     }
-    
-    fun getAdminUsername():String?{
+
+    fun getAdminUsername(): String? {
         return mPreferences.getString("username", "")
     }
-    
-    fun getAdminBasicAuth(username:String, password: String?): String{
+
+    fun getAdminBasicAuth(username: String, password: String?): String {
         val authPayload = "${username}:${password}"
         val data = authPayload.toByteArray()
         val base64 = Base64.encodeToString(data, Base64.NO_WRAP)
