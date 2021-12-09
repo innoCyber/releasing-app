@@ -121,7 +121,8 @@ open class SearchViewModel @Inject constructor(
 
     fun saveShipSideChassisNumber(cargoNumber: String?) {
         viewModelScope.launch {
-            repository.saveShipSideChassisNumber(ShipSideChassisNumbers(0, cargoNumber))
+            repository.saveShipSideChassisNumber(ShipSideChassisNumbers(0, cargoNumber,"cargoType",33,
+            1,"shippingLine",20338,"imei",20338))
         }
     }
 

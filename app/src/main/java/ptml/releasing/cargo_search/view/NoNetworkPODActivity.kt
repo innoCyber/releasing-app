@@ -19,19 +19,21 @@ class NoNetworkPODActivity : AppCompatActivity() {
 
         val containerNumber: String = bundle?.getString("containerNumber") ?: ""
         val isShipSide = bundle?.getBoolean("isShipSide") ?: false
-        val podItems = (bundle?.getParcelable<DownloadVoyageResponse>("podItems") )
-        val podSpinner = findViewById<Spinner>(R.id.pod_spinner)
+
+//        val podItems = (bundle?.getParcelable<DownloadVoyageResponse>("podItems") )
+//        val podSpinner = findViewById<Spinner>(R.id.pod_spinner)
+
         val containerNumberTV = findViewById<TextView>(R.id.container_number)
         containerNumberTV.text = containerNumber
 
 
-        val customDropDownAdapter = podItems?.optionsPOD?.let { PODAdapter(this, it) }
-        podSpinner.adapter = customDropDownAdapter
-
-        if (isShipSide) {
-            podSpinner.visibility = View.GONE
-            findViewById<ImageView>(R.id.ic_arrow_down).visibility = View.GONE
-        }
+//        val customDropDownAdapter = podItems?.optionsPOD?.let { PODAdapter(this, it) }
+//        podSpinner.adapter = customDropDownAdapter
+//
+//        if (isShipSide) {
+//            podSpinner.visibility = View.GONE
+//            findViewById<ImageView>(R.id.ic_arrow_down).visibility = View.GONE
+//        }
 
     }
 

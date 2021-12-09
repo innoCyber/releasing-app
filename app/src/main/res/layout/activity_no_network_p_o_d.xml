@@ -38,12 +38,13 @@
 
                 <Spinner
                     android:id="@+id/pod_spinner"
+                    style="@style/SpinnerStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/sample"
                     android:paddingLeft="10dp"
-                    style="@style/SpinnerStyle"
-                    android:paddingRight="10dp"/>
+                    android:paddingRight="10dp"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/ic_arrow_down"
@@ -54,6 +55,7 @@
                     android:layout_marginRight="15dp"
                     android:padding="2dp"
                     android:layout_marginTop="10dp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_arrow_down"/>
         </RelativeLayout>
 

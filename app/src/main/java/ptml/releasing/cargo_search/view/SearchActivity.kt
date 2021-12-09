@@ -242,12 +242,13 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
                 val bundle: Bundle = Bundle()
 
-                bundle.putParcelable("podItems", DownloadVoyageResponse(true,"", emptyList()))
+               // bundle.putParcelable("podItems", DownloadVoyageResponse(true,"", emptyList()))
+
                 bundle.putString(
                     "containerNumber",
                     binding.appBarHome.content.includeSearch.editInput.text.toString()
                 )
-                bundle.putBoolean("isShipSide", isShipSide)
+                //bundle.putBoolean("isShipSide", isShipSide)
                 intent.putExtras(bundle)
                 startActivity(intent)
 

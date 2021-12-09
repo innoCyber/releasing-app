@@ -8,7 +8,7 @@ import ptml.releasing.app.ReleasingApplication
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.domain.model.ShipSideChassisNumbers
 
-@Database(entities = [ChassisNumber::class, ShipSideChassisNumbers::class], version = 2)
+@Database(entities = [ChassisNumber::class, ShipSideChassisNumbers::class], version = 3)
 abstract class ChassisDatabase : RoomDatabase(){
     abstract fun chassisNumberDao(): ChassisNumberDao
 
