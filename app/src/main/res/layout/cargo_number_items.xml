@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    android:layout_margin="@dimen/constraint_default_margin_10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/constraint_default_margin_10dp">
+
+    <ImageView
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_container"
+        android:layout_margin="@dimen/constraint_default_margin_10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/container_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="90324876hg"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:layout_toRightOf="@id/container"
+        android:layout_margin="@dimen/constraint_default_margin_10dp"
+        android:layout_toEndOf="@id/container"
+        android:layout_toLeftOf="@id/forward_icon"
+        android:layout_toStartOf="@id/forward_icon" />
+
+
+        <ImageView
+            android:id="@+id/forward_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/forward_icon"
+            android:layout_margin="@dimen/constraint_default_margin_10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
