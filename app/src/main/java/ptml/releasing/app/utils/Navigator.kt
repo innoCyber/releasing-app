@@ -3,6 +3,7 @@ package ptml.releasing.app.utils
 import android.content.Intent
 import android.os.Bundle
 import ptml.releasing.app.base.BaseActivity
+import ptml.releasing.cargo_search.model.PODOperationStep
 import ptml.releasing.cargo_search.view.SearchActivity
 import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.resetpassword.view.ResetPasswordActivity
@@ -28,13 +29,20 @@ class Navigator @Inject constructor() {
         baseActivity.finishAffinity()
     }
 
-    fun goToSearchWithBundle(baseActivity: BaseActivity<*, *>,isGrimaldiContainer : Boolean,isLoadOnBoard : Boolean,grimaldiContainerVoyageID : Int) {
+    fun goToSearchWithBundle(
+        baseActivity: BaseActivity<*, *>,
+        isGrimaldiContainer: Boolean,
+        isLoadOnBoard: Boolean,
+        grimaldiContainerVoyageID: Int,
+        podItems: ArrayList<PODOperationStep>
+    ) {
         val send = Intent(baseActivity, SearchActivity::class.java)
         val b = Bundle()
         b.putBoolean("fromSavedConfigButton", true)
         b.putBoolean("isGrimaldiContainer", isGrimaldiContainer)
         b.putBoolean("isLoadOnBoard", isLoadOnBoard)
-        b.putInt("grimaldiContainerVoyageID",grimaldiContainerVoyageID)
+        b.putInt("grimaldiContainerVoyageID", grimaldiContainerVoyageID)
+        b.putParcelableArrayList("podItems", podItems)
         send.putExtras(b)
         baseActivity.startActivity(send)
     }

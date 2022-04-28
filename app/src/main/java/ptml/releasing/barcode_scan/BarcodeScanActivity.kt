@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.MenuItem
 import android.widget.FrameLayout
-import dagger.android.support.DaggerAppCompatActivity
 import me.dm7.barcodescanner.zbar.Result
 import me.dm7.barcodescanner.zbar.ZBarScannerView
 import ptml.releasing.BR
@@ -14,7 +12,6 @@ import ptml.releasing.R
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.utils.Constants
 import ptml.releasing.damages.view_model.DummyViewModel
-import ptml.releasing.damages.view_model.SelectDamageViewModel
 import ptml.releasing.databinding.ActivityReleasingScanBinding
 
 class BarcodeScanActivity : BaseActivity<DummyViewModel, ActivityReleasingScanBinding>(), ZBarScannerView.ResultHandler {
@@ -41,7 +38,6 @@ class BarcodeScanActivity : BaseActivity<DummyViewModel, ActivityReleasingScanBi
         viewScanner?.startCamera()
 
     }
-
 
 
     public override fun onPause() {

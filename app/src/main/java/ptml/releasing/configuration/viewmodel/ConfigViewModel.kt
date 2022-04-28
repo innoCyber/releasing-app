@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.app.base.BaseViewModel
@@ -14,8 +15,10 @@ import ptml.releasing.app.utils.AppCoroutineDispatchers
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.cargo_search.model.PODOperationStep
 import ptml.releasing.configuration.models.*
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 
@@ -43,6 +46,11 @@ class ConfigViewModel @Inject constructor(
     val networkState = MutableLiveData<Event<NetworkState>>()
     fun getNetworkState(): LiveData<Event<NetworkState>> = networkState
 
+    private val _podSpinnerItems = MutableLiveData<ArrayList<PODOperationStep>>()
+    val podSpinnerItems: LiveData<ArrayList<PODOperationStep>> = _podSpinnerItems
+
+    lateinit var poditems: ArrayList<PODOperationStep>
+
     val savedSuccess = MutableLiveData<Event<Boolean>>()
     fun getSavedSuccess(): LiveData<Event<Boolean>> = savedSuccess
 
@@ -62,7 +70,9 @@ class ConfigViewModel @Inject constructor(
                 adminConfigResponse = repository.getAdminConfigurationAsync(imei).await()
                 val config = repository.getSelectedConfigAsync()
 
-                voyageList.postValue(voyageRepository.downloadRecentVoyages().map { ReleasingVoyage().apply { id = it.id; value = it.vesselName }  })
+                voyageList.postValue(
+                    voyageRepository.downloadRecentVoyages()
+                        .map { ReleasingVoyage().apply { id = it.id; value = it.vesselName } })
                 withContext(dispatchers.main) {
                     _cargoTypes.postValue(adminConfigResponse.cargoTypeList)
                     val modifiedTerminal = modifyTerminal()
@@ -116,9 +126,9 @@ class ConfigViewModel @Inject constructor(
                 operationStep ?: return,
                 cargoType ?: return,
                 shippingLine ?: return,
-                voyage?: return,
+                voyage ?: return,
                 checked,
-                id_voyage?: return
+                id_voyage ?: return
             )
         compositeJob = CoroutineScope(dispatchers.db).launch {
             try {
@@ -131,7 +141,17 @@ class ConfigViewModel @Inject constructor(
                     imei = imei,
                     id_voyage = id_voyage
                 ).await()
-                Timber.d("Result gotten: %s", result)
+                Timber.d("My Result gotten: %s", result)
+                for (items in result.data) {
+                    if (items.title.toLowerCase(Locale.ROOT).contains("pod")) {
+                        withContext(Dispatchers.Main) {
+                            _podSpinnerItems.value = items.options as ArrayList<PODOperationStep>
+                            poditems = items.options
+
+                        }
+
+                    }
+                }
                 repository.setConfigured(true)
                 savedSuccess.postValue(Event(true))
                 networkState.postValue(Event(NetworkState.LOADED))

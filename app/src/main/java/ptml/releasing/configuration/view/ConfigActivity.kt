@@ -1,19 +1,14 @@
 package ptml.releasing.configuration.view
 
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.include_configure_profile_top_controls.*
-import kotlinx.android.synthetic.main.include_configure_profile_top_controls.select_voyage_spinner
 import kotlinx.android.synthetic.main.select_voyage_layout.*
 import permissions.dispatcher.*
 import ptml.releasing.BR
@@ -24,6 +19,7 @@ import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.Status
+import ptml.releasing.cargo_search.model.PODOperationStep
 import ptml.releasing.configuration.models.*
 import ptml.releasing.configuration.view.adapter.ConfigSpinnerAdapter
 import ptml.releasing.configuration.viewmodel.ConfigViewModel
@@ -50,6 +46,7 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
     var isGrimaldiContainer: Boolean = false
     var isLoadOnBoard: Boolean = false
     var grimaldiContainerVoyageID: Int = 0
+    var podItems: ArrayList<PODOperationStep>? = null
 
 
     override fun onBackPressed() {
@@ -74,6 +71,10 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                 binding.swipeRefreshLayout.isRefreshing = false
             })
 
+        })
+
+        viewModel.podSpinnerItems.observe(this, Observer {
+            podItems = it
         })
 
         viewModel.getOperationStepList().observe(this, Observer { operationSteps ->
@@ -152,7 +153,12 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
                     notifyUser(getString(R.string.config_saved_success))
 //                    setResult(Activity.RESULT_OK)
 //                    finish()
-                    navigator.goToSearchWithBundle(this,isGrimaldiContainer,isLoadOnBoard, grimaldiContainerVoyageID)
+                    podItems?.let { it1 ->
+                        navigator.goToSearchWithBundle(
+                            this, isGrimaldiContainer, isLoadOnBoard, grimaldiContainerVoyageID,
+                            it1
+                        )
+                    }
                 }
             }
         })
@@ -254,7 +260,9 @@ class ConfigActivity : BaseActivity<ConfigViewModel, ActivityConfigBinding>() {
         val selectedVoyage = binding.top.selectVoyageSpinner.selectedItem as ReleasingVoyage
         val shippingLine = binding.top.selectShippingLineSpinner.selectedItem as ShippingLine?
 
-        if (operationStep?.id == 20 && shippingLine?.value?.toLowerCase(Locale.ROOT)!!.contains("Grimaldi")){
+        if (operationStep?.id == 20 && shippingLine?.value?.toLowerCase(Locale.ROOT)!!
+                .contains("grimaldi")
+        ) {
             isGrimaldiContainer = true
             isLoadOnBoard = true
             grimaldiContainerVoyageID = selectedVoyage.id ?: 0

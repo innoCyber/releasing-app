@@ -4,15 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import ptml.releasing.R
 import ptml.releasing.cargo_search.model.PODOperationStep
-import ptml.releasing.configuration.models.BaseConfig
-import java.util.*
 
 
 class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) : BaseAdapter() {
@@ -31,7 +28,7 @@ class PODAdapter(val context: Context, var dataSource: List<PODOperationStep>) :
             view = convertView
             vh = view.tag as ItemHolder
         }
-        vh.label.text = dataSource[position].DESCRIPTION
+        vh.label.text = dataSource[position].name
         val textView = view.findViewById<TextView>(R.id.tv_category)
         val drawable =   VectorDrawableCompat.create(
             context.resources, R.drawable.ic_arrow_drop_down, null)

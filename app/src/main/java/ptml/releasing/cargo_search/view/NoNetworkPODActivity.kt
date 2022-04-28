@@ -1,10 +1,9 @@
 package ptml.releasing.cargo_search.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import ptml.releasing.R
 import ptml.releasing.cargo_search.model.PODOperationStep
 import ptml.releasing.cargo_search.model.adapters.PODAdapter
@@ -20,7 +19,8 @@ class NoNetworkPODActivity : AppCompatActivity() {
 
     private fun getAndDisplaySpinnerItems() {
         val bundle = intent.extras
-        val podItems = (bundle?.getParcelableArrayList<PODOperationStep>("podSpinnerItems") as ArrayList<PODOperationStep>)
+        val podItems =
+            (bundle?.getParcelableArrayList<PODOperationStep>("podItems") as ArrayList<PODOperationStep>)
         val containerNumber: String = bundle.getString("containerNumber") ?: ""
 
         val podSpinner = findViewById<Spinner>(R.id.pod_spinner)

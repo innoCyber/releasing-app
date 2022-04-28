@@ -1,7 +1,6 @@
 package ptml.releasing.app.data.remote
 
 import android.content.Context
-import android.text.TextUtils
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -35,6 +34,7 @@ class VoyageRestClient @Inject constructor(
     private val api: Api
 
     init {
+
         val loggingInterceptor = makeLoggingInterceptor(debug)
 
         val httpClient = OkHttpClient.Builder()

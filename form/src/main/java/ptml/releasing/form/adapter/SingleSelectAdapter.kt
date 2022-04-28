@@ -45,7 +45,6 @@ class SingleSelectAdapter<T> :
             }
         }
 
-
         notifyDataSetChanged()
     }
 

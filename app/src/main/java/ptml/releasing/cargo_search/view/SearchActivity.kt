@@ -2,7 +2,6 @@ package ptml.releasing.cargo_search.view
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,8 +16,6 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import permissions.dispatcher.*
 import ptml.releasing.BR
 import ptml.releasing.BuildConfig
@@ -26,16 +23,15 @@ import ptml.releasing.R
 import ptml.releasing.adminlogin.view.LoginActivity
 import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.base.openBarCodeScannerWithPermissionCheck
-import ptml.releasing.app.data.remote.exception.NoConnectivityException
 import ptml.releasing.app.dialogs.EditTextDialog
 import ptml.releasing.app.dialogs.InfoConfirmDialog
 import ptml.releasing.app.dialogs.InfoDialog
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.*
 import ptml.releasing.cargo_info.view.CargoInfoActivity
-import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.CargoNotFoundResponse
 import ptml.releasing.cargo_search.model.FindCargoResponse
+import ptml.releasing.cargo_search.model.PODOperationStep
 import ptml.releasing.cargo_search.viewmodel.SearchViewModel
 import ptml.releasing.configuration.models.CargoType
 import ptml.releasing.configuration.models.Configuration
@@ -43,7 +39,6 @@ import ptml.releasing.configuration.view.ConfigActivity
 import ptml.releasing.databinding.ActivitySearchBinding
 import ptml.releasing.voyage.view.VoyageActivity
 import timber.log.Timber
-import java.nio.channels.NetworkChannel
 import java.util.*
 
 
@@ -71,6 +66,8 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
         val isGrimaldiContainer: Boolean = bundle?.getBoolean("isGrimaldiContainer") ?: false
         val isLoadOnBoard: Boolean = bundle?.getBoolean("isLoadOnBoard") ?: false
         val grimaldiContainerVoyageID: Int = bundle?.getInt("grimaldiContainerVoyageID") ?: 0
+        val podItems =
+            (bundle?.getParcelableArrayList<PODOperationStep>("podItems") as ArrayList<PODOperationStep>)
         _grimaldiContainerVoyageID = grimaldiContainerVoyageID
 
         viewModel.chassisNumbers.observe(this, Observer {
@@ -79,10 +76,11 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 _chassisNumber = chassisnumber.toString()
             }
             Toast.makeText(this@SearchActivity, _chassisNumber, Toast.LENGTH_LONG).show()
-           //findCargoLocal(_chassisNumber,imei)
+
            //viewModel.deleteChassisNumber(_chassisNumber)
         })
 
+        Log.d("podItemsd", "onCreate: $podItems")
 
         //downloadPOD()
         initErrorDrawable(binding.appBarHome.content.includeError.imgError)
@@ -223,22 +221,20 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
                 Log.d("isLoadOnBoard1", "onCreate: $isGrimaldiContainer $isLoadOnBoard")
                 viewModel.saveChassisNumber(binding.appBarHome.content.includeSearch.editInput.text.toString())
 
-//                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
-//                    binding.appBarHome.content.includeSearch.tilInput.error =
-//                        "Please enter a valid cargo number"
-//                } else {
-//                    viewModel.podSpinnerItems.observe(this, Observer {
-//                        val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
-//                        val bundle: Bundle = Bundle()
-//                        bundle.putParcelableArrayList("podSpinnerItems", it)
-//                        bundle.putString(
-//                            "containerNumber",
-//                            binding.appBarHome.content.includeSearch.editInput.text.toString()
-//                        )
-//                        intent.putExtras(bundle)
-//                        startActivity(intent)
-//                    })
-//                }
+                if (binding.appBarHome.content.includeSearch.editInput.text.toString().isEmpty()) {
+                    binding.appBarHome.content.includeSearch.tilInput.error =
+                        "Please enter a valid cargo number"
+                } else {
+                    val intent = Intent(this@SearchActivity, NoNetworkPODActivity::class.java)
+                    val bundle: Bundle = Bundle()
+                    bundle.putParcelableArrayList("podItems", podItems)
+                    bundle.putString(
+                        "containerNumber",
+                        binding.appBarHome.content.includeSearch.editInput.text.toString()
+                    )
+                    intent.putExtras(bundle)
+                    startActivity(intent)
+                }
 
             } else {
                 Log.d("isLoadOnBoard2", "onCreate: $isGrimaldiContainer $isLoadOnBoard")
@@ -281,6 +277,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 //            viewModel.downloadPOD(_grimaldiContainerVoyageID)
 //        }
 //    }
+
 
     private fun updateAppVersion() {
         viewModel.updateAppVersion()
@@ -513,6 +510,9 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
     override fun onResume() {
         super.onResume()
+        if (NetworkUtil.isOnline(this@SearchActivity)) {
+            findCargoLocal(_chassisNumber, imei)
+        }
         viewModel.getSavedConfig()
         binding.appBarHome.content.includeSearch.btnVerify.setBackgroundResource(R.drawable.save_btn_bg)
     }

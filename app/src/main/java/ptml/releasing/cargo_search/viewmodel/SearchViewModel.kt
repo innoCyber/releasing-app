@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ptml.releasing.R
@@ -21,15 +20,17 @@ import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.app.utils.livedata.asLiveData
 import ptml.releasing.app.utils.remoteconfig.RemoteConfigUpdateChecker
+import ptml.releasing.cargo_info.model.FormDamage
+import ptml.releasing.cargo_info.model.FormSubmissionRequest
 import ptml.releasing.cargo_search.domain.model.ChassisNumber
 import ptml.releasing.cargo_search.model.*
+import ptml.releasing.damages.view.DamagesActivity
 import ptml.releasing.form.FormType
 import ptml.releasing.form.utils.Constants.VOYAGE_ID
 import ptml.releasing.save_time_worker.CheckLoginWorker
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 open class SearchViewModel @Inject constructor(
     private val imeiRepository: ImeiRepository,
@@ -123,6 +124,67 @@ open class SearchViewModel @Inject constructor(
 //        }
 //    }
 
+
+    fun submitForm(
+        findCargoResponse: FindCargoResponse?,
+        cargoCode: String?,
+        imei: String?
+    ) {
+
+        CoroutineScope(dispatchers.network).launch {
+            try {
+
+                val operator = loginRepository.getLoginData().badgeId
+
+                val configuration = repository.getSelectedConfigAsync()
+                val formSubmissionRequest = FormSubmissionRequest(
+                    emptyList(),
+                    emptyList(),
+                    getDamages(),
+                    configuration.cargoType?.id,
+                    configuration.operationStep?.id,
+                    configuration.terminal.id,
+                    operator,
+                    cargoCode,
+                    findCargoResponse?.mrkNumber,
+                    findCargoResponse?.grimaldiContainer,
+                    findCargoResponse?.cargoId,
+                    getPhotoNames(cargoCode),
+                    configuration.voyage?.id ?: -1,
+                    configuration.shippingLine?.id ?: -1,
+                    imei,
+                    badgeId = loginRepository.getLoginData().badgeId
+                )
+                val result = repository.uploadData(formSubmissionRequest).await()
+                withContext(dispatchers.main) {
+                    if (result.isSuccess) {
+
+                    } else {
+
+                    }
+
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    private fun getDamages(): List<FormDamage>? {
+        val formDamageList = mutableListOf<FormDamage>()
+        for (damage in DamagesActivity.currentDamages) {
+            formDamageList.add(damage.toFormDamage())
+        }
+        return formDamageList
+    }
+
+    private suspend fun getPhotoNames(cargoCode: String?): List<String> {
+        return repository.getImages(cargoCode ?: return emptyList()).values.map {
+            it.name ?: ""
+        }
+    }
+
+
     fun findCargoLocal(cargoNumber: String?, imei: String) {
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
@@ -148,8 +210,12 @@ open class SearchViewModel @Inject constructor(
                 println("Aminu $formResponse")
                 withContext(dispatchers.main) {
                     if (findCargoResponse?.isSuccess == true) {
-                        _findCargoResponse.value = formResponse
+                        //_findCargoResponse.value = formResponse
+                        submitForm(findCargoResponse, cargoNumber, imei)
                         deleteChassisNumber(cargoNumber)
+                        Log.d("deleteChassisNumber", "findCargoLocal: Deleted")
+                        return@withContext
+
                         Timber.v("findCargoResponse: %s", formResponse)
                     } else {
                         Timber.e("Find Cargo failed with message =%s", formResponse?.message)

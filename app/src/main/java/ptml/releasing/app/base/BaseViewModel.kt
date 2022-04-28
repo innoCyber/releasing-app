@@ -64,7 +64,6 @@ open class BaseViewModel @Inject constructor(
     private val _showUpdateApp = SingleLiveEvent<Unit>()
     val showUpdateApp: LiveData<Unit> = _showUpdateApp
 
-
     private val _startDamagesUpdate = SingleLiveEvent<Unit>()
     val startDamagesUpdate: LiveData<Unit> = _startDamagesUpdate
 
@@ -88,10 +87,8 @@ open class BaseViewModel @Inject constructor(
 
     val logOutDialog: LiveData<Unit> = _logOutDialog
 
-
     private val _openConfiguration = MutableLiveData<Unit>()
     protected val _configuration = MutableLiveData<Configuration>()
-
 
     val openConfiguration: LiveData<Unit> = _openConfiguration
 
