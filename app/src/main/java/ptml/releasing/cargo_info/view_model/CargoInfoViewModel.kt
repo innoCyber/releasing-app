@@ -1,7 +1,6 @@
 package ptml.releasing.cargo_info.view_model
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -221,17 +220,17 @@ class CargoInfoViewModel @Inject constructor(
                 )
                 val result = repository.uploadData(formSubmissionRequest).await()
                 withContext(dispatchers.main) {
-                    if (result.isSuccess) {
-                        //schedule upload images
-                        val workRequest =
-                            ImageUploadWorker.createWorkRequest(
-                                cargoCode ?: "",
-                                configuration.operationStep?.id ?: return@withContext,
-                                findCargoResponse?.cargoId ?: 0,
-                                configuration.cargoType?.id ?: 0
-                            )
-                        repository.addWorkerId(cargoCode ?: "", workRequest.id.toString())
-                        WorkManager.getInstance(context).enqueue(workRequest)
+                if (result.isSuccess) {
+                    //schedule upload images
+                    val workRequest =
+                        ImageUploadWorker.createWorkRequest(
+                            cargoCode ?: "",
+                            configuration.operationStep?.id ?: return@withContext,
+                            findCargoResponse?.cargoId ?: 0,
+                            configuration.cargoType?.id ?: 0
+                        )
+                    repository.addWorkerId(cargoCode ?: "", workRequest.id.toString())
+                    WorkManager.getInstance(context).enqueue(workRequest)
                         _submitSuccess.postValue(Event(Unit))
                     } else {
                         _errorMessage.postValue(
@@ -281,4 +280,5 @@ class CargoInfoViewModel @Inject constructor(
             }
         }
     }
+
 }

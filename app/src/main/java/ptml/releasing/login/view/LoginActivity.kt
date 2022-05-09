@@ -1,7 +1,6 @@
 package ptml.releasing.login.view
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import ptml.releasing.BR
 import ptml.releasing.R
@@ -21,7 +20,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
     @Inject
     lateinit var loginRepository: LoginRepository
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,7 +1,6 @@
 package ptml.releasing.cargo_search.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -213,7 +212,6 @@ open class SearchViewModel @Inject constructor(
                         //_findCargoResponse.value = formResponse
                         submitForm(findCargoResponse, cargoNumber, imei)
                         deleteChassisNumber(cargoNumber)
-                        Log.d("deleteChassisNumber", "findCargoLocal: Deleted")
                         return@withContext
 
                         Timber.v("findCargoResponse: %s", formResponse)

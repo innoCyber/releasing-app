@@ -2,7 +2,6 @@ package ptml.releasing.adminlogin.view
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.admin_login_basic_auth_layout.view.*
 import ptml.releasing.BR
+import ptml.releasing.BuildConfig
 import ptml.releasing.R
 import ptml.releasing.admin_config.view.AdminConfigActivity
 import ptml.releasing.adminlogin.viewmodel.LoginViewModel
@@ -20,13 +20,9 @@ import ptml.releasing.app.base.BaseActivity
 import ptml.releasing.app.exception.ErrorHandler
 import ptml.releasing.app.utils.NetworkState
 import ptml.releasing.app.utils.StaticBasicAuth.saveAdminLoginDetails
-import ptml.releasing.app.utils.StaticBasicAuth.getAdminPassword
-import ptml.releasing.app.utils.StaticBasicAuth.getAdminUsername
 import ptml.releasing.app.utils.Status
 import ptml.releasing.app.utils.hideSoftInputFromWindow
-import ptml.releasing.app.utils.livedata.Event
 import ptml.releasing.databinding.ActivityAdminLoginBinding
-import ptml.releasing.BuildConfig
 
 
 class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() {
@@ -208,8 +204,9 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityAdminLoginBinding>() 
         super.onBackPressed()
     }
 
-    companion object{
-        val BASIC_AUTH_USERNAME = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging") "Ptml01R1" else "admin"
-        val BASIC_AUTH_PASSWORD = if(BuildConfig.FLAVOR == "production" || BuildConfig.FLAVOR == "staging" ) "SPtml0309!!" else "Passw2021"
+    companion object {
+        val BASIC_AUTH_USERNAME = if (BuildConfig.FLAVOR == "production") "Ptml01R1" else "admin"
+        val BASIC_AUTH_PASSWORD =
+            if (BuildConfig.FLAVOR == "production") "SPtml0309!!" else "Passw2021"
     }
 }

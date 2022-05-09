@@ -3,7 +3,6 @@ package ptml.releasing.app.data.local
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Base64
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ptml.releasing.BuildConfig
@@ -67,8 +66,8 @@ open class PreferencesManagerImpl @Inject constructor(
         }
 
         if (baseurl.contains("8085")) {
-            username = "Ptml01R1"
-            password = "SPtml0309!!"
+            username = "admin"
+            password = "Passw2021"
         }
 
         if (baseurl.contains("1449")) {

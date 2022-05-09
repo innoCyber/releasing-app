@@ -2,14 +2,12 @@ package ptml.releasing.app.di.modules.network
 
 
 import android.text.TextUtils
-import ptml.releasing.app.utils.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import ptml.releasing.BuildConfig
-import ptml.releasing.app.di.scopes.ReleasingAppScope
 import ptml.releasing.app.prefs.Prefs
-import ptml.releasing.app.utils.NullOnEmptyConverterFactory
+import ptml.releasing.app.utils.CoroutineCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
@@ -24,7 +22,6 @@ class NetworkModule {
     fun provideRetrofit(
         client: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory,
-        nullOnEmptyConverterFactory: NullOnEmptyConverterFactory,
         coroutineCallAdapterFactory: CoroutineCallAdapterFactory, @Named(
             BASE_URL
         ) baseUrl: String
@@ -33,7 +30,6 @@ class NetworkModule {
         Timber.e("OKHTTTP: ${client.interceptors()}")
         builder.client(client)
         builder.addCallAdapterFactory(coroutineCallAdapterFactory)
-        builder.addConverterFactory(nullOnEmptyConverterFactory)
         builder.addConverterFactory(gsonConverterFactory)
         builder.baseUrl(baseUrl)
         return builder.build()

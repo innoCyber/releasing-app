@@ -6,9 +6,13 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ptml.releasing.BuildConfig
 import ptml.releasing.app.data.remote.interceptor.ConnectivityInterceptor
+import ptml.releasing.app.data.remote.interceptor.DecryptionInterceptor
+import ptml.releasing.app.data.remote.interceptor.EncryptionInterceptor
 import ptml.releasing.app.data.remote.interceptor.ImeiInterceptor
 import ptml.releasing.app.prefs.Prefs
 import ptml.releasing.app.utils.Constants
+import ptml.releasing.app.utils.encryption.DecryptionImpl
+import ptml.releasing.app.utils.encryption.EncryptionImpl
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -36,6 +40,8 @@ class VoyageRestClient @Inject constructor(
     init {
 
         val loggingInterceptor = makeLoggingInterceptor(debug)
+        val encryptloggingInterceptor = EncryptionInterceptor(EncryptionImpl())
+        val decryptloggingInterceptor = DecryptionInterceptor(DecryptionImpl())
 
         val httpClient = OkHttpClient.Builder()
             .apply {
@@ -44,6 +50,8 @@ class VoyageRestClient @Inject constructor(
                 readTimeout(TIMEOUT, TimeUnit.SECONDS)
 
                 addInterceptor(loggingInterceptor)
+                addInterceptor(encryptloggingInterceptor)
+                addInterceptor(decryptloggingInterceptor)
                 addInterceptor(
                     ConnectivityInterceptor(
                         context

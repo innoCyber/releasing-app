@@ -38,7 +38,6 @@ class DeviceConfigViewModel @Inject constructor(
     private val mutableImei = MutableLiveData<Event<String?>>()
     val imeiNumber = mutableImei.asLiveData()
 
-
     fun verifyDeviceId(imei: String) {
         if (networkState.value?.peekContent() == NetworkState.LOADING) return
         networkState.postValue(
@@ -49,6 +48,7 @@ class DeviceConfigViewModel @Inject constructor(
         compositeJob = CoroutineScope(dispatchers.network).launch {
             try {
                 val response = repository.verifyDeviceIdAsync(imei).await()
+
                 withContext(dispatchers.main) {
                     if (response.isSuccess) {
                         openSearchActivity.postValue(
